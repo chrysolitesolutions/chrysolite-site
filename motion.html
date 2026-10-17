@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a motion story. Particle intro, a sticky scrollytelling canvas (raw → labeled → verified → delivered), a live ops board of animated widgets, then an interactive surge planner. */
+/* Layout: a motion story. Particle intro, a step-through canvas with all four steps listed beside it (raw → labeled → verified → delivered), a live ops board of animated widgets, then an interactive surge planner. */
 :root{
   --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
   --gem:#9BB52A;--gem-ink:#4C5F0C;--gold:#C99A2E;--chip:transparent;
@@ -36,9 +36,9 @@
   --gem:#B6D441;--gem-ink:#C5E05A;--gold:#E0B44E;--chip:#F2F5EF;
   --band:#07100D;--band-2:#0E1C17;--band-fg:#E6EEE4;--band-soft:#93A99E;--band-line:#1F352C;color-scheme:dark}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
+html{scroll-behavior:smooth}
 section[id]{scroll-margin-top:72px}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:clip}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--band)}
 h1,h2,h3{font-family:var(--display);margin:0;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
 p{margin:0}
@@ -48,7 +48,7 @@ a{color:inherit}
 @media(min-width:700px){.wrap{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gem-ink);display:inline-flex;align-items:center;gap:10px}
 .eyebrow::before{content:"";width:8px;height:8px;background:var(--gem);transform:rotate(45deg)}
-.dark .eyebrow{color:var(--gem)}
+.dark .eyebrow,.story .eyebrow{color:var(--gem)}
 .btn{display:inline-flex;align-items:center;gap:10px;font:600 15px/1 var(--body);padding:14px 20px;border-radius:999px;border:1px solid transparent;text-decoration:none;cursor:pointer;transition:transform .25s,box-shadow .25s,background .2s}
 .btn-gem{background:var(--gem);color:#10200A;box-shadow:0 8px 24px -10px var(--gem)}
 .btn-gem:hover{transform:translateY(-2px)}
@@ -83,29 +83,37 @@ a{color:inherit}
 @keyframes wheel{60%{transform:translateY(9px);opacity:0}}
 
 /* story */
-.story{position:relative;background:var(--band-2);color:var(--band-fg)}
-.story .wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:48px}
-@media(max-width:860px){.story .wrap{grid-template-columns:1fr;gap:0}}
-.stage{position:sticky;top:calc(64px + env(safe-area-inset-top,0px));height:calc(100vh - 64px - env(safe-area-inset-top,0px));display:flex;align-items:center;min-width:0}
-@media(max-width:860px){.stage{height:52vh;z-index:1;background:var(--band-2)}}
-.stage-box{position:relative;width:100%;height:min(560px,88%);border:1px solid var(--band-line);border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--band-fg) 5%,transparent),transparent 70%)}
-#storyCv{width:100%;height:100%;display:block}
-.stage-hud{position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;gap:8px;font:500 11.5px var(--mono);color:var(--band-soft);flex-wrap:wrap}
+.story{position:relative;background:var(--band-2);color:var(--band-fg);padding-block:88px}
+.story-head{display:grid;gap:12px;max-width:640px;margin-bottom:36px}
+.story-head h2{font-size:clamp(30px,4vw,48px);font-weight:800}
+.story-head p{color:var(--band-soft);font-size:17px}
+.story-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:stretch}
+@media(max-width:900px){.story-grid{grid-template-columns:1fr}}
+.stage-box{position:relative;width:100%;min-height:520px;border:1px solid var(--band-line);border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--band-fg) 5%,transparent),transparent 70%);min-width:0}
+@media(max-width:900px){.stage-box{min-height:380px}}
+#storyCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage-hud{position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;gap:8px;font:500 11.5px var(--mono);color:var(--band-soft);flex-wrap:wrap;z-index:1}
 .stage-hud b{color:var(--gem);font-weight:500}
-.dots{position:absolute;left:14px;bottom:14px;display:flex;gap:6px}
-.dots i{width:22px;height:4px;border-radius:2px;background:var(--band-line);transition:background .3s,width .3s}
-.dots i.on{background:var(--gem);width:36px}
-.steps{display:grid;padding-block:20vh 30vh}
-.step{min-height:78vh;display:flex;align-items:center}
-@media(max-width:860px){.step{min-height:70vh;position:relative;z-index:2}}
-.step-card{display:grid;gap:14px;padding:28px;border-radius:18px;border:1px solid var(--band-line);background:color-mix(in srgb,var(--band) 70%,transparent);backdrop-filter:blur(6px);transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .6s,border-color .4s;opacity:.45;transform:scale(.97)}
-.step.on .step-card{opacity:1;transform:none;border-color:color-mix(in srgb,var(--gem) 55%,var(--band-line))}
-.step .n{font:500 12px var(--mono);color:var(--gem);letter-spacing:.1em}
-.step h2{font-size:clamp(28px,3.4vw,42px);font-weight:800}
-.step p{color:var(--band-soft);font-size:16.5px}
-.step ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.play{position:absolute;right:14px;bottom:12px;z-index:1;font:500 11.5px var(--mono);color:var(--band-soft);background:color-mix(in srgb,var(--band) 70%,transparent);border:1px solid var(--band-line);border-radius:999px;padding:6px 11px;cursor:pointer}
+.play:hover{color:var(--band-fg)}
+.steps{display:grid;gap:10px;align-content:start;min-width:0}
+.step{position:relative;display:grid;grid-template-columns:40px 1fr;gap:4px 14px;text-align:left;width:100%;padding:16px 18px;border-radius:16px;border:1px solid var(--band-line);background:color-mix(in srgb,var(--band) 55%,transparent);color:var(--band-fg);font:inherit;cursor:pointer;overflow:hidden;transition:border-color .35s,background .35s,transform .35s cubic-bezier(.2,.8,.2,1)}
+.step:hover{border-color:color-mix(in srgb,var(--gem) 35%,var(--band-line))}
+.step.on{border-color:color-mix(in srgb,var(--gem) 65%,var(--band-line));background:color-mix(in srgb,var(--band) 85%,transparent);transform:translateX(-4px)}
+.step .num{grid-row:span 3;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font:600 14px var(--mono);border:1px solid var(--band-line);color:var(--band-soft);transition:.35s}
+.step.on .num{background:var(--gem);border-color:var(--gem);color:#10200A}
+.step .n{font:500 11px var(--mono);color:var(--gem);letter-spacing:.1em}
+.step h3{font-size:20px;font-weight:700;line-height:1.2}
+.step p{color:var(--band-soft);font-size:14.5px;line-height:1.5}
+.step .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1)}
+.step.on .more{grid-template-rows:1fr}
+.step .more > div{overflow:hidden}
+.step ul{margin:0;padding:8px 0 0;list-style:none;display:grid;gap:6px;font-size:14px}
 .step li{display:flex;gap:10px;align-items:baseline}
 .step li::before{content:"";width:7px;height:7px;background:var(--gem);transform:rotate(45deg);flex:none}
+.step .timer{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--gem)}
+.step.on .timer.run{animation:timer var(--dur,5s) linear forwards}
+@keyframes timer{to{width:100%}}
 
 /* ops board */
 .sec{padding-block:96px}
@@ -169,7 +177,7 @@ footer a{text-decoration:none}
 footer a:hover{color:var(--ink)}
 .rv{transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s}
 .rv.pre{transform:translateY(30px) scale(.98);opacity:.35}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv.pre{transform:none;opacity:1}.step-card{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv.pre{transform:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -202,18 +210,19 @@ footer a:hover{color:var(--ink)}
 
 <section class="story" id="story">
   <div class="wrap">
-    <div class="stage">
+    <div class="story-head rv"><span class="eyebrow">The flow</span><h2>Four steps from raw files to training-ready data.</h2><p>The animation plays through each step. Click any step to jump to it.</p></div>
+    <div class="story-grid">
       <div class="stage-box">
         <canvas id="storyCv" role="img" aria-label="Particles representing data items moving from scattered raw data into labeled clusters, through QA corrections, into delivered bar totals."></canvas>
         <div class="stage-hud"><span>batch_1029 · <b id="hudStage">raw intake</b></span><span id="hudCount">320 items</span></div>
-        <div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+        <button class="play" id="playBtn" type="button">Pause</button>
       </div>
-    </div>
-    <div class="steps">
-      <div class="step on" data-i="0"><div class="step-card"><span class="n">STEP 1 · INTAKE</span><h2>Raw data arrives unsorted.</h2><p>Images, documents, audio and text land in the queue with no labels. Each dot is one item.</p><ul><li>Your data stays in your tools or a workspace we set up</li><li>Guidelines and gold items are loaded first</li></ul></div></div>
-      <div class="step" data-i="1"><div class="step-card"><span class="n">STEP 2 · LABEL</span><h2>Specialists sort and tag every item.</h2><p>Trained annotators apply your taxonomy. Items group by class as they're labeled. A few land in the wrong group, as happens on any real project.</p><ul><li>Matched by domain and tool experience</li><li>Calibrated on a pilot batch before production</li></ul></div></div>
-      <div class="step" data-i="2"><div class="step-card"><span class="n">STEP 3 · VERIFY</span><h2>QA catches the mistakes.</h2><p>Reviewers and gold-set checks flag mislabeled items in red and send them to the right class before anything ships.</p><ul><li>Second-specialist review on every item</li><li>Daily lead audit on a random sample</li></ul></div></div>
-      <div class="step" data-i="3"><div class="step-card"><span class="n">STEP 4 · DELIVER</span><h2>Clean, counted, ready to train.</h2><p>Verified data is delivered in your format with a quality report, so your team can accept the batch with confidence.</p><ul><li>Per-class counts and error report</li><li>Edge cases logged for your guidelines</li></ul></div></div>
+      <div class="steps">
+      <button class="step on" type="button" data-i="0" aria-pressed="true"><span class="num">1</span><span class="n">STEP 1 · INTAKE</span><h3>Raw data arrives unsorted.</h3><span class="more"><div><p>Images, documents, audio and text land in the queue with no labels. Each dot is one item.</p><ul><li>Your data stays in your tools or a workspace we set up</li><li>Guidelines and gold items are loaded first</li></ul></div></span><span class="timer"></span></button>
+      <button class="step" type="button" data-i="1" aria-pressed="false"><span class="num">2</span><span class="n">STEP 2 · LABEL</span><h3>Specialists sort and tag every item.</h3><span class="more"><div><p>Trained annotators apply your taxonomy and items group by class. A few land in the wrong group, as on any real project.</p><ul><li>Matched by domain and tool experience</li><li>Calibrated on a pilot batch before production</li></ul></div></span><span class="timer"></span></button>
+      <button class="step" type="button" data-i="2" aria-pressed="false"><span class="num">3</span><span class="n">STEP 3 · VERIFY</span><h3>QA catches the mistakes.</h3><span class="more"><div><p>Reviewers and gold-set checks flag mislabeled items in red and move them to the right class.</p><ul><li>Second-specialist review on every item</li><li>Daily lead audit on a random sample</li></ul></div></span><span class="timer"></span></button>
+      <button class="step" type="button" data-i="3" aria-pressed="false"><span class="num">4</span><span class="n">STEP 4 · DELIVER</span><h3>Clean, counted, ready to train.</h3><span class="more"><div><p>Verified data is delivered in your format with a quality report you can accept the batch on.</p><ul><li>Per-class counts and error report</li><li>Edge cases logged for your guidelines</li></ul></div></span><span class="timer"></span></button>
+      </div>
     </div>
   </div>
 </section>
@@ -376,16 +385,22 @@ function storyDraw(t) {
     if (p.f && s > 1.25 && s < 2.4) { const pulse = 4 + (Math.sin(t / 160) * .5 + .5) * 4; SX.strokeStyle = '#E2513B'; SX.lineWidth = 1.5; SX.beginPath(); SX.arc(x, y, r + pulse, 0, 6.3); SX.stroke(); }
   });
 }
-const steps = [...document.querySelectorAll('.step')], dots = [...document.querySelectorAll('.dots i')];
+const steps = [...document.querySelectorAll('.step')];
 const STAGES = ['raw intake', 'labeling', 'QA review', 'delivered'];
-function storyScroll() {
-  let f = 0; steps.forEach(st => { const r = st.getBoundingClientRect(); f += clamp((innerHeight * .62 - r.top) / r.height); });
-  sTarget = clamp(f - .5, 0, 3);
-  const cur = Math.round(sTarget);
-  steps.forEach((st, i) => st.classList.toggle('on', i === cur)); dots.forEach((d, i) => d.classList.toggle('on', i === cur));
-  $('hudStage').textContent = STAGES[cur];
-  $('hudCount').textContent = cur === 2 ? `${flagged.size} corrections` : cur === 3 ? `${N} verified` : `${N} items`;
+const DUR = 5200; let cur = 0, playing = !reduce, storyVisible = false, nextAt = 0;
+function setStep(i, user) {
+  cur = i; sTarget = i;
+  steps.forEach((st, k) => { st.classList.toggle('on', k === i); st.setAttribute('aria-pressed', k === i); const tm = st.querySelector('.timer'); tm.classList.remove('run'); });
+  const tm = steps[i].querySelector('.timer'); void tm.offsetWidth; tm.style.setProperty('--dur', DUR + 'ms'); if (playing) tm.classList.add('run');
+  $('hudStage').textContent = STAGES[i];
+  $('hudCount').textContent = i === 2 ? `${flagged.size} corrections` : i === 3 ? `${N} verified` : `${N} items`;
+  nextAt = performance.now() + DUR;
 }
+steps.forEach((st, i) => st.addEventListener('click', () => setStep(i, true)));
+$('playBtn').addEventListener('click', () => { playing = !playing; $('playBtn').textContent = playing ? 'Pause' : 'Play'; setStep(cur); });
+if (reduce) $('playBtn').textContent = 'Play';
+function storyTick(t) { if (playing && storyVisible && t >= nextAt) setStep((cur + 1) % 4); }
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { const was = storyVisible; storyVisible = es[0].isIntersecting; if (storyVisible && !was) setStep(cur); }, {threshold: .35}).observe($('story')); else storyVisible = true;
 
 /* ---------- ops board (simulated) ---------- */
 const spark = $('spark'); let PX, PW, PH, series = [...Array(60)].map((_, i) => 1800 + Math.sin(i / 5) * 160 + Math.random() * 120);
@@ -462,7 +477,7 @@ let lastBoard = 0;
 function loop(t) {
   const max = document.documentElement.scrollHeight - innerHeight; $('progress').style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
   const ir = ic.getBoundingClientRect(); if (ir.bottom > 0) introFrame();
-  storyScroll(); sPos += (sTarget - sPos) * (reduce ? 1 : .08);
+  storyTick(t); sPos += (sTarget - sPos) * (reduce ? 1 : .07);
   const sr = sc.getBoundingClientRect(); if (sr.bottom > 0 && sr.top < innerHeight) storyDraw(t);
   if (boardOn && t - lastBoard > 900) { lastBoard = t; boardTick(); heatPaint(t); }
   requestAnimationFrame(loop);

@@ -47,8 +47,8 @@
   --c1:#5DB79F;--c2:#E0B44E;--c3:#9D90D6;--c4:#E0836B;--chip:#F2F5EF;color-scheme:dark}
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:clip}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
 h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.02em}
 p{margin:0}
@@ -390,7 +390,7 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
         </div>
         <div class="hero-facts">
           <div class="fact"><b data-count="72" data-suffix="h">0h</b><span>target time to first trained team</span></div>
-          <div class="fact"><b data-count="2" data-prefix="" data-suffix="–12 wk">0</b><span>typical engagement length</span></div>
+          <div class="fact"><b data-count="2" data-prefix="" data-suffix="–3 wk">0</b><span>to your first delivered data</span></div>
           <div class="fact"><b data-count="3" data-suffix="-layer">0</b><span>QA on every deliverable</span></div>
         </div>
       </div>
@@ -534,7 +534,7 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
         <div class="step"><div class="dot">1</div><div class="day">DAY 0</div><h3>Scope</h3><p>We review your guidelines, sample data, volume and deadline, then confirm team size and quality targets.</p></div>
         <div class="step"><div class="dot">2</div><div class="day">DAY 1</div><h3>Match</h3><p>Specialists with the right domain and tool experience are selected from our bench.</p></div>
         <div class="step"><div class="dot">3</div><div class="day">DAY 2–3</div><h3>Calibrate</h3><p>A pilot batch is scored against your gold set. Guidelines are tightened until agreement meets target.</p></div>
-        <div class="step"><div class="dot">4</div><div class="day">WEEKS 1–N</div><h3>Deliver</h3><p>Production runs with daily throughput and quality reporting. Seats scale with the queue.</p></div>
+        <div class="step"><div class="dot">4</div><div class="day">WEEKS 2–3</div><h3>Deliver</h3><p>Verified data is delivered within 2–3 weeks, with daily throughput and quality reporting. Seats scale with the queue.</p></div>
         <div class="step"><div class="dot">5</div><div class="day">FINAL WEEK</div><h3>Hand back</h3><p>Final QA, documentation of edge cases and a clean ramp-down. Your data and IP stay yours.</p></div>
       </div>
     </div>
@@ -573,14 +573,14 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
       </div>
       <div class="plans">
         <div class="plan rv" data-m="z">
-          <span class="term">2–4 weeks</span>
+          <span class="term">1–3 months</span>
           <h3>Surge Sprint</h3>
           <p class="muted">For a single deadline: a launch, a backlog or an urgent relabel.</p>
           <ul><li>Team of 5–50 specialists</li><li>Pilot batch before production</li><li>Daily throughput report</li></ul>
           <a class="btn btn-ghost" href="#contact" data-plan="Surge Sprint">Plan a sprint</a>
         </div>
         <div class="plan feat rv" data-m="z">
-          <span class="term">1–3 months</span>
+          <span class="term">3 months +</span>
           <h3>Project Pod</h3>
           <p class="muted">For a defined program with changing volume, run end to end by a Chrysolite lead.</p>
           <ul><li>Dedicated project lead &amp; reviewers</li><li>Weekly seat scaling</li><li>Three-layer QA with gold-set scoring</li><li>Final documentation &amp; hand-back</li></ul>
@@ -605,7 +605,7 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
         <p>Anything else, ask us in the form below.</p>
       </div>
       <div>
-        <details open><summary>How short can an engagement be?<span class="pm"></span></summary><p class="ans">Two weeks is the usual minimum, since calibration takes the first few days. For smaller QA audits we can scope a fixed-size review that finishes sooner.</p></details>
+        <details open><summary>How short can an engagement be?<span class="pm"></span></summary><p class="ans">A Surge Sprint runs 1 to 3 months, with your first verified data delivered in 2 to 3 weeks. Longer programs run as a Project Pod of 3 months or more. For smaller QA audits we can scope a fixed-size review that finishes sooner.</p></details>
         <details><summary>Do you work in our labeling tools?<span class="pm"></span></summary><p class="ans">Yes. Our specialists work in your platform of choice, whether that's an in-house tool or a commercial annotation platform. If you don't have one, we can set up a workspace for the project.</p></details>
         <details><summary>How do you keep quality high when scaling quickly?<span class="pm"></span></summary><p class="ans">Every new specialist passes a calibration batch scored against your gold set before touching production data. Peer review, consensus and daily lead audits continue for the life of the project.</p></details>
         <details><summary>Who owns the data and the labels?<span class="pm"></span></summary><p class="ans">You do. All data, labels, guidelines and derived work belong to you. Specialists sign NDAs, and access is revoked when the project closes.</p></details>
