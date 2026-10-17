@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="canonical" href="https://chrysolite.in/motion.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://chrysolite.in/motion.html">
+<meta property="og:image" content="https://chrysolite.in/logo.png">
+<meta name="description" content="Watch data move through a Chrysolite surge team, and plan the team size for your own spike.">
+<meta property="og:title" content="Chrysolite Data Flow">
+<meta property="og:description" content="Watch data move through a Chrysolite surge team, and plan the team size for your own spike.">
+<title>Chrysolite Data Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a motion story. Particle intro, a sticky scrollytelling canvas (raw → labeled → verified → delivered), a live ops board of animated widgets, then an interactive surge planner. */
+:root{
+  --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
+  --gem:#9BB52A;--gem-ink:#4C5F0C;--gold:#C99A2E;--chip:transparent;
+  --band:#0F2620;--band-2:#16332A;--band-fg:#E7EFE4;--band-soft:#A9BDB2;--band-line:#2A4A3F;
+  --k1:#21B3C4;--k2:#8DC63F;--k3:#F2A33A;--k4:#E2513B;--k5:#2E86DE;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--gold:#E0B44E;--chip:#F2F5EF;
+  --band:#07100D;--band-2:#0E1C17;--band-fg:#E6EEE4;--band-soft:#93A99E;--band-line:#1F352C;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--gold:#E0B44E;--chip:#F2F5EF;
+  --band:#07100D;--band-2:#0E1C17;--band-fg:#E6EEE4;--band-soft:#93A99E;--band-line:#1F352C;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+section[id]{scroll-margin-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--band)}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gem);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media(min-width:700px){.wrap{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gem-ink);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:8px;height:8px;background:var(--gem);transform:rotate(45deg)}
+.dark .eyebrow{color:var(--gem)}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 15px/1 var(--body);padding:14px 20px;border-radius:999px;border:1px solid transparent;text-decoration:none;cursor:pointer;transition:transform .25s,box-shadow .25s,background .2s}
+.btn-gem{background:var(--gem);color:#10200A;box-shadow:0 8px 24px -10px var(--gem)}
+.btn-gem:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:color-mix(in srgb,var(--band-fg) 28%,transparent);color:var(--band-fg)}
+.btn-ghost:hover{background:color-mix(in srgb,var(--band-fg) 8%,transparent)}
+.tag{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--band-soft);border:1px solid var(--band-line);border-radius:999px;padding:3px 9px}
+.dark{background:var(--band);color:var(--band-fg)}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--band) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--band-fg);border-bottom:1px solid var(--band-line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:18px}
+.logo img{width:36px;background:#F2F5EF;border-radius:9px;padding:2px}
+.nav nav{display:flex;gap:20px;align-items:center;font-size:14.5px}
+.nav nav a{text-decoration:none;color:var(--band-soft)}
+.nav nav a:hover{color:var(--band-fg)}
+@media(max-width:640px){.nav nav a.hide-sm{display:none}}
+.progress{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:3px;z-index:70;background:linear-gradient(90deg,var(--k1),var(--k2),var(--k3),var(--k4));transform-origin:left;transform:scaleX(0)}
+
+/* intro */
+.intro{position:relative;overflow:hidden;padding-block:40px 64px}
+#intro{position:absolute;inset:0;width:100%;height:100%;display:block}
+.intro .wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;min-height:440px}
+@media(max-width:860px){.intro .wrap{grid-template-columns:1fr;min-height:0;padding-top:300px}}
+.intro h1{font-size:clamp(40px,6vw,78px);font-weight:800;margin-top:18px}
+.intro h1 em{font-style:normal;color:var(--gem)}
+.intro p{color:var(--band-soft);font-size:18px;max-width:46ch;margin-top:20px}
+.intro .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hint{font:500 12px var(--mono);color:var(--band-soft);margin-top:28px;display:flex;align-items:center;gap:10px}
+.hint i{width:18px;height:28px;border:1.5px solid var(--band-soft);border-radius:10px;position:relative}
+.hint i::after{content:"";position:absolute;left:50%;top:5px;width:3px;height:6px;margin-left:-1.5px;border-radius:2px;background:var(--gem);animation:wheel 1.6s infinite}
+@keyframes wheel{60%{transform:translateY(9px);opacity:0}}
+
+/* story */
+.story{position:relative;background:var(--band-2);color:var(--band-fg)}
+.story .wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:48px}
+@media(max-width:860px){.story .wrap{grid-template-columns:1fr;gap:0}}
+.stage{position:sticky;top:calc(64px + env(safe-area-inset-top,0px));height:calc(100vh - 64px - env(safe-area-inset-top,0px));display:flex;align-items:center;min-width:0}
+@media(max-width:860px){.stage{height:52vh;z-index:1;background:var(--band-2)}}
+.stage-box{position:relative;width:100%;height:min(560px,88%);border:1px solid var(--band-line);border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--band-fg) 5%,transparent),transparent 70%)}
+#storyCv{width:100%;height:100%;display:block}
+.stage-hud{position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;gap:8px;font:500 11.5px var(--mono);color:var(--band-soft);flex-wrap:wrap}
+.stage-hud b{color:var(--gem);font-weight:500}
+.dots{position:absolute;left:14px;bottom:14px;display:flex;gap:6px}
+.dots i{width:22px;height:4px;border-radius:2px;background:var(--band-line);transition:background .3s,width .3s}
+.dots i.on{background:var(--gem);width:36px}
+.steps{display:grid;padding-block:20vh 30vh}
+.step{min-height:78vh;display:flex;align-items:center}
+@media(max-width:860px){.step{min-height:70vh;position:relative;z-index:2}}
+.step-card{display:grid;gap:14px;padding:28px;border-radius:18px;border:1px solid var(--band-line);background:color-mix(in srgb,var(--band) 70%,transparent);backdrop-filter:blur(6px);transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .6s,border-color .4s;opacity:.45;transform:scale(.97)}
+.step.on .step-card{opacity:1;transform:none;border-color:color-mix(in srgb,var(--gem) 55%,var(--band-line))}
+.step .n{font:500 12px var(--mono);color:var(--gem);letter-spacing:.1em}
+.step h2{font-size:clamp(28px,3.4vw,42px);font-weight:800}
+.step p{color:var(--band-soft);font-size:16.5px}
+.step ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.step li{display:flex;gap:10px;align-items:baseline}
+.step li::before{content:"";width:7px;height:7px;background:var(--gem);transform:rotate(45deg);flex:none}
+
+/* ops board */
+.sec{padding-block:96px}
+.head{display:grid;gap:14px;max-width:700px;margin-bottom:40px}
+.head h2{font-size:clamp(32px,4.4vw,52px);font-weight:800}
+.head p{color:var(--ink-soft);font-size:18px}
+.board{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:10px;align-content:start;min-width:0;position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.w:hover{transform:translateY(-4px)}
+.w h3{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.w .big{font-family:var(--display);font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.w .sub{font-size:13.5px;color:var(--ink-soft)}
+.w1{grid-column:span 7}.w2{grid-column:span 5}.w3{grid-column:span 5}.w4{grid-column:span 7}
+@media(max-width:900px){.w1,.w2,.w3,.w4{grid-column:1/-1}}
+.w canvas{width:100%;height:120px;display:block}
+.ring-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ring-wrap svg{width:140px;height:140px;flex:none}
+.ring-wrap .lg{display:grid;gap:8px;font-size:14px}
+.ring-wrap .lg span{display:flex;gap:8px;align-items:center}
+.ring-wrap .lg i{width:10px;height:10px;border-radius:3px}
+.queue-bar{height:10px;border-radius:10px;background:var(--surface-2);overflow:hidden}
+.queue-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--k1),var(--k2));border-radius:10px;transition:width .5s}
+.lanes{display:grid;gap:8px;margin-top:4px}
+.lane{display:grid;grid-template-columns:90px 1fr 48px;gap:10px;align-items:center;font-size:13px}
+.lane .tr{height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}
+.lane .tr i{display:block;height:100%;border-radius:8px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.lane b{font:500 12px var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.heat{display:grid;grid-template-columns:34px repeat(24,1fr);gap:3px;font:500 10px var(--mono);color:var(--ink-soft)}
+.heat .c{aspect-ratio:1;border-radius:3px;background:var(--gem);max-width:100%}
+.heat .c.now{outline:2px solid var(--k4);outline-offset:1px}
+.illus{position:absolute;top:16px;right:16px;font:500 10.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+
+/* planner */
+.planner{display:grid;grid-template-columns:1fr 1.35fr;gap:16px}
+@media(max-width:960px){.planner{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;min-width:0}
+.ctrl{display:grid;gap:22px}
+.ctrl .f{display:grid;gap:8px}
+.ctrl .top{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-weight:600}
+.ctrl .top output{font:500 14px var(--mono);color:var(--gem-ink);font-variant-numeric:tabular-nums}
+.ctrl small{color:var(--ink-soft);font-size:12.5px}
+input[type=range]{width:100%;accent-color:var(--gem);height:28px}
+.result{display:grid;gap:18px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:2px}
+.kpi span{font-size:12.5px;color:var(--ink-soft)}
+.kpi b{font-family:var(--display);font-weight:800;font-size:32px;font-variant-numeric:tabular-nums;line-height:1.1}
+.team{display:flex;flex-wrap:wrap;gap:5px;min-height:24px}
+.team i{width:14px;height:14px;border-radius:50%;animation:pop .35s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(0)}}
+.team-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft)}
+.team-legend span{display:flex;align-items:center;gap:6px}
+.team-legend i{width:10px;height:10px;border-radius:50%}
+#simChart{width:100%;height:auto;display:block}
+.assume{font-size:12.5px;color:var(--ink-soft)}
+
+footer{padding-block:40px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-soft);font-size:14px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+.rv{transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s}
+.rv.pre{transform:translateY(30px) scale(.98);opacity:.35}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv.pre{transform:none;opacity:1}.step-card{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img src="logo.png" alt="">Chrysolite</a>
+    <nav>
+      <a href="#story" class="hide-sm">The flow</a>
+      <a href="#ops" class="hide-sm">Ops board</a>
+      <a href="#plan" class="hide-sm">Surge planner</a>
+      <a href="index.html">← Main site</a>
+    </nav>
+  </div>
+</header>
+
+<section class="intro dark">
+  <canvas id="intro" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Chrysolite in motion</span>
+      <h1>Follow your data through a <em>surge team.</em></h1>
+      <p>Scroll to watch a batch move from raw files to labeled, verified and delivered data, then plan the team for your own spike.</p>
+      <div class="ctas"><a class="btn btn-gem" href="#plan">Plan my surge team</a><a class="btn btn-ghost" href="#story">Watch the flow</a></div>
+      <div class="hint"><i></i>Scroll to play. Move your pointer over the particles.</div>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="wrap">
+    <div class="stage">
+      <div class="stage-box">
+        <canvas id="storyCv" role="img" aria-label="Particles representing data items moving from scattered raw data into labeled clusters, through QA corrections, into delivered bar totals."></canvas>
+        <div class="stage-hud"><span>batch_1029 · <b id="hudStage">raw intake</b></span><span id="hudCount">320 items</span></div>
+        <div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step on" data-i="0"><div class="step-card"><span class="n">STEP 1 · INTAKE</span><h2>Raw data arrives unsorted.</h2><p>Images, documents, audio and text land in the queue with no labels. Each dot is one item.</p><ul><li>Your data stays in your tools or a workspace we set up</li><li>Guidelines and gold items are loaded first</li></ul></div></div>
+      <div class="step" data-i="1"><div class="step-card"><span class="n">STEP 2 · LABEL</span><h2>Specialists sort and tag every item.</h2><p>Trained annotators apply your taxonomy. Items group by class as they're labeled. A few land in the wrong group, as happens on any real project.</p><ul><li>Matched by domain and tool experience</li><li>Calibrated on a pilot batch before production</li></ul></div></div>
+      <div class="step" data-i="2"><div class="step-card"><span class="n">STEP 3 · VERIFY</span><h2>QA catches the mistakes.</h2><p>Reviewers and gold-set checks flag mislabeled items in red and send them to the right class before anything ships.</p><ul><li>Second-specialist review on every item</li><li>Daily lead audit on a random sample</li></ul></div></div>
+      <div class="step" data-i="3"><div class="step-card"><span class="n">STEP 4 · DELIVER</span><h2>Clean, counted, ready to train.</h2><p>Verified data is delivered in your format with a quality report, so your team can accept the batch with confidence.</p><ul><li>Per-class counts and error report</li><li>Edge cases logged for your guidelines</li></ul></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ops">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">Live ops board</span><h2>What you see while we work.</h2><p>Every engagement comes with a project board like this one. The numbers below are simulated to show how it behaves.</p></div>
+    <div class="board">
+      <div class="w w1 rv"><span class="illus">Simulated</span><h3>Throughput</h3><div><span class="big" id="tput">0</span> <span class="sub">items / hour</span></div><canvas id="spark"></canvas></div>
+      <div class="w w2 rv"><span class="illus">Simulated</span><h3>Gold-set accuracy</h3>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 140 140" aria-hidden="true">
+            <circle cx="70" cy="70" r="58" fill="none" stroke="var(--surface-2)" stroke-width="12"/>
+            <circle id="ringArc" cx="70" cy="70" r="58" fill="none" stroke="var(--gem)" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4" transform="rotate(-90 70 70)" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/>
+            <text id="ringTxt" x="70" y="78" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="26" fill="var(--ink)">0%</text>
+          </svg>
+          <div class="lg"><span><i style="background:var(--gem)"></i>Target ≥ 98%</span><span><i style="background:var(--k5)"></i>κ <b id="kap">0.90</b></span><span><i style="background:var(--k4)"></i><b id="fixes">0</b> corrections today</span></div>
+        </div></div>
+      <div class="w w3 rv"><span class="illus">Simulated</span><h3>Queue remaining</h3><div><span class="big" id="queue">48,000</span> <span class="sub">items</span></div><div class="queue-bar"><i id="qbar" style="width:0%"></i></div>
+        <div class="lanes" id="lanes"></div></div>
+      <div class="w w4 rv"><span class="illus">Simulated</span><h3>Team coverage · specialists on shift by hour (UTC)</h3><div class="heat" id="heat"></div><span class="sub">Follow-the-sun teams keep the queue moving around the clock.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="plan" style="padding-top:0">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">Surge planner</span><h2>How big a team does your spike need?</h2><p>Move the sliders to get a rough team size. We confirm the real numbers after a pilot batch.</p></div>
+    <div class="planner">
+      <div class="panel ctrl">
+        <div class="f"><div class="top"><label for="items">Items to process</label><output id="itemsO"></output></div><input type="range" id="items" min="10000" max="1000000" step="10000" value="200000"></div>
+        <div class="f"><div class="top"><label for="days">Deadline (working days)</label><output id="daysO"></output></div><input type="range" id="days" min="5" max="60" step="1" value="15"></div>
+        <div class="f"><div class="top"><label for="rate">Items per specialist per day</label><output id="rateO"></output></div><input type="range" id="rate" min="50" max="3000" step="50" value="600"><small>Depends on the task. Simple tags can pass 2,000 a day; detailed polygons or RLHF ranking may be under 150.</small></div>
+        <div class="f"><div class="top"><label for="rev">Second review</label><output id="revO"></output></div><input type="range" id="rev" min="0" max="100" step="10" value="100"><small>Share of items checked by a reviewer.</small></div>
+      </div>
+      <div class="panel result">
+        <div class="kpis">
+          <div class="kpi"><span>Team size</span><b id="kTeam">0</b></div>
+          <div class="kpi"><span>Full speed by</span><b id="kRamp">day 3</b></div>
+          <div class="kpi"><span>Finishes on</span><b id="kDone">day 0</b></div>
+        </div>
+        <div class="team" id="team" aria-label="Team composition"></div>
+        <div class="team-legend"><span><i style="background:var(--k1)"></i><b id="nA">0</b> annotators</span><span><i style="background:var(--k3)"></i><b id="nR">0</b> reviewers</span><span><i style="background:var(--k4)"></i><b id="nL">0</b> leads</span></div>
+        <svg id="simChart" viewBox="0 0 600 220" role="img" aria-label="Cumulative items completed per day against the total needed"></svg>
+        <p class="assume">Assumes a 3-day ramp (calibration at 30%, 60%, then full speed), 85% productive time, one reviewer per 4 annotators at full review, and one lead per 25 people. A rough estimate, not a quote.</p>
+        <a class="btn btn-gem" href="index.html#contact" style="justify-self:start">Request this team</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Chrysolite Solutions</span><span><a href="index.html">Main site</a> · <a href="https://claude.ai/artifact/9bCBiUHNM1VW8EAjNocBuH">Employee login</a></span></div></footer>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const KC = ['#21B3C4', '#8DC63F', '#F2A33A', '#E2513B'];
+const NAMES = ['vehicle', 'pedestrian', 'signage', 'cyclist'];
+function fit(cv) { const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = r.width * d; cv.height = r.height * d; const c = cv.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0); return [c, r.width, r.height]; }
+
+/* reveal */
+if (!reduce && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), {rootMargin: '0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach((el, i) => { if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('pre'); el.style.transitionDelay = (i % 2) * 90 + 'ms'; io.observe(el); } });
+}
+
+/* ---------- intro: particles assemble into "CS" ---------- */
+const ic = $('intro'); let IX, IW, IH, ip = [], mouse = {x: -999, y: -999};
+function introSetup() {
+  [IX, IW, IH] = fit(ic);
+  const off = document.createElement('canvas'), ox = off.getContext('2d'); off.width = IW; off.height = IH;
+  const fs = Math.min(IH * .62, IW * (IW < 860 ? .42 : .26));
+  ox.font = `800 ${fs}px "Bricolage Grotesque", sans-serif`; ox.textAlign = 'center'; ox.textBaseline = 'middle';
+  ox.fillText('CS', IW < 860 ? IW / 2 : IW * .74, IW < 860 ? 160 : IH / 2);
+  const data = ox.getImageData(0, 0, IW, IH).data, step = Math.max(5, Math.round(fs / 34)), targets = [];
+  for (let y = 0; y < IH; y += step) for (let x = 0; x < IW; x += step) if (data[(y * IW + x) * 4 + 3] > 128) targets.push([x, y]);
+  ip = targets.map(([tx, ty], i) => ({x: Math.random() * IW, y: Math.random() * IH, tx, ty, vx: 0, vy: 0, c: KC[(Math.floor(tx / (fs * .5))) % 4], r: 1.4 + Math.random() * 1.6}));
+  for (let k = 0; k < 60; k++) ip.push({x: Math.random() * IW, y: Math.random() * IH, tx: null, vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, c: 'rgba(169,189,178,.5)', r: 1});
+  if (reduce) ip.forEach(p => { if (p.tx != null) { p.x = p.tx; p.y = p.ty; } });
+}
+function introFrame() {
+  IX.clearRect(0, 0, IW, IH);
+  ip.forEach(p => {
+    if (p.tx != null) {
+      p.vx += (p.tx - p.x) * .012; p.vy += (p.ty - p.y) * .012;
+      const dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
+      if (d2 < 9000) { const f = (9000 - d2) / 9000 * 3; p.vx += dx / Math.sqrt(d2 + 1) * f; p.vy += dy / Math.sqrt(d2 + 1) * f; }
+      p.vx *= .86; p.vy *= .86;
+    } else { if (p.x < 0 || p.x > IW) p.vx *= -1; if (p.y < 0 || p.y > IH) p.vy *= -1; }
+    p.x += p.vx; p.y += p.vy;
+    IX.fillStyle = p.c; IX.beginPath(); IX.arc(p.x, p.y, p.r, 0, 6.3); IX.fill();
+  });
+}
+ic.parentElement.addEventListener('pointermove', e => { const r = ic.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+ic.parentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -999; });
+
+/* ---------- story: scroll-scrubbed particle states ---------- */
+const sc = $("storyCv"); let SX, SW, SH, sp = [], sPos = 0, sTarget = 0;
+const N = 320, flagged = new Set();
+const classOf = i => { const f = i / N; return f < .4 ? 0 : f < .65 ? 1 : f < .85 ? 2 : 3; };
+const rand = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const seeds = [...Array(N)].map(() => [rand(), rand(), rand(), rand()]);
+for (let i = 0; i < N; i += 13) flagged.add(i);
+const counts = [0, 0, 0, 0]; for (let i = 0; i < N; i++) counts[classOf(i)]++;
+function storySetup() {
+  [SX, SW, SH] = fit(sc);
+  const m = Math.min(SW, SH), cx = [SW * .3, SW * .7, SW * .3, SW * .7], cy = [SH * .33, SH * .33, SH * .72, SH * .72];
+  const barW = SW / 5.2, gap = (SW - barW * 4) / 5, cell = Math.max(4, Math.min(9, barW / 9)), perRow = Math.floor(barW / cell);
+  const rowsIn = [0, 0, 0, 0];
+  sp = seeds.map(([a, b, cc, d], i) => {
+    const k = classOf(i), wrong = (k + 1 + Math.floor(d * 3)) % 4;
+    const ang = a * 6.283, rad = Math.sqrt(b) * m * .13;
+    const s0 = [24 + a * (SW - 48), 40 + cc * (SH - 70)];
+    const lk = flagged.has(i) ? wrong : k;
+    const s1 = [cx[lk] + Math.cos(ang) * rad, cy[lk] + Math.sin(ang) * rad];
+    const s2 = [cx[k] + Math.cos(ang) * rad * .85, cy[k] + Math.sin(ang) * rad * .85];
+    const idx = rowsIn[k]++, col = idx % perRow, row = Math.floor(idx / perRow);
+    const s3 = [gap + k * (barW + gap) + col * cell + cell / 2, SH - 46 - row * cell];
+    return {k, lk, f: flagged.has(i), st: [s0, s1, s2, s3], x: s0[0], y: s0[1], ph: a * 10};
+  });
+  storyDraw(0);
+}
+function storyDraw(t) {
+  const s = sPos, lo = Math.floor(clamp(s, 0, 2.999)), fr = ease(clamp(s - lo));
+  SX.clearRect(0, 0, SW, SH);
+  // stage overlays
+  const m = Math.min(SW, SH), cx = [SW * .3, SW * .7, SW * .3, SW * .7], cy = [SH * .33, SH * .33, SH * .72, SH * .72];
+  const clusterA = clamp(1 - Math.abs(s - 1.5) * 1.1);
+  if (clusterA > 0) {
+    SX.globalAlpha = clusterA;
+    for (let k = 0; k < 4; k++) {
+      SX.strokeStyle = KC[k]; SX.setLineDash([4, 6]); SX.lineWidth = 1; SX.beginPath(); SX.arc(cx[k], cy[k], m * .155, 0, 6.3); SX.stroke(); SX.setLineDash([]);
+      SX.fillStyle = KC[k]; SX.font = '500 11px "JetBrains Mono", monospace'; SX.textAlign = 'center'; SX.fillText(NAMES[k], cx[k], cy[k] - m * .155 - 8);
+    }
+    if (s > 1.4 && s < 2.6) { // QA sweep
+      const a = t / 500; SX.strokeStyle = '#B6D441'; SX.lineWidth = 2;
+      for (let k = 0; k < 4; k++) { SX.beginPath(); SX.arc(cx[k], cy[k], m * .155, a + k, a + k + .9); SX.stroke(); }
+    }
+    SX.globalAlpha = 1;
+  }
+  const barA = clamp((s - 2.4) * 1.7);
+  if (barA > 0) {
+    SX.globalAlpha = barA; const barW = SW / 5.2, gap = (SW - barW * 4) / 5;
+    SX.strokeStyle = 'rgba(169,189,178,.4)'; SX.beginPath(); SX.moveTo(gap * .5, SH - 40); SX.lineTo(SW - gap * .5, SH - 40); SX.stroke();
+    SX.textAlign = 'center';
+    for (let k = 0; k < 4; k++) { const x = gap + k * (barW + gap) + barW / 2; SX.fillStyle = KC[k]; SX.font = '500 11px "JetBrains Mono", monospace'; SX.fillText(NAMES[k], x, SH - 22); SX.fillStyle = '#E6EEE4'; SX.font = '800 16px "Bricolage Grotesque", sans-serif'; SX.fillText(Math.round(counts[k] * barA), x, SH - 46 - Math.ceil(counts[k] / Math.floor(barW / Math.max(4, Math.min(9, barW / 9)))) * Math.max(4, Math.min(9, barW / 9)) - 10); }
+    SX.globalAlpha = 1;
+  }
+  // particles
+  sp.forEach(p => {
+    const A = p.st[lo], B = p.st[lo + 1], wob = reduce ? 0 : (s < .5 ? 3 : 1.2);
+    const x = A[0] + (B[0] - A[0]) * fr + Math.sin(t / 700 + p.ph) * wob, y = A[1] + (B[1] - A[1]) * fr + Math.cos(t / 800 + p.ph) * wob;
+    let col = 'rgba(201,214,205,.65)';
+    if (s > .45) col = KC[s < 1.75 ? p.lk : p.k];
+    const r = s > 2.6 ? Math.max(2, Math.min(3.6, SW / 230)) : 2.6;
+    SX.fillStyle = col; SX.beginPath(); SX.arc(x, y, r, 0, 6.3); SX.fill();
+    if (p.f && s > 1.25 && s < 2.4) { const pulse = 4 + (Math.sin(t / 160) * .5 + .5) * 4; SX.strokeStyle = '#E2513B'; SX.lineWidth = 1.5; SX.beginPath(); SX.arc(x, y, r + pulse, 0, 6.3); SX.stroke(); }
+  });
+}
+const steps = [...document.querySelectorAll('.step')], dots = [...document.querySelectorAll('.dots i')];
+const STAGES = ['raw intake', 'labeling', 'QA review', 'delivered'];
+function storyScroll() {
+  let f = 0; steps.forEach(st => { const r = st.getBoundingClientRect(); f += clamp((innerHeight * .62 - r.top) / r.height); });
+  sTarget = clamp(f - .5, 0, 3);
+  const cur = Math.round(sTarget);
+  steps.forEach((st, i) => st.classList.toggle('on', i === cur)); dots.forEach((d, i) => d.classList.toggle('on', i === cur));
+  $('hudStage').textContent = STAGES[cur];
+  $('hudCount').textContent = cur === 2 ? `${flagged.size} corrections` : cur === 3 ? `${N} verified` : `${N} items`;
+}
+
+/* ---------- ops board (simulated) ---------- */
+const spark = $('spark'); let PX, PW, PH, series = [...Array(60)].map((_, i) => 1800 + Math.sin(i / 5) * 160 + Math.random() * 120);
+let queue = 48000, fixes = 0, boardOn = false;
+const lanes = [['Labeling', '#21B3C4', 62], ['Review', '#F2A33A', 48], ['Audit', '#E2513B', 18], ['Delivered', '#8DC63F', 41]];
+$('lanes').innerHTML = lanes.map(([n, c]) => `<div class="lane"><span>${n}</span><div class="tr"><i style="background:${c};width:0%"></i></div><b>0%</b></div>`).join('');
+const heat = $('heat'); const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+heat.innerHTML = DAYS.map(d => `<span>${d}</span>` + [...Array(24)].map((_, h) => `<i class="c" data-h="${h}"></i>`).join('')).join('');
+const cells = [...heat.querySelectorAll('.c')];
+function heatPaint(t) {
+  const nowCol = Math.floor(t / 900) % 24;
+  cells.forEach((c, i) => { const d = Math.floor(i / 24), h = i % 24; const v = .25 + .6 * (Math.sin((h - 6 + d) / 24 * 6.28) * .5 + .5) * (d > 4 ? .5 : 1); c.style.opacity = v.toFixed(2); c.classList.toggle('now', h === nowCol && d === 2); });
+}
+function sparkDraw() {
+  PX.clearRect(0, 0, PW, PH); const mn = 1400, mx = 2400, X = i => i / (series.length - 1) * PW, Y = v => PH - 8 - (v - mn) / (mx - mn) * (PH - 16);
+  PX.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--line'); PX.lineWidth = 1;
+  [.25, .5, .75].forEach(g => { PX.beginPath(); PX.moveTo(0, PH * g); PX.lineTo(PW, PH * g); PX.stroke(); });
+  const gr = PX.createLinearGradient(0, 0, 0, PH); gr.addColorStop(0, 'rgba(141,198,63,.35)'); gr.addColorStop(1, 'rgba(141,198,63,0)');
+  PX.beginPath(); series.forEach((v, i) => i ? PX.lineTo(X(i), Y(v)) : PX.moveTo(X(i), Y(v))); PX.lineTo(PW, PH); PX.lineTo(0, PH); PX.fillStyle = gr; PX.fill();
+  PX.beginPath(); series.forEach((v, i) => i ? PX.lineTo(X(i), Y(v)) : PX.moveTo(X(i), Y(v))); PX.strokeStyle = '#8DC63F'; PX.lineWidth = 2; PX.stroke();
+  const lx = X(series.length - 1), ly = Y(series[series.length - 1]); PX.fillStyle = '#8DC63F'; PX.beginPath(); PX.arc(lx - 3, ly, 4, 0, 6.3); PX.fill();
+}
+function boardTick() {
+  series.push(clamp(series[series.length - 1] + (Math.random() - .48) * 140, 1500, 2300)); series.shift();
+  $('tput').textContent = Math.round(series[series.length - 1]).toLocaleString();
+  sparkDraw();
+  queue = Math.max(0, queue - Math.round(series[series.length - 1] / 6)); if (queue === 0) queue = 48000;
+  $('queue').textContent = queue.toLocaleString(); $('qbar').style.width = (100 - queue / 480) + '%';
+  const acc = 98.1 + Math.random() * .7; $('ringArc').style.strokeDashoffset = 364.4 * (1 - acc / 100); $('ringTxt').textContent = acc.toFixed(1) + '%';
+  $('kap').textContent = (0.88 + Math.random() * .05).toFixed(2); if (Math.random() < .5) fixes++; $('fixes').textContent = fixes;
+  document.querySelectorAll('.lane').forEach((l, i) => { const v = clamp(lanes[i][2] + (Math.random() - .5) * 12, 5, 98); l.querySelector('i').style.width = v + '%'; l.querySelector('b').textContent = Math.round(v) + '%'; });
+}
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { boardOn = es[0].isIntersecting; }, {threshold: .1}).observe($('ops')); else boardOn = true;
+
+/* ---------- surge planner ---------- */
+const fmt = n => n >= 1e6 ? (n / 1e6).toFixed(n % 1e6 ? 1 : 0) + 'M' : n >= 1000 ? Math.round(n / 1000) + 'k' : String(n);
+let shownTeam = 0;
+function plan() {
+  const items = +$('items').value, days = +$('days').value, rate = +$('rate').value, rev = +$('rev').value / 100;
+  $('itemsO').textContent = items.toLocaleString(); $('daysO').textContent = days + ' days'; $('rateO').textContent = rate.toLocaleString(); $('revO').textContent = Math.round(rev * 100) + '%';
+  const ramp = [.3, .6]; const effDays = Math.max(.5, days - 3 + ramp.reduce((a, b) => a + b, 0) + 1) ; // day 3 counts full
+  const ann = Math.max(1, Math.ceil(items / (rate * .85 * effDays)));
+  const reviewers = rev ? Math.max(1, Math.ceil(ann * rev / 4)) : 0, leads = Math.max(1, Math.ceil((ann + reviewers) / 25)), team = ann + reviewers + leads;
+  $('nA').textContent = ann; $('nR').textContent = reviewers; $('nL').textContent = leads;
+  countTo($('kTeam'), team);
+  const daily = d => ann * rate * .85 * (d === 1 ? .3 : d === 2 ? .6 : 1);
+  let cum = 0, finish = 0; const pts = [];
+  for (let d = 1; d <= days + 10 && d <= 90; d++) { cum += daily(d); pts.push([d, Math.min(cum, items)]); if (!finish && cum >= items) finish = d; }
+  $('kDone').textContent = 'day ' + (finish || '—'); 
+  // team dots
+  const el = $('team'), maxDots = 120, scale = team > maxDots ? team / maxDots : 1;
+  const want = [['#21B3C4', Math.round(ann / scale)], ['#F2A33A', Math.round(reviewers / scale)], ['#E2513B', Math.max(1, Math.round(leads / scale))]];
+  el.innerHTML = want.map(([c, n]) => [...Array(n)].map((_, i) => `<i style="background:${c};animation-delay:${Math.min(i, 40) * 12}ms"></i>`).join('')).join('') + (scale > 1 ? `<span style="font-size:12px;color:var(--ink-soft);align-self:center">each dot ≈ ${scale.toFixed(1)} people</span>` : '');
+  // chart
+  const W = 600, H = 220, L = 52, R = 14, T = 16, B = 30, maxD = Math.max(days, finish || days) + 1;
+  const X = d => L + (d / maxD) * (W - L - R), Y = v => T + (1 - v / items) * (H - T - B);
+  const path = 'M' + X(0) + ',' + Y(0) + pts.filter(p => p[0] <= maxD).map(([d, v]) => ` L${X(d).toFixed(1)},${Y(v).toFixed(1)}`).join('');
+  const ticksX = [0, Math.round(maxD / 4), Math.round(maxD / 2), Math.round(maxD * 3 / 4), maxD];
+  $('simChart').innerHTML = `
+    ${[0, .5, 1].map(g => `<line x1="${L}" x2="${W - R}" y1="${Y(items * g)}" y2="${Y(items * g)}" stroke="var(--line)"/><text x="${L - 8}" y="${Y(items * g) + 4}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--ink-soft)">${fmt(Math.round(items * g))}</text>`).join('')}
+    ${ticksX.map((d, j) => `<text x="${X(d)}" y="${H - 10}" text-anchor="${j === 0 ? 'start' : j === ticksX.length - 1 ? 'end' : 'middle'}" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--ink-soft)">day ${d}</text>`).join('')}
+    <line x1="${X(days)}" x2="${X(days)}" y1="${T}" y2="${H - B}" stroke="var(--k4)" stroke-dasharray="4 4"/>
+    <text x="${X(days) - 6}" y="${T + 12}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--k4)">deadline</text>
+    <path d="${path} L${X(Math.min(maxD, pts.filter(p => p[0] <= maxD).slice(-1)[0][0]))},${Y(0)} Z" fill="var(--gem)" opacity=".15"/>
+    <path id="simLine" d="${path}" fill="none" stroke="var(--gem)" stroke-width="3" stroke-linejoin="round"/>
+    ${finish ? `<circle cx="${X(finish)}" cy="${Y(items)}" r="5" fill="var(--gem)"/><text x="${X(finish) + 8}" y="${Y(items) + 14}" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--ink)">done</text>` : ''}`;
+  const line = $('simLine'); if (!reduce && line.getTotalLength) { const len = line.getTotalLength(); line.style.strokeDasharray = len; line.style.strokeDashoffset = len; line.getBoundingClientRect(); line.style.transition = 'stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)'; line.style.strokeDashoffset = 0; }
+}
+function countTo(el, n) { const s = shownTeam, t0 = performance.now(); shownTeam = n; if (reduce) { el.textContent = n; return; } (function f(t) { const p = Math.min(1, (t - t0) / 500); el.textContent = Math.round(s + (n - s) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0); }
+let planT; ['items', 'days', 'rate', 'rev'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(planT); planT = setTimeout(plan, 60); }));
+
+/* ---------- main loop ---------- */
+let lastBoard = 0;
+function loop(t) {
+  const max = document.documentElement.scrollHeight - innerHeight; $('progress').style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  const ir = ic.getBoundingClientRect(); if (ir.bottom > 0) introFrame();
+  storyScroll(); sPos += (sTarget - sPos) * (reduce ? 1 : .08);
+  const sr = sc.getBoundingClientRect(); if (sr.bottom > 0 && sr.top < innerHeight) storyDraw(t);
+  if (boardOn && t - lastBoard > 900) { lastBoard = t; boardTick(); heatPaint(t); }
+  requestAnimationFrame(loop);
+}
+function setup() { introSetup(); storySetup(); [PX, PW, PH] = fit(spark); sparkDraw(); }
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { setup(); plan(); boardTick(); heatPaint(0); requestAnimationFrame(loop); });
+setup(); plan();
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(setup, 150); });
+})();
+</script>
+
+</body>
+</html>
