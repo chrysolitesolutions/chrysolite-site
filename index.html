@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a faceted-gem identity. Hero pairs the thesis with a live annotation console; sections alternate open bands and one deep "mineral" band for the surge story. */
+/* Layout: a faceted-gem identity. Hero pairs the thesis with a live data-refinery animation, followed by an annotation studio; sections alternate open bands and one deep "mineral" band for the surge story. */
 :root{
   --bg:#F2F5EF;          /* mineral mist */
   --surface:#FFFFFF;
@@ -103,7 +103,7 @@ a{color:inherit}
 
 /* hero */
 .hero{padding-block:56px 72px;position:relative}
-.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,640px) 1fr;gap:56px;align-items:center;min-height:min(660px,78vh)}
 @media(max-width:960px){.hero .wrap{grid-template-columns:1fr;gap:40px}}
 .hero h1{font-size:clamp(42px,6.6vw,86px);font-weight:800;margin-top:20px}
 .hero h1 .facet{display:inline-block;position:relative;color:var(--gem-ink)}
@@ -294,8 +294,8 @@ footer a:hover{color:var(--ink)}
 /* hero video background */
 .hero{background:var(--band);color:var(--band-fg);padding-block:72px 96px}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
-.hero-shade{position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--band) 94%,transparent) 0%,color-mix(in srgb,var(--band) 62%,transparent) 48%,color-mix(in srgb,var(--band) 10%,transparent) 100%),linear-gradient(0deg,var(--band) 0%,transparent 26%)}
-@media(max-width:960px){.hero-shade{background:linear-gradient(180deg,color-mix(in srgb,var(--band) 88%,transparent),color-mix(in srgb,var(--band) 70%,transparent))}}
+.hero-shade{position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--band) 86%,transparent) 0%,color-mix(in srgb,var(--band) 50%,transparent) 40%,transparent 62%),linear-gradient(0deg,var(--band) 0%,transparent 26%)}
+@media(max-width:760px){.hero-shade{background:linear-gradient(180deg,color-mix(in srgb,var(--band) 20%,transparent) 0%,color-mix(in srgb,var(--band) 72%,transparent) 30%,color-mix(in srgb,var(--band) 80%,transparent))}}
 .hero .eyebrow{color:var(--gem)}
 .hero h1 .facet{color:var(--gem)}
 .hero .hero-lede{color:var(--band-soft)}
@@ -368,12 +368,93 @@ footer a:hover{color:var(--ink)}
 .legend-row span{display:flex;align-items:center;gap:6px}
 .legend-row i{width:9px;height:9px;border-radius:2px}
 
+/* hero glass panels */
+.hero{background:radial-gradient(120% 90% at 72% 40%,#123227 0%,#081612 60%,#050D0B 100%)}
+.hero.no-gl{background:radial-gradient(40% 50% at 72% 42%,rgba(200,240,74,.16),transparent 70%),radial-gradient(30% 40% at 62% 60%,rgba(57,135,229,.16),transparent 70%),#081612}
+.hero-labels{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.clabel{position:absolute;left:0;top:0;font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;will-change:transform,opacity;opacity:0}
+.clabel span{display:inline-flex;align-items:center;gap:8px;padding:5px 9px;border-radius:999px;background:rgba(4,10,9,.6);border:1px solid var(--c);color:#EAF2EC;backdrop-filter:blur(6px)}
+.clabel i{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.clabel em{font-style:normal;color:var(--c)}
+@media(max-width:1099px){.clabel{display:none}}
+.holo{position:absolute;inset:0;z-index:0;pointer-events:none}
+.holo-p{position:absolute;width:200px;padding:12px 14px;border-radius:14px;color:#E6EEE4;background:linear-gradient(150deg,rgba(230,238,228,.09),rgba(230,238,228,.02));border:1px solid rgba(182,212,65,.28);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 20px 50px -20px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);animation:hover 7s ease-in-out infinite;font-family:var(--mono)}
+.holo-p:nth-child(2){animation-delay:-2.3s}.holo-p:nth-child(3){animation-delay:-4.6s}
+.holo.paused .holo-p{animation-play-state:paused}
+@keyframes hover{50%{transform:translateY(-8px)}}
+.hp-h{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A9BDB2;margin-bottom:8px}
+.hp-h b{color:#B6D441;font-weight:500;letter-spacing:0}
+.hp-loss{width:100%;height:auto;display:block}
+.hp-loss .grid{stroke:rgba(230,238,228,.08);fill:none}
+.hp-loss .ln{fill:none;stroke:#B6D441;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:300;stroke-dashoffset:0;transition:stroke-dashoffset 1.6s cubic-bezier(.4,.1,.2,1);filter:drop-shadow(0 0 4px rgba(182,212,65,.7))}
+.hp-f{font-size:10px;color:#93A99E;margin-top:6px}
+.holo-p:nth-child(2){width:156px}
+.cm{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+.cm i{aspect-ratio:1;border-radius:3px;background:rgba(57,135,229,var(--a));transition:background 1.2s}
+.cm i:nth-child(6n+1){background:rgba(182,212,65,var(--a))}
+.ev-b{display:grid;grid-template-columns:70px 1fr 36px;gap:8px;align-items:center;font-size:11px;margin-top:6px;color:#C9D6CD}
+.ev-b em{height:6px;border-radius:6px;background:rgba(230,238,228,.1);overflow:hidden}
+.ev-b em i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#3987e5,#B6D441);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.ev-b b{font-weight:500;text-align:right;color:#E6EEE4}
+@media (prefers-reduced-motion: reduce){.holo-p{animation:none}}
+
+/* annotation studio */
+.studio-sec{padding-bottom:40px}
+.studio{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 40px 80px -50px rgba(15,38,32,.6);transform:perspective(1400px) rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg));transition:transform .5s ease-out;color:var(--ink)}
+.st-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);font:500 12px var(--mono);color:var(--ink-soft);flex-wrap:wrap}
+.st-right{display:flex;gap:14px;align-items:center}
+.st-body{display:grid;grid-template-columns:52px minmax(0,1fr) 300px;min-height:460px}
+@media(max-width:960px){.st-body{grid-template-columns:minmax(0,1fr)}.st-tools{flex-direction:row!important;border-right:0!important;border-bottom:1px solid var(--line)}.st-side{border-left:0!important;border-top:1px solid var(--line)}}
+.st-tools{display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-right:1px solid var(--line);background:var(--bg)}
+.st-tools i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink-soft);transition:background .3s,color .3s,box-shadow .3s}
+.st-tools i svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.st-tools i.on{background:color-mix(in srgb,var(--gem) 22%,transparent);color:var(--ink);box-shadow:inset 0 0 0 1px var(--gem)}
+.st-stage{position:relative;min-width:0;background:var(--surface-2)}
+#stCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+@media(max-width:960px){.st-stage{height:340px}}
+.st-hud{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;font:500 11px var(--mono)}
+.st-hud span{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);border-radius:6px;padding:3px 7px;color:var(--ink-soft)}
+.st-side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.st-block{padding:14px 16px;border-bottom:1px solid var(--line)}
+.st-block h4{margin:0 0 10px;font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.pipe{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pipe::before{content:"";position:absolute;left:16%;right:16%;top:17px;height:2px;background:var(--line)}
+.pipe .stage{position:relative;display:grid;justify-items:center;gap:2px;z-index:1}
+.pipe .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font:600 11px var(--mono);color:#fff;background:var(--c);box-shadow:0 0 0 4px var(--surface)}
+.pipe .stage b{font:800 18px var(--display);font-variant-numeric:tabular-nums}
+.pipe .stage small{font-size:11px;color:var(--ink-soft)}
+.pipe .flow{position:absolute;top:14px;left:16%;width:8px;height:8px;border-radius:50%;background:var(--gem);box-shadow:0 0 10px var(--gem);animation:pipe 2.7s linear infinite;z-index:2}
+@keyframes pipe{0%{left:16%;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(84% - 8px);opacity:0}}
+.cbars{display:grid;gap:8px}
+.cbars .r{display:grid;grid-template-columns:80px 1fr 30px;gap:8px;align-items:center;font-size:12.5px}
+.cbars .t{height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}
+.cbars .t i{display:block;height:100%;border-radius:8px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.cbars b{font:500 12px var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.st-k{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.st-k b{display:block;font:800 26px var(--display);line-height:1}
+.st-k small{font-size:12px;color:var(--ok,#2F7D5B)}
+#stSpark{width:120px;height:44px}
+.tput{height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}
+.tput i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c1),var(--gem));border-radius:8px;transition:width .8s}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:12px;max-height:136px;overflow:hidden}
+.log li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;animation:logIn .45s cubic-bezier(.2,.8,.2,1) both}
+.log li .tm{font:500 10.5px var(--mono);color:var(--ink-soft);padding-top:1px}
+.log li b{font-weight:600}
+@keyframes logIn{from{opacity:0;transform:translateY(-8px)}}
+.st-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-soft);flex-wrap:wrap}
+.st-foot b{color:var(--ink)}
+.frames{display:flex;gap:3px;flex:1;min-width:200px;max-width:520px}
+.frames i{flex:1;height:14px;border-radius:3px;background:var(--surface-2);transition:background .4s}
+.frames i.done{background:color-mix(in srgb,var(--gem) 70%,transparent)}
+.frames i.cur{background:var(--gem);box-shadow:0 0 0 2px color-mix(in srgb,var(--gem) 40%,transparent);animation:pulse 1.2s infinite}
+
 /* scroll reveal: elements stay readable at rest, motion only adds lift */
 .rv{transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s}
 .rv.pre{transform:translateY(26px);opacity:.35}
 .rv.pre[data-m="l"]{transform:translateX(-48px)}
 .rv.pre[data-m="r"]{transform:translateX(48px)}
 .rv.pre[data-m="z"]{transform:perspective(900px) rotateX(16deg) translateY(40px) scale(.95)}
+@media(max-width:1200px){.rv.pre[data-m="l"],.rv.pre[data-m="r"],.rv.pre[data-m="z"]{transform:translateY(26px)}}
 .sec-head h2 .w{display:inline-block;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s}
 .sec-head.pre h2 .w{transform:translateY(.5em) rotate(4deg);opacity:.15}
 .sec-head.pre{transform:none;opacity:1}
@@ -435,14 +516,8 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
   <section class="hero">
     <canvas class="hero-video" id="heroVideo" aria-hidden="true"></canvas>
     <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-labels" id="heroLabels" aria-hidden="true"></div>
     <button class="vid-toggle" id="vidToggle" type="button" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" id="vidIcon"><rect x="2" y="1" width="3" height="10"/><rect x="7" y="1" width="3" height="10"/></svg><span id="vidLabel">Pause background</span></button>
-    <div class="floaters" aria-hidden="true">
-      <i style="--s:120px;--c:#21B3C4;left:-30px;top:40px" data-sp=".25"></i>
-      <i style="--s:60px;--c:#F2A33A;left:44%;top:12px" data-sp="-.15"></i>
-      <i style="--s:90px;--c:#E2513B;right:-20px;top:120px" data-sp=".35"></i>
-      <i style="--s:44px;--c:#8DC63F;left:38%;bottom:30px" data-sp="-.3"></i>
-      <i style="--s:70px;--c:#2E86DE;right:30%;bottom:-20px" data-sp=".2"></i>
-    </div>
     <div class="wrap">
       <div>
         <span class="eyebrow">Data talent for AI teams</span>
@@ -460,31 +535,6 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
         </div>
       </div>
 
-      <div class="console" id="console" aria-label="Animated example of an annotation task in progress">
-        <div class="con-bar">
-          <div class="dots"><i></i><i></i><i></i></div>
-          <span>batch_0417 · bbox · 3-pass review</span>
-          <span class="live">labeling</span>
-        </div>
-        <div class="con-body">
-          <canvas id="annot" role="img" aria-label="Objects being boxed and labeled by annotators"></canvas>
-          <aside class="con-side">
-            <h4>Classes</h4>
-            <div class="cls">
-              <div><span><i style="background:var(--c1)"></i>vehicle</span><b id="n0">0</b></div>
-              <div><span><i style="background:var(--c2)"></i>pedestrian</span><b id="n1">0</b></div>
-              <div><span><i style="background:var(--c3)"></i>signage</span><b id="n2">0</b></div>
-              <div><span><i style="background:var(--c4)"></i>cyclist</span><b id="n3">0</b></div>
-            </div>
-            <h4>Batch progress</h4>
-            <div class="meter"><i id="prog"></i></div>
-            <h4>Agreement</h4>
-            <div style="font-size:22px;font-family:var(--display);font-weight:800" id="kappa">κ 0.90</div>
-            <span style="color:var(--ink-soft)">gold-set check: pass</span>
-          </aside>
-        </div>
-        <div class="con-foot"><span>Sample data, for illustration</span><span>items labeled <b id="items">0</b></span></div>
-      </div>
     </div>
   </section>
 
@@ -494,6 +544,53 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
       <span>Bounding boxes</span><span>Semantic segmentation</span><span>RLHF preference ranking</span><span>Prompt &amp; response writing</span><span>Entity extraction</span><span>Transcription</span><span>Sentiment tagging</span><span>Gold-set QA</span><span>Document parsing</span><span>Data cleaning</span>
     </div>
   </div>
+
+  <section class="sec studio-sec" id="studio-sec">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Inside a live batch</span>
+        <h2>Watch a surge team label, review and verify in real time.</h2>
+        <p>This is what a Chrysolite batch looks like from the inside: specialists annotate, a second reviewer catches mistakes, and a QA lead audits before anything is delivered.</p>
+      </div>
+      <div class="studio rv" data-m="z" id="studio" aria-label="Animated example of an annotation batch in progress">
+        <div class="st-bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <span class="st-title">batch_0417 · Atlas Vision · bbox + polygon · 3-pass review</span>
+          <span class="st-right"><span class="live">live</span><span class="mono" id="stClock">00:00:00</span></span>
+        </div>
+        <div class="st-body">
+          <div class="st-tools" aria-hidden="true">
+            <i data-tool="sel" title="Select"><svg viewBox="0 0 20 20"><path d="M5 3l10 7-5 1-2 5z"/></svg></i>
+            <i data-tool="box" title="Bounding box"><svg viewBox="0 0 20 20"><rect x="4" y="5" width="12" height="10" rx="1"/></svg></i>
+            <i data-tool="poly" title="Polygon"><svg viewBox="0 0 20 20"><path d="M10 3l7 6-3 8H6L3 9z"/></svg></i>
+            <i data-tool="kp" title="Keypoints"><svg viewBox="0 0 20 20"><circle cx="6" cy="6" r="2"/><circle cx="14" cy="8" r="2"/><circle cx="9" cy="15" r="2"/></svg></i>
+            <i data-tool="rev" title="Review"><svg viewBox="0 0 20 20"><path d="M4 10l4 4 8-9"/></svg></i>
+          </div>
+          <div class="st-stage">
+            <canvas id="stCanvas" role="img" aria-label="Objects being boxed, outlined and reviewed"></canvas>
+            <div class="st-hud"><span id="stTool">BBOX</span><span id="stZoom">zoom 100%</span><span id="stFrameL">frame 1</span></div>
+          </div>
+          <aside class="st-side">
+            <div class="st-block"><h4>Review pipeline</h4>
+              <div class="pipe" id="stPipe">
+                <div class="stage"><span class="av" style="--c:var(--c1)">A3</span><b id="pA">0</b><small>Annotator</small></div>
+                <div class="stage"><span class="av" style="--c:var(--c3)">R2</span><b id="pR">0</b><small>Reviewer</small></div>
+                <div class="stage"><span class="av" style="--c:var(--gem)">QA</span><b id="pQ">0</b><small>QA lead</small></div>
+                <i class="flow"></i><i class="flow" style="animation-delay:-.9s"></i><i class="flow" style="animation-delay:-1.8s"></i>
+              </div></div>
+            <div class="st-block"><h4>Classes</h4><div class="cbars" id="stClasses"></div></div>
+            <div class="st-block st-k"><div><h4>Agreement</h4><b id="stKappa">κ 0.92</b><small id="stGold">gold-set: pass</small></div><canvas id="stSpark" width="120" height="44" aria-hidden="true"></canvas></div>
+            <div class="st-block"><h4>Throughput <span class="mono" id="stTput" style="float:right;color:var(--ink)">0 / hr</span></h4><div class="tput"><i id="stTputBar"></i></div></div>
+            <div class="st-block"><h4>Activity</h4><ul class="log" id="stLog"></ul></div>
+          </aside>
+        </div>
+        <div class="st-foot">
+          <div class="frames" id="stFrames"></div>
+          <span class="mono">Sample data, for illustration · items labeled <b id="stItems">0</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="sec" id="services">
     <div class="wrap">
@@ -758,6 +855,7 @@ footer .brandline img{width:34px;background:var(--chip);border-radius:8px;paddin
   <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 16V4M5 9l5-5 5 5"/></svg>
 </button>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -791,7 +889,7 @@ document.querySelectorAll('.sec-head h2').forEach(h => {
 
 /* scroll-linked motion */
 const prog = document.getElementById('progress'), stepsEl = document.getElementById('steps'), steps = [...document.querySelectorAll('.step')];
-const floaters = [...document.querySelectorAll('.floaters i')], conEl = document.getElementById('console');
+const conEl = null;
 const kin = document.getElementById('kinetic'), kRows = [...document.querySelectorAll('.k-row')];
 const track = document.querySelector('.track'), totop = document.getElementById('totop'), ring = document.getElementById('ring'), big = document.getElementById('bigmark');
 const navLinks = [...document.querySelectorAll('.links a[href^="#"]')], secs = navLinks.map(a => document.querySelector(a.getAttribute('href')));
@@ -804,8 +902,6 @@ function onFrame() {
   ring.style.strokeDashoffset = 144.5 * (1 - pct);
   totop.classList.toggle('show', y > 600);
   if (!reduce) {
-    floaters.forEach(f => f.style.transform = `translateY(${y * f.dataset.sp}px) rotate(${45 + y * .06 * Math.sign(f.dataset.sp)}deg)`);
-    if (y < innerHeight * 1.5) conEl.style.setProperty('--py', y * -.06 + 'px');
     const kr = kin.getBoundingClientRect();
     if (kr.bottom > 0 && kr.top < innerHeight) {
       const p = (innerHeight - kr.top) / (innerHeight + kr.height);
@@ -840,159 +936,201 @@ if (!reduce && matchMedia('(hover:hover)').matches) {
     b.addEventListener('pointerleave', () => { b.style.setProperty('--x','0px'); b.style.setProperty('--y','0px'); });
   });
   document.querySelectorAll('.svc').forEach(c => c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', e.clientX - r.left + 'px'); c.style.setProperty('--my', e.clientY - r.top + 'px'); }));
-  const con = document.getElementById('console');
-  con.addEventListener('pointermove', e => { const r = con.getBoundingClientRect(); con.style.setProperty('--ry', ((e.clientX - r.left)/r.width - .5) * 6 + 'deg'); con.style.setProperty('--rx', -((e.clientY - r.top)/r.height - .5) * 6 + 'deg'); });
+  const con = document.getElementById('studio');
+  con.addEventListener('pointermove', e => { const r = con.getBoundingClientRect(); con.style.setProperty('--ry', ((e.clientX - r.left)/r.width - .5) * 3 + 'deg'); con.style.setProperty('--rx', -((e.clientY - r.top)/r.height - .5) * 3 + 'deg'); });
   con.addEventListener('pointerleave', () => { con.style.setProperty('--ry','0deg'); con.style.setProperty('--rx','0deg'); });
 }
 
 /* plan buttons preselect the form */
 document.querySelectorAll('[data-plan]').forEach(a => a.addEventListener('click', () => { document.getElementById('fplan').value = a.dataset.plan; }));
 
-/* annotation console */
-const cv = document.getElementById('annot'), ctx = cv.getContext('2d');
-const NAMES = ['vehicle','pedestrian','signage','cyclist'];
-let W = 0, H = 0, colors = {}, objs = [], idx = 0, phase = 0, t0 = 0, total = 0;
-const counts = [0,0,0,0];
-function readColors() { const s = getComputedStyle(document.documentElement); ['c1','c2','c3','c4','ink','line','surface','gem','surface-2'].forEach(k => colors[k] = s.getPropertyValue('--' + k).trim()); }
-function size() { const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
-function scene() {
-  objs = []; idx = 0; phase = 0;
-  const n = 5 + Math.floor(Math.random() * 2), tries = 200;
-  for (let k = 0; k < tries && objs.length < n; k++) {
-    const w = 40 + Math.random() * 70, h = 30 + Math.random() * 60, x = 16 + Math.random() * (W - w - 32), y = 16 + Math.random() * (H - h - 40);
-    if (objs.some(o => x < o.x + o.w + 14 && x + w + 14 > o.x && y < o.y + o.h + 26 && y + h + 26 > o.y)) continue;
-    const c = Math.floor(Math.random() * 4);
-    objs.push({x, y, w, h, c, shape: Math.random(), conf: (0.9 + Math.random() * .09).toFixed(2), p: 0});
-  }
-  t0 = performance.now();
-}
-function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
-function draw(now) {
-  ctx.clearRect(0, 0, W, H);
-  // faint grid
-  ctx.strokeStyle = colors.line; ctx.globalAlpha = .5; ctx.lineWidth = 1;
-  for (let gx = 0; gx < W; gx += 28) { ctx.beginPath(); ctx.moveTo(gx + .5, 0); ctx.lineTo(gx + .5, H); ctx.stroke(); }
-  for (let gy = 0; gy < H; gy += 28) { ctx.beginPath(); ctx.moveTo(0, gy + .5); ctx.lineTo(W, gy + .5); ctx.stroke(); }
-  ctx.globalAlpha = 1;
-  const fade = phase === 2 ? Math.max(0, 1 - (now - t0) / 600) : Math.min(1, (now - t0) / 400 + (idx > 0 ? 1 : 0));
-  ctx.globalAlpha = fade;
-  objs.forEach((o, i) => {
-    // the "object"
-    ctx.fillStyle = colors.c1 && colors[['c1','c2','c3','c4'][o.c]]; ctx.globalAlpha = fade * .28;
-    const pad = 6;
-    if (o.shape < .5) { rr(o.x + pad, o.y + pad, o.w - pad*2, o.h - pad*2, 10); ctx.fill(); }
-    else { ctx.beginPath(); ctx.ellipse(o.x + o.w/2, o.y + o.h/2, o.w/2 - pad, o.h/2 - pad, 0, 0, Math.PI*2); ctx.fill(); }
-    ctx.globalAlpha = fade;
-    if (o.p > 0) {
-      const col = colors[['c1','c2','c3','c4'][o.c]], p = o.p, per = 2 * (o.w + o.h), len = per * p;
-      ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.setLineDash([len, per]); ctx.strokeRect(o.x, o.y, o.w, o.h); ctx.setLineDash([]);
-      if (p >= 1) {
-        ctx.fillStyle = col;
-        [[o.x,o.y],[o.x+o.w,o.y],[o.x,o.y+o.h],[o.x+o.w,o.y+o.h]].forEach(([hx,hy]) => ctx.fillRect(hx-3, hy-3, 6, 6));
-        ctx.font = '500 10.5px "JetBrains Mono", monospace';
-        const txt = NAMES[o.c] + ' ' + o.conf, tw = ctx.measureText(txt).width + 10;
-        const ly = o.y - 18 < 2 ? o.y + o.h + 2 : o.y - 18;
-        ctx.fillRect(o.x - 1, ly, tw, 16);
-        ctx.fillStyle = '#0B1512'; ctx.fillText(txt, o.x + 4, ly + 11.5);
-      }
-    }
-  });
-  // cursor
-  if (phase === 0 && objs[idx]) {
-    const o = objs[idx], cx = o.x + o.w * Math.min(1, objs[idx].p * 1.2), cy = o.y + o.h * Math.min(1, objs[idx].p * 1.2);
-    ctx.strokeStyle = colors.ink; ctx.lineWidth = 1.2; ctx.globalAlpha = fade * .7;
-    ctx.beginPath(); ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8); ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-}
-let last = 0;
-function loop(now) {
-  const dt = Math.min(64, now - (last || now)); last = now;
-  if (phase === 0) {
-    const o = objs[idx];
-    if (o) { o.p = Math.min(1, o.p + dt / 650); if (o.p >= 1) { counts[o.c]++; total++; updateSide(); idx++; if (idx >= objs.length) { phase = 1; t0 = now; } } }
-  } else if (phase === 1 && now - t0 > 1400) { phase = 2; t0 = now; }
-  else if (phase === 2 && now - t0 > 650) { scene(); }
-  draw(now);
-  requestAnimationFrame(loop);
-}
-function updateSide() {
-  counts.forEach((c, i) => document.getElementById('n' + i).textContent = c);
-  document.getElementById('items').textContent = total.toLocaleString();
-  document.getElementById('prog').style.width = Math.min(100, (total % 60) / 60 * 100 + 4) + '%';
-  document.getElementById('kappa').textContent = 'κ 0.' + (88 + Math.floor(Math.random() * 7));
-}
-readColors(); size(); scene();
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
-new MutationObserver(readColors).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
-addEventListener('resize', () => { size(); scene(); });
-if (reduce) { objs.forEach(o => { o.p = 1; counts[o.c]++; total++; }); updateSide(); draw(performance.now()); }
-else requestAnimationFrame(loop);
-
-/* hero video: raw data streams through a QA gate and comes out labeled */
+/* annotation studio: tools, drawing, review corrections, pipeline, classes, agreement trend, activity log */
 (() => {
-  const cv = document.getElementById('heroVideo'), c = cv.getContext('2d'), hero = cv.parentElement;
-  const RAW = ['IMG_20931.jpg','scan_0442.pdf','audio_118.wav','{"txt":"refund pls"}','row 88213','frame_00412.png','invoice_7731.pdf','chat_5590.json','lidar_0921.bin','{"q":"best laptop?"}','call_2207.wav','IMG_88310.jpg','review_4471.txt','form_W9_118.pdf','clip_0093.mp4'];
-  const OUT = ['vehicle 0.98','total: $1,240.00','speaker A ✓','intent: refund','valid ✓','pedestrian 0.96','vendor: ACME Ltd','rank 1 > 2','12 objects','helpful ✓','transcribed ✓','signage 0.97','sentiment: +0.8','EIN extracted','6 segments'];
-  const COLS = ['#21B3C4','#8DC63F','#F2A33A','#E2513B','#2E86DE','#B6D441'];
-  let W, H, gate, toks = [], sparks = [], playing = !reduce, visible = true, t = 0, raf = 0;
-  function size() {
-    const r = hero.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
-    W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; c.setTransform(d, 0, 0, d, 0, 0);
-    gate = W * (W < 960 ? .7 : .6);
-    const n = Math.round(Math.min(64, W * H / 13000));
-    toks = [...Array(n)].map(() => mk(Math.random() * W));
+  const cv = document.getElementById('stCanvas'), c = cv.getContext('2d'), root = document.getElementById('studio');
+  const NAMES = ['vehicle','pedestrian','signage','cyclist'], TOOL = ['box','box','poly','kp'];
+  let W, H, col = {}, objs = [], cur = 0, phase = 'move', pt = 0, frame = 1, items = 0, counts = [0,0,0,0], pA = 0, pR = 0, pQ = 0, kHist = [], flag = null, t0 = performance.now(), cx = 40, cy = 40, vis = true;
+  const FR = 24, frames = document.getElementById('stFrames');
+  frames.innerHTML = '<i></i>'.repeat(FR);
+  function readColors(){ const st = getComputedStyle(document.documentElement); ['c1','c2','c3','c4','ink','ink-soft','line','surface','surface-2','gem','bg'].forEach(k => col[k] = st.getPropertyValue('--' + k).trim()); }
+  function size(){ const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; c.setTransform(d, 0, 0, d, 0, 0); }
+  function scene(){
+    objs = []; cur = 0; phase = 'move'; pt = 0;
+    for (let k = 0; k < 300 && objs.length < 7; k++) {
+      const type = Math.floor(Math.random() * 4), w = 60 + Math.random() * 90, h = type === 1 ? 70 + Math.random() * 60 : 40 + Math.random() * 60;
+      const x = 24 + Math.random() * (W - w - 48), y = 30 + Math.random() * (H - h - 70);
+      if (objs.some(o => x < o.x + o.w + 24 && x + w + 24 > o.x && y < o.y + o.h + 34 && y + h + 34 > o.y)) continue;
+      const wrong = Math.random() < .28 ? (type + 1 + Math.floor(Math.random() * 3)) % 4 : -1;
+      objs.push({type, x, y, w, h, p: 0, conf: (.9 + Math.random() * .09).toFixed(2), label: wrong >= 0 ? wrong : type, wrong, fixed: false, flash: 0});
+    }
+    document.getElementById('stFrameL').textContent = 'frame ' + frame;
+    [...frames.children].forEach((f, i) => { f.className = i < (frame - 1) % FR ? 'done' : i === (frame - 1) % FR ? 'cur' : ''; });
   }
-  function mk(x) { const z = .3 + Math.random() * .7, i = Math.floor(Math.random() * RAW.length); return {x: x ?? -200 - Math.random() * 300, y: 20 + Math.random() * (H - 40), z, i, col: COLS[i % COLS.length], done: false}; }
-  function frame() {
-    t += 1;
+  function setTool(t){ root.querySelectorAll('.st-tools i').forEach(i => i.classList.toggle('on', i.dataset.tool === t)); document.getElementById('stTool').textContent = {sel:'SELECT',box:'BBOX',poly:'POLYGON',kp:'KEYPOINTS',rev:'REVIEW'}[t]; }
+  const clock = () => { const s = Math.floor((performance.now() - t0) / 1000) + 3600 * 2 + 41 * 60; return [s / 3600, s / 60 % 60, s % 60].map(v => String(Math.floor(v)).padStart(2, '0')).join(':'); };
+  function log(who, html, colr){ const ul = document.getElementById('stLog'); const li = document.createElement('li'); li.innerHTML = `<span class="tm">${clock().slice(0,5)}</span><span><b style="color:${colr}">${who}</b> · ${html}</span>`; ul.prepend(li); while (ul.children.length > 6) ul.lastChild.remove(); }
+  function classesUI(){ const tot = Math.max(1, ...counts); document.getElementById('stClasses').innerHTML = NAMES.map((n, i) => `<div class="r"><span>${n}</span><span class="t"><i style="width:${counts[i] / tot * 100}%;background:var(--c${i + 1})"></i></span><b>${counts[i]}</b></div>`).join(''); }
+  function sideUI(){
+    document.getElementById('pA').textContent = pA; document.getElementById('pR').textContent = pR; document.getElementById('pQ').textContent = pQ;
+    document.getElementById('stItems').textContent = items.toLocaleString();
+    const tp = 1650 + Math.round(Math.sin(performance.now() / 4000) * 180 + Math.random() * 60); document.getElementById('stTput').textContent = tp.toLocaleString() + ' / hr'; document.getElementById('stTputBar').style.width = (tp / 2200 * 100) + '%';
+  }
+  function spark(){ const s = document.getElementById('stSpark'), x = s.getContext('2d'), w = s.width, h = s.height; x.clearRect(0, 0, w, h); if (kHist.length < 2) return;
+    const X = i => i / (kHist.length - 1) * (w - 6) + 3, Y = v => h - 4 - (v - .84) / .14 * (h - 8);
+    x.beginPath(); kHist.forEach((v, i) => i ? x.lineTo(X(i), Y(v)) : x.moveTo(X(i), Y(v))); x.lineTo(X(kHist.length - 1), h); x.lineTo(X(0), h); x.fillStyle = col.gem + '33'; x.fill();
+    x.beginPath(); kHist.forEach((v, i) => i ? x.lineTo(X(i), Y(v)) : x.moveTo(X(i), Y(v))); x.strokeStyle = col.gem; x.lineWidth = 2; x.stroke();
+    x.fillStyle = col.gem; x.beginPath(); x.arc(X(kHist.length - 1), Y(kHist[kHist.length - 1]), 3, 0, 6.3); x.fill(); }
+  const ease = v => v < .5 ? 2 * v * v : 1 - Math.pow(-2 * v + 2, 2) / 2;
+  function shape(o, a){ const C = col['c' + (o.type + 1)]; c.globalAlpha = a * .3; c.fillStyle = C;
+    const cx2 = o.x + o.w / 2, cy2 = o.y + o.h / 2; c.beginPath();
+    if (o.type === 0) (c.roundRect ? c.roundRect(o.x + 6, o.y + 8, o.w - 12, o.h - 16, 12) : c.rect(o.x + 6, o.y + 8, o.w - 12, o.h - 16));
+    else if (o.type === 1) c.ellipse(cx2, cy2, o.w / 2 - 10, o.h / 2 - 6, 0, 0, 6.3);
+    else if (o.type === 2) { c.moveTo(cx2, o.y + 6); c.lineTo(o.x + o.w - 6, cy2); c.lineTo(cx2, o.y + o.h - 6); c.lineTo(o.x + 6, cy2); c.closePath(); }
+    else { c.arc(cx2, cy2, Math.min(o.w, o.h) / 2 - 8, 0, 6.3); }
+    c.fill(); c.globalAlpha = 1; }
+  function polyPts(o){ const cx2 = o.x + o.w / 2, cy2 = o.y + o.h / 2; return [[cx2, o.y + 4], [o.x + o.w - 4, cy2], [cx2, o.y + o.h - 4], [o.x + 4, cy2]]; }
+  function kpPts(o){ const cx2 = o.x + o.w / 2, cy2 = o.y + o.h / 2, r = Math.min(o.w, o.h) / 2 - 8; return [[cx2, cy2 - r], [cx2 + r * .9, cy2 + r * .4], [cx2 - r * .9, cy2 + r * .4], [cx2, cy2]]; }
+  function annot(o, p){
+    const L = o.wrong >= 0 && !o.fixed ? o.label : o.type, C = o === flag?.o && !o.fixed ? '#E2513B' : col['c' + (L + 1)], tool = TOOL[o.type];
+    c.strokeStyle = C; c.lineWidth = 2; c.setLineDash(o === flag?.o && !o.fixed ? [6, 4] : []);
+    if (tool === 'box') { const per = 2 * (o.w + o.h); c.setLineDash(p < 1 ? [per * p, per] : (o === flag?.o && !o.fixed ? [6, 4] : [])); c.strokeRect(o.x, o.y, o.w, o.h); c.setLineDash([]);
+      if (p >= 1) { c.fillStyle = C; [[o.x, o.y], [o.x + o.w, o.y], [o.x, o.y + o.h], [o.x + o.w, o.y + o.h]].forEach(([a, b]) => c.fillRect(a - 3, b - 3, 6, 6)); } }
+    else if (tool === 'poly') { const pts = polyPts(o), n = p * pts.length; c.beginPath(); pts.forEach((q, i) => { if (i > n) return; i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); });
+      const k = Math.floor(n); if (k < pts.length && p < 1) { const a = pts[k], b = pts[(k + 1) % pts.length], f = n - k; c.lineTo(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f); } if (p >= 1) c.closePath(); c.stroke();
+      if (p >= 1) { c.globalAlpha = .12; c.fillStyle = C; c.fill(); c.globalAlpha = 1; } c.fillStyle = C; pts.forEach((q, i) => { if (i <= n) c.fillRect(q[0] - 3, q[1] - 3, 6, 6); }); }
+    else { const pts = kpPts(o), n = Math.floor(p * pts.length + .001); c.fillStyle = C; c.beginPath(); pts.slice(0, Math.max(1, n)).forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.stroke(); pts.slice(0, n).forEach(q => { c.beginPath(); c.arc(q[0], q[1], 4, 0, 6.3); c.fill(); }); }
+    c.setLineDash([]);
+    if (p >= 1) { const txt = NAMES[L] + ' ' + o.conf + (o.fixed ? ' ✓' : ''); c.font = '500 10.5px "JetBrains Mono", monospace'; const tw = c.measureText(txt).width + 10, ly = o.y - 18 < 2 ? o.y + o.h + 2 : o.y - 18;
+      c.fillStyle = C; c.fillRect(o.x - 1, ly, tw, 16); c.fillStyle = '#fff'; c.fillText(txt, o.x + 4, ly + 11.5);
+      if (o === flag?.o && !o.fixed) { c.fillStyle = '#E2513B'; c.fillText('flagged by R2', o.x, o.y + o.h + 14); }
+      if (o.flash > 0) { c.globalAlpha = o.flash; c.strokeStyle = col.gem; c.lineWidth = 3; c.strokeRect(o.x - 5, o.y - 5, o.w + 10, o.h + 10); c.globalAlpha = 1; o.flash -= .02; } }
+  }
+  function draw(now){
     c.clearRect(0, 0, W, H);
-    // drifting color glows
-    [[.2, .3, '#21B3C4'], [.75, .65, '#8DC63F'], [.55, .15, '#2E86DE']].forEach(([gx, gy, col], k) => {
-      const x = W * (gx + Math.sin(t / 400 + k * 2) * .08), y = H * (gy + Math.cos(t / 500 + k) * .1), r = Math.max(W, H) * .45;
-      const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, col + '22'); g.addColorStop(1, col + '00'); c.fillStyle = g; c.fillRect(0, 0, W, H);
-    });
-    // moving dot grid
-    c.fillStyle = 'rgba(230,238,228,.07)'; const off = (t * .3) % 32;
-    for (let x = -32 + off; x < W; x += 32) for (let y = 8; y < H; y += 32) c.fillRect(x, y, 1.5, 1.5);
-    // QA gate with scanning pulse
-    const gg = c.createLinearGradient(gate - 30, 0, gate + 30, 0); gg.addColorStop(0, 'rgba(182,212,65,0)'); gg.addColorStop(.5, 'rgba(182,212,65,.12)'); gg.addColorStop(1, 'rgba(182,212,65,0)');
-    c.fillStyle = gg; c.fillRect(gate - 30, 0, 60, H);
-    c.fillStyle = 'rgba(182,212,65,.55)'; c.fillRect(gate - .5, 0, 1, H);
-    const py = (Math.sin(t / 70) * .5 + .5) * H; const pg = c.createLinearGradient(0, py - 80, 0, py + 80);
-    pg.addColorStop(0, 'rgba(182,212,65,0)'); pg.addColorStop(.5, 'rgba(182,212,65,.9)'); pg.addColorStop(1, 'rgba(182,212,65,0)'); c.fillStyle = pg; c.fillRect(gate - 1.5, py - 80, 3, 160);
-    c.font = '500 10px "JetBrains Mono", monospace'; c.fillStyle = 'rgba(182,212,65,.7)'; c.fillText('QA GATE', gate + 8, 18);
-    // tokens
-    toks.sort((a, b) => a.z - b.z);
-    toks.forEach(k => {
-      k.x += (.5 + k.z * 1.6);
-      const fs = 9 + k.z * 6; c.font = `${k.z > .7 ? 500 : 400} ${fs}px "JetBrains Mono", monospace`;
-      if (!k.done && k.x > gate) { k.done = true; for (let s = 0; s < 6; s++) sparks.push({x: gate, y: k.y, vx: Math.random() * 2.4, vy: (Math.random() - .5) * 2.4, l: 1, col: k.col}); }
-      if (k.done) {
-        const txt = OUT[k.i], w = c.measureText(txt).width + 12, h = fs + 8;
-        c.globalAlpha = .25 + k.z * .7;
-        c.strokeStyle = k.col; c.lineWidth = 1; c.strokeRect(k.x - 6, k.y - fs - 2, w, h);
-        c.fillStyle = k.col; c.fillRect(k.x - 6, k.y - fs - 2, 3, h);
-        c.fillText(txt, k.x, k.y);
-      } else {
-        c.globalAlpha = .12 + k.z * .38; c.fillStyle = '#C9D6CD'; c.fillText(RAW[k.i], k.x, k.y);
-      }
-      c.globalAlpha = 1;
-      if (k.x > W + 40) Object.assign(k, mk());
-    });
-    sparks = sparks.filter(s => (s.l -= .03) > 0);
-    sparks.forEach(s => { s.x += s.vx; s.y += s.vy; c.globalAlpha = s.l; c.fillStyle = s.col; c.fillRect(s.x, s.y, 2, 2); });
+    c.strokeStyle = col.line; c.globalAlpha = .6; c.lineWidth = 1;
+    for (let x = 0; x < W; x += 32) { c.beginPath(); c.moveTo(x + .5, 0); c.lineTo(x + .5, H); c.stroke(); }
+    for (let y = 0; y < H; y += 32) { c.beginPath(); c.moveTo(0, y + .5); c.lineTo(W, y + .5); c.stroke(); }
     c.globalAlpha = 1;
+    objs.forEach(o => { shape(o, 1); if (o.p > 0) annot(o, Math.min(1, o.p)); });
+    // crosshair guides + cursor
+    c.setLineDash([3, 4]); c.strokeStyle = col['ink-soft']; c.globalAlpha = .45; c.beginPath(); c.moveTo(cx, 0); c.lineTo(cx, H); c.moveTo(0, cy); c.lineTo(W, cy); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    c.fillStyle = col.ink; c.font = '500 10px "JetBrains Mono", monospace'; c.fillText(Math.round(cx) + ', ' + Math.round(cy), cx + 8, cy - 8);
+    c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + 11, cy + 8); c.lineTo(cx + 5, cy + 9); c.lineTo(cx + 2, cy + 14); c.closePath(); c.fillStyle = col.ink; c.fill(); c.strokeStyle = col.surface; c.lineWidth = 1; c.stroke();
   }
-  function loop() { raf = 0; if (playing && visible && !document.hidden) { frame(); raf = requestAnimationFrame(loop); } }
-  function kick() { if (!raf) raf = requestAnimationFrame(loop); }
-  size(); for (let i = 0; i < 240; i++) toks.forEach(k => k.x += .5 + k.z * 1.6); toks.forEach(k => { if (k.x > W + 40) Object.assign(k, mk(Math.random() * W)); k.done = k.x > gate; });
-  frame(); kick();
-  addEventListener('resize', () => { size(); frame(); });
+  let last = performance.now();
+  function step(now){
+    const dt = Math.min(50, now - last); last = now; pt += dt;
+    const o = objs[cur];
+    if (phase === 'move' && o) { const tx = o.x, ty = o.y; cx += (tx - cx) * .12; cy += (ty - cy) * .12; setTool(TOOL[o.type]);
+      if (Math.hypot(tx - cx, ty - cy) < 2) { phase = 'draw'; pt = 0; } }
+    else if (phase === 'draw' && o) { o.p = ease(Math.min(1, pt / 900)); const tool = TOOL[o.type];
+      if (tool === 'box') { cx = o.x + o.w * o.p; cy = o.y + o.h * o.p; } else { const pts = tool === 'poly' ? polyPts(o) : kpPts(o), n = o.p * pts.length, k = Math.min(pts.length - 1, Math.floor(n)), a = pts[k], b = pts[(k + 1) % pts.length], f = n - k; cx = a[0] + (b[0] - a[0]) * f; cy = a[1] + (b[1] - a[1]) * f; }
+      if (pt > 900) { o.p = 1; items++; pA++; counts[o.label]++; classesUI(); log('Annotator A3', `${TOOL[o.type] === 'box' ? 'bbox' : TOOL[o.type] === 'poly' ? 'polygon' : 'keypoints'} <b>${NAMES[o.label]}</b> (${o.conf})`, col.c1);
+        if (Math.random() < .55) setTimeout(() => { pR++; sideUI(); }, 900); cur++; phase = cur >= objs.length ? 'review' : 'move'; pt = 0; } }
+    else if (phase === 'review') {
+      setTool('rev');
+      if (!flag) { const bad = objs.find(x => x.wrong >= 0 && !x.fixed); if (bad) { flag = {o: bad, t: 0}; log('Reviewer R2', `flagged <b>${NAMES[bad.label]}</b> as wrong class`, '#E2513B'); } else { phase = 'done'; pt = 0; } }
+      else { flag.t += dt; cx += (flag.o.x + flag.o.w / 2 - cx) * .1; cy += (flag.o.y + flag.o.h / 2 - cy) * .1;
+        if (flag.t > 1500) { const b = flag.o; counts[b.label]--; counts[b.type]++; b.fixed = true; b.flash = 1; classesUI(); log('Reviewer R2', `corrected ${NAMES[b.label]} → <b>${NAMES[b.type]}</b>`, col.c3); b.label = b.type; flag = null; pR++; } } }
+    else if (phase === 'done') {
+      setTool('sel');
+      if (pt > 600 && pt < 700) { pR = Math.max(pR, pA); pQ += Math.max(1, Math.round(objs.length * .2)); const k = .88 + Math.random() * .08; kHist.push(k); if (kHist.length > 24) kHist.shift(); document.getElementById('stKappa').textContent = 'κ ' + k.toFixed(2); spark(); log('QA lead', `audited frame ${frame} · gold item <b>passed</b>`, col.gem); pt = 700; }
+      if (pt > 1800) { frame++; scene(); }
+    }
+    document.getElementById('stZoom').textContent = 'zoom ' + (100 + Math.round(Math.sin(now / 3000) * 12)) + '%';
+    document.getElementById('stClock').textContent = clock();
+  }
+  let lastSide = 0;
+  function loop(now){ if (vis && !document.hidden) { step(now); draw(now); if (now - lastSide > 400) { lastSide = now; sideUI(); } } requestAnimationFrame(loop); }
+  readColors(); size(); scene(); classesUI(); sideUI(); for (let i = 0; i < 8; i++) kHist.push(.89 + Math.random() * .06); spark();
+  ['Annotator A3|started batch_0417|c1', 'QA lead|loaded 40 gold items|gem'].forEach(e => { const [w, h, k] = e.split('|'); log(w, h, col[k]); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); spark(); });
+  new MutationObserver(() => { readColors(); spark(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+  addEventListener('resize', () => { size(); scene(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { vis = es[0].isIntersecting; }).observe(root);
+  if (reduce) { objs.forEach(o => { o.p = 1; counts[o.label]++; }); classesUI(); draw(0); } else requestAnimationFrame(loop);
+})();
+
+/* hero: WebGL chrysolite crystal (iridescent faceted icosahedron with glowing edges and an inner core) inside a
+   particle data galaxy that sorts itself from chaos into five labelled task clusters, then scatters for a new batch. */
+(() => {
+  const cv = document.getElementById('heroVideo'), hero = cv.parentElement, labelsEl = document.getElementById('heroLabels');
+  const LAB = [['Profile mapper', '#3987e5'], ['Email mapper', '#eb6834'], ['Sutherland / Peraton ETO', '#1baf7a'], ['ROI', '#eda100'], ['Power Filter', '#e87ba4']];
+  let playing = !reduce, visible = true, raf = 0, api = null;
+  function init(){
+    if (!window.THREE) return null;
+    let renderer; try { renderer = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true, powerPreference: 'high-performance'}); } catch (e) { return null; }
+    renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(42, 1, .1, 100); camera.position.set(0, 0, 13);
+    const root = new THREE.Group(); scene.add(root);
+    const geo = new THREE.IcosahedronGeometry(1.75, 0);
+    const crystalMat = new THREE.ShaderMaterial({transparent: true, uniforms: {uTime: {value: 0}},
+      vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
+      fragmentShader: 'uniform float uTime; varying vec3 vN; varying vec3 vV; vec3 pal(float t){ return .55 + .45 * cos(6.2831 * (vec3(.0,.33,.67) + t)); } void main(){ float f = pow(1. - max(dot(vN, vV), 0.), 2.2); float band = dot(vN, normalize(vec3(.4,.8,.3))); vec3 iri = pal(band * .6 + f * .5 + uTime * .05); vec3 base = vec3(.03,.09,.06); vec3 lime = vec3(.78,.94,.29); vec3 col = mix(base, iri, .35 + f * .6) + lime * pow(max(band,0.), 18.) * 1.4; col += lime * f * .35; gl_FragColor = vec4(col, .55 + f * .4); }'});
+    const crystal = new THREE.Mesh(geo, crystalMat); root.add(crystal);
+    crystal.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({color: 0xC8F04A, transparent: true, opacity: .75, blending: THREE.AdditiveBlending})));
+    const inner = new THREE.Mesh(new THREE.OctahedronGeometry(.62, 0), new THREE.MeshBasicMaterial({color: 0xC8F04A, wireframe: true, transparent: true, opacity: .55, blending: THREE.AdditiveBlending})); root.add(inner);
+    const gc = document.createElement('canvas'); gc.width = gc.height = 128; const gx = gc.getContext('2d'), gr = gx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(200,240,74,.55)'); gr.addColorStop(.35, 'rgba(120,200,120,.18)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); gx.fillStyle = gr; gx.fillRect(0, 0, 128, 128);
+    const glow = new THREE.Sprite(new THREE.SpriteMaterial({map: new THREE.CanvasTexture(gc), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false})); glow.scale.set(9, 9, 1); root.add(glow);
+    const rings = [];
+    [[3.1, .9, 0xC8F04A], [3.9, -.6, 0x3987e5], [4.8, .3, 0x1baf7a]].forEach(([r, tilt, col]) => {
+      const pts = []; for (let i = 0; i <= 160; i++) { const a = i / 160 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r)); }
+      const line = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({color: col, dashSize: .12, gapSize: .18, transparent: true, opacity: .35}));
+      line.computeLineDistances(); line.rotation.x = Math.PI / 2 + tilt * .4; line.rotation.z = tilt; root.add(line); rings.push(line); });
+    const N = innerWidth < 760 ? 3200 : 6000, chaos = new Float32Array(N * 3), order = new Float32Array(N * 3), colr = new Float32Array(N * 3), seed = new Float32Array(N);
+    const centers = LAB.map((_, k) => { const a = k / 5 * Math.PI * 2; return new THREE.Vector3(Math.cos(a) * 4.6, Math.sin(k * 1.9) * 1.1, Math.sin(a) * 4.6); });
+    const tc = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const r = 2.6 + Math.pow(Math.random(), .7) * 7.5, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+      chaos.set([r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph) * .55, r * Math.sin(ph) * Math.sin(th)], i * 3);
+      const k = i % 5, c = centers[k], g = () => (Math.random() + Math.random() + Math.random() - 1.5) * .62;
+      order.set([c.x + g(), c.y + g() * .8, c.z + g()], i * 3); tc.set(LAB[k][1]); colr.set([tc.r, tc.g, tc.b], i * 3); seed[i] = Math.random();
+    }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute('position', new THREE.BufferAttribute(chaos, 3)); pg.setAttribute('aOrder', new THREE.BufferAttribute(order, 3)); pg.setAttribute('aColor', new THREE.BufferAttribute(colr, 3)); pg.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+    const pMat = new THREE.ShaderMaterial({transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: {uTime: {value: 0}, uMix: {value: 0}, uPix: {value: renderer.getPixelRatio()}},
+      vertexShader: 'uniform float uTime; uniform float uMix; uniform float uPix; attribute vec3 aOrder; attribute vec3 aColor; attribute float aSeed; varying vec3 vC; varying float vA; mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c,-s,s,c); } void main(){ vec3 ch = position; ch.xz = rot(uTime * (.04 + aSeed * .05)) * ch.xz; ch.y += sin(uTime * .6 + aSeed * 40.) * .25; vec3 od = aOrder; od.xz = rot(uTime * .07) * od.xz; od += vec3(sin(uTime + aSeed * 20.), cos(uTime * .8 + aSeed * 30.), sin(uTime * .7 + aSeed * 10.)) * .06; float e = smoothstep(0., 1., clamp(uMix * 1.5 - aSeed * .5, 0., 1.)); vec3 p = mix(ch, od, e); vec4 mv = modelViewMatrix * vec4(p, 1.); gl_PointSize = (1.4 + aSeed * 2.2 + e * 1.2) * uPix * (14. / -mv.z); gl_Position = projectionMatrix * mv; vC = mix(vec3(.62,.72,.68), aColor, e); vA = .35 + e * .55; }',
+      fragmentShader: 'varying vec3 vC; varying float vA; void main(){ vec2 d = gl_PointCoord - .5; float r = length(d); if (r > .5) discard; float a = smoothstep(.5, .0, r); gl_FragColor = vec4(vC * (.6 + a), a * vA); }'});
+    root.add(new THREE.Points(pg, pMat));
+    labelsEl.innerHTML = LAB.map(([n, c], k) => `<div class="clabel" id="cl${k}" style="--c:${c}"><span><i></i>${n} <em id="clv${k}">20%</em></span></div>`).join('');
+    const shares = [31, 22, 18, 17, 12], lab = LAB.map((_, k) => document.getElementById('cl' + k));
+    setInterval(() => { if (playing && visible) shares.forEach((s, k) => { const e = document.getElementById('clv' + k); if (e) e.textContent = Math.max(5, Math.round(s + (Math.random() - .5) * 3)) + '%'; }); }, 2200);
+    let W = 1, H = 1, wide = true, mx = 0, my = 0, tx = 0, ty = 0, mix = 0, phaseT = 0, scrollP = 0;
+    function size(){ W = hero.clientWidth; H = hero.clientHeight; renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
+      const halfW = Math.tan(21 * Math.PI / 180) * 13 * camera.aspect, halfH = Math.tan(21 * Math.PI / 180) * 13; wide = W >= 1100; const mid = !wide && W >= 760;
+      root.position.set(wide ? halfW * .44 : mid ? halfW * .5 : halfW * .35, wide ? .1 : mid ? halfH * .62 : halfH * .78, 0); root.scale.setScalar(wide ? Math.min(.85, halfW * .082) : mid ? .5 : .4); }
+    hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width - .5; ty = (e.clientY - r.top) / r.height - .5; }, {passive: true});
+    addEventListener('scroll', () => { scrollP = Math.min(1, scrollY / Math.max(1, hero.offsetHeight)); }, {passive: true});
+    const v = new THREE.Vector3(); let t = 0, last = performance.now();
+    function render(now){
+      const dt = Math.min(.05, ((now || performance.now()) - last) / 1000); last = now || performance.now(); t += dt;
+      if (t > 1.2) phaseT += dt; if (phaseT > 10) phaseT = 0; const mixT = t < 1.2 ? 0 : (phaseT < 7.8 ? 1 : .08); mix += (mixT - mix) * dt * 1.1;
+      mx += (tx - mx) * .05; my += (ty - my) * .05;
+      camera.position.set(mx * 1.6, -my * 1.1 + scrollP * 1.5, 13 + scrollP * 4); camera.lookAt(0, root.position.y * .3, 0);
+      crystal.rotation.y = t * .25 + mx * 1.2; crystal.rotation.x = Math.sin(t * .3) * .25 + my * .8; inner.rotation.y = -t * .6; inner.rotation.z = t * .4;
+      rings.forEach((r, i) => r.rotation.y = t * (.05 + i * .03) * (i % 2 ? -1 : 1));
+      crystalMat.uniforms.uTime.value = t; pMat.uniforms.uTime.value = t; pMat.uniforms.uMix.value = mix; glow.material.opacity = .75 + Math.sin(t * 1.4) * .15;
+      renderer.render(scene, camera);
+      if (!wide) return;
+      const ang = t * .07, cs = Math.cos(ang), sn = Math.sin(ang);
+      centers.forEach((c, k) => { v.set(c.x * cs - c.z * sn, c.y, c.x * sn + c.z * cs).multiplyScalar(root.scale.x).add(root.position); v.project(camera);
+        const el = lab[k], x = (v.x * .5 + .5) * W, y = (-v.y * .5 + .5) * H;
+        el.style.transform = `translate(${Math.min(x - 20, W - (el.offsetWidth || 160) - 16)}px, ${y - 34}px)`; el.style.opacity = v.z < 1 ? Math.max(0, (mix - .6) * 2.5) * (x < W * .58 ? .12 : 1) : 0; });
+    }
+    size(); let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { size(); render(); }, 100); });
+    if ('ResizeObserver' in window) new ResizeObserver(() => size()).observe(hero);
+    return {render};
+  }
+  api = init();
+  if (!api) { cv.style.display = 'none'; hero.classList.add('no-gl'); }
+  function loop(now){ raf = 0; if (api && playing && visible && !document.hidden) { api.render(now); raf = requestAnimationFrame(loop); } }
+  function kick(){ if (!raf && api) raf = requestAnimationFrame(loop); }
+  if (api) { api.render(); if (reduce) { for (let i = 0; i < 1; i++) api.render(); } kick(); }
   document.addEventListener('visibilitychange', kick);
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; kick(); }).observe(hero);
-  const btn = document.getElementById('vidToggle'), lab = document.getElementById('vidLabel'), ic = document.getElementById('vidIcon');
-  function sync() { btn.setAttribute('aria-pressed', !playing); lab.textContent = playing ? 'Pause background' : 'Play background'; ic.innerHTML = playing ? '<rect x="2" y="1" width="3" height="10"/><rect x="7" y="1" width="3" height="10"/>' : '<path d="M2 1l9 5-9 5z"/>'; }
+  const btn = document.getElementById('vidToggle'), labEl = document.getElementById('vidLabel'), ic = document.getElementById('vidIcon');
+  function sync(){ btn.setAttribute('aria-pressed', !playing); labEl.textContent = playing ? 'Pause background' : 'Play background'; ic.innerHTML = playing ? '<rect x="2" y="1" width="3" height="10"/><rect x="7" y="1" width="3" height="10"/>' : '<path d="M2 1l9 5-9 5z"/>'; }
   btn.addEventListener('click', () => { playing = !playing; sync(); kick(); }); sync();
 })();
 
