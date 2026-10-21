@@ -872,6 +872,8 @@ function applyRole() {
   const wantsAdmin = me ? ((me.access === 'admin' && !!me.active) || me.key === OWNER) : false;
   const was = isAdmin; isAdmin = wantsAdmin && canEditDb;
   $('adminTab').hidden = !isAdmin;
+  document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"]').forEach(e => e.hidden = !isAdmin);
+  if (!isAdmin && document.querySelector('.view[data-view="roster"]:not([hidden])')) setTimeout(() => go('home'));
   const ct = document.querySelector('.tab[data-v="clock"]'); if (ct) ct.hidden = !!me && !selfClock() && !isAdmin;
   if (me && !selfClock() && !isAdmin && document.querySelector('.view[data-view="clock"]:not([hidden])')) setTimeout(() => go('home'));
   document.querySelectorAll('.admin-only').forEach(e => e.hidden = !isAdmin);
@@ -935,7 +937,7 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
-  if (!['home','roster','schedule','leave','clock','links','profile','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','clock','links','profile','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== v);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v===v));
   history.replaceState(null,'','#'+v); window.scrollTo(0,0);
