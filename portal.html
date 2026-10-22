@@ -632,10 +632,18 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- PROFILE -->
     <section class="view" data-view="profile" hidden>
-      <div class="vhead"><div><h1>My profile &amp; leave</h1><p>Your details, leave balances and requests, and when the team is off. To change your details, ask a portal admin.</p></div></div>
+      <div class="vhead"><div><h1>Profile</h1><p>Your details, leave balances and requests, and when the team is off. To change your details, ask a portal admin.</p></div></div>
       <div class="panel prof-card" id="profCard"></div>
       <div class="two">
-        <div class="panel">
+        <div class="panel"><h3>My balances <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><div style="display:grid;gap:18px" id="profBal"></div></div>
+        <div class="panel"><h3>My leave used this year</h3><div class="chart" id="cLeave"></div></div>
+      </div>
+      <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
+      <div class="two">
+        <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
+        <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
+      </div>
+      <div class="panel" id="rqPanel">
           <h3>Request leave</h3>
           <form class="lv-form" id="rqForm" novalidate>
             <div class="f"><label for="rqType">Type</label><select id="rqType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Unpaid</option></select></div>
@@ -647,15 +655,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <button class="btn btn-gem full" type="submit" id="rqBtn">Send leave request</button>
           </form>
           <p class="hint" style="margin-top:10px">Your request goes to the portal admins. You'll see it approved or rejected in My leave requests.</p>
-        </div>
-        <div class="panel"><h3>My balances <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><div style="display:grid;gap:18px" id="profBal"></div></div>
       </div>
-      <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
-      <div class="two">
-        <div class="panel"><h3>My leave used this year</h3><div class="chart" id="cLeave"></div></div>
-        <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
-      </div>
-      <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
     </section>
 
     <!-- TIMESHEET & PAYROLL -->
