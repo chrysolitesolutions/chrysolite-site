@@ -189,6 +189,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .pf-cks .tile{padding:12px;border-left:4px solid var(--c)}.pf-cks .tile b{font:800 22px var(--display)}.pf-cks .tile small{font-size:11.5px}
 .ck{display:grid;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2);font-size:12.5px}.ck .pill{justify-self:start}.ck small{color:var(--ink-soft)}
 .cku{font-size:11.5px;color:var(--ink-soft);display:block;margin-top:3px}
+.pay-lines{display:grid;gap:2px}.pay-lines>div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.pay-lines>div span:first-child{display:grid}.pay-lines small{color:var(--ink-soft);font-size:12px}
+.pay-lines .neg{color:var(--warn)}.pay-lines .tot{border-bottom:0;border-top:2px solid var(--ink);font-size:17px;margin-top:4px}
+#payWho{min-width:180px}
 .src-box .btn{justify-self:start;font-size:13px;padding:7px 12px;text-decoration:none}
 .pf-due{display:grid;gap:14px}
 .pf-grp h4{margin:0 0 8px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:8px;align-items:center}
@@ -468,11 +471,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <div class="brand"><img src="logo.png" alt="Chrysolite Solutions" class="logo-img" style="width:34px"><span>Chrysolite<small>Employee portal</small></span></div>
     <nav role="tablist" aria-label="Portal sections">
       <button class="tab" role="tab" data-v="home"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l7-6 7 6v8H3z"/></svg>Home</button>
-      <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
-      <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
-      <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>Time clock<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="profile"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg>Profile</button>
       <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Projects</button>
+      <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
+      <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>Time clock<span class="dot-live" id="clockDot" hidden></span></button>
+      <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
+      <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
       <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
     </nav>
@@ -509,7 +513,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <button class="lk" data-go="guides"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1 1M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1-1"/></svg></div><div><b>Projects &amp; links</b><span>Project guidelines, SeekOut, the bench and other work tools.</span></div></button>
         <button class="lk" data-go="roster"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg></div><div><b>Roster</b><span>Who is on which project, role and status.</span></div></button>
         <button class="lk" data-go="schedule"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14"/></svg></div><div><b>Schedule</b><span>Weekly shifts for the whole team.</span></div></button>
-        <button class="lk" data-go="leave"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6"/></svg></div><div><b>Leave plans</b><span>Balances, requests and team time off.</span></div></button>
+        <button class="lk" data-go="profile"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6"/></svg></div><div><b>Profile &amp; leave</b><span>Your details, leave balances, requests and team time off.</span></div></button>
         <button class="lk" data-soon="Project guidelines"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h7l3 3v11H5z"/></svg></div><div><b>Project guidelines</b><span>Labeling guides and edge-case logs.</span><div class="soon">Coming soon</div></div></button>
         <button class="lk" data-soon="Training & calibration"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8l8-4 8 4-8 4zM5 10v4c3 2 7 2 10 0v-4"/></svg></div><div><b>Training &amp; calibration</b><span>Courses, gold-set tests and scores.</span><div class="soon">Coming soon</div></div></button>
         <button class="lk" data-soon="Timesheets & payroll"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg></div><div><b>Timesheets &amp; payroll</b><span>Hours logged and payslips.</span><div class="soon">Coming soon</div></div></button>
@@ -575,7 +579,6 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="panel self-only"><h3>My balances <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="balYear"></span></h3><div style="display:grid;gap:18px" id="balances"></div></div>
       </div>
       <div class="two">
-        <div class="panel self-only"><h3>My leave used this year</h3><div class="chart" id="cLeave"></div></div>
         <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30"></div></div>
       </div>
       <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList"></div></div>
@@ -629,7 +632,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- PROFILE -->
     <section class="view" data-view="profile" hidden>
-      <div class="vhead"><div><h1>My profile</h1><p>Your details as your admin set them up. To change anything here, ask a portal admin. You can request leave below.</p></div></div>
+      <div class="vhead"><div><h1>My profile &amp; leave</h1><p>Your details, leave balances and requests, and when the team is off. To change your details, ask a portal admin.</p></div></div>
       <div class="panel prof-card" id="profCard"></div>
       <div class="two">
         <div class="panel">
@@ -648,6 +651,32 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="panel"><h3>My balances <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><div style="display:grid;gap:18px" id="profBal"></div></div>
       </div>
       <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
+      <div class="two">
+        <div class="panel"><h3>My leave used this year</h3><div class="chart" id="cLeave"></div></div>
+        <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
+      </div>
+      <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
+    </section>
+
+    <!-- TIMESHEET & PAYROLL -->
+    <section class="view" data-view="pay" hidden>
+      <div class="vhead"><div><h1>Timesheet &amp; Payroll</h1><p id="paySub">Your hours each week and month, and your estimated salary.</p></div>
+        <div class="toolbar" style="flex:0 1 auto"><select id="payWho" class="admin-only" hidden aria-label="Employee"></select><input type="month" id="payMonth" aria-label="Month"><button class="mini" id="payCopy" type="button">Copy as table</button></div></div>
+      <div class="tiles">
+        <div class="tile"><span>Hours this month</span><b id="pyHours">0h 00m</b><small id="pyHoursSub"></small></div>
+        <div class="tile"><span>Days worked</span><b id="pyDays">0</b><small id="pyDaysSub"></small></div>
+        <div class="tile"><span>Overtime</span><b id="pyOt">0h 00m</b><small>hours over 8 a day</small></div>
+        <div class="tile hl"><span>Estimated salary</span><b id="pySal">—</b><small id="pySalSub"></small></div>
+      </div>
+      <div class="two">
+        <div class="panel"><h3 id="pyWeekT">Hours per week</h3><div class="tbl"><table class="att"><thead><tr><th>Week</th><th>Days worked</th><th>Hours</th><th>Overtime</th></tr></thead><tbody id="pyWeeks"></tbody></table></div></div>
+        <div class="panel"><h3 id="pySalT">Salary</h3><div id="pyCalc"></div></div>
+      </div>
+      <div class="panel"><h3>Hours per month</h3><div class="chart" id="cPay"></div></div>
+      <div class="panel admin-only" hidden style="padding:0">
+        <div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0" id="pyTeamT">Team payroll</h3><span class="hint">Click a row to open that employee. Set salaries in Admin → Edit employee.</span></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Hours</th><th>Overtime</th><th>Pay type</th><th>Estimated salary</th></tr></thead><tbody id="pyTeam"></tbody></table></div>
+      </div>
     </section>
 
     <!-- PROJECT GUIDELINES -->
@@ -785,6 +814,17 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
                 <div class="f"><label for="alS">Sick</label><input id="alS" type="number" min="0" max="365" value="10"></div>
                 <div class="f"><label for="alP">Personal</label><input id="alP" type="number" min="0" max="365" value="3"></div>
               </div>
+            </fieldset>
+            <fieldset class="allow"><legend>Salary (only this employee and admins can see it)</legend>
+              <div class="g2">
+                <div class="f"><label for="aPayType">Pay type</label><select id="aPayType"><option value="">Not set</option><option value="monthly">Fixed monthly salary</option><option value="hourly">Paid per hour worked</option></select></div>
+                <div class="f"><label for="aPayCur">Currency</label><select id="aPayCur"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option></select></div>
+              </div>
+              <div class="g2">
+                <div class="f"><label for="aPayAmt" id="aPayAmtL">Monthly salary</label><input id="aPayAmt" type="number" min="0" step="0.01" placeholder="e.g. 25000"></div>
+                <div class="f"><label for="aPayOt">Overtime pay per hour</label><input id="aPayOt" type="number" min="0" step="0.01" placeholder="Optional"></div>
+              </div>
+              <small class="hint">Unpaid leave is deducted from a monthly salary (salary ÷ working days in the month × unpaid days). Overtime is paid for approved hours over 8 a day.</small>
             </fieldset>
             <div class="f"><label for="aPw" id="aPwLabel">Password</label><div class="pw-row"><input id="aPw" type="text" autocomplete="new-password" spellcheck="false" placeholder="At least 10 characters"><button class="btn btn-ghost" type="button" id="genPw">Generate</button></div></div>
             <div class="msg err" id="accErr" hidden></div>
@@ -1002,6 +1042,7 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); });
@@ -1011,6 +1052,7 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
 
 function startAdminData() {
+  watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
   watch('requests2', db.collection('leaveRequests'), s => { reqNew = s.docs.map(d => ({uid: d.id, ...d.data()})); setReqs(); });
@@ -1025,7 +1067,8 @@ function applyRole() {
   const wantsAdmin = me ? ((me.access === 'admin' && !!me.active) || me.key === OWNER) : false;
   const was = isAdmin; isAdmin = wantsAdmin && canEditDb;
   $('adminTab').hidden = !isAdmin;
-  document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"]').forEach(e => e.hidden = !isAdmin);
+  document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"], .tab[data-v="leave"]').forEach(e => e.hidden = !isAdmin);
+  if (!isAdmin && document.querySelector('.view[data-view="leave"]:not([hidden])')) setTimeout(() => go('profile'));
   if (!isAdmin && document.querySelector('.view[data-view="roster"]:not([hidden])')) setTimeout(() => go('home'));
   const ct = document.querySelector('.tab[data-v="clock"]'); if (ct) ct.hidden = !!me && !selfClock() && !isAdmin;
   if (me && !selfClock() && !isAdmin && document.querySelector('.view[data-view="clock"]:not([hidden])')) setTimeout(() => go('home'));
@@ -1091,7 +1134,8 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
-  if (!['home','roster','schedule','leave','clock','links','profile','guides','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (v === 'leave' && !isAdmin) v = 'profile';
+  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links'].includes(v) || GDOCS[v] ? 'guides' : v)));
@@ -1198,6 +1242,7 @@ function renderLeave(){
     b.hidden = !pend.length; b.textContent = pend.length;
   } else b.hidden = true;
   const up = approved().filter(d => d.to >= todayStr()).sort((a,b) => a.from.localeCompare(b.from));
+  if ($('leaveList2')) $('leaveList2').innerHTML = up.length ? up.map((d, i) => evRow(d, '<div class="acts"><span class="pill ok">Approved</span></div>', i)).join('') : '<p class="empty">No upcoming leave booked for the team.</p>';
   $('leaveList').innerHTML = up.length ? up.map((d,i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini danger" data-undo="${esc(d.key)}">Remove</button>` : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave.</p>';
 }
 ['lvFrom','lvTo'].forEach(id=>$(id).addEventListener('change',()=>{ const f=$('lvFrom').value,t=$('lvTo').value||f; if(f&&t>=f) $('lvDays').value=workdays(f,t); }));
@@ -1302,6 +1347,7 @@ function renderHours(){
   }
 }
 function renderHome(){
+  try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
   const list = people(), di = (new Date().getDay() + 6) % 7, today = todayStr();
@@ -1320,6 +1366,69 @@ function renderHome(){
 const TAGS = {info:'Project', warn:'Deadline', ok:'Meeting', off:'Urgent'};
 function annRow(a, extra){ const d = new Date((a.date || todayStr()) + 'T00:00'); return `<div class="ev"><div class="d">${d.getDate()}<small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(a.title)}</b><span>${esc(a.body)}</span></div><div class="acts">${typeof extra === 'string' ? extra : ''}<span class="pill ${TAGS[a.tag] ? a.tag : 'info'}">${TAGS[a.tag] || 'Project'}</span></div></div>`; }
 function count(el,n){ const s=+el.textContent||0, t0=performance.now(); (function f(t){ const p=Math.min(1,(t-t0)/700); el.textContent=Math.round(s+(n-s)*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(f); })(t0); }
+
+/* ---------- timesheet & payroll ---------- */
+let payMine = null, payAll = {}, payWhoKey = '';
+function payAmtLabel(){ $('aPayAmtL').textContent = $('aPayType').value === 'hourly' ? 'Pay per hour' : 'Monthly salary'; }
+$('aPayType').addEventListener('change', payAmtLabel);
+const money = (v, cur) => { try { return new Intl.NumberFormat(undefined, {style: 'currency', currency: cur || 'INR', maximumFractionDigits: 0}).format(v); } catch (e) { return (cur || '') + ' ' + Math.round(v); } };
+function payPerson(){ if (isAdmin && payWhoKey) return people().find(p => p.key === payWhoKey) || me; return me; }
+function payDays(p){ if (!p) return {}; if (me && p.key === me.key) return (myAtt && myAtt.days) || {}; const r = teamAtt.find(a => a.email === p.email); return (r && r.days) || {}; }
+function payCfg(p){ if (!p) return null; if (me && p.key === me.key && !isAdmin) return payMine; return payAll[p.key] || (me && p.key === me.key ? payMine : null); }
+function payMonthStats(days, m){ const keys = monthDays(days, m); let ms = 0, ot = 0, worked = 0; keys.forEach(k => { const d = sessMs(days[k]); if (d > 0) { worked++; ms += d; ot += Math.max(0, d - DAY_MAX); } }); return {ms, ot, worked}; }
+function payCalc(p, m, st){
+  const c = payCfg(p); if (!c || !c.type || !(c.amount > 0)) return null;
+  const [y, mo] = m.split('-').map(Number), first = m + '-01', last = m + '-' + pad(new Date(y, mo, 0).getDate()), wd = workdays(first, last);
+  const unpaid = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= last).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < last ? d.to : last), 0);
+  const otH = st.ot / 3600000, regH = (st.ms - st.ot) / 3600000, lines = [];
+  let total;
+  if (c.type === 'hourly') { const reg = regH * c.amount, otp = otH * (c.otRate || c.amount); total = reg + otp;
+    lines.push(['Regular hours', fmtH(st.ms - st.ot) + ' × ' + money(c.amount, c.currency), reg]); if (otH) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate || c.amount, c.currency), otp]); }
+  else { const ded = wd ? unpaid * c.amount / wd : 0, otp = c.otRate ? otH * c.otRate : 0; total = c.amount - ded + otp;
+    lines.push(['Monthly salary', wd + ' working days this month', c.amount]); if (unpaid) lines.push(['Unpaid leave', unpaid + ' day' + (unpaid === 1 ? '' : 's') + ' × ' + money(c.amount / wd, c.currency), -ded]); if (otp) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate, c.currency), otp]); }
+  return {c, total, lines, unpaid, wd};
+}
+function payWeeks(days, m){
+  const [y, mo] = m.split('-').map(Number), n = new Date(y, mo, 0).getDate(), out = [];
+  for (let i = 1; i <= n; i++) { const d = new Date(y, mo - 1, i), wk = (d.getDay() + 6) % 7; if (i === 1 || wk === 0) out.push({from: d, to: d, ms: 0, ot: 0, worked: 0}); const w = out[out.length - 1]; w.to = d;
+    const v = sessMs(days[ymd(d)]); if (v > 0) { w.worked++; w.ms += v; w.ot += Math.max(0, v - DAY_MAX); } }
+  return out;
+}
+function renderPay(){
+  if (!$('payMonth')) return; if (!$('payMonth').value) $('payMonth').value = monthKey(new Date());
+  const m = $('payMonth').value, p = payPerson(), mName = new Date(m + '-01T00:00').toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
+  if (isAdmin) { const ps = people(); if (!payWhoKey && me) payWhoKey = me.key; $('payWho').innerHTML = ps.map(x => `<option value="${esc(x.key)}"${x.key === payWhoKey ? ' selected' : ''}>${esc(x.name)}</option>`).join(''); }
+  if (!p) { $('pyWeeks').innerHTML = '<tr><td colspan="4" class="empty">Sign in with an employee account.</td></tr>'; return; }
+  const tracked = p.clock !== false, days = payDays(p), st = payMonthStats(days, m);
+  $('paySub').textContent = (isAdmin && me && p.key !== me.key ? p.name + ' · ' : '') + 'Hours each week and month, and the estimated salary for ' + mName + '.';
+  $('pyHours').textContent = tracked ? fmtH(st.ms) : 'Not tracked'; $('pyHoursSub').textContent = tracked ? mName : 'this employee does not use the time clock';
+  $('pyDays').textContent = st.worked; $('pyDaysSub').textContent = st.worked ? 'average ' + fmtH(st.ms / st.worked) + ' a day' : '';
+  $('pyOt').textContent = fmtH(st.ot);
+  $('pyWeekT').textContent = 'Hours per week · ' + mName;
+  const wk = payWeeks(days, m), df = d => d.toLocaleDateString(undefined, {day: 'numeric', month: 'short'});
+  $('pyWeeks').innerHTML = wk.map((w, i) => `<tr><td><b>Week ${i + 1}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${df(w.from)}${+w.to !== +w.from ? ' – ' + df(w.to) : ''}</div></td><td>${w.worked}</td><td class="mono">${fmtH(w.ms)}</td><td class="mono">${w.ot ? fmtH(w.ot) : '—'}</td></tr>`).join('') + `<tr><td><b>Total</b></td><td><b>${st.worked}</b></td><td class="mono"><b>${fmtH(st.ms)}</b></td><td class="mono"><b>${st.ot ? fmtH(st.ot) : '—'}</b></td></tr>`;
+  const pc = payCalc(p, m, st);
+  $('pySalT').textContent = 'Salary · ' + mName;
+  if (!pc) { $('pySal').textContent = '—'; $('pySalSub').textContent = 'salary not set yet';
+    $('pyCalc').innerHTML = '<p class="empty">' + (isAdmin ? 'No salary set for ' + esc(p.name) + '. Add it in Admin → Edit employee → Salary.' : 'Your salary hasn\'t been added yet. Ask your admin.') + '</p>'; }
+  else { $('pySal').textContent = money(pc.total, pc.c.currency); $('pySalSub').textContent = pc.c.type === 'hourly' ? money(pc.c.amount, pc.c.currency) + ' per hour' : 'fixed monthly salary';
+    $('pyCalc').innerHTML = `<div class="pay-lines">${pc.lines.map(([a, b, v]) => `<div><span><b>${a}</b><small>${esc(b)}</small></span><span class="mono${v < 0 ? ' neg' : ''}">${v < 0 ? '− ' : ''}${money(Math.abs(v), pc.c.currency)}</span></div>`).join('')}<div class="tot"><span><b>Estimated total</b></span><span class="mono">${money(pc.total, pc.c.currency)}</span></div></div>
+      <p class="hint" style="margin:10px 0 0">An estimate from the time clock and approved leave. Your final payslip may differ (taxes, deductions, bonuses).</p>`; }
+  if (isAdmin) { $('pyTeamT').textContent = 'Team payroll · ' + mName;
+    $('pyTeam').innerHTML = people().map(x => { const s2 = payMonthStats(payDays(x), m), c2 = payCalc(x, m, s2); return `<tr data-k="${esc(x.key)}" style="cursor:pointer"><td><div class="person">${av(x.name)}${esc(x.name)}</div></td><td class="mono">${x.clock === false ? 'Not tracked' : fmtH(s2.ms)}</td><td class="mono">${s2.ot ? fmtH(s2.ot) : '—'}</td><td>${c2 ? (c2.c.type === 'hourly' ? 'Per hour' : 'Monthly') : '<span class="pill off">Not set</span>'}</td><td class="mono"><b>${c2 ? money(c2.total, c2.c.currency) : '—'}</b></td></tr>`; }).join('') || '<tr><td colspan="5" class="empty">No employees yet.</td></tr>'; }
+  if (document.querySelector('.view[data-view="pay"]:not([hidden])')) { const c = $('cPay'); delete c.dataset.drawn; queueCharts(); }
+}
+function chartsPay(){
+  const p = payPerson(), days = payDays(p), base = new Date((($('payMonth').value) || monthKey(new Date())) + '-01T00:00');
+  const ms = [...Array(6)].map((_, i) => new Date(base.getFullYear(), base.getMonth() - 5 + i, 1));
+  columns($('cPay'), ms.map((d, i) => { const st = payMonthStats(days, monthKey(d)); return {label: d.toLocaleDateString(undefined, {month: 'short'}), v: hrs(st.ms), c: '--s1', hl: i === 5, tip: d.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}) + ': ' + fmtH(st.ms) + ' · ' + st.worked + ' days'}; }), {aria: 'Hours worked per month', h: 190, fmtAxis: v => Math.round(v) + 'h', empty: 'No hours clocked in these months yet.'});
+}
+$('payMonth').addEventListener('change', renderPay);
+$('payWho').addEventListener('change', e => { payWhoKey = e.target.value; renderPay(); });
+$('pyTeam').addEventListener('click', e => { const r = e.target.closest('tr[data-k]'); if (!r) return; payWhoKey = r.dataset.k; renderPay(); window.scrollTo({top: 0, behavior: 'smooth'}); });
+$('payCopy').onclick = () => { const p = payPerson(), m = $('payMonth').value, wk = payWeeks(payDays(p), m), st = payMonthStats(payDays(p), m), pc = p && payCalc(p, m, st);
+  const t = [['Week', 'From', 'To', 'Days worked', 'Hours', 'Overtime'].join('\t'), ...wk.map((w, i) => ['Week ' + (i + 1), ymd(w.from), ymd(w.to), w.worked, fmtH(w.ms), fmtH(w.ot)].join('\t')), ['Total', '', '', st.worked, fmtH(st.ms), fmtH(st.ot)].join('\t')].concat(pc ? ['', ['Estimated salary', money(pc.total, pc.c.currency)].join('\t')] : []).join('\n');
+  navigator.clipboard.writeText((p ? p.name + ' · ' + m + '\n' : '') + t).then(() => toast('Copied. Paste into a spreadsheet'), () => toast('Copy failed')); };
 
 /* ---------- admin: accounts ---------- */
 let editKey = null;
@@ -1378,11 +1487,12 @@ function setEdit(a){
   $('admFormTitle').textContent = a ? 'Edit ' + a.name : 'Add an employee';
   $('accSave').textContent = a ? 'Save changes' : 'Create account'; $('accCancel').hidden = !a;
   $('aEmail').readOnly = !!a; $('aPwLabel').textContent = a ? 'Password (use Reset password in the list to change it)' : 'Password'; $('aPw').disabled = !!a; $('genPw').disabled = !!a;
-  if (!a) { $('accForm').reset(); accessHint(); return; }
+  if (!a) { $('accForm').reset(); accessHint(); payAmtLabel(); return; }
   const al = allowOf(a);
   $('aName').value = a.name || ''; $('aEmail').value = a.email; $('aRole').value = ROLES.includes(a.role) ? a.role : 'Data Executive'; $('aStatus').value = a.status || 'Active'; $('aAccess').value = a.access === 'admin' ? 'admin' : 'contributor'; accessHint();
   $('aProject').value = 'Seekout'; $('aClock').value = a.clock === false ? '0' : '1'; $('aSkills').value = a.skills || ''; $('aLoc').value = a.location || ''; $('aPw').value = '';
   $('alA').value = al.Annual; $('alS').value = al.Sick; $('alP').value = al.Personal;
+  { const py = payAll[a.key] || {}; $('aPayType').value = py.type || ''; $('aPayCur').value = py.currency || 'INR'; $('aPayAmt').value = py.amount ?? ''; $('aPayOt').value = py.otRate ?? ''; payAmtLabel(); }
   $('accErr').hidden = true; $('aName').focus(); window.scrollTo({top: 0, behavior: 'smooth'});
 }
 $('accCancel').onclick = () => setEdit(null);
@@ -1404,8 +1514,11 @@ $('accForm').addEventListener('submit', async e => {
   }
   if (setupMode && !editKey && p.access !== 'admin' && !activeAdmins().length) return fail('Create an account with Admin rights first. You can add contributors after that.');
   if (!editKey && accounts.some(a => a.key === key)) return fail('An account with this email already exists. Click Edit on it in the list instead.');
+  const payType = $('aPayType').value, payAmt = $('aPayAmt').value === '' ? null : +$('aPayAmt').value, payOt = $('aPayOt').value === '' ? null : +$('aPayOt').value;
+  if (payType && !(payAmt > 0)) return fail('Enter the ' + (payType === 'hourly' ? 'hourly rate' : 'monthly salary') + ', or set Pay type to "Not set".');
   err.hidden = true; btn.disabled = true; const label = btn.textContent; btn.textContent = 'Saving…';
   try {
+    if (payType || payAll[key]) await db.doc('payroll/' + key).set({email: key, type: payType, amount: payType ? payAmt : null, otRate: payType ? payOt : null, currency: $('aPayCur').value, updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'});
     if (editKey) { await db.doc('accounts/' + key).update(p); toast('Saved changes for ' + p.name); setEdit(null); }
     else { const how = await createLogin(key, pw); await db.doc('accounts/' + key).set({...p, email: key, active: true, createdAt: new Date().toISOString()});
       if (how === 'created') showCred(p.name, key, pw, 'Account created');
@@ -2069,7 +2182,7 @@ function chartsLeave(){
   else hbars($('cLeave'), Object.keys(DEF_ALLOW).map((t, i) => { const u = mine.filter(d => d.type === t && d.from.slice(0, 4) === year).reduce((a, d) => a + (d.days || 0), 0); return {label: t, v: u, c: SER[i], tip: `${t}: ${u} of ${allow[t]} days used`}; }), {lw: 100, aria: 'Leave days used by type', fmt: v => v + ' used'});
   const days = [...Array(30)].map((_, i) => { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + i); return d; });
   const ap = approved();
-  columns($('cLeave30'), days.map((d, i) => { const k = ymd(d), who = ap.filter(x => x.from <= k && x.to >= k); return {label: i % 5 === 0 ? String(d.getDate()) : '', v: new Set(who.map(x => x.email)).size, c: '--s2', hl: i === 0, tip: d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}) + ': ' + (who.length ? [...new Set(who.map(x => x.name))].join(', ') : 'nobody off')}; }), {aria: 'People on leave each day for the next 30 days', h: 170, min: 1, int: true, fmtAxis: v => Math.round(v), empty: 'Nobody has leave booked in the next 30 days.'});
+  ['cLeave30', 'cLeave30p'].forEach(cid => $(cid) && columns($(cid), days.map((d, i) => { const k = ymd(d), who = ap.filter(x => x.from <= k && x.to >= k); return {label: i % 5 === 0 ? String(d.getDate()) : '', v: new Set(who.map(x => x.email)).size, c: '--s2', hl: i === 0, tip: d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}) + ': ' + (who.length ? [...new Set(who.map(x => x.name))].join(', ') : 'nobody off')}; }), {aria: 'People on leave each day for the next 30 days', h: 170, min: 1, int: true, fmtAxis: v => Math.round(v), empty: 'Nobody has leave booked in the next 30 days.'}));
 }
 function chartsAdmin(){
   if (!isAdmin) return;
@@ -2081,7 +2194,7 @@ function chartsAdmin(){
 let chartQ = 0;
 function queueCharts(){ if (chartQ) return; chartQ = requestAnimationFrame(() => { chartQ = 0; if ($('appView').hidden) return;
   const v = (document.querySelector('.view:not([hidden])') || {}).dataset?.view;
-  try { if (v === 'home') chartsHome(); if (v === 'roster') chartsRoster(); if (v === 'schedule') chartsSchedule(); if (v === 'clock') chartsClock(); if (v === 'leave') chartsLeave(); if (v === 'admin') chartsAdmin(); } catch (e) { console.error(e); }
+  try { if (v === 'home') chartsHome(); if (v === 'roster') chartsRoster(); if (v === 'schedule') chartsSchedule(); if (v === 'clock') chartsClock(); if (v === 'leave' || v === 'profile') chartsLeave(); if (v === 'pay') chartsPay(); if (v === 'admin') chartsAdmin(); } catch (e) { console.error(e); }
 }); }
 $('myMonth').addEventListener('change', () => queueCharts());
 // shared tooltip for every chart mark and heat-map cell
