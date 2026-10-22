@@ -634,22 +634,33 @@ tbody tr:hover{background:var(--surface-2)}
     <section class="view" data-view="guides" hidden>
       <div class="vhead"><div><h1>Project guidelines</h1><p>Reference pages for the projects you work on. Open a guide to see its schedule and rules.</p></div></div>
       <div class="link-grid" id="guideGrid">
-        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4M6.5 11.5h2M11.5 11.5h2M6.5 14h2"/></svg></div><div><b>PowerFilter refresh schedule</b><span id="gdPfSub">When each PowerFilter is due for a refresh, month by month.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="pfsrc"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4M6.5 9h5M9 6.5v5"/></svg></div><div><b>PowerFilter sources</b><span id="gdSrcSub">Primary and backup source for every PowerFilter, and whether it is up to date.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>2. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>3. Project CSM reports</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="pfhub"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>5. Project Power filter</b><span id="gdHubSub">PowerFilter task schedule and PowerFilter sources.</span></div></button>
       </div>
-      <div class="panel admin-only" hidden style="margin-top:16px"><h3>Load guideline content</h3><p class="hint" style="margin:-4px 0 12px">One-time step: choose <b>guidelines-pack.json</b> to load all five guideline pages. Later you can replace a single page with its own Upload button.</p><input type="file" id="gdPack" accept=".json,application/json"><div class="msg" id="gdPackMsg" hidden style="margin-top:12px"></div></div>
+      <div class="panel admin-only" hidden style="margin-top:16px"><h3>Load guideline content</h3><p class="hint" style="margin:-4px 0 12px">One-time step: choose <b>guidelines-pack.json</b> to load the guideline pages. Later you can replace a single page with its own Upload button.</p><input type="file" id="gdPack" accept=".json,application/json"><div class="msg" id="gdPackMsg" hidden style="margin-top:12px"></div></div>
+    </section>
+
+    <!-- PROJECT POWER FILTER -->
+    <section class="view" data-view="pfhub" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <div class="vhead"><div><h1>Project Power filter</h1><p>Everything for PowerFilter work: when each filter is due, and where its data comes from.</p></div></div>
+      <div class="link-grid">
+        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4M6.5 11.5h2M11.5 11.5h2M6.5 14h2"/></svg></div><div><b>PowerFilter task schedule</b><span id="gdPfSub">When each PowerFilter is due, month by month.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="pfsrc"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4M6.5 9h5M9 6.5v5"/></svg></div><div><b>PowerFilter sources</b><span id="gdSrcSub">Primary and backup source for every PowerFilter, and whether it is up to date.</span></div></button>
+      </div>
+      <div class="tiles" id="hubTiles" style="margin-top:16px"></div>
     </section>
 
     <!-- POWERFILTER SCHEDULE -->
     <section class="view" data-view="pf" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
-      <div class="vhead"><div><h1>PowerFilter refresh schedule</h1><p id="pfUpd">Which PowerFilters are due each month, and when.</p></div>
+      <button class="linkbtn gd-back" type="button" data-go="pfhub">← Project Power filter</button>
+      <div class="vhead"><div><h1>PowerFilter task schedule</h1><p id="pfUpd">Which PowerFilters are due each month, and when.</p></div>
         <div class="admin-only" hidden><label class="btn btn-ghost" for="pfFile" style="cursor:pointer">Upload schedule (.xlsx)</label><input type="file" id="pfFile" accept=".xlsx" hidden></div></div>
       <div class="msg" id="pfMsg" hidden style="margin-bottom:14px"></div>
-      <div id="pfEmpty" class="panel" hidden><p class="empty">No schedule has been loaded yet.<span class="admin-only" hidden> Use <b>Upload schedule (.xlsx)</b> above and choose the PowerFilter refresh schedule workbook.</span></p></div>
+      <div id="pfEmpty" class="panel" hidden><p class="empty">No schedule has been loaded yet.<span class="admin-only" hidden> Use <b>Upload schedule (.xlsx)</b> above and choose the PowerFilter schedule workbook.</span></p></div>
       <div id="pfBody" hidden>
         <div class="tiles">
           <div class="tile"><span>PowerFilters</span><b id="pfTotal">0</b><small id="pfFreqSum"></small></div>
@@ -669,7 +680,7 @@ tbody tr:hover{background:var(--surface-2)}
 
     <!-- POWERFILTER SOURCES -->
     <section class="view" data-view="pfsrc" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <button class="linkbtn gd-back" type="button" data-go="pfhub">← Project Power filter</button>
       <div class="vhead"><div><h1>PowerFilter sources</h1><p id="srcUpd">Where each PowerFilter's data comes from, and whether the source is current.</p></div>
         <div class="admin-only" hidden><label class="btn btn-ghost" for="srcFile" style="cursor:pointer">Upload sources (.xlsx)</label><input type="file" id="srcFile" accept=".xlsx" hidden></div></div>
       <div class="msg" id="srcMsg" hidden style="margin-bottom:14px"></div>
@@ -689,7 +700,7 @@ tbody tr:hover{background:var(--surface-2)}
     <section class="view" data-view="gdoc" hidden>
       <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
       <div class="vhead"><div><h1 id="gdTitle">Guideline</h1><p id="gdSub"></p></div>
-        <div class="admin-only" hidden><label class="btn btn-ghost" for="gdFile" style="cursor:pointer">Replace with .docx</label><input type="file" id="gdFile" accept=".docx" hidden></div></div>
+        <div class="admin-only" hidden><label class="btn btn-ghost" for="gdFile" id="gdDocBtn" style="cursor:pointer">Replace with .docx</label><input type="file" id="gdFile" accept=".docx" hidden></div></div>
       <div class="msg" id="gdMsg" hidden style="margin-bottom:14px"></div>
       <nav class="gd-toc" id="gdToc" aria-label="Sections"></nav>
       <article class="panel gd-doc" id="gdDoc"></article>
@@ -1045,10 +1056,11 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
-  if (!['home','roster','schedule','leave','clock','links','profile','guides','pf','pfsrc','eto','roi','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','clock','links','profile','guides','pfhub','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (v === 'pfhub') renderHub();
   const vv = GDOCS[v] ? 'gdoc' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc'].includes(v) || GDOCS[v] ? 'guides' : v)));
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pfhub', 'pf', 'pfsrc'].includes(v) || GDOCS[v] ? 'guides' : v)));
   history.replaceState(null,'','#'+v); window.scrollTo(0,0);
   const view = document.querySelector('.view[data-view="' + vv + '"]');
   if (view && !reduce) { view.classList.remove('enter'); [...view.children].forEach((c, i) => c.style.setProperty('--i', i)); void view.offsetWidth; view.classList.add('enter'); }
@@ -1407,7 +1419,7 @@ function pfMonths(){ const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T
   return [...Array(12)].map((_, i) => new Date(base.getFullYear(), base.getMonth() + i, 1)); }
 function renderPf(){
   const rows = (pfDoc && pfDoc.rows) || [], has = rows.length > 0;
-  $('gdPfSub').textContent = has ? rows.length + ' PowerFilters · see what is due each month' : 'When each PowerFilter is due for a refresh, month by month.';
+  $('gdPfSub').textContent = has ? rows.length + ' PowerFilters · see what is due each month' : 'When each PowerFilter is due, month by month.';
   $('pfEmpty').hidden = has; $('pfBody').hidden = !has; if (!has) return;
   $('pfUpd').textContent = 'Which PowerFilters are due each month, and when.' + (pfDoc.updatedAt ? ' Updated ' + new Date(pfDoc.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (pfDoc.fileName ? ' from ' + pfDoc.fileName : '') + '.' : '');
   const months = pfMonths(); if (!pfSel || !months.some(m => +m === +pfSel)) pfSel = months[0];
@@ -1459,7 +1471,7 @@ $('pfFile').addEventListener('change', async e => {
 });
 
 /* ---------- project guidelines: documents and source register ---------- */
-const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', bench: 'doc_benchmarking'};
+const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bench: 'doc_benchmarking'};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
   const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE)$/;
@@ -1468,15 +1480,21 @@ function cleanHtml(raw){
     if (c.tagName === 'A') { c.target = '_blank'; c.rel = 'noopener'; } walk(c); });
   const root = doc.body.firstChild; walk(root); return root.innerHTML;
 }
-function renderGuideCards(){
+function renderHub(){
+  const el = $('hubTiles'); if (!el) return; const pf = guides.powerfilter, src = guides.pfsources, t = [];
+  if (pf && pf.rows) t.push(`<div class="tile hl"><span>Due this month</span><b>${esc($('pfThis').textContent)}</b><small>of ${pf.rows.length} scheduled PowerFilters</small></div>`);
+  if (src && src.rows) t.push(`<div class="tile"><span>Sources to check</span><b>${src.rows.filter(r => /outdated|not verified/i.test(r.primaryStatus || '')).length}</b><small>primary source outdated or not verified</small></div>`);
+  el.innerHTML = t.join(''); el.hidden = !t.length;
+}
+function renderGuideCards(){ renderHub();
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
   const src = guides.pfsources; if (src) $('gdSrcSub').textContent = src.rows.length + ' PowerFilters · primary and backup sources with their status';
-  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['bench', 'gdBenchSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; });
+  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bench', 'gdBenchSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; });
 }
 function renderGdoc(){
-  const g = guides[GDOCS[gdKey]], names = {eto: 'Project ETO', roi: 'Project ROI', bench: 'Project Benchmarking'};
-  $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdSub').textContent = (g && g.subtitle) || '';
-  if (!g) { $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been loaded yet.' + (isAdmin ? ' Load the guideline pack on the Project guidelines page, or use Replace with .docx.' : '') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
+  const g = guides[GDOCS[gdKey]], names = {eto: 'Project ETO', roi: 'Project ROI', csm: 'Project CSM reports', bench: 'Project Benchmarking'};
+  $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = g ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
+  if (!g) { $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
   $('gdDoc').innerHTML = cleanHtml(g.html || '');
   const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
   $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
