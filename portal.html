@@ -169,6 +169,23 @@ tbody tr:hover{background:var(--surface-2)}
 .pf-m .mn{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}.pf-m .cnt{font:800 22px var(--display)}
 .pf-m .bar{display:flex;height:6px;border-radius:4px;overflow:hidden;background:var(--surface-2)}.pf-m .bar i{display:block;height:100%;background:var(--c)}
 .pf-m.now .mn::after{content:" · now";color:var(--gem-ink)}
+.pf-m .dn{font-size:11px;color:var(--ink-soft)}.pf-m .dn b{color:var(--ok)}
+button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:100%;transition:transform .2s,box-shadow .2s}button.pf-it:hover{transform:translateY(-2px);box-shadow:0 8px 20px -12px rgba(0,0,0,.3)}
+.pf-it .tg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.pf-it .tg .pill{font-size:11px}
+.pf-it.st-Completed{opacity:.78}.pf-it.st-Completed b{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ok) 60%,transparent)}
+.pf-pbar{display:flex;height:12px;border-radius:8px;overflow:hidden;background:var(--surface-2)}.pf-pbar i{display:block;height:100%;transition:width .5s}
+.pf-stt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}@media(max-width:760px){.pf-stt{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pf-stt .tile{cursor:pointer;padding:14px;text-align:left;font:inherit;color:var(--ink);border-left:4px solid var(--c)}.pf-stt .tile b{font:800 26px var(--display)}.pf-stt .tile.on{box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 45%,transparent)}
+.pf-sf{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}.pf-sf button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}.pf-sf button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+#pfRows tr{cursor:pointer}#pfRows tr:hover td{background:color-mix(in srgb,var(--gem) 6%,transparent)}
+.pf-up{display:flex;gap:8px;flex-wrap:wrap}
+.pf-dlg{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto;display:none;gap:14px}.pf-dlg[open]{display:grid}
+.pf-dh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.pf-dh h3{margin:0 0 4px;font-size:20px}.pf-dh code{font:12px var(--mono);color:var(--ink-soft);word-break:break-all}
+.pf-dmeta{display:flex;gap:6px;flex-wrap:wrap}
+.pf-dst{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface-2)}.pf-dst h5{margin:0 0 8px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.pf-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pf-seg button{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.pf-seg button[data-s="Pending"].on{border-color:var(--off);background:color-mix(in srgb,var(--off) 14%,var(--surface))}.pf-seg button[data-s="Ongoing"].on{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,var(--surface))}.pf-seg button[data-s="Completed"].on{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--surface))}
+.src-box .btn{justify-self:start;font-size:13px;padding:7px 12px;text-decoration:none}
 .pf-due{display:grid;gap:14px}
 .pf-grp h4{margin:0 0 8px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:8px;align-items:center}
 .pf-grp h4 i{width:9px;height:9px;border-radius:3px;background:var(--c)}
@@ -451,8 +468,7 @@ tbody tr:hover{background:var(--surface-2)}
       <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
       <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>Time clock<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="profile"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg>Profile</button>
-      <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Guidelines</button>
-      <button class="tab" role="tab" data-v="links"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1 1M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1-1"/></svg>Links</button>
+      <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Projects</button>
       <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
     </nav>
@@ -486,7 +502,7 @@ tbody tr:hover{background:var(--surface-2)}
       <h3 style="font-size:18px">Internal pages</h3>
       <div class="links-grid">
         <button class="lk" data-go="clock"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg></div><div><b>Time clock</b><span>Mark your login and logout time.</span></div></button>
-        <button class="lk" data-go="links"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1 1M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1-1"/></svg></div><div><b>Links</b><span>SeekOut, the bench and other work tools.</span></div></button>
+        <button class="lk" data-go="guides"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1 1M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1-1"/></svg></div><div><b>Projects &amp; links</b><span>Project guidelines, SeekOut, the bench and other work tools.</span></div></button>
         <button class="lk" data-go="roster"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg></div><div><b>Roster</b><span>Who is on which project, role and status.</span></div></button>
         <button class="lk" data-go="schedule"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14"/></svg></div><div><b>Schedule</b><span>Weekly shifts for the whole team.</span></div></button>
         <button class="lk" data-go="leave"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6"/></svg></div><div><b>Leave plans</b><span>Balances, requests and team time off.</span></div></button>
@@ -632,33 +648,35 @@ tbody tr:hover{background:var(--surface-2)}
 
     <!-- PROJECT GUIDELINES -->
     <section class="view" data-view="guides" hidden>
-      <div class="vhead"><div><h1>Project guidelines</h1><p>Reference pages for the projects you work on. Open a guide to see its schedule and rules.</p></div></div>
+      <div class="vhead"><div><h1>Projects</h1><p>Guidelines for each project you work on, plus the tools and links you use every day.</p></div></div>
       <div class="link-grid" id="guideGrid">
-        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>2. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>3. Project CSM reports</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="pfhub"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>5. Project Power filter</b><span id="gdHubSub">PowerFilter task schedule and PowerFilter sources.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>2. Project Power filter</b><span id="gdHubSub">Task schedule, progress and sources for every PowerFilter.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>3. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>5. Project CSM reports</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
+      </div>
+      
+      <div class="vhead" id="linksHead" style="margin-top:40px"><div><h1>Links</h1><p>Tools and sites you use for Chrysolite work. Each opens in a new tab.</p></div></div>
+      <div class="link-grid" id="linkGrid"></div>
+      <div class="panel admin-only" hidden>
+        <h3>Add a link</h3>
+        <form class="adm-form" id="linkForm" novalidate>
+          <div class="g2"><div class="f"><label for="lkName">Name</label><input id="lkName" autocomplete="off" placeholder="e.g. Project tracker"></div>
+          <div class="f"><label for="lkUrl">Web address</label><input id="lkUrl" autocomplete="off" placeholder="https://…"></div></div>
+          <div class="f"><label for="lkDesc">Short description</label><input id="lkDesc" autocomplete="off" placeholder="What employees use it for"></div>
+          <div class="msg err" id="lkErr" hidden></div>
+          <button class="btn btn-gem" type="submit" style="justify-self:start">Add link</button>
+        </form>
       </div>
       <div class="panel admin-only" hidden style="margin-top:16px"><h3>Load guideline content</h3><p class="hint" style="margin:-4px 0 12px">One-time step: choose <b>guidelines-pack.json</b> to load the guideline pages. Later you can replace a single page with its own Upload button.</p><input type="file" id="gdPack" accept=".json,application/json"><div class="msg" id="gdPackMsg" hidden style="margin-top:12px"></div></div>
     </section>
 
-    <!-- PROJECT POWER FILTER -->
-    <section class="view" data-view="pfhub" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
-      <div class="vhead"><div><h1>Project Power filter</h1><p>Everything for PowerFilter work: when each filter is due, and where its data comes from.</p></div></div>
-      <div class="link-grid">
-        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4M6.5 11.5h2M11.5 11.5h2M6.5 14h2"/></svg></div><div><b>PowerFilter task schedule</b><span id="gdPfSub">When each PowerFilter is due, month by month.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="pfsrc"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4M6.5 9h5M9 6.5v5"/></svg></div><div><b>PowerFilter sources</b><span id="gdSrcSub">Primary and backup source for every PowerFilter, and whether it is up to date.</span></div></button>
-      </div>
-      <div class="tiles" id="hubTiles" style="margin-top:16px"></div>
-    </section>
-
     <!-- POWERFILTER SCHEDULE -->
     <section class="view" data-view="pf" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="pfhub">← Project Power filter</button>
-      <div class="vhead"><div><h1>PowerFilter task schedule</h1><p id="pfUpd">Which PowerFilters are due each month, and when.</p></div>
-        <div class="admin-only" hidden><label class="btn btn-ghost" for="pfFile" style="cursor:pointer">Upload schedule (.xlsx)</label><input type="file" id="pfFile" accept=".xlsx" hidden></div></div>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
+      <div class="vhead"><div><h1>Project Power filter</h1><p id="pfUpd">Task schedule, progress and sources for every PowerFilter.</p></div>
+        <div class="admin-only pf-up" hidden><label class="btn btn-ghost" for="pfFile" style="cursor:pointer">Upload schedule (.xlsx)</label><input type="file" id="pfFile" accept=".xlsx" hidden><label class="btn btn-ghost" for="srcFile" style="cursor:pointer">Upload sources (.xlsx)</label></div></div>
       <div class="msg" id="pfMsg" hidden style="margin-bottom:14px"></div>
       <div id="pfEmpty" class="panel" hidden><p class="empty">No schedule has been loaded yet.<span class="admin-only" hidden> Use <b>Upload schedule (.xlsx)</b> above and choose the PowerFilter schedule workbook.</span></p></div>
       <div id="pfBody" hidden>
@@ -668,19 +686,25 @@ tbody tr:hover{background:var(--surface-2)}
           <div class="tile"><span>Next refresh</span><b id="pfNext" style="font-size:20px">—</b><small id="pfNextSub"></small></div>
           <div class="tile"><span>Bi-weekly refresh</span><b id="pfBi" style="font-size:20px">—</b><small>Companies with recent layoffs</small></div>
         </div>
-        <div class="pf-legend" id="pfLegend"></div>
-        <div class="panel" style="margin-top:14px"><h3>12-month plan</h3><p class="hint" style="margin:-4px 0 12px">Select a month to see what's due.</p><div class="pf-months" id="pfMonths" role="tablist" aria-label="Months"></div></div>
-        <div class="panel" style="margin-top:14px"><div class="vhead" style="align-items:baseline;margin-bottom:6px"><h3 style="margin:0" id="pfMonthT">Due this month</h3><span class="hint" id="pfMonthN"></span></div><div class="pf-due" id="pfDue"></div></div>
+        <div class="panel pf-prog" style="margin-top:14px">
+          <div class="vhead" style="align-items:baseline;margin-bottom:10px"><h3 style="margin:0" id="pfProgT">Progress</h3><span class="hint" id="pfProgN"></span></div>
+          <div class="pf-pbar" id="pfPbar"></div>
+          <div class="pf-stt" id="pfStTiles"></div>
+        </div>
+        <div class="pf-legend" id="pfLegend" style="margin-top:14px"></div>
+        <div class="panel" style="margin-top:14px"><h3>12-month plan</h3><p class="hint" style="margin:-4px 0 12px">Select a month to see what's due. Click any PowerFilter to open its sources and update its status.</p><div class="pf-months" id="pfMonths" role="tablist" aria-label="Months"></div></div>
+        <div class="panel" style="margin-top:14px"><div class="vhead" style="align-items:baseline;margin-bottom:6px"><h3 style="margin:0" id="pfMonthT">Due this month</h3><span class="hint" id="pfMonthN"></span></div><div class="pf-sf" id="pfSf" role="group" aria-label="Filter by status"></div><div class="pf-due" id="pfDue"></div></div>
         <div class="panel" style="margin-top:14px;padding:0">
-          <div class="toolbar" style="padding:16px;flex-wrap:wrap"><input id="pfQ" type="search" placeholder="Search PowerFilter name or ID" aria-label="Search PowerFilters"><select id="pfCat" aria-label="Category"><option value="">All categories</option></select><select id="pfFreq" aria-label="Frequency"><option value="">All frequencies</option></select></div>
-          <div class="tbl"><table><thead><tr><th>PowerFilter</th><th>Category</th><th>Frequency</th><th>Next due</th><th>Status</th></tr></thead><tbody id="pfRows"></tbody></table></div>
+          <div class="vhead" style="padding:16px 16px 0;margin:0;align-items:baseline"><h3 style="margin:0">All PowerFilters</h3><button class="linkbtn" type="button" data-go="pfsrc">Full source register →</button></div>
+          <div class="toolbar" style="padding:16px;flex-wrap:wrap"><input id="pfQ" type="search" placeholder="Search PowerFilter, ID or source" aria-label="Search PowerFilters"><select id="pfCat" aria-label="Category"><option value="">All categories</option></select><select id="pfFreq" aria-label="Frequency"><option value="">All frequencies</option></select><select id="pfStF" aria-label="Status"><option value="">Any status</option><option>Pending</option><option>Ongoing</option><option>Completed</option></select></div>
+          <div class="tbl"><table><thead><tr><th>PowerFilter</th><th>Frequency</th><th>Next due</th><th>Primary source</th><th>Status</th></tr></thead><tbody id="pfRows"></tbody></table></div>
         </div>
       </div>
     </section>
 
     <!-- POWERFILTER SOURCES -->
     <section class="view" data-view="pfsrc" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="pfhub">← Project Power filter</button>
+      <button class="linkbtn gd-back" type="button" data-go="pf">← Project Power filter</button>
       <div class="vhead"><div><h1>PowerFilter sources</h1><p id="srcUpd">Where each PowerFilter's data comes from, and whether the source is current.</p></div>
         <div class="admin-only" hidden><label class="btn btn-ghost" for="srcFile" style="cursor:pointer">Upload sources (.xlsx)</label><input type="file" id="srcFile" accept=".xlsx" hidden></div></div>
       <div class="msg" id="srcMsg" hidden style="margin-bottom:14px"></div>
@@ -698,7 +722,7 @@ tbody tr:hover{background:var(--surface-2)}
 
     <!-- PROJECT GUIDELINE DOCUMENT -->
     <section class="view" data-view="gdoc" hidden>
-      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
       <div class="vhead"><div><h1 id="gdTitle">Guideline</h1><p id="gdSub"></p></div>
         <div class="admin-only" hidden><label class="btn btn-ghost" for="gdFile" id="gdDocBtn" style="cursor:pointer">Replace with .docx</label><input type="file" id="gdFile" accept=".docx" hidden></div></div>
       <div class="msg" id="gdMsg" hidden style="margin-bottom:14px"></div>
@@ -707,21 +731,6 @@ tbody tr:hover{background:var(--surface-2)}
       <p class="hint" id="gdUpd" style="margin-top:10px"></p>
     </section>
 
-    <!-- LINKS -->
-    <section class="view" data-view="links" hidden>
-      <div class="vhead"><div><h1>Links</h1><p>Tools and sites you use for Chrysolite work. Each opens in a new tab.</p></div></div>
-      <div class="link-grid" id="linkGrid"></div>
-      <div class="panel admin-only" hidden>
-        <h3>Add a link</h3>
-        <form class="adm-form" id="linkForm" novalidate>
-          <div class="g2"><div class="f"><label for="lkName">Name</label><input id="lkName" autocomplete="off" placeholder="e.g. Project tracker"></div>
-          <div class="f"><label for="lkUrl">Web address</label><input id="lkUrl" autocomplete="off" placeholder="https://…"></div></div>
-          <div class="f"><label for="lkDesc">Short description</label><input id="lkDesc" autocomplete="off" placeholder="What employees use it for"></div>
-          <div class="msg err" id="lkErr" hidden></div>
-          <button class="btn btn-gem" type="submit" style="justify-self:start">Add link</button>
-        </form>
-      </div>
-    </section>
 
     <!-- ADMIN -->
     <section class="view" data-view="admin" hidden>
@@ -808,6 +817,13 @@ tbody tr:hover{background:var(--surface-2)}
   </main>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<dialog class="pw-dlg pf-dlg" id="pfDlg" aria-labelledby="pfDlgT">
+  <div class="pf-dh"><div><h3 id="pfDlgT"></h3><code id="pfDlgId"></code></div><button class="btn btn-ghost" type="button" id="pfDlgX" aria-label="Close">✕</button></div>
+  <div class="pf-dmeta" id="pfDlgMeta"></div>
+  <div class="pf-dst"><h5>Status for <span id="pfDlgCyc"></span></h5><div class="pf-seg" id="pfSeg" role="group" aria-label="Status"><button type="button" data-s="Pending">Pending</button><button type="button" data-s="Ongoing">Ongoing</button><button type="button" data-s="Completed">Completed</button></div><p class="hint" id="pfDlgWho" style="margin:6px 0 0"></p></div>
+  <div class="src-det" id="pfDlgSrc" style="padding:0"></div>
+  <div class="src-box"><h5>Upcoming refresh dates</h5><div id="pfDlgNext"></div></div>
+</dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
     <h3 id="otDlgT">You've reached 8 hours today</h3>
@@ -889,7 +905,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -954,6 +970,7 @@ function startData() {
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
+  watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -1056,12 +1073,12 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
-  if (!['home','roster','schedule','leave','clock','links','profile','guides','pfhub','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
-  if (v === 'pfhub') renderHub();
-  const vv = GDOCS[v] ? 'gdoc' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
+  if (v === 'pfhub') v = 'pf';
+  if (!['home','roster','schedule','leave','clock','links','profile','guides','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pfhub', 'pf', 'pfsrc'].includes(v) || GDOCS[v] ? 'guides' : v)));
-  history.replaceState(null,'','#'+v); window.scrollTo(0,0);
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links'].includes(v) || GDOCS[v] ? 'guides' : v)));
+  history.replaceState(null,'','#'+v); window.scrollTo(0,0); if (v === 'links') { const lh = $('linksHead'); if (lh) setTimeout(() => lh.scrollIntoView({block: 'start'}), 30); }
   const view = document.querySelector('.view[data-view="' + vv + '"]');
   if (view && !reduce) { view.classList.remove('enter'); [...view.children].forEach((c, i) => c.style.setProperty('--i', i)); void view.offsetWidth; view.classList.add('enter'); }
   if (view) view.querySelectorAll('.chart').forEach(c => delete c.dataset.drawn);
@@ -1403,7 +1420,14 @@ $('accBody').addEventListener('click', async e => {
 /* ---------- project guidelines: PowerFilter refresh schedule ---------- */
 const PF_FREQ = {'Bi-weekly': {iv: .5, c: '#e87ba4'}, 'Monthly': {iv: 1, c: '#eb6834'}, 'Quarterly': {iv: 3, c: '#2a78d6'}, 'Half-yearly': {iv: 6, c: '#1baf7a'}, 'Yearly': {iv: 12, c: '#eda100'}};
 const pfCol = f => (PF_FREQ[f] || {c: '#9AA7AE'}).c;
-let pfSel = null, pfFreqOn = '';
+let pfSel = null, pfFreqOn = '', pfStOn = '', pfStat = {}, pfOpen = null;
+const PF_ST = {Pending: {c: 'var(--off)', p: 'off'}, Ongoing: {c: 'var(--warn)', p: 'warn'}, Completed: {c: 'var(--ok)', p: 'ok'}};
+const pfMKey = d => d.getFullYear() + '-' + pad(d.getMonth() + 1);
+const pfKey = (id, d) => id + '__' + pfMKey(d);
+const pfSt = (id, d) => (d && pfStat[pfKey(id, d)] && pfStat[pfKey(id, d)].status) || 'Pending';
+const pfStPill = s => `<span class="pill ${PF_ST[s].p}">${s}</span>`;
+const pfSrcOf = id => ((guides.pfsources && guides.pfsources.rows) || []).find(r => r.id === id) || null;
+const srcBad = r => r && /outdated|not verified/i.test(r.primaryStatus || '');
 const firstWorkday = (y, m) => { const d = new Date(y, m, 1); while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return d; };
 function pfDates(r, y, m){ // refresh dates of one filter inside month m (0-based) of year y
   const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T00:00') : new Date(2026, 10, 1); if (new Date(y, m + 1, 0) < st) return [];
@@ -1419,9 +1443,8 @@ function pfMonths(){ const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T
   return [...Array(12)].map((_, i) => new Date(base.getFullYear(), base.getMonth() + i, 1)); }
 function renderPf(){
   const rows = (pfDoc && pfDoc.rows) || [], has = rows.length > 0;
-  $('gdPfSub').textContent = has ? rows.length + ' PowerFilters · see what is due each month' : 'When each PowerFilter is due, month by month.';
   $('pfEmpty').hidden = has; $('pfBody').hidden = !has; if (!has) return;
-  $('pfUpd').textContent = 'Which PowerFilters are due each month, and when.' + (pfDoc.updatedAt ? ' Updated ' + new Date(pfDoc.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (pfDoc.fileName ? ' from ' + pfDoc.fileName : '') + '.' : '');
+  $('pfUpd').textContent = 'Task schedule, progress and sources for every PowerFilter.' + (pfDoc.updatedAt ? ' Updated ' + new Date(pfDoc.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (pfDoc.fileName ? ' from ' + pfDoc.fileName : '') + '.' : '');
   const months = pfMonths(); if (!pfSel || !months.some(m => +m === +pfSel)) pfSel = months[0];
   const count = {}; rows.forEach(r => count[r.freq] = (count[r.freq] || 0) + 1);
   $('pfTotal').textContent = rows.length; $('pfFreqSum').textContent = Object.keys(PF_FREQ).filter(f => count[f]).map(f => count[f] + ' ' + f.toLowerCase()).join(' · ');
@@ -1429,27 +1452,72 @@ function renderPf(){
   const nowM = new Date(); const due = (m) => rows.map(r => ({r, d: pfDates(r, m.getFullYear(), m.getMonth())})).filter(x => x.d.length);
   $('pfMonths').innerHTML = months.map(m => { const list = due(m), n = list.length, by = {}; list.forEach(x => by[x.r.freq] = (by[x.r.freq] || 0) + 1);
     const isNow = m.getFullYear() === nowM.getFullYear() && m.getMonth() === nowM.getMonth();
-    return `<button type="button" role="tab" class="pf-m${+m === +pfSel ? ' on' : ''}${isNow ? ' now' : ''}" data-m="${+m}" aria-selected="${+m === +pfSel}"><span class="mn">${m.toLocaleDateString(undefined, {month: 'short', year: '2-digit'})}</span><span class="cnt">${n}</span><span class="bar">${Object.keys(PF_FREQ).filter(f => by[f]).map(f => `<i style="--c:${pfCol(f)};width:${by[f] / n * 100}%"></i>`).join('')}</span></button>`; }).join('');
+    const dn = list.filter(x => pfSt(x.r.id, m) === 'Completed').length;
+    return `<button type="button" role="tab" class="pf-m${+m === +pfSel ? ' on' : ''}${isNow ? ' now' : ''}" data-m="${+m}" aria-selected="${+m === +pfSel}"><span class="mn">${m.toLocaleDateString(undefined, {month: 'short', year: '2-digit'})}</span><span class="cnt">${n}</span><span class="dn"><b>${dn}</b>/${n} completed</span><span class="bar">${Object.keys(PF_FREQ).filter(f => by[f]).map(f => `<i style="--c:${pfCol(f)};width:${by[f] / n * 100}%"></i>`).join('')}</span></button>`; }).join('');
   const cur = months[0], curList = due(cur); $('pfThisL').textContent = 'Due in ' + cur.toLocaleDateString(undefined, {month: 'long'}); $('pfThis').textContent = curList.length;
   $('pfThisSub').textContent = curList.length ? 'starting ' + pfFmt(curList.map(x => x.d[0]).sort((a, b) => a - b)[0]) : '';
   const nexts = rows.map(r => ({r, d: pfNextDue(r)})).filter(x => x.d).sort((a, b) => a.d - b.d);
   if (nexts.length) { const d0 = +nexts[0].d, same = nexts.filter(x => +x.d === d0); $('pfNext').textContent = pfFmt(nexts[0].d); $('pfNextSub').textContent = same.length + ' PowerFilter' + (same.length === 1 ? '' : 's') + ' due'; }
   const bi = rows.find(r => r.freq === 'Bi-weekly'); $('pfBi').textContent = bi ? pfFmt(pfNextDue(bi)) : '—';
   // selected month detail, grouped by frequency
-  const sel = due(pfSel).filter(x => !pfFreqOn || x.r.freq === pfFreqOn);
-  $('pfMonthT').textContent = 'Due in ' + pfSel.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}); $('pfMonthN').textContent = sel.length + ' PowerFilter' + (sel.length === 1 ? '' : 's') + (pfFreqOn ? ' · ' + pfFreqOn : '');
+  const allSel = due(pfSel).filter(x => !pfFreqOn || x.r.freq === pfFreqOn), stc = {Pending: 0, Ongoing: 0, Completed: 0}; allSel.forEach(x => stc[pfSt(x.r.id, pfSel)]++);
+  const mLong = pfSel.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}), tot = allSel.length || 1;
+  $('pfProgT').textContent = 'Progress · ' + mLong; $('pfProgN').textContent = stc.Completed + ' of ' + allSel.length + ' completed' + (pfFreqOn ? ' · ' + pfFreqOn : '');
+  $('pfPbar').innerHTML = ['Completed', 'Ongoing', 'Pending'].map(k => `<i style="width:${stc[k] / tot * 100}%;background:${PF_ST[k].c}" title="${k}: ${stc[k]}"></i>`).join('');
+  const badN = allSel.filter(x => srcBad(pfSrcOf(x.r.id))).length;
+  $('pfStTiles').innerHTML = ['Pending', 'Ongoing', 'Completed'].map(k => `<button type="button" class="tile${pfStOn === k ? ' on' : ''}" data-st="${k}" style="--c:${PF_ST[k].c}"><span>${k}</span><b>${stc[k]}</b><small>${k === 'Pending' ? 'not started yet' : k === 'Ongoing' ? 'being refreshed now' : 'done for ' + pfSel.toLocaleDateString(undefined, {month: 'long'})}</small></button>`).join('')
+    + `<button type="button" class="tile${pfStOn === 'src' ? ' on' : ''}" data-st="src" style="--c:#eda100"><span>Source to check</span><b>${badN}</b><small>primary source outdated or not verified</small></button>`;
+  $('pfSf').innerHTML = [['', 'All'], ['Pending', 'Pending'], ['Ongoing', 'Ongoing'], ['Completed', 'Completed'], ['src', 'Source to check']].map(([k, l]) => `<button type="button" data-st="${k}" class="${pfStOn === k ? 'on' : ''}">${l}</button>`).join('');
+  const sel = allSel.filter(x => !pfStOn || (pfStOn === 'src' ? srcBad(pfSrcOf(x.r.id)) : pfSt(x.r.id, pfSel) === pfStOn));
+  $('pfMonthT').textContent = 'Due in ' + pfSel.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}); $('pfMonthN').textContent = sel.length + ' PowerFilter' + (sel.length === 1 ? '' : 's') + (pfFreqOn ? ' · ' + pfFreqOn : '') + (pfStOn ? ' · ' + (pfStOn === 'src' ? 'source to check' : pfStOn.toLowerCase()) : '');
   $('pfDue').innerHTML = sel.length ? Object.keys(PF_FREQ).map(f => { const g = sel.filter(x => x.r.freq === f); if (!g.length) return '';
-    return `<div class="pf-grp" style="--c:${pfCol(f)}"><h4><i></i>${f} · ${g.length}</h4><div class="pf-items">${g.map(x => `<div class="pf-it" style="--c:${pfCol(f)}"><b>${esc(x.r.name)}</b><span>${esc(x.r.cat || '')} · ${x.d.map(d => d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})).join(', ')}</span><code>${esc(x.r.id)}</code></div>`).join('')}</div></div>`; }).join('') : '<p class="empty">Nothing due this month.</p>';
+    return `<div class="pf-grp" style="--c:${pfCol(f)}"><h4><i></i>${f} · ${g.length}</h4><div class="pf-items">${g.map(x => { const st = pfSt(x.r.id, pfSel), sr = pfSrcOf(x.r.id); return `<button type="button" class="pf-it st-${st}" style="--c:${pfCol(f)}" data-pf="${esc(x.r.id)}" data-d="${+x.d[0]}"><b>${esc(x.r.name)}</b><span>${esc(x.r.cat || '')} · ${x.d.map(d => d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})).join(', ')}</span><code>${esc(x.r.id)}</code><span class="tg">${pfStPill(st)}${srcBad(sr) ? '<span class="pill warn">Check source</span>' : ''}</span></button>`; }).join('')}</div></div>`; }).join('') : (pfStOn ? '<p class="empty">No PowerFilters with this status this month.</p>' : '<p class="empty">Nothing due this month.</p>');
   // full table
   const cats = [...new Set(rows.map(r => r.cat).filter(Boolean))].sort(), kc = $('pfCat').value, kf = $('pfFreq').value;
   $('pfCat').innerHTML = '<option value="">All categories</option>' + cats.map(c => `<option${c === kc ? ' selected' : ''}>${esc(c)}</option>`).join('');
   $('pfFreq').innerHTML = '<option value="">All frequencies</option>' + Object.keys(PF_FREQ).filter(f => count[f]).map(f => `<option${f === kf ? ' selected' : ''}>${f}</option>`).join('');
-  const q = $('pfQ').value.toLowerCase(), list = nexts.concat(rows.filter(r => !pfNextDue(r)).map(r => ({r, d: null}))).filter(x => (!q || (x.r.name + ' ' + x.r.id).toLowerCase().includes(q)) && (!kc || x.r.cat === kc) && (!kf || x.r.freq === kf));
-  $('pfRows').innerHTML = list.length ? list.map(x => `<tr><td><b>${esc(x.r.name)}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${esc(x.r.id)}</div></td><td>${esc(x.r.cat || '—')}</td><td><span class="fq" style="--c:${pfCol(x.r.freq)}"><i></i>${esc(x.r.freq)}</span></td><td class="mono">${pfFmt(x.d)}</td><td>${x.r.status ? `<span class="pill ${/done|complete/i.test(x.r.status) ? 'ok' : /progress/i.test(x.r.status) ? 'warn' : 'info'}">${esc(x.r.status)}</span>` : '—'}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No PowerFilters match these filters.</td></tr>';
+  const kst = $('pfStF').value, q = $('pfQ').value.toLowerCase(), list = nexts.concat(rows.filter(r => !pfNextDue(r)).map(r => ({r, d: null}))).filter(x => { const sr = pfSrcOf(x.r.id); return (!q || [x.r.name, x.r.id, sr && sr.primary, sr && sr.backup].join(' ').toLowerCase().includes(q)) && (!kc || x.r.cat === kc) && (!kf || x.r.freq === kf) && (!kst || pfSt(x.r.id, x.d) === kst); });
+  $('pfRows').innerHTML = list.length ? list.map(x => { const sr = pfSrcOf(x.r.id), st = pfSt(x.r.id, x.d); return `<tr data-pf="${esc(x.r.id)}" data-d="${x.d ? +x.d : ''}" tabindex="0"><td><b>${esc(x.r.name)}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${esc(x.r.cat || '')} · ${esc(x.r.id)}</div></td><td><span class="fq" style="--c:${pfCol(x.r.freq)}"><i></i>${esc(x.r.freq)}</span></td><td class="mono">${pfFmt(x.d)}</td><td style="min-width:200px;max-width:260px;white-space:normal">${sr ? `<div style="font-size:13px">${esc(sr.primary || '—')}</div>${srcPill(sr.primaryStatus)}` : '—'}</td><td>${x.d ? pfStPill(st) : '—'}</td></tr>`; }).join('') : '<tr><td colspan="5" class="empty">No PowerFilters match these filters.</td></tr>';
 }
 $('pfMonths').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; pfSel = new Date(+b.dataset.m); renderPf(); });
 $('pfLegend').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; pfFreqOn = pfFreqOn === b.dataset.f ? '' : b.dataset.f; renderPf(); });
-['pfQ', 'pfCat', 'pfFreq'].forEach(id => $(id).addEventListener(id === 'pfQ' ? 'input' : 'change', renderPf));
+['pfQ', 'pfCat', 'pfFreq', 'pfStF'].forEach(id => $(id).addEventListener(id === 'pfQ' ? 'input' : 'change', renderPf));
+const pfStClick = e => { const b = e.target.closest('[data-st]'); if (!b) return; pfStOn = pfStOn === b.dataset.st || !b.dataset.st ? '' : b.dataset.st; renderPf(); };
+$('pfStTiles').addEventListener('click', pfStClick); $('pfSf').addEventListener('click', pfStClick);
+const pfOpenFrom = e => { const b = e.target.closest('[data-pf]'); if (!b) return; const r = ((pfDoc && pfDoc.rows) || []).find(r => r.id === b.dataset.pf); if (!r) return; openPf(r, b.dataset.d ? new Date(+b.dataset.d) : pfNextDue(r)); };
+$('pfDue').addEventListener('click', pfOpenFrom); $('pfRows').addEventListener('click', pfOpenFrom);
+$('pfRows').addEventListener('keydown', e => { if (e.key === 'Enter') pfOpenFrom(e); });
+function pfUpcoming(r, n){ const t = new Date(); t.setHours(0, 0, 0, 0); const out = []; for (let i = 0; i < 26 && out.length < n; i++) { const y = t.getFullYear(), m = t.getMonth() + i; pfDates(r, y + Math.floor(m / 12), m % 12).filter(d => d >= t || (pfOpen && pfMKey(d) === pfMKey(pfOpen.d))).forEach(d => out.length < n && out.push(d)); } return out; }
+function srcBoxes(r){
+  if (!r) return '<div class="src-box" style="grid-column:1/-1"><h5>Sources</h5><div>No source details for this PowerFilter yet.</div></div>';
+  const open = (u, t) => u ? `<a class="btn btn-ghost" href="${/^https?:\/\//i.test(u) ? esc(u) : 'https://' + esc(u)}" target="_blank" rel="noopener">${t} ↗</a><div style="font-size:12px;color:var(--ink-soft);word-break:break-all">${esc(u)}</div>` : '';
+  return `${r.action ? `<div class="src-box act"><h5>Recommended action</h5><div>${esc(r.action)}</div></div>` : ''}
+    <div class="src-box"><h5>Primary source</h5><b>${esc(r.primary || '—')}</b>${open(r.primaryUrl, 'Open source')}<div>${srcPill(r.primaryStatus)} ${r.type ? `<span class="pill off">${esc(r.type)}</span>` : ''}</div>${r.primaryInfo ? `<div>${esc(r.primaryInfo)}</div>` : ''}${r.cadence || r.access ? `<div style="color:var(--ink-soft)">${esc([r.cadence && 'Published: ' + r.cadence, r.access && 'Access: ' + r.access].filter(Boolean).join(' · '))}</div>` : ''}</div>
+    <div class="src-box"><h5>Backup source</h5><b>${esc(r.backup || '—')}</b>${open(r.backupUrl, 'Open backup source')}<div>${srcPill(r.backupStatus)}</div>${r.backupInfo ? `<div>${esc(r.backupInfo)}</div>` : ''}</div>
+    ${r.howTo ? `<div class="src-box" style="grid-column:1/-1"><h5>Notes</h5><div>${esc(r.howTo)}</div></div>` : ''}
+    ${/yes/i.test(r.decision || '') ? `<div class="src-box" style="grid-column:1/-1"><h5>Team decision needed</h5><div>${esc(r.decision)}</div></div>` : ''}`;
+}
+function renderPfDlg(){
+  if (!pfOpen) return; const {r, d} = pfOpen, sr = pfSrcOf(r.id), st = d ? pfSt(r.id, d) : 'Pending', rec = d && pfStat[pfKey(r.id, d)];
+  $('pfDlgT').textContent = r.name; $('pfDlgId').textContent = r.id;
+  $('pfDlgMeta').innerHTML = `<span class="fq" style="--c:${pfCol(r.freq)}"><i></i>${esc(r.freq)}</span>${r.cat ? `<span class="pill off">${esc(r.cat)}</span>` : ''}${d ? `<span class="pill info">Due ${pfFmt(d)}</span>` : ''}`;
+  $('pfDlgCyc').textContent = d ? d.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}) : '—';
+  $('pfSeg').querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.s === st); b.setAttribute('aria-pressed', b.dataset.s === st); b.disabled = !d || !me; });
+  $('pfDlgWho').textContent = rec ? st + ' · set by ' + (rec.byName || rec.by) + ' on ' + new Date(rec.at).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'}) : 'Pending by default. Set Ongoing when you start the refresh and Completed when it is done.';
+  $('pfDlgSrc').innerHTML = srcBoxes(sr);
+  const up = pfUpcoming(r, 6); $('pfDlgNext').innerHTML = up.length ? up.map(x => `<span class="pill ${pfMKey(x) === (d && pfMKey(d)) ? 'info' : 'off'}" style="margin:0 6px 6px 0">${pfFmt(x)} · ${pfSt(r.id, x)}</span>`).join('') : '—';
+}
+function openPf(r, d){ pfOpen = {r, d}; renderPfDlg(); const dl = $('pfDlg'); if (!dl.open) { try { dl.showModal(); } catch (e) { dl.setAttribute('open', ''); } } }
+$('pfDlgX').onclick = () => { $('pfDlg').close(); pfOpen = null; };
+$('pfDlg').addEventListener('close', () => { pfOpen = null; });
+$('pfDlg').addEventListener('click', e => { if (e.target === $('pfDlg')) $('pfDlg').close(); });
+$('pfSeg').addEventListener('click', async e => {
+  const b = e.target.closest('[data-s]'); if (!b || !pfOpen || !pfOpen.d || !me) return; const {r, d} = pfOpen, k = pfKey(r.id, d), prev = pfStat[k];
+  const rec = {id: r.id, month: pfMKey(d), status: b.dataset.s, by: String(me.email || me.key || '').toLowerCase(), byName: me.name || '', at: new Date().toISOString()};
+  pfStat[k] = rec; renderPfDlg(); renderPf();
+  try { await db.collection('pfStatus').doc(k).set(rec); toast(r.name + ': ' + rec.status); }
+  catch (x) { if (prev) pfStat[k] = prev; else delete pfStat[k]; renderPfDlg(); renderPf(); toast('The status couldn\'t be saved. Try again.'); }
+});
 const loadXlsx = () => window.XLSX ? Promise.resolve() : new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
 $('pfFile').addEventListener('change', async e => {
   const f = e.target.files[0], m = $('pfMsg'); if (!f || !isAdmin) return;
@@ -1481,14 +1549,11 @@ function cleanHtml(raw){
   const root = doc.body.firstChild; walk(root); return root.innerHTML;
 }
 function renderHub(){
-  const el = $('hubTiles'); if (!el) return; const pf = guides.powerfilter, src = guides.pfsources, t = [];
-  if (pf && pf.rows) t.push(`<div class="tile hl"><span>Due this month</span><b>${esc($('pfThis').textContent)}</b><small>of ${pf.rows.length} scheduled PowerFilters</small></div>`);
-  if (src && src.rows) t.push(`<div class="tile"><span>Sources to check</span><b>${src.rows.filter(r => /outdated|not verified/i.test(r.primaryStatus || '')).length}</b><small>primary source outdated or not verified</small></div>`);
-  el.innerHTML = t.join(''); el.hidden = !t.length;
+  const pf = guides.powerfilter, src = guides.pfsources, n = (pf && pf.rows && pf.rows.length) || (src && src.rows && src.rows.length) || 0;
+  if (n) $('gdHubSub').textContent = n + ' PowerFilters · task schedule, progress and sources';
 }
 function renderGuideCards(){ renderHub();
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
-  const src = guides.pfsources; if (src) $('gdSrcSub').textContent = src.rows.length + ' PowerFilters · primary and backup sources with their status';
   [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bench', 'gdBenchSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; });
 }
 function renderGdoc(){
@@ -1545,7 +1610,7 @@ function renderSrc(){
 ['srcQ', 'srcSt', 'srcFq', 'srcDec', 'srcAct'].forEach(id => $(id).addEventListener(id === 'srcQ' ? 'input' : 'change', renderSrc));
 const SRC_COLS = ['n','id','name','freq','primary','type','primaryUrl','primaryInfo','primaryStatus','cadence','access','backup','backupUrl','backupInfo','backupStatus','action','howTo','decision','edition','checked','by'];
 $('srcFile').addEventListener('change', async e => {
-  const f = e.target.files[0], m = $('srcMsg'); if (!f || !isAdmin) return; const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
+  const f = e.target.files[0], m = $('pfsrcVisible') || (document.querySelector('.view[data-view="pf"]').hidden ? $('srcMsg') : $('pfMsg')); if (!f || !isAdmin) return; const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
   say('Reading ' + f.name + '…');
   try { await loadXlsx(); const wb = XLSX.read(await f.arrayBuffer(), {cellDates: true}); const ws = wb.Sheets['Sources'] || wb.Sheets[wb.SheetNames[wb.SheetNames.length - 1]];
     const rows = XLSX.utils.sheet_to_json(ws, {header: 1, defval: null}).filter(r => r && r[1] && /\./.test(String(r[1]))).map(r => { const o = {}; SRC_COLS.forEach((k, i) => { let v = r[i]; if (v instanceof Date) v = ymd(v); if (v != null && v !== '') o[k] = v; }); return o; });
