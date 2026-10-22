@@ -231,6 +231,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .prof-grid dt{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}.prof-grid dd{margin:4px 0 0;font-weight:700}
 @media(max-width:520px){.prof-card{grid-template-columns:1fr}}
 .bal .top{display:flex;justify-content:space-between;font-size:14px}
+.bal-sub{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--ink-soft)}.bal-sub .pd{color:var(--warn)}
 .bar{height:8px;border-radius:8px;background:var(--surface-2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--gem);border-radius:8px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
 .lv-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -635,10 +636,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="vhead"><div><h1>Profile</h1><p>Your details, leave balances and requests, and when the team is off. To change your details, ask a portal admin.</p></div></div>
       <div class="panel prof-card" id="profCard"></div>
       <div class="two">
-        <div class="panel"><h3>My balances <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><div style="display:grid;gap:18px" id="profBal"></div></div>
-        <div class="panel"><h3>My leave used this year</h3><div class="chart" id="cLeave"></div></div>
+        <div class="panel"><h3>My leave <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><p class="hint" style="margin:-4px 0 14px">Days used and left this year.</p><div style="display:grid;gap:18px" id="profBal"></div></div>
+        <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
       </div>
-      <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
       <div class="two">
         <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
         <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
@@ -1291,7 +1291,7 @@ function renderProfile(){
   const pendDays = t => myReqs().filter(q => q.type === t && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
   $('profBalYear').textContent = year;
   $('profBal').innerHTML = Object.keys(DEF_ALLOW).map(t => { const tot = +allow[t] || 0, u = used(t), left = Math.max(0, tot - u), pc = tot ? left / tot * 100 : 0, pd = pendDays(t);
-    return `<div class="bal"><div class="top"><span>${t}</span><span class="mono">${left} of ${tot} days left${pd ? ' · ' + pd + ' pending' : ''}</span></div><div class="bar"><i style="width:${pc}%"></i></div></div>`; }).join('');
+    return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('');
   const reqs = [...myReqs()].sort((a, b) => String(b.from).localeCompare(String(a.from)));
   $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? d.status : 'Pending';
     return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '<p class="empty">You haven\'t requested any leave yet.</p>';
@@ -2178,7 +2178,7 @@ function chartsClock(){
 }
 function chartsLeave(){
   const year = String(new Date().getFullYear()), mine = myLeave(), allow = allowOf(me);
-  if (!me) empty($('cLeave'), 'Sign in with an employee account to see your leave.');
+  if (!$('cLeave')) {} else if (!me) empty($('cLeave'), 'Sign in with an employee account to see your leave.');
   else hbars($('cLeave'), Object.keys(DEF_ALLOW).map((t, i) => { const u = mine.filter(d => d.type === t && d.from.slice(0, 4) === year).reduce((a, d) => a + (d.days || 0), 0); return {label: t, v: u, c: SER[i], tip: `${t}: ${u} of ${allow[t]} days used`}; }), {lw: 100, aria: 'Leave days used by type', fmt: v => v + ' used'});
   const days = [...Array(30)].map((_, i) => { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + i); return d; });
   const ap = approved();
