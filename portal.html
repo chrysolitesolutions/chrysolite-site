@@ -87,15 +87,6 @@ a{color:inherit}
 @keyframes lgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .lg-chip.pop{animation:lgPop .6s cubic-bezier(.2,1.6,.4,1) both,lgFloat 6s ease-in-out .6s infinite}
 @keyframes lgPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
-/* space backdrop with a rotating Earth */
-#loginView.login{position:relative;background:radial-gradient(900px 620px at 22% 72%,rgba(38,92,190,.22),transparent 62%),radial-gradient(760px 520px at 88% 12%,rgba(118,64,190,.16),transparent 60%),radial-gradient(600px 420px at 60% 95%,rgba(33,179,196,.10),transparent 60%),radial-gradient(130% 120% at 50% 40%,#080d1c 0%,#03050b 100%)!important}
-#loginView > #net{display:none!important}
-#space{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:0;transition:opacity 1.4s ease}#space.on{opacity:1}
-#loginView .login-art{background:transparent!important}
-#loginView .login-art > *{text-shadow:0 2px 18px rgba(0,0,0,.55)}
-.lg-stage{min-height:340px}
-.lg-copy h2 em{background:linear-gradient(90deg,#b6d441,#5fd3df,#7fb6ee,#b6d441)!important;background-size:300% 100%!important;-webkit-background-clip:text!important;background-clip:text!important}
-#loginView .login-card{background:rgba(247,250,252,.96)}
 /* scene parts: restrained, product-style motion */
 #lgScene .an{transform-box:fill-box}
 .ls-type-a{transform-origin:50% 0;animation:lsTypeA .34s ease-in-out infinite alternate}.ls-type-b{transform-origin:50% 0;animation:lsTypeB .41s ease-in-out infinite alternate}
@@ -117,6 +108,15 @@ a{color:inherit}
 .ls-leaf{transform-origin:50% 100%;animation:lsLeaf 6s ease-in-out infinite}@keyframes lsLeaf{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
 .ls-glow{animation:lsGlow 4s ease-in-out infinite}@keyframes lsGlow{50%{opacity:.55}}
 .ls-cursor{animation:lsBlink 1.1s steps(1) infinite}
+.ls-led{animation:lsLed 2.3s steps(1) infinite}@keyframes lsLed{0%,100%{opacity:1}40%{opacity:.2}60%{opacity:.9}}
+.ls-code{transform-origin:0 50%;animation:lsCode 3.5s ease-in-out infinite}@keyframes lsCode{0%{transform:scaleX(.1)}60%,100%{transform:scaleX(1)}}
+.ls-draw{stroke-dasharray:80;stroke-dashoffset:80;animation:lsDrawB 5s ease-in-out infinite}@keyframes lsDrawB{0%{stroke-dashoffset:80}50%,90%{stroke-dashoffset:0}100%{stroke-dashoffset:80}}
+.ls-write{transform-origin:50% 0;animation:lsWrite 1.3s ease-in-out infinite alternate}@keyframes lsWrite{from{transform:rotate(-128deg)}to{transform:rotate(-146deg)}}
+.ls-cupr{transform-origin:50% 0;animation:lsSip 5s ease-in-out infinite}@keyframes lsSip{0%,70%,100%{transform:rotate(-48deg)}80%,90%{transform:rotate(-120deg)}}
+.ls-swing2{transform-origin:50% 0;animation:lsStep .62s ease-in-out infinite alternate-reverse}
+.ls-lift{animation:lsLift 14s ease-in-out infinite}@keyframes lsLift{0%,28%{transform:translateY(0)}42%,72%{transform:translateY(-242px)}86%,100%{transform:translateY(0)}}
+.ls-walk1{animation:lsW1 18s linear infinite}@keyframes lsW1{0%{transform:translateX(1260px)}100%{transform:translateX(640px)}}
+.ls-walk2{animation:lsW2 20s linear infinite}@keyframes lsW2{0%{transform:translateX(-40px)}100%{transform:translateX(560px)}}
 .ls-min{transform-origin:50% 100%;transform-box:fill-box;animation:lsSpin 60s linear infinite}.ls-hr{transform-origin:50% 100%;transform-box:fill-box;animation:lsSpin 720s linear infinite}@keyframes lsSpin{to{transform:rotate(360deg)}}@keyframes lsBlink{50%{opacity:0}}
 /* card */
 .login-card .m-brand{display:none}
@@ -512,10 +512,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <h2>Great work<br><em>starts here.</em></h2>
       <p>Clock in, check your shifts, follow project guidelines and see your hours and pay. All in one secure place.</p>
     </div>
-    <div class="lg-stage" aria-hidden="true"></div>
+    <div class="lg-stage" aria-hidden="true">
+      <svg id="lgScene" viewBox="0 0 760 520" preserveAspectRatio="xMidYMax meet"></svg>
+    </div>
     <p class="lg-foot"><span>Employee portal · internal use only</span><span>Built for people. Powered by teamwork.</span></p>
   </div>
-  <canvas id="space" aria-hidden="true"></canvas>
   <div class="login-form-wrap">
     <form class="login-card" id="loginForm" novalidate>
       <div class="m-brand"><img src="logo.png" alt=""><span>Chrysolite<small>Solutions</small></span></div>
@@ -2371,184 +2372,91 @@ function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = acco
       ${sleeve(6, -108, 'ls-type-a', coat, skin, 40)}${sleeve(-2, -108, 'ls-type-b', coat, skin, 40)}
       <g transform="translate(0 38)">${head(skin, hair, style, 1).replace('class="an ls-head"', 'class="an"')}</g></g>`;
   const chair = (x, y) => `<g transform="translate(${x} ${y})"><path d="M-30 -60 h36 a5 5 0 0 1 5 5 v4 h-46 a5 5 0 0 1 5 -9z" fill="#2a3542"/><path d="M-32 -118 q-4 30 2 58 h8 q-6 -28 -2 -58z" fill="#2a3542"/><rect x="-12" y="-51" width="5" height="34" fill="#55626f"/><path d="M-34 -14 h50" stroke="#55626f" stroke-width="4" stroke-linecap="round"/><circle cx="-32" cy="-10" r="3.5" fill="#55626f"/><circle cx="14" cy="-10" r="3.5" fill="#55626f"/></g>`;
-  // live data wall
-  const pts = [[0, 62], [34, 54], [68, 58], [102, 40], [136, 46], [170, 30], [204, 34], [238, 18]], line = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' ');
-  const wall = `<g transform="translate(150 54)">
-      <rect width="300" height="186" rx="12" fill="#0d1b17" stroke="rgba(182,212,65,.28)"/><rect width="300" height="186" rx="12" fill="url(#lsScreen)"/>
+  const at = (x, y, sc, inner) => `<g transform="translate(${x} ${y}) scale(${sc})">${inner}</g>`;
+  const S = .6;                                   // people / furniture scale
+  const F2 = 250, F1 = 492;                       // floor lines (upper, ground)
+  const monAt = (x, y, kind = 'sheet') => {
+    const body = kind === 'code'
+      ? [0, 1, 2, 3, 4].map(r => `<rect class="an ls-code" style="animation-delay:${-r * .7}s" x="${4 + (r % 2) * 8}" y="${3 + r * 10}" width="${30 + (r * 17) % 30}" height="3.5" rx="1.5" fill="${[C.cyan, C.lime, C.amber, C.blue, C.lime][r]}" opacity=".85"/>`).join('')
+      : kind === 'chart' ? [0, 1, 2, 3, 4, 5].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .5}s" x="${6 + i * 11}" y="${8 + (i * 7) % 18}" width="7" height="${40 - (i * 7) % 18}" rx="1.5" fill="${i % 2 ? C.cyan : C.lime}" opacity=".85"/>`).join('')
+      : [0, 1, 2, 3, 4].map(r => `<rect x="0" y="${r * 11}" width="76" height="9" rx="1.5" fill="rgba(255,255,255,${r % 2 ? .035 : .06})"/><rect x="4" y="${r * 11 + 3}" width="${18 + (r * 13) % 20}" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/><rect x="50" y="${r * 11 + 3}" width="10" height="3" rx="1.5" fill="${r === 2 ? C.amber : C.lime}" opacity=".8"/>`).join('') + `<rect class="ls-row" x="0" y="0" width="76" height="9" rx="1.5" fill="none" stroke="${C.cyan}" stroke-width="1.2"/>`;
+    return `<g transform="translate(${x} ${y})"><rect x="-44" y="-66" width="88" height="58" rx="5" fill="#0d1b17" stroke="#3a4754" stroke-width="2.5"/><g transform="translate(-38 -60)">${body}</g><rect x="-3" y="-8" width="6" height="12" fill="#55626f"/><rect x="-16" y="3" width="32" height="3" rx="1.5" fill="#55626f"/></g>`;
+  };
+  // a full workstation in local units (floor at 0): desk, monitor, chair and a seated person typing
+  const ws = (p, kind) => `${chair(22, 0)}${seated({x: 16, y: -36, ...p})}<rect x="0" y="-96" width="170" height="6" rx="3" fill="#dfe5e8"/><rect x="8" y="-90" width="4" height="90" fill="#8b98a3"/><rect x="158" y="-90" width="4" height="90" fill="#8b98a3"/>${monAt(80, -104, kind)}<rect x="62" y="-102" width="34" height="5" rx="2" fill="#aab5bd"/>`;
+  const cupIn = `<g transform="translate(0 56) rotate(48)"><rect x="-5" y="-6" width="10" height="12" rx="2" fill="#e9eef1"/><path class="ls-steam" d="M-1 -9 q-3 -5 0 -9" stroke="rgba(255,255,255,.6)" stroke-width="1.4" fill="none"/></g>`;
+  const marker = `<g transform="translate(0 56)"><rect x="-1.5" y="-2" width="3" height="10" rx="1" fill="${C.blue}"/></g>`;
+  const bag = `<g transform="translate(0 54)"><rect x="-9" y="0" width="18" height="14" rx="3" fill="#6d5b4b"/></g>`;
+  // live data wall (reused from the single-room scene)
+  const pts = [[0, 62], [34, 54], [68, 58], [102, 40], [136, 46], [170, 30], [204, 34], [238, 18]], line = pts.map((q, i) => (i ? 'L' : 'M') + q[0] + ' ' + q[1]).join(' ');
+  const wall = `<rect width="300" height="186" rx="12" fill="#0d1b17" stroke="rgba(182,212,65,.28)"/><rect width="300" height="186" rx="12" fill="url(#lsScreen)"/>
       <circle cx="16" cy="15" r="3" fill="#e2513b"/><circle cx="27" cy="15" r="3" fill="#f2a33a"/><circle cx="38" cy="15" r="3" fill="#8dc63f"/>
       <text x="56" y="19" fill="#9fb5ab" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1">OPERATIONS · TODAY</text>
       <circle class="ls-live" cx="252" cy="15" r="3.2" fill="#8dc63f"/><text x="260" y="18.5" fill="#c9e36a" font-family="IBM Plex Mono, monospace" font-size="8.5" font-weight="600">LIVE</text>
       ${[['Hours tracked', '1,248'], ['On shift', '12'], ['QA pass', '99.2%']].map(([k, v], i) => `<g transform="translate(${14 + i * 94} 32)"><rect width="84" height="38" rx="7" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.07)"/><text x="9" y="14" fill="#8ea69c" font-family="Public Sans, sans-serif" font-size="7.5">${k}</text><text x="9" y="30" fill="#eef4f0" font-family="Bricolage Grotesque, sans-serif" font-size="14" font-weight="700">${v}</text></g>`).join('')}
-      <g transform="translate(16 86)"><path d="${line} L238 80 L0 80Z" fill="url(#lsArea)" class="ls-area"/><path class="ls-line" d="${line}" fill="none" stroke="${C.lime}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        ${[0, 20, 40, 60, 80].map(y => `<line x1="0" x2="238" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.05)"/>`).join('')}</g>
-      <g transform="translate(262 92)">${[0, 1, 2, 3].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .9}s" x="${i * 7}" y="${4 + i * 3}" width="4.5" height="${68 - i * 3}" rx="1.5" fill="${[C.cyan, C.lime, C.blue, C.amber][i]}" opacity=".85"/>`).join('')}</g>
-    </g>`;
-  // workstation monitor with a spreadsheet and a moving selection row
-  const mon = `<g transform="translate(176 232)"><rect x="-44" y="-66" width="88" height="58" rx="5" fill="#0d1b17" stroke="#3a4754" stroke-width="2.5"/>
-      <g transform="translate(-38 -60)">${[0, 1, 2, 3, 4].map(r => `<rect x="0" y="${r * 11}" width="76" height="9" rx="1.5" fill="rgba(255,255,255,${r % 2 ? .035 : .06})"/><rect x="4" y="${r * 11 + 3}" width="${18 + (r * 13) % 20}" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/><rect x="50" y="${r * 11 + 3}" width="10" height="3" rx="1.5" fill="${r === 2 ? C.amber : C.lime}" opacity=".8"/>`).join('')}
-        <rect class="ls-row" x="0" y="0" width="76" height="9" rx="1.5" fill="none" stroke="${C.cyan}" stroke-width="1.2"/></g>
-      <rect x="-3" y="-8" width="6" height="12" fill="#55626f"/><rect x="-16" y="3" width="32" height="3" rx="1.5" fill="#55626f"/></g>`;
-  const plant = (x, y) => `<g transform="translate(${x} ${y})"><rect x="-15" y="-40" width="30" height="40" rx="3" fill="#d9dfe2"/><rect x="-15" y="-40" width="30" height="6" fill="#c3cbcf"/>
-      <g class="an ls-leaf">${[[-26, 70, '#2f6f59'], [-8, 92, '#3b8a6c'], [10, 84, '#2f6f59'], [26, 66, '#468f73'], [0, 104, '#356f5c']].map(([r, h, c]) => `<path d="M0 -40 q-7 ${-h / 2} 0 ${-h} q7 ${h / 2} 0 ${h}" fill="${c}" transform="rotate(${r} 0 -40)"/>`).join('')}</g></g>`;
-  const tablet = `<g transform="translate(0 56) rotate(42)"><rect x="-13" y="-9" width="26" height="18" rx="2.5" fill="#1a2733" stroke="#55626f" stroke-width="1.2"/><rect class="ls-glow" x="-10" y="-6" width="20" height="12" rx="1.5" fill="${C.cyan}" opacity=".35"/></g>`;
-  const laptop = `<g transform="translate(-2 40) rotate(-14)"><rect x="-14" y="-2" width="28" height="4" rx="1.5" fill="#8b98a3"/></g>`;
-  // ---- office surroundings
-  let sky = ''; for (let i = 0; i < 26; i++) { const w = 16 + (i * 29) % 22, h = 26 + (i * 47) % 70, x = 150 + i * 24; sky += `<rect x="${x}" y="${128 - h}" width="${w}" height="${h}" fill="rgba(255,255,255,.045)"/>`; }
-  const windows = `<rect x="140" y="18" width="620" height="112" fill="rgba(140,200,180,.035)"/>${sky}
-    ${[140, 264, 388, 512, 636, 760].map(x => `<line x1="${x}" y1="18" x2="${x}" y2="130" stroke="rgba(182,212,65,.10)" stroke-width="3"/>`).join('')}
-    <line x1="140" y1="18" x2="760" y2="18" stroke="rgba(182,212,65,.12)" stroke-width="3"/><line x1="140" y1="130" x2="760" y2="130" stroke="rgba(182,212,65,.12)" stroke-width="3"/>
-    ${[[170, 30, 230, 128], [420, 30, 480, 128], [640, 30, 700, 128]].map(([a, b, c, d]) => `<path d="M${a} ${b} L${a + 18} ${b} L${c + 18} ${d} L${c} ${d}z" fill="rgba(255,255,255,.025)"/>`).join('')}`;
-  const pendant = x => `<g transform="translate(${x} 0)"><line x1="0" y1="0" x2="0" y2="26" stroke="rgba(233,238,241,.35)" stroke-width="1"/><path d="M-13 38 q13 -14 26 0z" fill="#c9d2d6"/><rect x="-13" y="37" width="26" height="2.5" rx="1" fill="#f6e7b8"/>
-    <path class="ls-glow" d="M-12 40 L-46 150 L46 150 L12 40z" fill="url(#lsCone)"/></g>`;
-  const clock = `<g transform="translate(724 168)"><circle r="17" fill="#e9eef1" stroke="#9aa7b0" stroke-width="2"/>${[...Array(12)].map((_, i) => `<line x1="0" y1="-13" x2="0" y2="-11" stroke="#55626f" stroke-width="1.4" transform="rotate(${i * 30})"/>`).join('')}
-    <line class="ls-hr" x1="0" y1="0" x2="0" y2="-7.5" stroke="#22324a" stroke-width="2.2" stroke-linecap="round"/><line class="ls-min" x1="0" y1="0" x2="0" y2="-11.5" stroke="#22324a" stroke-width="1.5" stroke-linecap="round"/><circle r="1.6" fill="#e2513b"/></g>`;
-  const binders = (x, y) => [0, 1, 2, 3, 4, 5].map(i => `<rect x="${x + i * 8}" y="${y - (i % 3 === 1 ? 22 : 26)}" width="6.5" height="${i % 3 === 1 ? 22 : 26}" rx="1" fill="${['#3e5d7a', '#7a8f6a', '#b9a88e', '#2a6f6c', '#55626f', '#8a6d58'][i]}"/>`).join('');
-  const shelf = `<g><rect x="690" y="222" width="64" height="114" rx="3" fill="#2a3542"/><rect x="694" y="226" width="56" height="106" fill="#1e2832"/>
-    ${[260, 296, 332].map(y => `<rect x="692" y="${y}" width="60" height="3" fill="#55626f"/>`).join('')}${binders(698, 260)}${binders(698, 296)}
-    <rect x="700" y="306" width="18" height="24" rx="2" fill="#c9d2d6"/><rect x="724" y="314" width="20" height="16" rx="2" fill="#8b98a3"/></g>`;
-  const smallPlant = (x, y, sc) => `<g transform="translate(${x} ${y}) scale(${sc})">${plant(0, 0)}</g>`;
-  const meet = `<g>
-    <rect x="8" y="64" width="132" height="272" rx="4" fill="rgba(150,215,195,.05)" stroke="rgba(182,212,65,.22)" stroke-width="2"/>
-    <line x1="74" y1="64" x2="74" y2="336" stroke="rgba(182,212,65,.16)" stroke-width="2"/><rect x="8" y="190" width="132" height="5" fill="rgba(182,212,65,.10)"/>
-    <path d="M22 70 L40 70 L18 330 L8 330 L8 240z" fill="rgba(255,255,255,.04)"/><path d="M92 70 L102 70 L80 330 L70 330z" fill="rgba(255,255,255,.03)"/>
-    <text x="16" y="84" fill="rgba(233,238,241,.55)" font-family="IBM Plex Mono, monospace" font-size="7.5" letter-spacing="1.2">MEETING ROOM 2</text>
-    <g transform="translate(74 118)"><rect x="-34" y="-20" width="68" height="40" rx="3" fill="#0d1b17" stroke="#3a4754" stroke-width="1.5"/>${[0, 1, 2, 3, 4, 5].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .6}s" x="${-26 + i * 9}" y="${-8 + (i * 5) % 12}" width="5" height="${22 - (i * 5) % 12}" rx="1" fill="${i % 2 ? '#21B3C4' : '#b6d441'}" opacity=".8"/>`).join('')}</g>
-    <g transform="translate(0 336) scale(.62) translate(0 -336)">
-      ${chair(52, 336)}${seated({x: 46, y: 300, skin: '#c68e66', hair: '#1a1410', style: 'crop', coat: '#3e5d7a', pant: '#18212d'})}
-      <g transform="translate(238 0) scale(-1 1)">${chair(52, 336)}${seated({x: 46, y: 300, skin: '#f0cfb3', hair: '#7a4a2a', style: 'bob', coat: '#6d5b4b', pant: '#2b3542'})}</g>
-    </g>
-    <ellipse cx="74" cy="300" rx="34" ry="6" fill="#dfe5e8"/><rect x="71" y="300" width="6" height="34" fill="#8b98a3"/><rect x="58" y="332" width="32" height="4" rx="2" fill="#8b98a3"/>
-    <g transform="translate(74 298)"><rect x="-11" y="-2" width="22" height="3" rx="1" fill="#8b98a3"/><path d="M-10 -2 l2 -12 h16 l2 12z" fill="#c7d2d8"/><rect class="ls-glow" x="-6" y="-12" width="12" height="8" rx="1" fill="#21B3C4" opacity=".4"/></g>
-    ${smallPlant(128, 336, .55)}
-  </g>`;
+      <g transform="translate(16 86)"><path d="${line} L238 80 L0 80Z" fill="url(#lsArea)" class="ls-area"/><path class="ls-line" d="${line}" fill="none" stroke="${C.lime}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>${[0, 20, 40, 60, 80].map(y => `<line x1="0" x2="238" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.05)"/>`).join('')}</g>
+      <g transform="translate(262 92)">${[0, 1, 2, 3].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .9}s" x="${i * 7}" y="${4 + i * 3}" width="4.5" height="${68 - i * 3}" rx="1.5" fill="${[C.cyan, C.lime, C.blue, C.amber][i]}" opacity=".85"/>`).join('')}</g>`;
+  const plant = (x, y, sc = 1) => at(x, y, sc, `<rect x="-15" y="-40" width="30" height="40" rx="3" fill="#d9dfe2"/><rect x="-15" y="-40" width="30" height="6" fill="#c3cbcf"/><g class="an ls-leaf">${[[-26, 70, '#2f6f59'], [-8, 92, '#3b8a6c'], [10, 84, '#2f6f59'], [26, 66, '#468f73'], [0, 104, '#356f5c']].map(([r, h, c]) => `<path d="M0 -40 q-7 ${-h / 2} 0 ${-h} q7 ${h / 2} 0 ${h}" fill="${c}" transform="rotate(${r} 0 -40)"/>`).join('')}</g>`);
+  const pendant = (x, top) => `<g transform="translate(${x} ${top})"><line x1="0" y1="0" x2="0" y2="16" stroke="rgba(233,238,241,.35)"/><path d="M-10 24 q10 -11 20 0z" fill="#c9d2d6"/><rect x="-10" y="23" width="20" height="2" rx="1" fill="#f6e7b8"/><path class="ls-glow" d="M-9 26 L-34 110 L34 110 L9 26z" fill="url(#lsCone)"/></g>`;
+  const label = (x, y, t) => `<text x="${x}" y="${y}" fill="rgba(233,238,241,.5)" font-family="IBM Plex Mono, monospace" font-size="7.5" letter-spacing="1.3">${t}</text>`;
+  const glassRoom = (x, top, w, floor) => `<rect x="${x}" y="${top}" width="${w}" height="${floor - top}" fill="rgba(150,215,195,.045)" stroke="rgba(182,212,65,.22)" stroke-width="1.6"/><path d="M${x + 12} ${top + 4} l14 0 l-24 ${floor - top - 8} l-2 0z" fill="rgba(255,255,255,.035)"/>`;
+  let sky = ''; for (let i = 0; i < 34; i++) { const w = 14 + (i * 29) % 20, h = 30 + (i * 47) % 80, x = 16 + i * 22; sky += `<rect x="${x}" y="${F2 - h}" width="${w}" height="${h}" fill="rgba(255,255,255,.04)"/>`; }
+  const racks = [0, 1, 2].map(k => { let leds = ''; for (let r = 0; r < 12; r++) for (let c = 0; c < 3; c++) leds += `<rect class="ls-led" style="animation-delay:${((k * 37 + r * 13 + c * 7) % 23) / 10}s" x="${6 + c * 7}" y="${10 + r * 10}" width="4" height="2.2" fill="${(r + c + k) % 5 === 0 ? C.amber : (r + c) % 3 ? C.lime : C.cyan}"/>`;
+    return `<g transform="translate(${k * 30} ${-142})"><rect width="26" height="142" rx="2" fill="#151e27" stroke="#3a4754"/>${leds}</g>`; }).join('');
+  const lift = `<rect x="332" y="30" width="48" height="${F1 - 30}" fill="#0f1720" stroke="rgba(182,212,65,.2)"/>${[F2, F1].map(f => `<rect x="338" y="${f - 96}" width="36" height="4" rx="2" fill="#1e2a35"/><circle cx="356" cy="${f - 104}" r="2.4" class="ls-live" fill="${C.lime}"/>`).join('')}
+    <g class="ls-lift"><rect x="336" y="${F1 - 92}" width="40" height="90" rx="3" fill="#1d2a36" stroke="#55626f"/><rect x="340" y="${F1 - 88}" width="32" height="82" fill="rgba(150,215,195,.07)"/>${at(356, F1 - 4, .4, standing({x: 0, y: 0, skin: '#e8b996', hair: '#3b2a20', style: 'bob', coat: C.teal, pant: C.pant, arms: ['ls-rest', 'ls-rest2']}))}</g>`;
   svg.innerHTML = `
   <defs>
-    <linearGradient id="lsCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(246,231,184,.16)"/><stop offset="1" stop-color="rgba(246,231,184,0)"/></linearGradient>
     <linearGradient id="lsScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(182,212,65,.06)"/><stop offset="1" stop-color="rgba(33,179,196,.03)"/></linearGradient>
     <linearGradient id="lsArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(182,212,65,.32)"/><stop offset="1" stop-color="rgba(182,212,65,0)"/></linearGradient>
-    <radialGradient id="lsSpot" cx="50%" cy="30%" r="60%"><stop offset="0" stop-color="rgba(182,212,65,.10)"/><stop offset="1" stop-color="rgba(182,212,65,0)"/></radialGradient>
-    <linearGradient id="lsFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.07)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></linearGradient>
+    <linearGradient id="lsCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(246,231,184,.15)"/><stop offset="1" stop-color="rgba(246,231,184,0)"/></linearGradient>
+    <linearGradient id="lsRoom" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#11241d"/><stop offset="1" stop-color="#0c1a15"/></linearGradient>
+    <clipPath id="lsC2"><rect x="10" y="30" width="740" height="${F2 - 30}"/></clipPath><clipPath id="lsC1"><rect x="10" y="${F2 + 10}" width="740" height="${F1 - F2 - 10}"/></clipPath>
   </defs>
-  ${windows}
-  <line x1="0" y1="336" x2="760" y2="336" stroke="rgba(182,212,65,.22)"/><rect x="0" y="336" width="760" height="54" fill="url(#lsFloor)"/>
-  <ellipse cx="560" cy="342" rx="120" ry="10" fill="rgba(182,212,65,.05)"/>
-  ${pendant(300)}${pendant(450)}${pendant(600)}
-  ${clock}${shelf}
-  <g transform="translate(60 0)">
-  <ellipse cx="300" cy="150" rx="320" ry="170" fill="url(#lsSpot)"/>
-  ${wall}
-  <path class="ls-flow" d="M176 168 C 176 120 150 110 150 110" stroke="rgba(33,179,196,.0)" fill="none"/>
-  <path class="ls-flow" d="M206 200 C 240 200 250 220 262 240" stroke="rgba(182,212,65,.45)" stroke-width="1.4" fill="none"/>
-  <path class="ls-flow" d="M450 150 C 490 150 520 170 540 196" stroke="rgba(33,179,196,.45)" stroke-width="1.4" fill="none"/>
-  <!-- walker in the background, carrying a laptop -->
-  <g transform="translate(0 334) scale(.74)"><g class="ls-walk">${standing({x: 0, y: 0, face: -1, skin: '#c68e66', hair: '#1f1712', style: 'crop', coat: C.slate, pant: C.pant2, arms: ['ls-swing', 'ls-hold2', '', laptop], legs: ['ls-step-a', 'ls-step-b']})}</g></g>
-  <!-- workstation: seated analyst -->
-  <rect x="96" y="240" width="170" height="6" rx="3" fill="#dfe5e8"/><rect x="104" y="246" width="4" height="90" fill="#8b98a3"/><rect x="254" y="246" width="4" height="90" fill="#8b98a3"/>
-  ${mon}<rect x="158" y="234" width="34" height="5" rx="2" fill="#aab5bd"/><rect class="ls-cursor" x="186" y="207" width="2" height="6" fill="${C.cyan}"/>
-  ${chair(118, 336)}
-  ${seated({x: 112, y: 300, skin: '#e8b996', hair: '#2a1e17', style: 'bob', coat: C.navy, pant: C.pant})}
-  <!-- presenter at the data wall -->
-  ${standing({x: 488, y: 336, face: -1, skin: '#8a5a3c', hair: '#14100d', style: 'short', coat: C.char, pant: C.pant, arms: ['ls-rest', 'ls-point']})}
-  <!-- colleague reviewing on a tablet -->
-  ${standing({x: 560, y: 336, s: .97, face: -1, skin: '#f0cfb3', hair: '#5a3a24', style: 'bun', coat: C.sand, pant: C.pant2, arms: ['ls-hold', 'ls-rest2', tablet]})}
-  ${plant(640, 336)}
-  </g>
-  ${meet}`;
-})();
-
-/* ---------- sign-in backdrop: Earth rotating in space (three.js, textures painted in code) ---------- */
-(function spaceScene(){
-  const cv = $('space'); if (!cv) return;
-  const LAND = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA+f8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADk//8HCPP///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P//P/D///////4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBf9//H////////PwAAAAAAAAAAoEABAAAAgA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P//PwD///////8DAAAAcP0fAAAAAAAAAAAAfgAAAAAAAAAAAAAAAAAAAAAAAAAAIPgI//8f/v///////wEAAADgfwAAAAAAAAAAAAAgDwAAAAAAAAAAAAAAAAAAAAAAAAA4AOCA/gP/////////AAAAAACfAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfAAA4OD/Afj///////8DAAAAAAYAAAAAAAAIAAAAAD8AAAAAAAAAAAAAAAAAAAAAAACFx/APDgAAEPD//////wMAAAAAAAAAAAAA+AMAAAD2/z8AAAAGAAAAAAAAAAAAAAAAAID9A+b8fwAAAP//////AwAAAAAAAAAAAIAPAAAA/v//PwAAAL4wAAAAAAAAAAAAAADAEwAAAAAAAAAA/v////8DAAAAAAAAAAAA4AEAAAD///8HAAAAAAAAAAAAAAAAAAAAAMD/AA7P5/0HAAD8/////wAAAAAAAAAAAABwAAAA/P//f/4PfgAgAAAAAAAAAAAAAAAA4Pd/h8/w/g4AAPj///9/AAAAAAAAAAAAADwA4Mn8//////9/APABAAAAAAMAAAAAAADA8/8PxvD/vwAA7P///38AAAAAAAAAAAAAPAD47P///////39I/H8AAAAAAADAfwAAAADA/x/g4f//BwCg////zwAAAAAAAPgBAAAgAPj97/////////////8BAAAAAPj//wfgJ8H/f+ABHvwfALj///8/AAAAAADg/w8AAAA4+P3//////////////yPkDwEA//////////w9GDce8A8AgP///wcAAAAAAPr//wFACPrz+f//////////////////DwD/////////AT/cPx+MfwDg//8PAAAAAAAA/v//H4b////5//////////////////8/APj/////////////H4D/A/D//wMAAAAAAAD///8/5v////z///////////////////+H//////////////8EwN8H4P//AIBgAAAAwP//P8T/////////////////////////8IH/////////////fwf8HwHA/w8AwP8BAADg//B/8P////////////////////////8AAOD///////////8/H4T/AMD/BwCAfwAAAPD/+H/8////////////////////////PwAA8P///////////wcCAP8AgP8DAAAMAAAA/D/+//////////////////////////9/AAD+////////////ARgEOAAA/wEAAAAAAID/D////////////////////////////28AAP////////////8AAP4AAAD+AQAAAAAAwP8H////////////////////////f9z/AQAA/n/n////////fwAA/AMAAOgAAAAAAADA/wf///////////////////////8f4H8AAAD0PwP4//////9/AAD8AwEAAAAAAAAAAMD/HwD//////////////////////w84AAAAAPAfAID//////38AAP6PAwAAAAAAAAAAwPcP/P///////////////////z8AAB4AAAAAAA4AAP///////wEA/P8HAAAAAAAAAAwA4Qf4////////////////////DwAADwAAAAAAMwAA9v//////DQD4/wcAAAAAAAAAPgDIA/v///////////////////8HAMAfAAAAAMAAAADw//////8/APj/DwAAAAAAAAAeAM6B/////////////////////wEA4B8AAAAAAAAAAND///////8F/P8fAAAAAAAAADwAJgD///////////////////9/AADgDwAAAAAAAAAAgP///////x////8AAAAAAADAcwBE/P////////////////////8AAOADAAAAAAAAAACQ////////H////wMAAAAAAODxAP///////////////////////08A4AMAAAAAAAAAAAD+//////8f/v//AwAAAAAA4Pnj////////////////////////XwDAAAAAAAAAAAAAAPz//////z////8DAAAAAABg+OH///////////////////////9fAMAAAAAAAAAAAAAA/P//////////PwIAAAAAAAD4/f///////////////////////88AAAAAAAAAAAAAAAD4/////////z8AAwAAAAAAAAD+////////////////////////zwAAAAAAAAAAAAAAAKD/////////74APAAAAAAAAwP////////////////////////9PAAAAAAAAAAAAAAAAwP//////////wB8AAAAAAAD4/////////////////////////wcAAAAAAAAAAAAAAADA//////////8AEAAAAAAAAOD/////////////////////////QwAAAAAAAAAAAAAAAMD//////////xEAAAAAAAAAwP////9z/H/4//////////////8BAAAAAAAAAAAAAAAAwP//////////DwAAAAAAAACA/7///2H8H/z//////////////wAAAAAAAAAAAAAAAADA/////////58BAAAAAAAAAID/P/7/IPwP/v////////////9/YAAAAAAAAAAAAAAAAMD/////////AwAAAAAAAACAw/94/P8A8B/+/////////////z/gAQAAAAAAAAAAAAAAwP////////8BAAAAAAAAAMD/B/DwfwDAH/z/////////////A/AAAAAAAAAAAAAAAADA/////////wEAAAAAAAAAwP8H4OF/cMA/8P////////////8AAAAAAAAAAAAAAAAAAMD///////9/AAAAAAAAAADA/wEEx3///3/w/////////////wAQAAAAAAAAAAAAAAAAwP///////z8AAAAAAAAAAMD/AAbG4f//f/j//////////58/ADgAAAAAAAAAAAAAAACA////////HwAAAAAAAAAAwP8AAITD//9/8P//////////jzgAOAAAAAAAAAAAAAAAAID///////8PAAAAAAAAAADAfwAAAMf//z/w//////////8HeAAYAAAAAAAAAAAAAAAAAP///////wcAAAAAAAAAAMA/AIABw/////D//////////+/gABwAAAAAAAAAAAAAAAAA/v//////DwAAAAAAAAAAAAb+DwAAM///////////////P/AADwAAAAAAAAAAAAAAAAD+//////8PAAAAAAAAAAAAgv8PAAAA//////////////8f4PAPAAAAAAAAAAAAAAAAAPz//////wMAAAAAAAAAAAD+/w8AAAD//////////////x8Q/AAAAAAAAAAAAAAAAAAA4P//////AAAAAAAAAAAAAP//DwAAgP//////////////PwBaAAAAAAAAAAAAAAAAAADA/////38AAAAAAAAAAADA//9/AAGA//////////////8/AAMAAAAAAAAAAAAAAAAAAMD/////PwAAAAAAAAAAAOD////BB4D//////////////38AAgAAAAAAAAAAAAAAAAAAgPz///8/AAAAAAAAAAAA4P///8f//v//////////////fwAAAAAAAAAAAAAAAAAAAACA+f//Hz4AAAAAAAAAAADg/////////7////////////9/AAAAAAAAAAAAAAAAAAAAAAD7/z8IMAAAAAAAAAAAAPD/////////H////////////38AAAAAAAAAAAAAAAAAAAAAAPb/HwAwAAAAAAAAAAAA+P////////8//v//////////fwAAAAAAAAAAAAAAAAAAAAAA5v8PAHAAAAAAAAAAAAD+//////8f/3/8//////////8/AAAAAAAAAAAAAAAAAAAAAADI/w8AYAAAAAAAAAAAAP7//////z///4D//////////x8AAAAAAAAAAAAAAAAAAAAAAJj/DwBAAAAAAAAAAAAA////////P/7/QP7/////////HwAAAAAAAAAAAAAAAAAAAAAAEP8PAAAAAAAAAAAAAID///////9//v9hAPz///////9PAAAAAAAAAAAAAAAAAAAAAAAg/gcAAAAAAAAAAAAAwP///////3/4//8A+P///////0cAAAAAAAAAAAAAAAAAAAAAAAD8BwBgAAAAAAAAAADA//////////j//wPg////////QQAAAAAAAAAAAAAAAAAAAAAAAPgHAMABAAAAAAAAAOD/////////+f//A+D//8///z8AAAAAAAAAAAAAAAAAAAAAAAAA+A9wAA4AAAAAAAAA4P/////////x//8DwP7/wf9/BAAAAAAAAAAAAAAAAAAAAAAAAAD4D3gAHAAAAAAAAADA//////////H//wAA/v+A/z8EAAAAAAAAAAAAAAAACAAAAAAAAPgfeACABwAAAAAAAMD/////////wf//AAD+PwD/PwYAAAAAAAAAAAAAAAAAAAAAAAAA4H8/AIAPAAAAAAAAwP/////////D/38AAP4/AP4/AkAAAAAAAAAAAAAAAAAAAAAAAACA/z8AAAAAAAAAAADA/////////4f/PwAA/g8A/n8AwAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAAAAAAAAAAAMD/////////h/8HAAD+BwD2fwDAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AwAAAAAAAAAAwP////////8P/wMAAPwBAOD/AWAAAAAAAAAAAAAAAAAAAAAAAAAAAP4HAAAAAAAAAADg/////////x//AAAA/AEA4P8BQAAAAAAAAAAAAAAAAAAAAAAAAAAA+AcAAAAAAAAAAOD/////////Pz8AAAD4AQDg/wFAAQAAAAAAAAAAAAAAAAAAAAAAAACABwAAAAAAAAAA4P////////9/AwAAAPgBAGD/AUAAAAAAAAAAAAAAAAAAAAAAAAAAAIAHAAEAAAAAAADA//////////8AAAAA8AEAQPwBAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAfADgAAAAAAAID//////////8ABAADwAQBA+AEABQAAAAAAAAAAAAAAAAAAAAAAAAAABvB/BgAAAAAAAP///////////wEAAOAAACBwAAABAAAAAAAAAAAAAAAAAAAAAAAAAACM8P4PAAAAAAAA/v//////////AAAA4AIAIDAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAHj6/x8AAAAAAAD+//////////8AAABgAgBgAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAQP7/fwAAAAAAAPz/////////fwAAAAAGAEAAAAAdAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P9/AAAAAAAA+P////////9/AAAAAAYAgAEAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAD8//8PAAAAAADg/8H//////z8AAAAAAACAAwAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz//z8AAAAAAMAhwP//////PwAAAAAAABwHAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P//fwAAAAAAAAAA/P////8fAAAAAAAAGAfABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8//9/AAAAAAAAAAD4/////w8AAAAAAABwBuAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7///8AAAAAAAAAAPj/////BwAAAAAAAOAE8AcAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAA+P////8BAAAAAAAAwAP+D0AAAAAAAAAAAAAAAAAAAAAAAAAAAID/////AAAAAAAAAAD4/////wAAAAAAAADAB/7HAwAAAAAAAAAAAAAAAAAAAAAAAAAAgP///38DAAAAAAAAAPz///9/AAAAAAAAAIAH/gcAAAAAAAAAAAAAAAAAAAAAAAAAAADA/////x8AAAAAAAAA/P///z8AAAAAAAAAAA/84wAcAAAAAAAAAAAAAAAAAAAAAAAAAMD/////fwAAAAAAAAD4////HwAAAAAAAAAAP/xxABgHAAAAAAAAAAAAAAAAAAAAAAAAgP//////DwAAAAAAAPD///8fAAAAAAAAAAA+8PGAuT8AAAAAAAAAAAAAAAAAAAAAAADA//////8/AAAAAAAA4P///w8AAAAAAAAAADwAoADA/wEAAAAAAAAAAAAAAAAAAAAAAMD//////38AAAAAAADg////DwAAAAAAAAAAOAAgAQD/AwEAAAAAAAAAAAAAAAAAAAAAwP///////wEAAAAAAMD///8HAAAAAAAAAAAAAAAAAPznAAAAAAAAAAAAAAAAAAAAAACA////////AQAAAAAAwP///w8AAAAAAAAAAMAJAAAA/A8AAAAAAAAAAAAAAAAAAAAAAAD///////8BAAAAAADA////DwAAAAAAAAAAAD8AAAD+DwAAAAAAAAAAAAAAAAAAAAAAAP///////wEAAAAAAID///8PAAAAAAAAAAAAAE4IAHAYAAAAAAAAAAAAAAAAAAAAAAAA/v//////AAAAAAAAgP///w8AAAAAAAAAAAAAAAQAADgAAAAAAAAAAAAAAAAAAAAAAAD+//////8AAAAAAACA////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/////fwAAAAAAAID///8fAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA/P////8/AAAAAAAAgP///x8AAAAAAAAAAAAAAAB4QAAAAAAAAAAAAAAAAAAAAAAAAAD4/////x8AAAAAAADA////H0AAAAAAAAAAAAAAAP5gAAAAAAAAAAAAAAAAAAAAAAAAAPj/////HwAAAAAAAMD///8f4AAAAAAAAAAAAAAAf+AAAAAAAAAAAAAAAAAAAAAAAAAA8P////8fAAAAAAAAwP///x/gAAAAAAAAAAAAAHh/4AEAAAAAAAAAAAAAAAAAAAAAAADg/////x8AAAAAAADg////H/gAAAAAAAAAAAAA/P/gAQAAAAAAAAAAAAAAAAAAAAAAAID/////HwAAAAAAAOD///8PfgAAAAAAAAAAAAD+/+MDAAAAAAAAAAAAAAAAAAAAAAAAAP7///8PAAAAAAAA4P///wN+AAAAAAAAAAAAAP//9wMAAAAgAAAAAAAAAAAAAAAAAAAA/P///w8AAAAAAADg////AX4AAAAAAAAAAAAA////AwAAAAAAAAAAAAAAAAAAAAAAAAD8////DwAAAAAAAMD//38APgAAAAAAAAAAAID///8PAAAAAAAAAAAAAAAAAAAAAAAAAPz///8HAAAAAAAAgP//fwA+AAAAAAAAAAAA8P///x8AAAAAAAAAAAAAAAAAAAAAAAAA/P///wcAAAAAAACA//9/AD4AAAAAAAAAAAD+////PwCAAAAAAAAAAAAAAAAAAAAAAAD8////AwAAAAAAAAD//38AHwAAAAAAAAAAgP////8/AAAAAAAAAAAAAAAAAAAAAAAAAPz///8AAAAAAAAAAP//fwAfAAAAAAAAAADA//////8AAAAAAAAAAAAAAAAAAAAAAAAA/P//HwAAAAAAAAAA//9/AB4AAAAAAAAAAMD//////wAAAAAAAAAAAAAAAAAAAAAAAAD8//8HAAAAAAAAAAD//38ADgAAAAAAAAAAwP//////AQAAAAAAAAAAAAAAAAAAAAAAAPz//wMAAAAAAAAAAP7/DwAAAAAAAAAAAACA//////8DAAAAAAAAAAAAAAAAAAAAAAAA/v//AwAAAAAAAAAA/v8fAAAAAAAAAAAAAMD//////wMAAAAAAAAAAAAAAAAAAAAAAAD+//8DAAAAAAAAAAD+/w8AAAAAAAAAAAAAgP//////AwAAAAAAAAAAAAAAAAAAAAAAAP7//wMAAAAAAAAAAPz/DwAAAAAAAAAAAACA//////8HAAAAAAAAAAAAAAAAAAAAAAAA/v//AQAAAAAAAAAA+P8HAAAAAAAAAAAAAAD//////wMAAAAAAAAAAAAAAAAAAAAAAAD+//8AAAAAAAAAAAD4/wMAAAAAAAAAAAAAAP//////AwAAAAAAAAAAAAAAAAAAAAAAAP//fwAAAAAAAAAAAPD/AwAAAAAAAAAAAAAA//////8DAAAAAAAAAAAAAAAAAAAAAAAA/v8/AAAAAAAAAAAA8P8AAAAAAAAAAAAAAAD+f/j//wMAAAAAAAAAAAAAAAAAAAAAAAD+/z8AAAAAAAAAAADwfwAAAAAAAAAAAAAAAP4H4P//AQAAAAAAAAAAAAAAAAAAAAAAAP//HwAAAAAAAAAAAPAfAAAAAAAAAAAAAAAA/wHA/v8AAAAAAAAAAAAAAAAAAAAAAAAA//8OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAD8/wAAAAAAAAAAAAAAAAAAAAAAAID//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPx/AAAAAgAAAAAAAAAAAAAAAAAAgP//AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+H8AAAAAAAAAAAAAAAAAAAAAAADA//8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwfwAAAAwAAAAAAAAAAAAAAAAAAMD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAOAAAAPAAAAAAAAAAAAAAAAAAAgP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAAAAAAAAAAAAAAAAAADA/wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAMD/AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAACADAAAAAAAAAAAAAAAAAAAwP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AAIABAAAAAAAAAAAAAAAAAACA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAwAEAAAAAAAAAAAAAAAAAAID/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAoH8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAADAHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAAAAAAAAAAAAAAAAAAAPAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAA4H8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4A8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADADQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAHAAAAAAAAAAAAAAAAAAAAPgAAAAAAAA94AAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAAAAAAAAD/AAAAwP////+E////AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA////HwD+//////////8HAAAAAAAAAAAAAAAAAAAAAAAAAOIBAAAAAAAAAAAAAAAAIOD///8fgP////////////8PAAAAAAAAAAAAAAAAAAAAAAAA9wcAAAAAAAAAAAAAAADw8////x/w//////////////8DAAAAAAAAAAAAAAAAAAAAAADuBwAAAAAAAAAAwO8fBf//////H/////////////////cBAAAAAAAAAAAAAAAAAAAA4O8PAAAAAAAAsH////////////+H/////////////////x8AAAAAAAAAAAAAAAAQAAAA5g8AAAAAAAD4//////////////f/////////////////HwAAAAAAAAAAAAAAwP7/wZD/HwAAAAAAwP////////////////////////////////8BAAAAAAAAAAAgAROA//////8PAAAAAADg////////////////////////////////fwAAAAAAAADg////f3j+/////wEAAAAAAPj///////////////////////////////8PAAAAAAAAwP////////////8/AAAAAAD8/////////////////////////////////x8AAAAAAADA////////////BwAAAAAA4P//////////////////////////////////HwAAAAAA//////////////8/AAAAGAD+//////////////////////////////////8/AgAAAAD4////////////jwEYAAB/AP///////////////////////////////////z8AAAAAMAD+////////////BwIAAP8AgP//////////////////////////////////AwAAAAAAAP7///////////8PABzwAwD+//////////////////////////////////8DAAAAAADw//////////////9/AAAA/P///////////////////////////////////wcAAAAAAOD///////////////8D+N//////////////////////////////////////HwAAAOAM/v///////////////4//////////////////////////////////////////BwAAAP7/////////////////////////////////////////////////////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==', MW = 400, MH = 200;
-  const load = src => new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
-  // smooth 3D value noise (seamless around the globe because it is sampled on the sphere)
-  const perm = new Uint8Array(512); { const p = [...Array(256).keys()]; let seed = 7; for (let i = 255; i > 0; i--) { seed = (seed * 16807) % 2147483647; const j = seed % (i + 1); [p[i], p[j]] = [p[j], p[i]]; } for (let i = 0; i < 512; i++) perm[i] = p[i & 255]; }
-  const fade = t => t * t * (3 - 2 * t), lerp = (a, b, t) => a + (b - a) * t, hsh = (x, y, z) => perm[(perm[(perm[x & 255] + y) & 255] + z) & 255] / 255;
-  function noise(x, y, z){ const X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z), fx = fade(x - X), fy = fade(y - Y), fz = fade(z - Z);
-    return lerp(lerp(lerp(hsh(X, Y, Z), hsh(X + 1, Y, Z), fx), lerp(hsh(X, Y + 1, Z), hsh(X + 1, Y + 1, Z), fx), fy), lerp(lerp(hsh(X, Y, Z + 1), hsh(X + 1, Y, Z + 1), fx), lerp(hsh(X, Y + 1, Z + 1), hsh(X + 1, Y + 1, Z + 1), fx), fy), fz); }
-  const fbm = (x, y, z, o) => { let a = .5, f = 1, s = 0, n = 0; for (let i = 0; i < o; i++) { s += a * noise(x * f, y * f, z * f); n += a; a *= .5; f *= 2.03; } return s / n; };
-  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-  function paint(TW){
-    const TH = TW / 2, bits = Uint8Array.from(atob(LAND), c => c.charCodeAt(0));
-    const mc = document.createElement('canvas'); mc.width = MW; mc.height = MH; const mx = mc.getContext('2d'), md = mx.createImageData(MW, MH);
-    for (let i = 0; i < MW * MH; i++) { const on = (bits[i >> 3] >> (i & 7)) & 1; md.data[i * 4] = md.data[i * 4 + 1] = md.data[i * 4 + 2] = on ? 255 : 0; md.data[i * 4 + 3] = 255; } mx.putImageData(md, 0, 0);
-    const blurred = r => { const c = document.createElement('canvas'); c.width = TW; c.height = TH; const x = c.getContext('2d'); x.filter = `blur(${r}px)`; x.drawImage(mc, 0, 0, TW, TH); return x.getImageData(0, 0, TW, TH).data; };
-    const m1 = blurred(TW / 700), m2 = blurred(TW / 90);
-    const mk = () => { const c = document.createElement('canvas'); c.width = TW; c.height = TH; const x = c.getContext('2d'); return [c, x, x.createImageData(TW, TH)]; };
-    const [dc, dx, dd] = mk(), [nc, nx, nd] = mk(), [cc, cx2, cd] = mk();
-    for (let y = 0; y < TH; y++) { const lat = 90 - (y + .5) / TH * 180, la = lat * Math.PI / 180, cl = Math.cos(la), sl = Math.sin(la), al = Math.abs(lat);
-      for (let x = 0; x < TW; x++) { const lo = (x + .5) / TW * 2 * Math.PI, px = cl * Math.cos(lo), py = sl, pz = cl * Math.sin(lo), i = (y * TW + x) * 4;
-        const n = fbm(px * 3 + 11, py * 3, pz * 3, 5), n2 = fbm(px * 9, py * 9 + 5, pz * 9, 3), v = m1[i] / 255 + (n - .5) * .34, landA = sm(.44, .56, v), shelf = m2[i] / 255;
-        // ocean
-        let r = lerp(5, 22, shelf * .9) + n2 * 6, g = lerp(20, 78, shelf * .9) + n2 * 8, b = lerp(48, 118, shelf * .8) + n2 * 10;
-        // land by climate band
-        const desert = Math.exp(-Math.pow((al - 23) / 9, 2)) * sm(.42, .62, n2 + (n - .5) * .6), tundra = sm(52, 66, al), ice = sm(66, 74, al + (n - .5) * 10) + (lat < -60 ? 1 : 0);
-        let lr = lerp(46, 92, n2), lg = lerp(78, 112, n2), lb = lerp(36, 58, n2);
-        lr = lerp(lr, 196, desert); lg = lerp(lg, 168, desert); lb = lerp(lb, 116, desert);
-        const mtn = sm(.6, .75, n); lr = lerp(lr, 112, mtn * .7); lg = lerp(lg, 98, mtn * .7); lb = lerp(lb, 78, mtn * .7);
-        lr = lerp(lr, 128, tundra); lg = lerp(lg, 126, tundra); lb = lerp(lb, 106, tundra);
-        const ic = Math.min(1, ice); lr = lerp(lr, 236, ic); lg = lerp(lg, 242, ic); lb = lerp(lb, 248, ic);
-        dd.data[i] = lerp(r, lr, landA); dd.data[i + 1] = lerp(g, lg, landA); dd.data[i + 2] = lerp(b, lb, landA); dd.data[i + 3] = 255;
-        // city lights on the night side
-        const city = landA > .5 && al < 62 && ic < .3 ? Math.pow(sm(.52, .8, fbm(px * 22, py * 22, pz * 22, 3)), 2) * (Math.random() < .5 ? 1 : .4) : 0;
-        nd.data[i] = 255 * city; nd.data[i + 1] = 196 * city; nd.data[i + 2] = 120 * city; nd.data[i + 3] = 255;
-        // clouds
-        const w = fbm(px * 2 + 3, py * 2, pz * 2, 3), c = fbm(px * 4 + w * 2.2, py * 5 + w, pz * 4 - w, 5), ca = sm(.56, .8, c) * (1 - Math.exp(-Math.pow(al / 12, 2)) * .45);
-        cd.data[i] = cd.data[i + 1] = cd.data[i + 2] = 255; cd.data[i + 3] = 235 * ca; } }
-    dx.putImageData(dd, 0, 0); nx.putImageData(nd, 0, 0); cx2.putImageData(cd, 0, 0);
-    return {day: dc, night: nc, clouds: cc};
-  }
-  async function start(){
-    if (!window.THREE) { try { await load('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'); } catch (e) { return; } }
-    let renderer; try { renderer = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true}); } catch (e) { return; }
-    renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(35, 1, .1, 200); cam.position.set(0, 0, 10);
-    const sun = new THREE.Vector3(-1, .35, .75).normalize();
-    // stars
-    const SN = 2600, sp = [], ss = [], sc = [];
-    for (let i = 0; i < SN; i++) { const u = Math.random() * 2 - 1, t = Math.random() * Math.PI * 2, r = 60 + Math.random() * 40, q = Math.sqrt(1 - u * u); sp.push(q * Math.cos(t) * r, u * r, q * Math.sin(t) * r - 30); ss.push(Math.pow(Math.random(), 3) * 2.6 + .6); sc.push(Math.random()); }
-    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); sg.setAttribute('aSize', new THREE.Float32BufferAttribute(ss, 1)); sg.setAttribute('aSeed', new THREE.Float32BufferAttribute(sc, 1));
-    const starMat = new THREE.ShaderMaterial({transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: {uT: {value: 0}, uPix: {value: renderer.getPixelRatio()}},
-      vertexShader: 'attribute float aSize; attribute float aSeed; uniform float uT; uniform float uPix; varying float vA; varying vec3 vC; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); gl_Position = projectionMatrix * mv; float tw = .55 + .45 * sin(uT * (0.6 + aSeed * 2.4) + aSeed * 40.); vA = tw; vC = mix(vec3(.75,.85,1.), vec3(1.,.9,.75), step(.8, aSeed)); gl_PointSize = aSize * uPix; }',
-      fragmentShader: 'varying float vA; varying vec3 vC; void main(){ float d = length(gl_PointCoord - .5); float a = smoothstep(.5, 0., d); gl_FragColor = vec4(vC, a * vA); }'});
-    const stars = new THREE.Points(sg, starMat); scene.add(stars);
-    // earth
-    const small = innerWidth < 760, tex = paint(small ? 768 : 1024), T = c => { const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.anisotropy = 4; return t; };
-    const holder = new THREE.Group(); scene.add(holder); const tiltG = new THREE.Group(); tiltG.rotation.z = .41; tiltG.rotation.x = .18; holder.add(tiltG);
-    const V = 'varying vec3 vN; varying vec3 vV; varying vec2 vUv; void main(){ vUv = uv; vec4 wp = modelMatrix * vec4(position,1.); vN = normalize(mat3(modelMatrix) * normal); vV = normalize(cameraPosition - wp.xyz); gl_Position = projectionMatrix * viewMatrix * wp; }';
-    const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 72), new THREE.ShaderMaterial({uniforms: {tDay: {value: T(tex.day)}, tNight: {value: T(tex.night)}, uSun: {value: sun}}, vertexShader: V,
-      fragmentShader: 'uniform sampler2D tDay; uniform sampler2D tNight; uniform vec3 uSun; varying vec3 vN; varying vec3 vV; varying vec2 vUv; void main(){ vec4 d = texture2D(tDay, vUv); float ndl = dot(normalize(vN), uSun); float day = smoothstep(-.12, .28, ndl); vec3 col = d.rgb * (.03 + 1.15 * max(ndl, 0.)); vec3 night = texture2D(tNight, vUv).rgb * (1. - smoothstep(-.25, .08, ndl)) * 1.6; vec3 h = normalize(uSun + vV); float ocean = smoothstep(.06, .2, d.b - d.r); float spec = pow(max(dot(normalize(vN), h), 0.), 60.) * ocean * day * .7; float fr = pow(1. - max(dot(normalize(vN), vV), 0.), 3.); col += night + vec3(.55,.7,.9) * spec + vec3(.25,.55,1.) * fr * .55 * day; gl_FragColor = vec4(col, 1.); }'}));
-    tiltG.add(earth);
-    const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.012, 96, 72), new THREE.ShaderMaterial({transparent: true, depthWrite: false, uniforms: {tC: {value: T(tex.clouds)}, uSun: {value: sun}}, vertexShader: V,
-      fragmentShader: 'uniform sampler2D tC; uniform vec3 uSun; varying vec3 vN; varying vec3 vV; varying vec2 vUv; void main(){ float a = texture2D(tC, vUv).a; float ndl = dot(normalize(vN), uSun); vec3 c = vec3(1.) * (.05 + 1.05 * max(ndl, 0.)); gl_FragColor = vec4(c, a * (.25 + .75 * smoothstep(-.3, .3, ndl))); }'}));
-    tiltG.add(clouds);
-    const atm = new THREE.Mesh(new THREE.SphereGeometry(1.14, 72, 54), new THREE.ShaderMaterial({transparent: true, depthWrite: false, side: THREE.BackSide, blending: THREE.AdditiveBlending, uniforms: {uSun: {value: sun}}, vertexShader: V,
-      fragmentShader: 'uniform vec3 uSun; varying vec3 vN; varying vec3 vV; void main(){ float r = pow(clamp(-dot(normalize(vN), vV) / .62, 0., 1.), 3.2); float lit = .25 + .75 * smoothstep(-.4, .5, dot(normalize(vN), uSun)); gl_FragColor = vec4(mix(vec3(.2,.5,1.), vec3(.45,.8,1.), lit) * r * 1.5 * lit, r * lit); }'}));
-    holder.add(atm);
-    // orbit rings with satellites
-    const orbits = [[1.55, .32, .9, 0x7fb6ee, .00042], [1.85, -.5, -.35, 0xb6d441, -.00031]].map(([rad, rx, rz, col, sp]) => {
-      const g = new THREE.Group(); g.rotation.x = rx; g.rotation.z = rz; holder.add(g);
-      const pts = [...Array(181)].map((_, i) => new THREE.Vector3(Math.cos(i / 90 * Math.PI) * rad, 0, Math.sin(i / 90 * Math.PI) * rad));
-      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({color: col, transparent: true, opacity: .22})));
-      const sat = new THREE.Mesh(new THREE.SphereGeometry(.022, 12, 10), new THREE.MeshBasicMaterial({color: col})); g.add(sat);
-      const glow = new THREE.Sprite(new THREE.SpriteMaterial({color: col, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, map: (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })()})); glow.scale.set(.16, .16, 1); sat.add(glow);
-      return {g, sat, rad, sp, a: Math.random() * 6.28};
-    });
-    let W = 0, H = 0, mxp = 0, myp = 0;
-    function layout(){ W = cv.clientWidth; H = cv.clientHeight; if (!W || !H) return; renderer.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix();
-      const u = 2 * cam.position.z * Math.tan(cam.fov * Math.PI / 360) / H; let cx, cy, r;
-      if (W > 860) { cx = W * .26; cy = H * .69; r = Math.min(W * .145, H * .245); } else { cx = W * .5; cy = H * 1.02; r = W * .62; }
-      holder.position.set((cx - W / 2) * u, -(cy - H / 2) * u, 0); holder.scale.setScalar(r * u); }
-    addEventListener('resize', layout); layout();
-    addEventListener('pointermove', e => { mxp = e.clientX / innerWidth - .5; myp = e.clientY / innerHeight - .5; });
-    cv.classList.add('on');
-    let last = performance.now();
-    (function tick(now){ requestAnimationFrame(tick); if ($('loginView').hidden) return; if (!W) layout(); const dt = Math.min(50, now - last); last = now;
-      if (!reduce) { earth.rotation.y += dt * .000055; clouds.rotation.y += dt * .000075; orbits.forEach(o => { o.a += dt * o.sp; o.sat.position.set(Math.cos(o.a) * o.rad, 0, Math.sin(o.a) * o.rad); }); stars.rotation.y += dt * .0000035; }
-      starMat.uniforms.uT.value = now / 1000; cam.position.x += (mxp * .35 - cam.position.x) * .03; cam.position.y += (-myp * .22 - cam.position.y) * .03; cam.lookAt(0, 0, 0);
-      renderer.render(scene, cam); })(last);
-  }
-  setTimeout(start, 60);
+  <!-- building shell -->
+  <path d="M10 30 L380 8 L750 30" fill="none" stroke="rgba(182,212,65,.25)" stroke-width="2"/>
+  <text x="380" y="24" text-anchor="middle" fill="rgba(233,238,241,.55)" font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="3">CHRYSOLITE SOLUTIONS · KOCHI</text>
+  <rect x="10" y="30" width="740" height="${F1 - 30}" fill="url(#lsRoom)" stroke="rgba(182,212,65,.22)" stroke-width="1.6"/>
+  <g clip-path="url(#lsC2)">${sky}</g>
+  <rect x="6" y="${F2}" width="748" height="10" fill="#1d2a35"/><rect x="0" y="${F1}" width="760" height="8" fill="#1d2a35"/><rect x="0" y="${F1 + 8}" width="760" height="20" fill="rgba(255,255,255,.03)"/>
+  ${[120, 250, 470, 610, 700].map(x => pendant(x, 30)).join('')}${[100, 250, 470, 640].map(x => pendant(x, F2 + 10)).join('')}
+  ${lift}
+  <!-- upper floor: meeting room, whiteboard session, data wall, server room -->
+  ${glassRoom(18, 60, 156, F2)}${label(26, 74, 'MEETING ROOM 2')}
+  <g transform="translate(96 108)"><rect x="-40" y="-20" width="80" height="44" rx="3" fill="#0d1b17" stroke="#3a4754" stroke-width="1.5"/>${[0, 1, 2, 3, 4, 5].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .6}s" x="${-30 + i * 10}" y="${-8 + (i * 5) % 12}" width="6" height="${24 - (i * 5) % 12}" rx="1" fill="${i % 2 ? C.cyan : C.lime}" opacity=".8"/>`).join('')}</g>
+  ${at(52, F2, S, chair(6, 0) + seated({x: 0, y: -36, skin: '#c68e66', hair: '#1a1410', style: 'crop', coat: '#3e5d7a', pant: C.pant}))}
+  ${at(142, F2, S, `<g transform="scale(-1 1)">${chair(6, 0)}${seated({x: 0, y: -36, skin: '#f0cfb3', hair: '#7a4a2a', style: 'bob', coat: '#6d5b4b', pant: C.pant2})}</g>`)}
+  <ellipse cx="97" cy="${F2 - 42}" rx="26" ry="4.5" fill="#dfe5e8"/><rect x="95" y="${F2 - 42}" width="4" height="40" fill="#8b98a3"/>
+  <g transform="translate(97 ${F2 - 44})"><path d="M-8 0 l2 -9 h12 l2 9z" fill="#c7d2d8"/><rect class="ls-glow" x="-4" y="-8" width="8" height="6" rx="1" fill="${C.cyan}" opacity=".45"/></g>
+  <g transform="translate(192 120)"><rect width="122" height="70" rx="3" fill="#e9eef1"/><rect x="0" y="70" width="122" height="4" fill="#9aa7b0"/>
+    ${[[10, 10, '#f7d046'], [30, 10, '#8dc63f'], [10, 30, '#5fd3df'], [30, 30, '#f5b95c']].map(([x, y, c]) => `<rect x="${x}" y="${y}" width="15" height="15" fill="${c}" opacity=".9"/>`).join('')}
+    <path class="ls-draw" d="M58 50 L72 32 L86 40 L104 18" fill="none" stroke="${C.blue}" stroke-width="2.2" stroke-linecap="round"/><path d="M58 56 h50" stroke="#9aa7b0" stroke-width="1.2"/></g>
+  ${at(300, F2, S, standing({x: 0, y: 0, face: -1, skin: '#8a5a3c', hair: '#14100d', style: 'short', coat: C.char, pant: C.pant, arms: ['ls-rest', 'ls-write', '', marker]}))}
+  ${at(232, F2, S * .96, standing({x: 0, y: 0, skin: '#e8b996', hair: '#2a1e17', style: 'bun', coat: C.sand, pant: C.pant2, arms: ['ls-rest', 'ls-hold', '', `<g transform="translate(0 56) rotate(-42)"><rect x="-11" y="-8" width="22" height="15" rx="2" fill="#1a2733" stroke="#55626f"/><rect class="ls-glow" x="-8" y="-5" width="16" height="9" fill="${C.cyan}" opacity=".35"/></g>`]}))}
+  <g transform="translate(392 70) scale(.6)">${wall}</g>
+  ${at(592, F2, S, standing({x: 0, y: 0, face: -1, skin: '#c68e66', hair: '#1f1712', style: 'crop', coat: C.navy, pant: C.pant, arms: ['ls-rest', 'ls-point']}))}
+  ${glassRoom(620, 70, 126, F2)}${label(628, 84, 'SERVER ROOM')}
+  ${at(632, F2, 1, racks)}
+  ${at(726, F2, S, standing({x: 0, y: 0, face: -1, skin: '#f0cfb3', hair: '#5a3a24', style: 'crop', coat: C.slate, pant: C.pant2, arms: ['ls-rest', 'ls-hold2', '', `<g transform="translate(-2 40) rotate(-14)"><rect x="-14" y="-2" width="28" height="4" rx="1.5" fill="#8b98a3"/></g>`]}))}
+  <!-- ground floor: reception, workstations, coffee corner -->
+  <g transform="translate(24 ${F2 + 40})"><rect width="128" height="40" rx="4" fill="#e9eef1"/><image href="logo.png" x="8" y="6" width="28" height="28"/><text x="42" y="19" fill="#22324a" font-family="Bricolage Grotesque, sans-serif" font-size="11" font-weight="800">Chrysolite</text><text x="42" y="30" fill="#55626f" font-family="IBM Plex Mono, monospace" font-size="6" letter-spacing="1.2">SOLUTIONS</text></g>
+  ${label(24, F2 + 30, 'RECEPTION')}
+  ${at(60, F1, S, chair(6, 0) + seated({x: 0, y: -36, skin: '#f6d2b5', hair: '#7a4a2a', style: 'bun', coat: C.teal, pant: C.pant}))}
+  <path d="M20 ${F1} V${F1 - 58} q60 -10 120 0 V${F1}z" fill="#dfe5e8"/><path d="M26 ${F1 - 40} q54 -8 108 0" stroke="${C.lime}" stroke-width="3" fill="none" opacity=".8"/><path d="M26 ${F1 - 34} q54 -8 108 0" stroke="${C.cyan}" stroke-width="2" fill="none" opacity=".6"/>
+  ${at(160, F1, S, standing({x: 0, y: 0, face: -1, skin: '#8d5a3b', hair: '#121212', style: 'short', coat: '#6d5b4b', pant: C.pant, arms: ['ls-rest', 'ls-rest2', bag]}))}
+  ${at(186, F1, S, ws({skin: '#e8b996', hair: '#2a1e17', style: 'bob', coat: C.navy, pant: C.pant}, 'sheet'))}
+  ${at(392, F1, S, ws({skin: '#8a5a3c', hair: '#14100d', style: 'crop', coat: C.char, pant: C.pant}, 'code'))}
+  ${at(496, F1, S, ws({skin: '#f0cfb3', hair: '#5a3a24', style: 'bun', coat: '#3e5d7a', pant: C.pant2}, 'chart'))}
+  <g transform="translate(626 ${F1})"><rect x="0" y="-62" width="118" height="62" rx="3" fill="#2a3542"/><rect x="0" y="-66" width="118" height="6" rx="2" fill="#dfe5e8"/>
+    <rect x="12" y="-98" width="26" height="32" rx="3" fill="#c9d2d6"/><rect x="18" y="-90" width="14" height="8" rx="1" fill="#1d2a35"/><circle class="ls-live" cx="32" cy="-74" r="1.8" fill="${C.lime}"/><path class="ls-steam" d="M22 -102 q-3 -5 0 -10 M28 -102 q-3 -5 0 -10" stroke="rgba(255,255,255,.55)" stroke-width="1.4" fill="none"/>
+    <rect x="50" y="-76" width="9" height="10" rx="2" fill="#e9eef1"/><rect x="64" y="-76" width="9" height="10" rx="2" fill="#e2513b"/></g>
+  ${label(630, F2 + 30, 'CAFÉ')}
+  ${at(648, F1, S, standing({x: 0, y: 0, skin: '#c98d5a', hair: '#2b1d14', style: 'short', coat: C.sand, pant: C.pant, arms: ['ls-rest', 'ls-cupr', '', cupIn]}))}
+  ${at(700, F1, S, standing({x: 0, y: 0, face: -1, skin: '#f6d2b5', hair: '#3b2a20', style: 'bob', coat: C.blue, pant: C.pant2, arms: ['ls-rest', 'ls-cupr', '', cupIn]}))}
+  ${plant(318, F1, .62)}${plant(612, F2, .55)}${plant(742, F1, .6)}
+  <!-- people walking between areas -->
+  <g clip-path="url(#lsC1)"><g transform="translate(0 ${F1}) scale(${S})"><g class="ls-walk1">${standing({x: 0, y: 0, face: -1, skin: '#c68e66', hair: '#1f1712', style: 'crop', coat: C.slate, pant: C.pant2, arms: ['ls-swing', 'ls-hold2', '', `<g transform="translate(-2 40) rotate(-14)"><rect x="-14" y="-2" width="28" height="4" rx="1.5" fill="#8b98a3"/></g>`], legs: ['ls-step-a', 'ls-step-b']})}</g></g></g>
+  <g clip-path="url(#lsC2)"><g transform="translate(0 ${F2}) scale(${S})"><g class="ls-walk2">${standing({x: 0, y: 0, skin: '#8d5a3b', hair: '#121212', style: 'short', coat: '#3e5d7a', pant: C.pant, arms: ['ls-swing', 'ls-swing2'], legs: ['ls-step-a', 'ls-step-b']})}</g></g></g>`;
 })();
 
 /* ---------- sign-in backdrop: drifting network ---------- */
