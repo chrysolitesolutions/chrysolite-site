@@ -179,12 +179,16 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .pf-sf{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}.pf-sf button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}.pf-sf button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
 #pfRows tr{cursor:pointer}#pfRows tr:hover td{background:color-mix(in srgb,var(--gem) 6%,transparent)}
 .pf-up{display:flex;gap:8px;flex-wrap:wrap}
-.pf-dlg{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto;display:none;gap:14px}.pf-dlg[open]{display:grid}
+.pw-dlg.pf-dlg{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto;display:none;gap:14px}.pw-dlg.pf-dlg[open]{display:grid}
 .pf-dh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.pf-dh h3{margin:0 0 4px;font-size:20px}.pf-dh code{font:12px var(--mono);color:var(--ink-soft);word-break:break-all}
 .pf-dmeta{display:flex;gap:6px;flex-wrap:wrap}
 .pf-dst{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface-2)}.pf-dst h5{margin:0 0 8px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .pf-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pf-seg button{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
 .pf-seg button[data-s="Pending"].on{border-color:var(--off);background:color-mix(in srgb,var(--off) 14%,var(--surface))}.pf-seg button[data-s="Ongoing"].on{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,var(--surface))}.pf-seg button[data-s="Completed"].on{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--surface))}
+.pf-cks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}@media(max-width:900px){.pf-cks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pf-cks .tile{padding:12px;border-left:4px solid var(--c)}.pf-cks .tile b{font:800 22px var(--display)}.pf-cks .tile small{font-size:11.5px}
+.ck{display:grid;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2);font-size:12.5px}.ck .pill{justify-self:start}.ck small{color:var(--ink-soft)}
+.cku{font-size:11.5px;color:var(--ink-soft);display:block;margin-top:3px}
 .src-box .btn{justify-self:start;font-size:13px;padding:7px 12px;text-decoration:none}
 .pf-due{display:grid;gap:14px}
 .pf-grp h4{margin:0 0 8px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:8px;align-items:center}
@@ -691,6 +695,19 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
           <div class="pf-pbar" id="pfPbar"></div>
           <div class="pf-stt" id="pfStTiles"></div>
         </div>
+        <div class="panel pf-chk" style="margin-top:14px">
+          <div class="vhead" style="align-items:flex-start;margin-bottom:10px;gap:12px;flex-wrap:wrap"><div><h3 style="margin:0">Source check</h3><p class="hint" id="chkWhen" style="margin:4px 0 0">Sources have not been checked automatically yet.</p></div>
+            <div class="admin-only pf-up" hidden><button class="btn btn-gem" type="button" id="chkRun">Check all sources now</button><button class="btn btn-ghost" type="button" id="chkSetBtn">Setup</button></div></div>
+          <div class="pf-cks" id="chkSum"></div>
+          <div class="msg" id="chkMsg" hidden style="margin-top:12px"></div>
+          <form class="adm-form admin-only" id="chkSet" hidden novalidate style="margin-top:12px">
+            <p class="hint" style="margin:0">One-time setup. The check runs on GitHub (free) every Monday and whenever you press <b>Check all sources now</b>. Paste the GitHub access token you created for it. It is stored in the admin-only settings and never shown to employees.</p>
+            <div class="g2"><div class="f"><label for="chkRepo">GitHub repository</label><input id="chkRepo" autocomplete="off" value="chrysolitesolutions/chrysolite-site"></div>
+            <div class="f"><label for="chkBranch">Branch</label><input id="chkBranch" autocomplete="off" value="main"></div></div>
+            <div class="f"><label for="chkTok">GitHub access token</label><input id="chkTok" type="password" autocomplete="off" placeholder="github_pat_…"></div>
+            <button class="btn btn-gem" type="submit" style="justify-self:start">Save setup</button>
+          </form>
+        </div>
         <div class="pf-legend" id="pfLegend" style="margin-top:14px"></div>
         <div class="panel" style="margin-top:14px"><h3>12-month plan</h3><p class="hint" style="margin:-4px 0 12px">Select a month to see what's due. Click any PowerFilter to open its sources and update its status.</p><div class="pf-months" id="pfMonths" role="tablist" aria-label="Months"></div></div>
         <div class="panel" style="margin-top:14px"><div class="vhead" style="align-items:baseline;margin-bottom:6px"><h3 style="margin:0" id="pfMonthT">Due this month</h3><span class="hint" id="pfMonthN"></span></div><div class="pf-sf" id="pfSf" role="group" aria-label="Filter by status"></div><div class="pf-due" id="pfDue"></div></div>
@@ -966,7 +983,7 @@ function watch(name, ref, onData) {
 }
 function startData() {
   if (!db || unsub.accounts) return;
-  watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; renderPf(); renderSrc(); renderGdoc(); renderGuideCards(); });
+  watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
@@ -1427,7 +1444,41 @@ const pfKey = (id, d) => id + '__' + pfMKey(d);
 const pfSt = (id, d) => (d && pfStat[pfKey(id, d)] && pfStat[pfKey(id, d)].status) || 'Pending';
 const pfStPill = s => `<span class="pill ${PF_ST[s].p}">${s}</span>`;
 const pfSrcOf = id => ((guides.pfsources && guides.pfsources.rows) || []).find(r => r.id === id) || null;
-const srcBad = r => r && /outdated|not verified/i.test(r.primaryStatus || '');
+const pfChk = id => { const c = guides.pfcheck; return c && c.rows ? c.rows[String(id).replace(/\./g, '~')] || null : null; };
+const CK = {'Current': 'ok', 'Outdated': 'warn', 'Not verified': 'off', 'Link broken': 'warn'};
+const ckPill = c => c ? `<span class="pill ${CK[c.status] || 'off'}">${c.status === 'Link broken' ? '⚠ ' : ''}${esc(c.status)}${c.soft ? ' (year check)' : ''}</span>` : '';
+const dFmt = s => s ? new Date(String(s).length <= 10 ? s + 'T00:00' : s).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}) : '';
+const srcBad = r => { if (!r) return false; const c = pfChk(r.id); if (c && c.p) return c.p.status === 'Outdated' || c.p.status === 'Link broken' || (c.p.status === 'Not verified' && /outdated|not verified/i.test(r.primaryStatus || '')); return /outdated|not verified/i.test(r.primaryStatus || ''); };
+const ckBox = c => c ? `<div class="ck"><div>Automatic check: ${ckPill(c)}</div>${c.updated ? `<div><b>Source last updated: ${dFmt(c.updated)}</b></div>` : ''}<div>${esc(c.note || '')}</div>${c.moved ? `<div>The link now opens <a href="${esc(c.moved)}" target="_blank" rel="noopener">${esc(c.moved)}</a>. Consider updating the register.</div>` : ''}<small>Checked ${dFmt((guides.pfcheck || {}).at)}</small></div>` : '';
+let chkReqAt = 0;
+function renderChk(){
+  const c = guides.pfcheck, el = $('chkSum'); if (!el) return;
+  const running = c && c.running && (!c.startedAt || Date.now() - new Date(c.startedAt) < 30 * 60e3);
+  if (c && c.at) { $('chkWhen').innerHTML = `Sources last checked <b>${new Date(c.at).toLocaleString(undefined, {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit'})}</b> · ${c.trigger === 'weekly' ? 'weekly automatic check' : 'run by an admin'}. Every primary and backup link is opened and its latest update date read from the page.`; }
+  if (running) $('chkWhen').innerHTML = '<b>Checking all sources now…</b> this usually takes 2–4 minutes. The page updates by itself.';
+  $('chkRun').disabled = !!running || (chkReqAt && Date.now() - chkReqAt < 90e3 && !(c && c.at && new Date(c.at) > chkReqAt));
+  if (!c || !c.summary) { el.innerHTML = ''; return; }
+  const s = c.summary, bk = c.backup || {}, rows = Object.values(c.rows || {}), dates = rows.map(r => r.p && r.p.updated).filter(Boolean).sort();
+  el.innerHTML = [['Current', 'var(--ok)', 'primary source is up to date'], ['Outdated', 'var(--warn)', 'newer edition expected'], ['Not verified', 'var(--off)', 'no date on page or site blocks checks'], ['Link broken', '#d64545', 'link failed to open']].map(([k, col, t]) => `<div class="tile" style="--c:${col}"><span>${k}</span><b>${s[k] || 0}</b><small>${t} · backup: ${bk[k] || 0}</small></div>`).join('')
+    + `<div class="tile" style="--c:var(--info)"><span>Newest source update</span><b style="font-size:17px">${dates.length ? dFmt(dates[dates.length - 1]) : '—'}</b><small>${dates.length} of ${rows.length} pages show a date</small></div>`;
+}
+$('chkSetBtn').onclick = async () => { const f = $('chkSet'); f.hidden = !f.hidden; if (!f.hidden) { try { const d = await db.doc('adminSettings/sourceCheck').get(); if (d.exists) { const v = d.data(); if (v.repo) $('chkRepo').value = v.repo; if (v.branch) $('chkBranch').value = v.branch; $('chkTok').placeholder = v.token ? 'Saved. Paste a new token to replace it' : 'github_pat_…'; } } catch (e) {} } };
+$('chkSet').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return;
+  const repo = $('chkRepo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''), branch = $('chkBranch').value.trim() || 'main', tok = $('chkTok').value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return toast('Enter the repository as owner/name');
+  try { const cur = await db.doc('adminSettings/sourceCheck').get(), old = cur.exists ? cur.data() : {}; if (!tok && !old.token) return toast('Paste the GitHub access token');
+    await db.doc('adminSettings/sourceCheck').set({repo, branch, token: tok || old.token, updatedAt: new Date().toISOString()}); $('chkTok').value = ''; $('chkSet').hidden = true; toast('Source check setup saved'); }
+  catch (x) { toast('The setup couldn\'t be saved. Try again.'); } });
+$('chkRun').onclick = async () => {
+  const m = $('chkMsg'), say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.innerHTML = t; m.hidden = false; }; if (!isAdmin) return;
+  let cfg = {}; try { const d = await db.doc('adminSettings/sourceCheck').get(); cfg = d.exists ? d.data() : {}; } catch (e) {}
+  if (!cfg.token) { $('chkSet').hidden = false; return say('Finish the one-time setup first: paste the GitHub access token below and save.', true); }
+  $('chkRun').disabled = true; say('Starting the source check…');
+  try { const r = await fetch(`https://api.github.com/repos/${cfg.repo}/actions/workflows/source-check.yml/dispatches`, {method: 'POST', headers: {Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}, body: JSON.stringify({ref: cfg.branch || 'main'})});
+    if (r.status === 204) { chkReqAt = Date.now(); say('Check started. All ' + (((guides.pfsources || {}).rows || []).length || '') + ' PowerFilters are being checked; results appear here in about 2–4 minutes.'); setTimeout(renderChk, 91e3); }
+    else { const why = {401: 'the access token is wrong or expired', 403: 'the token is not allowed to run workflows', 404: 'the repository or the source-check workflow was not found', 422: 'the branch name is wrong'}[r.status] || 'GitHub answered ' + r.status; say('The check couldn\'t start: ' + why + '. Open <b>Setup</b> to fix it.', true); $('chkRun').disabled = false; } }
+  catch (x) { say('The check couldn\'t start. Check your internet connection and try again.', true); $('chkRun').disabled = false; }
+};
 const firstWorkday = (y, m) => { const d = new Date(y, m, 1); while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return d; };
 function pfDates(r, y, m){ // refresh dates of one filter inside month m (0-based) of year y
   const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T00:00') : new Date(2026, 10, 1); if (new Date(y, m + 1, 0) < st) return [];
@@ -1466,18 +1517,18 @@ function renderPf(){
   $('pfPbar').innerHTML = ['Completed', 'Ongoing', 'Pending'].map(k => `<i style="width:${stc[k] / tot * 100}%;background:${PF_ST[k].c}" title="${k}: ${stc[k]}"></i>`).join('');
   const badN = allSel.filter(x => srcBad(pfSrcOf(x.r.id))).length;
   $('pfStTiles').innerHTML = ['Pending', 'Ongoing', 'Completed'].map(k => `<button type="button" class="tile${pfStOn === k ? ' on' : ''}" data-st="${k}" style="--c:${PF_ST[k].c}"><span>${k}</span><b>${stc[k]}</b><small>${k === 'Pending' ? 'not started yet' : k === 'Ongoing' ? 'being refreshed now' : 'done for ' + pfSel.toLocaleDateString(undefined, {month: 'long'})}</small></button>`).join('')
-    + `<button type="button" class="tile${pfStOn === 'src' ? ' on' : ''}" data-st="src" style="--c:#eda100"><span>Source to check</span><b>${badN}</b><small>primary source outdated or not verified</small></button>`;
+    + `<button type="button" class="tile${pfStOn === 'src' ? ' on' : ''}" data-st="src" style="--c:#eda100"><span>Source to check</span><b>${badN}</b><small>${guides.pfcheck ? 'outdated or broken at the last check' : 'primary source outdated or not verified'}</small></button>`;
   $('pfSf').innerHTML = [['', 'All'], ['Pending', 'Pending'], ['Ongoing', 'Ongoing'], ['Completed', 'Completed'], ['src', 'Source to check']].map(([k, l]) => `<button type="button" data-st="${k}" class="${pfStOn === k ? 'on' : ''}">${l}</button>`).join('');
   const sel = allSel.filter(x => !pfStOn || (pfStOn === 'src' ? srcBad(pfSrcOf(x.r.id)) : pfSt(x.r.id, pfSel) === pfStOn));
   $('pfMonthT').textContent = 'Due in ' + pfSel.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}); $('pfMonthN').textContent = sel.length + ' PowerFilter' + (sel.length === 1 ? '' : 's') + (pfFreqOn ? ' · ' + pfFreqOn : '') + (pfStOn ? ' · ' + (pfStOn === 'src' ? 'source to check' : pfStOn.toLowerCase()) : '');
   $('pfDue').innerHTML = sel.length ? Object.keys(PF_FREQ).map(f => { const g = sel.filter(x => x.r.freq === f); if (!g.length) return '';
-    return `<div class="pf-grp" style="--c:${pfCol(f)}"><h4><i></i>${f} · ${g.length}</h4><div class="pf-items">${g.map(x => { const st = pfSt(x.r.id, pfSel), sr = pfSrcOf(x.r.id); return `<button type="button" class="pf-it st-${st}" style="--c:${pfCol(f)}" data-pf="${esc(x.r.id)}" data-d="${+x.d[0]}"><b>${esc(x.r.name)}</b><span>${esc(x.r.cat || '')} · ${x.d.map(d => d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})).join(', ')}</span><code>${esc(x.r.id)}</code><span class="tg">${pfStPill(st)}${srcBad(sr) ? '<span class="pill warn">Check source</span>' : ''}</span></button>`; }).join('')}</div></div>`; }).join('') : (pfStOn ? '<p class="empty">No PowerFilters with this status this month.</p>' : '<p class="empty">Nothing due this month.</p>');
+    return `<div class="pf-grp" style="--c:${pfCol(f)}"><h4><i></i>${f} · ${g.length}</h4><div class="pf-items">${g.map(x => { const st = pfSt(x.r.id, pfSel), sr = pfSrcOf(x.r.id); return `<button type="button" class="pf-it st-${st}" style="--c:${pfCol(f)}" data-pf="${esc(x.r.id)}" data-d="${+x.d[0]}"><b>${esc(x.r.name)}</b><span>${esc(x.r.cat || '')} · ${x.d.map(d => d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})).join(', ')}</span><code>${esc(x.r.id)}</code><span class="tg">${pfStPill(st)}${srcBad(sr) ? '<span class="pill warn">Check source</span>' : ''}</span>${(() => { const c = pfChk(x.r.id); return c && c.p && c.p.updated ? `<span class="cku">Source updated ${dFmt(c.p.updated)}</span>` : ''; })()}</button>`; }).join('')}</div></div>`; }).join('') : (pfStOn ? '<p class="empty">No PowerFilters with this status this month.</p>' : '<p class="empty">Nothing due this month.</p>');
   // full table
   const cats = [...new Set(rows.map(r => r.cat).filter(Boolean))].sort(), kc = $('pfCat').value, kf = $('pfFreq').value;
   $('pfCat').innerHTML = '<option value="">All categories</option>' + cats.map(c => `<option${c === kc ? ' selected' : ''}>${esc(c)}</option>`).join('');
   $('pfFreq').innerHTML = '<option value="">All frequencies</option>' + Object.keys(PF_FREQ).filter(f => count[f]).map(f => `<option${f === kf ? ' selected' : ''}>${f}</option>`).join('');
   const kst = $('pfStF').value, q = $('pfQ').value.toLowerCase(), list = nexts.concat(rows.filter(r => !pfNextDue(r)).map(r => ({r, d: null}))).filter(x => { const sr = pfSrcOf(x.r.id); return (!q || [x.r.name, x.r.id, sr && sr.primary, sr && sr.backup].join(' ').toLowerCase().includes(q)) && (!kc || x.r.cat === kc) && (!kf || x.r.freq === kf) && (!kst || pfSt(x.r.id, x.d) === kst); });
-  $('pfRows').innerHTML = list.length ? list.map(x => { const sr = pfSrcOf(x.r.id), st = pfSt(x.r.id, x.d); return `<tr data-pf="${esc(x.r.id)}" data-d="${x.d ? +x.d : ''}" tabindex="0"><td><b>${esc(x.r.name)}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${esc(x.r.cat || '')} · ${esc(x.r.id)}</div></td><td><span class="fq" style="--c:${pfCol(x.r.freq)}"><i></i>${esc(x.r.freq)}</span></td><td class="mono">${pfFmt(x.d)}</td><td style="min-width:200px;max-width:260px;white-space:normal">${sr ? `<div style="font-size:13px">${esc(sr.primary || '—')}</div>${srcPill(sr.primaryStatus)}` : '—'}</td><td>${x.d ? pfStPill(st) : '—'}</td></tr>`; }).join('') : '<tr><td colspan="5" class="empty">No PowerFilters match these filters.</td></tr>';
+  $('pfRows').innerHTML = list.length ? list.map(x => { const sr = pfSrcOf(x.r.id), st = pfSt(x.r.id, x.d); return `<tr data-pf="${esc(x.r.id)}" data-d="${x.d ? +x.d : ''}" tabindex="0"><td><b>${esc(x.r.name)}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${esc(x.r.cat || '')} · ${esc(x.r.id)}</div></td><td><span class="fq" style="--c:${pfCol(x.r.freq)}"><i></i>${esc(x.r.freq)}</span></td><td class="mono">${pfFmt(x.d)}</td><td style="min-width:200px;max-width:260px;white-space:normal">${sr ? (() => { const c = pfChk(x.r.id), cp = c && c.p; return `<div style="font-size:13px">${esc(sr.primary || '—')}</div>${cp ? ckPill(cp) : srcPill(sr.primaryStatus)}${cp && cp.updated ? `<span class="cku">updated ${dFmt(cp.updated)}</span>` : ''}`; })() : '—'}</td><td>${x.d ? pfStPill(st) : '—'}</td></tr>`; }).join('') : '<tr><td colspan="5" class="empty">No PowerFilters match these filters.</td></tr>';
 }
 $('pfMonths').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; pfSel = new Date(+b.dataset.m); renderPf(); });
 $('pfLegend').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; pfFreqOn = pfFreqOn === b.dataset.f ? '' : b.dataset.f; renderPf(); });
@@ -1492,8 +1543,8 @@ function srcBoxes(r){
   if (!r) return '<div class="src-box" style="grid-column:1/-1"><h5>Sources</h5><div>No source details for this PowerFilter yet.</div></div>';
   const open = (u, t) => u ? `<a class="btn btn-ghost" href="${/^https?:\/\//i.test(u) ? esc(u) : 'https://' + esc(u)}" target="_blank" rel="noopener">${t} ↗</a><div style="font-size:12px;color:var(--ink-soft);word-break:break-all">${esc(u)}</div>` : '';
   return `${r.action ? `<div class="src-box act"><h5>Recommended action</h5><div>${esc(r.action)}</div></div>` : ''}
-    <div class="src-box"><h5>Primary source</h5><b>${esc(r.primary || '—')}</b>${open(r.primaryUrl, 'Open source')}<div>${srcPill(r.primaryStatus)} ${r.type ? `<span class="pill off">${esc(r.type)}</span>` : ''}</div>${r.primaryInfo ? `<div>${esc(r.primaryInfo)}</div>` : ''}${r.cadence || r.access ? `<div style="color:var(--ink-soft)">${esc([r.cadence && 'Published: ' + r.cadence, r.access && 'Access: ' + r.access].filter(Boolean).join(' · '))}</div>` : ''}</div>
-    <div class="src-box"><h5>Backup source</h5><b>${esc(r.backup || '—')}</b>${open(r.backupUrl, 'Open backup source')}<div>${srcPill(r.backupStatus)}</div>${r.backupInfo ? `<div>${esc(r.backupInfo)}</div>` : ''}</div>
+    <div class="src-box"><h5>Primary source</h5><b>${esc(r.primary || '—')}</b>${open(r.primaryUrl, 'Open source')}${ckBox((pfChk(r.id) || {}).p)}<div>Register: ${srcPill(r.primaryStatus)} ${r.type ? `<span class="pill off">${esc(r.type)}</span>` : ''}</div>${r.primaryInfo ? `<div>${esc(r.primaryInfo)}</div>` : ''}${r.cadence || r.access ? `<div style="color:var(--ink-soft)">${esc([r.cadence && 'Published: ' + r.cadence, r.access && 'Access: ' + r.access].filter(Boolean).join(' · '))}</div>` : ''}</div>
+    <div class="src-box"><h5>Backup source</h5><b>${esc(r.backup || '—')}</b>${open(r.backupUrl, 'Open backup source')}${ckBox((pfChk(r.id) || {}).b)}<div>Register: ${srcPill(r.backupStatus)}</div>${r.backupInfo ? `<div>${esc(r.backupInfo)}</div>` : ''}</div>
     ${r.howTo ? `<div class="src-box" style="grid-column:1/-1"><h5>Notes</h5><div>${esc(r.howTo)}</div></div>` : ''}
     ${/yes/i.test(r.decision || '') ? `<div class="src-box" style="grid-column:1/-1"><h5>Team decision needed</h5><div>${esc(r.decision)}</div></div>` : ''}`;
 }
@@ -1600,7 +1651,7 @@ function renderSrc(){
   $('srcFq').innerHTML = '<option value="">All frequencies</option>' + fqs.map(x => `<option${x === kf ? ' selected' : ''}>${esc(x)}</option>`).join('');
   const q = $('srcQ').value.toLowerCase(), list = rows.filter(r => (!q || [r.name, r.id, r.primary, r.backup].join(' ').toLowerCase().includes(q)) && (!ks || r.primaryStatus === ks) && (!kf || r.freq === kf) && (!$('srcDec').checked || /yes/i.test(r.decision || '')) && (!$('srcAct').checked || r.action));
   $('srcCount').textContent = list.length + ' of ' + rows.length + ' PowerFilters · click a row for details';
-  $('srcList').innerHTML = list.length ? list.map(r => `<details class="src-it"><summary><div class="nm"><b>${esc(r.name)}</b><code>${esc(r.id)}</code></div><div class="ps">${esc(r.primary || '—')}</div><div class="tags">${r.freq ? `<span class="pill info">${esc(r.freq)}</span>` : ''}${srcPill(r.primaryStatus)}${/yes/i.test(r.decision || '') ? '<span class="pill warn">Team decision</span>' : ''}</div></summary>
+  $('srcList').innerHTML = list.length ? list.map(r => `<details class="src-it"><summary><div class="nm"><b>${esc(r.name)}</b><code>${esc(r.id)}</code></div><div class="ps">${esc(r.primary || '—')}</div><div class="tags">${r.freq ? `<span class="pill info">${esc(r.freq)}</span>` : ''}${(() => { const c = pfChk(r.id); return c && c.p ? ckPill(c.p) : srcPill(r.primaryStatus); })()}${/yes/i.test(r.decision || '') ? '<span class="pill warn">Team decision</span>' : ''}</div></summary>
     <div class="src-det">${r.action ? `<div class="src-box act"><h5>Recommended action</h5><div>${esc(r.action)}</div></div>` : ''}
       <div class="src-box"><h5>Primary source</h5><b>${esc(r.primary || '—')}</b><div>${srcLink(r.primaryUrl)}</div><div>${srcPill(r.primaryStatus)} ${r.type ? `<span class="pill off">${esc(r.type)}</span>` : ''}</div>${r.primaryInfo ? `<div>${esc(r.primaryInfo)}</div>` : ''}${r.cadence || r.access ? `<div style="color:var(--ink-soft)">${esc([r.cadence && 'Published: ' + r.cadence, r.access && 'Access: ' + r.access].filter(Boolean).join(' · '))}</div>` : ''}</div>
       <div class="src-box"><h5>Backup source</h5><b>${esc(r.backup || '—')}</b><div>${srcLink(r.backupUrl)}</div><div>${srcPill(r.backupStatus)}</div>${r.backupInfo ? `<div>${esc(r.backupInfo)}</div>` : ''}</div>
