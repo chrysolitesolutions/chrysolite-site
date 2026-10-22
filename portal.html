@@ -2692,13 +2692,12 @@ function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = acco
     let W = 0, H = 0, mx = 0, my = 0;
     const layout = () => { W = cv.clientWidth; H = cv.clientHeight; if (!W || !H) return; R.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); };
     addEventListener('resize', layout); layout();
-    addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
     host.classList.add('has3d');
     const t0 = performance.now(); let lastScr = 0;
     (function frame(now){ requestAnimationFrame(frame); if ($('loginView').hidden) return; if (!W) layout();
       const t = (now - t0) / 1000, tt = reduce ? 0 : t;
       const px = Math.sin(tt * .045) * 5.5 - 2.5, pz = 10.2 + Math.cos(tt * .03) * 1;
-      cam.position.set(px + mx * .6, 1.9 + Math.sin(tt * .07) * .15 - my * .25, pz);
+      cam.position.set(px, 1.9 + Math.sin(tt * .07) * .15, pz);
       cam.lookAt(px * .5 + 1.2, 1.0, -8);
       if (!reduce) { anim.forEach(f => f(t)); beacons.forEach((b, i) => b.material.opacity = (Math.sin(t * 2.2 + i) > .2) ? .95 : .1); leds.forEach((l, i) => { if (((i * 7919 + Math.floor(t * 4)) % 11) === 0) l.visible = !l.visible; }); }
       if (now - lastScr > 650) { lastScr = now; tick++; screens.forEach((s, i) => { if ((i + tick) % 2) return; s.userData.k++; drawScreen(s.userData.x, 256, 160, s.userData.kind, s.userData.k); s.needsUpdate = true; }); }
