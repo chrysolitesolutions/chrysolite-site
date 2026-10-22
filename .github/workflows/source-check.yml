@@ -1,0 +1,27 @@
+name: PowerFilter source check
+on:
+  workflow_dispatch: {}          # "Check all sources now" button in the portal, or Run workflow on GitHub
+  schedule:
+    - cron: '17 3 * * 1'         # every Monday 03:17 UTC
+permissions:
+  contents: read
+concurrency:
+  group: source-check
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node .github/scripts/check-sources.mjs
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SA }}
+          CHECKER_EMAIL: sourcecheck@chrysolite.in
+          CHECKER_PASSWORD: ${{ secrets.CHECKER_PASSWORD }}
+          TRIGGER: ${{ github.event_name == 'schedule' && 'weekly' || 'manual' }}
