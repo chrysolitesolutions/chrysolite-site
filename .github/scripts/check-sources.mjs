@@ -1,6 +1,8 @@
 // Chrysolite PowerFilter source check.
 // Reads the source register from Firestore (guidelines/pfsources), opens every primary and backup link,
 // works out whether each source looks current, and writes the result to guidelines/pfcheck.
+// It signs in to Firebase as the login sourcecheck@chrysolite.in (password in the GitHub secret CHECKER_PASSWORD);
+// the Firestore rules only let that login read the guidelines and write guidelines/pfcheck. No service-account key is needed.
 // Run by .github/workflows/source-check.yml. Local test: node check-sources.mjs --pack guidelines-pack.json --dry
 import fs from 'node:fs';
 
@@ -82,20 +84,53 @@ async function pool(items, n, fn){ const out = []; let i = 0; await Promise.all(
 
 const summarise = rows => { const s = {Current: 0, Outdated: 0, 'Not verified': 0, 'Link broken': 0}; rows.forEach(x => x.p && (s[x.p.status] = (s[x.p.status] || 0) + 1)); return s; };
 
+// ---- Firestore over its REST API, signed in as the checker login
+const FB = {apiKey: 'AIzaSyDJ8u4jCNp9c8nKu_tvAge_p-jZWLlezNQ', project: 'chrysolite-portal', referer: 'https://www.chrysolite.in/'};
+export const enc = v => v === null || v === undefined ? {nullValue: null} : typeof v === 'boolean' ? {booleanValue: v} : typeof v === 'number' ? (Number.isInteger(v) ? {integerValue: String(v)} : {doubleValue: v})
+  : typeof v === 'string' ? {stringValue: v} : Array.isArray(v) ? {arrayValue: {values: v.map(enc)}} : {mapValue: {fields: Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined).map(([k, x]) => [k, enc(x)]))}};
+export const dec = v => { if (!v) return null; if ('stringValue' in v) return v.stringValue; if ('integerValue' in v) return +v.integerValue; if ('doubleValue' in v) return v.doubleValue; if ('booleanValue' in v) return v.booleanValue;
+  if ('nullValue' in v) return null; if ('timestampValue' in v) return v.timestampValue; if ('arrayValue' in v) return (v.arrayValue.values || []).map(dec); if ('mapValue' in v) return Object.fromEntries(Object.entries(v.mapValue.fields || {}).map(([k, x]) => [k, dec(x)])); return null; };
+// Option A: service-account key (GitHub secret FIREBASE_SA). Signs a token with the key; no extra packages needed.
+async function saToken(sa){
+  const {createSign} = await import('node:crypto'), b64 = x => Buffer.from(typeof x === 'string' ? x : JSON.stringify(x)).toString('base64url'), now = Math.floor(Date.now() / 1000);
+  const head = b64({alg: 'RS256', typ: 'JWT'}), claim = b64({iss: sa.client_email, scope: 'https://www.googleapis.com/auth/datastore', aud: 'https://oauth2.googleapis.com/token', iat: now, exp: now + 3600});
+  const sig = createSign('RSA-SHA256').update(head + '.' + claim).sign(sa.private_key).toString('base64url');
+  const r = await fetch('https://oauth2.googleapis.com/token', {method: 'POST', headers: {'content-type': 'application/x-www-form-urlencoded'}, body: 'grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=' + head + '.' + claim + '.' + sig});
+  const j = await r.json(); if (!r.ok) throw new Error('The service-account key was refused: ' + (j.error_description || j.error || r.status)); return j.access_token;
+}
+// Option B: the checker login sourcecheck@chrysolite.in (GitHub secret CHECKER_PASSWORD)
+async function signIn(){
+  if (process.env.FIREBASE_SA && process.env.FIREBASE_SA.trim()) { console.log('Signing in with the service-account key'); return saToken(JSON.parse(process.env.FIREBASE_SA)); }
+  const email = process.env.CHECKER_EMAIL || 'sourcecheck@chrysolite.in', password = process.env.CHECKER_PASSWORD;
+  if (!password) throw new Error('No sign-in found: add the GitHub secret FIREBASE_SA (service-account key) or CHECKER_PASSWORD (checker login).');
+  const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FB.apiKey, {method: 'POST', headers: {'content-type': 'application/json', referer: FB.referer}, body: JSON.stringify({email, password, returnSecureToken: true})});
+  const j = await r.json(); if (!r.ok) throw new Error('Sign-in as ' + email + ' failed: ' + ((j.error && j.error.message) || r.status) + '. Check the login exists in Firebase Authentication and the password secret is right.');
+  return j.idToken;
+}
+function restDb(token){
+  const base = `https://firestore.googleapis.com/v1/projects/${FB.project}/databases/(default)/documents/`, h = {authorization: 'Bearer ' + token, 'content-type': 'application/json', referer: FB.referer};
+  const fail = async (r, what) => { const t = await r.text(); throw new Error(what + ' failed (' + r.status + '): ' + t.slice(0, 300) + (r.status === 403 ? ' — publish the latest Firestore rules.' : '')); };
+  return {
+    async get(path){ const r = await fetch(base + path, {headers: h}); if (r.status === 404) return null; if (!r.ok) await fail(r, 'Reading ' + path); return dec({mapValue: {fields: (await r.json()).fields || {}}}); },
+    async set(path, data, merge){ const q = merge ? '?' + Object.keys(data).map(k => 'updateMask.fieldPaths=' + encodeURIComponent(k)).join('&') : '';
+      const r = await fetch(base + path + q, {method: 'PATCH', headers: h, body: JSON.stringify({fields: enc(data).mapValue.fields})}); if (!r.ok) await fail(r, 'Saving ' + path); }
+  };
+}
+
 async function main(){
   let db = null, rows;
   if (opt('--pack')) rows = JSON.parse(fs.readFileSync(opt('--pack'), 'utf8')).pfsources.rows;
   else {
-    const {initializeApp, cert} = await import('firebase-admin/app'), {getFirestore} = await import('firebase-admin/firestore');
-    initializeApp({credential: cert(JSON.parse(process.env.FIREBASE_SA))}); db = getFirestore();
-    await db.doc('guidelines/pfcheck').set({running: true, startedAt: new Date().toISOString(), trigger: process.env.TRIGGER || 'manual'}, {merge: true});
-    const snap = await db.doc('guidelines/pfsources').get(); rows = (snap.exists && snap.data().rows) || [];
+    db = restDb(await signIn());
+    await db.set('guidelines/pfcheck', {running: true, startedAt: new Date().toISOString(), trigger: process.env.TRIGGER || 'manual'}, true);
+    const doc = await db.get('guidelines/pfsources'); rows = (doc && doc.rows) || [];
+    if (!rows.length) console.log('No PowerFilter sources found in guidelines/pfsources.');
   }
   if (opt('--limit')) rows = rows.slice(0, +opt('--limit'));
   console.log('Checking', rows.length, 'PowerFilters');
   const res = await pool(rows, 6, checkRow); console.log('');
   const summary = summarise(res), out = {running: false, at: new Date().toISOString(), trigger: process.env.TRIGGER || 'manual', summary, backup: summarise(res.map(x => ({p: x.b}))), rows: Object.fromEntries(res.map(x => [x.id.replace(/\./g, '~'), x]))};
   console.log('Primary sources:', JSON.stringify(summary), '| Backup sources:', JSON.stringify(out.backup));
-  if (db) await db.doc('guidelines/pfcheck').set(out); else fs.writeFileSync(opt('--out') || 'pfcheck.json', JSON.stringify(out, null, 1));
+  if (db) await db.set('guidelines/pfcheck', out); else fs.writeFileSync(opt('--out') || 'pfcheck.json', JSON.stringify(out, null, 1));
 }
 if (process.argv[1] && process.argv[1].endsWith('check-sources.mjs')) main().catch(async e => { console.error(e); process.exit(1); });
