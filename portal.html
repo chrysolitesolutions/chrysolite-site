@@ -136,6 +136,46 @@ tr{transition:background .15s}
 tbody tr:hover{background:var(--surface-2)}
 .person{display:flex;align-items:center;gap:10px}
 .person .av{width:30px;height:30px;font-size:11.5px}
+.gd-card b{display:block;font-size:15.5px;margin-bottom:4px}.gd-card span{color:var(--ink-soft);font-size:13.5px}
+.gd-back{margin-bottom:10px;display:inline-block}
+.gd-toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.gd-toc a{font:500 12.5px var(--body);text-decoration:none;color:var(--ink);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.gd-toc a:hover{border-color:var(--gem)}
+.gd-doc{max-width:980px;line-height:1.65}.gd-doc h2{font-size:21px;margin:26px 0 10px;padding-top:14px;border-top:1px solid var(--line);scroll-margin-top:20px}.gd-doc h2:first-child{margin-top:0;border-top:0;padding-top:0}
+.gd-doc h3{font-size:16px;margin:18px 0 6px;color:var(--gem-ink)}.gd-doc p{margin:0 0 10px}.gd-doc ul,.gd-doc ol{margin:0 0 12px;padding-left:22px;display:grid;gap:4px}
+.gd-doc a{color:var(--gem-ink);word-break:break-all}.gd-doc .note{font-size:13px;color:var(--ink-soft);font-style:italic}
+.gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
+.gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+.gd-doc .flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:4px 0 16px;counter-reset:fs}
+.gd-doc .fs{position:relative;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);display:grid;gap:4px}.gd-doc .fs b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gem);color:#10200A;font-size:13px}.gd-doc .fs span{font-size:13px;font-weight:600}
+.gd-doc ul.check{list-style:none;padding:0}.gd-doc ul.check li{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:9px}.gd-doc ul.check li::before{content:"";flex:none;width:16px;height:16px;margin-top:3px;border-radius:4px;border:2px solid var(--gem)}
+.src-guide summary{cursor:pointer}.src-guide p{margin:8px 0 0;color:var(--ink-soft);font-size:14px}
+.src-tg{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.src-list{display:grid}.src-it{border-top:1px solid var(--line)}.src-it summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.6fr) auto;gap:12px;align-items:center;padding:12px 16px}
+.src-it summary::-webkit-details-marker{display:none}.src-it summary:hover{background:var(--surface-2)}
+@media(max-width:760px){.src-it summary{grid-template-columns:1fr}}
+.src-it .nm b{display:block}.src-it .nm code{font:11px var(--mono);color:var(--ink-soft);word-break:break-all}.src-it .ps{font-size:13.5px;color:var(--ink-soft)}
+.src-it .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.src-det{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 16px}@media(max-width:760px){.src-det{grid-template-columns:1fr}}
+.src-box{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:6px;font-size:13.5px;background:var(--surface)}.src-box h5{margin:0;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.src-box a{color:var(--gem-ink);word-break:break-all}
+.src-box.act{grid-column:1/-1;border-color:color-mix(in srgb,#eda100 50%,var(--line));background:color-mix(in srgb,#eda100 9%,var(--surface))}
+.pf-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pf-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 13px var(--body);color:var(--ink);cursor:pointer}
+.pf-chip i{width:9px;height:9px;border-radius:3px;background:var(--c)}.pf-chip b{font-variant-numeric:tabular-nums}
+.pf-chip.on{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+.view[data-view="pf"],#pfBody,#pfBody > *{min-width:0;max-width:100%}
+#pfBody{display:grid}
+.pf-months{width:100%;display:grid;grid-template-columns:repeat(12,minmax(74px,1fr));gap:8px;overflow-x:auto;padding-bottom:4px}
+.pf-m{display:grid;gap:6px;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;font:inherit;color:var(--ink);transition:border-color .2s,transform .2s}
+.pf-m:hover{transform:translateY(-2px)}.pf-m.on{border-color:var(--gem);box-shadow:0 0 0 2px color-mix(in srgb,var(--gem) 35%,transparent)}
+.pf-m .mn{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}.pf-m .cnt{font:800 22px var(--display)}
+.pf-m .bar{display:flex;height:6px;border-radius:4px;overflow:hidden;background:var(--surface-2)}.pf-m .bar i{display:block;height:100%;background:var(--c)}
+.pf-m.now .mn::after{content:" · now";color:var(--gem-ink)}
+.pf-due{display:grid;gap:14px}
+.pf-grp h4{margin:0 0 8px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:8px;align-items:center}
+.pf-grp h4 i{width:9px;height:9px;border-radius:3px;background:var(--c)}
+.pf-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.pf-it{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);border-left:4px solid var(--c);display:grid;gap:2px}
+.pf-it b{font-size:14px}.pf-it span{font-size:12px;color:var(--ink-soft)}.pf-it code{font:11px var(--mono);color:var(--ink-soft);word-break:break-all}
+.fq{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.fq i{width:8px;height:8px;border-radius:2px;background:var(--c)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .pill.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
@@ -411,6 +451,7 @@ tbody tr:hover{background:var(--surface-2)}
       <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
       <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>Time clock<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="profile"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg>Profile</button>
+      <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Guidelines</button>
       <button class="tab" role="tab" data-v="links"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1 1M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1-1"/></svg>Links</button>
       <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
@@ -589,6 +630,72 @@ tbody tr:hover{background:var(--surface-2)}
       <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
     </section>
 
+    <!-- PROJECT GUIDELINES -->
+    <section class="view" data-view="guides" hidden>
+      <div class="vhead"><div><h1>Project guidelines</h1><p>Reference pages for the projects you work on. Open a guide to see its schedule and rules.</p></div></div>
+      <div class="link-grid" id="guideGrid">
+        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4M6.5 11.5h2M11.5 11.5h2M6.5 14h2"/></svg></div><div><b>PowerFilter refresh schedule</b><span id="gdPfSub">When each PowerFilter is due for a refresh, month by month.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="pfsrc"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4M6.5 9h5M9 6.5v5"/></svg></div><div><b>PowerFilter sources</b><span id="gdSrcSub">Primary and backup source for every PowerFilter, and whether it is up to date.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
+      </div>
+      <div class="panel admin-only" hidden style="margin-top:16px"><h3>Load guideline content</h3><p class="hint" style="margin:-4px 0 12px">One-time step: choose <b>guidelines-pack.json</b> to load all five guideline pages. Later you can replace a single page with its own Upload button.</p><input type="file" id="gdPack" accept=".json,application/json"><div class="msg" id="gdPackMsg" hidden style="margin-top:12px"></div></div>
+    </section>
+
+    <!-- POWERFILTER SCHEDULE -->
+    <section class="view" data-view="pf" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <div class="vhead"><div><h1>PowerFilter refresh schedule</h1><p id="pfUpd">Which PowerFilters are due each month, and when.</p></div>
+        <div class="admin-only" hidden><label class="btn btn-ghost" for="pfFile" style="cursor:pointer">Upload schedule (.xlsx)</label><input type="file" id="pfFile" accept=".xlsx" hidden></div></div>
+      <div class="msg" id="pfMsg" hidden style="margin-bottom:14px"></div>
+      <div id="pfEmpty" class="panel" hidden><p class="empty">No schedule has been loaded yet.<span class="admin-only" hidden> Use <b>Upload schedule (.xlsx)</b> above and choose the PowerFilter refresh schedule workbook.</span></p></div>
+      <div id="pfBody" hidden>
+        <div class="tiles">
+          <div class="tile"><span>PowerFilters</span><b id="pfTotal">0</b><small id="pfFreqSum"></small></div>
+          <div class="tile hl"><span id="pfThisL">Due this month</span><b id="pfThis">0</b><small id="pfThisSub"></small></div>
+          <div class="tile"><span>Next refresh</span><b id="pfNext" style="font-size:20px">—</b><small id="pfNextSub"></small></div>
+          <div class="tile"><span>Bi-weekly refresh</span><b id="pfBi" style="font-size:20px">—</b><small>Companies with recent layoffs</small></div>
+        </div>
+        <div class="pf-legend" id="pfLegend"></div>
+        <div class="panel" style="margin-top:14px"><h3>12-month plan</h3><p class="hint" style="margin:-4px 0 12px">Select a month to see what's due.</p><div class="pf-months" id="pfMonths" role="tablist" aria-label="Months"></div></div>
+        <div class="panel" style="margin-top:14px"><div class="vhead" style="align-items:baseline;margin-bottom:6px"><h3 style="margin:0" id="pfMonthT">Due this month</h3><span class="hint" id="pfMonthN"></span></div><div class="pf-due" id="pfDue"></div></div>
+        <div class="panel" style="margin-top:14px;padding:0">
+          <div class="toolbar" style="padding:16px;flex-wrap:wrap"><input id="pfQ" type="search" placeholder="Search PowerFilter name or ID" aria-label="Search PowerFilters"><select id="pfCat" aria-label="Category"><option value="">All categories</option></select><select id="pfFreq" aria-label="Frequency"><option value="">All frequencies</option></select></div>
+          <div class="tbl"><table><thead><tr><th>PowerFilter</th><th>Category</th><th>Frequency</th><th>Next due</th><th>Status</th></tr></thead><tbody id="pfRows"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POWERFILTER SOURCES -->
+    <section class="view" data-view="pfsrc" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <div class="vhead"><div><h1>PowerFilter sources</h1><p id="srcUpd">Where each PowerFilter's data comes from, and whether the source is current.</p></div>
+        <div class="admin-only" hidden><label class="btn btn-ghost" for="srcFile" style="cursor:pointer">Upload sources (.xlsx)</label><input type="file" id="srcFile" accept=".xlsx" hidden></div></div>
+      <div class="msg" id="srcMsg" hidden style="margin-bottom:14px"></div>
+      <div id="srcEmpty" class="panel" hidden><p class="empty">No source register has been loaded yet.</p></div>
+      <div id="srcBody" hidden>
+        <div class="tiles" id="srcTiles"></div>
+        <details class="panel src-guide" style="margin-top:14px"><summary><b>How to read this register</b></summary><div id="srcGuide"></div></details>
+        <div class="panel" style="margin-top:14px;padding:0">
+          <div class="toolbar" style="padding:16px;flex-wrap:wrap"><input id="srcQ" type="search" placeholder="Search PowerFilter, source or ID" aria-label="Search sources"><select id="srcSt" aria-label="Primary source status"><option value="">Any primary status</option></select><select id="srcFq" aria-label="Frequency"><option value="">All frequencies</option></select><label class="src-tg"><input type="checkbox" id="srcDec"> Needs team decision</label><label class="src-tg"><input type="checkbox" id="srcAct"> Has an action</label></div>
+          <p class="hint" id="srcCount" style="padding:0 16px"></p>
+          <div class="src-list" id="srcList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT GUIDELINE DOCUMENT -->
+    <section class="view" data-view="gdoc" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Project guidelines</button>
+      <div class="vhead"><div><h1 id="gdTitle">Guideline</h1><p id="gdSub"></p></div>
+        <div class="admin-only" hidden><label class="btn btn-ghost" for="gdFile" style="cursor:pointer">Replace with .docx</label><input type="file" id="gdFile" accept=".docx" hidden></div></div>
+      <div class="msg" id="gdMsg" hidden style="margin-bottom:14px"></div>
+      <nav class="gd-toc" id="gdToc" aria-label="Sections"></nav>
+      <article class="panel gd-doc" id="gdDoc"></article>
+      <p class="hint" id="gdUpd" style="margin-top:10px"></p>
+    </section>
+
     <!-- LINKS -->
     <section class="view" data-view="links" hidden>
       <div class="vhead"><div><h1>Links</h1><p>Tools and sites you use for Chrysolite work. Each opens in a new tab.</p></div></div>
@@ -758,7 +865,7 @@ const DEF_ALLOW = {Annual:18, Sick:10, Personal:3};
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
-let clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
+let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
 const SESSION_MAX = 8 * 3600000, DAY_MAX = 8 * 3600000;
 let accounts = [], week = {key:'', rows:[]}, nextWeek = {key:'', rows:[]}, decisions = [], anns = [], requests = [], myReq = null, myReqRaw = null, myReqDoc = null, myClockRaw = null, attDocs = [], clockDocs = [], reqLegacy = [], reqNew = [], links = [], myAtt = null, myAttRaw = null, teamAtt = [];
 // attendance/<claude user id> holds one record per employee email, so several employees using one device or Claude account never share hours
@@ -832,6 +939,7 @@ function watch(name, ref, onData) {
 }
 function startData() {
   if (!db || unsub.accounts) return;
+  watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; renderPf(); renderSrc(); renderGdoc(); renderGuideCards(); });
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
@@ -937,11 +1045,12 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
-  if (!['home','roster','schedule','leave','clock','links','profile','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
-  document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== v);
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v===v));
+  if (!['home','roster','schedule','leave','clock','links','profile','guides','pf','pfsrc','eto','roi','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  const vv = GDOCS[v] ? 'gdoc' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
+  document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc'].includes(v) || GDOCS[v] ? 'guides' : v)));
   history.replaceState(null,'','#'+v); window.scrollTo(0,0);
-  const view = document.querySelector('.view[data-view="' + v + '"]');
+  const view = document.querySelector('.view[data-view="' + vv + '"]');
   if (view && !reduce) { view.classList.remove('enter'); [...view.children].forEach((c, i) => c.style.setProperty('--i', i)); void view.offsetWidth; view.classList.add('enter'); }
   if (view) view.querySelectorAll('.chart').forEach(c => delete c.dataset.drawn);
   moveInd(); queueCharts();
@@ -1277,6 +1386,156 @@ $('accBody').addEventListener('click', async e => {
       b.disabled = true; await ref.delete(); if (editKey === key) setEdit(null); toast('Deleted ' + a.name + '\'s portal profile. Their login no longer opens the portal.');
     }
   } catch (x) { b.disabled = false; toast('That change couldn\'t be saved. Try again.'); }
+});
+
+/* ---------- project guidelines: PowerFilter refresh schedule ---------- */
+const PF_FREQ = {'Bi-weekly': {iv: .5, c: '#e87ba4'}, 'Monthly': {iv: 1, c: '#eb6834'}, 'Quarterly': {iv: 3, c: '#2a78d6'}, 'Half-yearly': {iv: 6, c: '#1baf7a'}, 'Yearly': {iv: 12, c: '#eda100'}};
+const pfCol = f => (PF_FREQ[f] || {c: '#9AA7AE'}).c;
+let pfSel = null, pfFreqOn = '';
+const firstWorkday = (y, m) => { const d = new Date(y, m, 1); while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return d; };
+function pfDates(r, y, m){ // refresh dates of one filter inside month m (0-based) of year y
+  const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T00:00') : new Date(2026, 10, 1); if (new Date(y, m + 1, 0) < st) return [];
+  if (r.freq === 'Bi-weekly') { const b = new Date((pfDoc.biStart || '2026-11-02') + 'T00:00'), out = []; const lo = new Date(y, m, 1), hi = new Date(y, m + 1, 1);
+    let d = new Date(b); if (d < lo) { const n = Math.ceil((lo - d) / (14 * 864e5)); d.setDate(d.getDate() + n * 14); } while (d < hi) { if (d >= b) out.push(new Date(d)); d.setDate(d.getDate() + 14); } return out; }
+  const iv = (PF_FREQ[r.freq] || {}).iv || 12, an = r.anchor ? r.anchor - 1 : st.getMonth();
+  if (iv >= 1 && ((m - an) % iv + iv) % iv !== 0) return [];
+  const d = firstWorkday(y, m); return d >= st || (y === st.getFullYear() && m === st.getMonth()) ? [d] : [];
+}
+function pfNextDue(r){ const t = new Date(); t.setHours(0, 0, 0, 0); for (let i = 0; i < 26; i++) { const y = t.getFullYear(), m = t.getMonth() + i, dd = pfDates(r, y + Math.floor(m / 12), m % 12).filter(d => d >= t); if (dd.length) return dd[0]; } return null; }
+const pfFmt = d => d ? d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'}) : '—';
+function pfMonths(){ const st = pfDoc && pfDoc.start ? new Date(pfDoc.start + 'T00:00') : new Date(2026, 10, 1), t = new Date(), base = t > st ? new Date(t.getFullYear(), t.getMonth(), 1) : new Date(st.getFullYear(), st.getMonth(), 1);
+  return [...Array(12)].map((_, i) => new Date(base.getFullYear(), base.getMonth() + i, 1)); }
+function renderPf(){
+  const rows = (pfDoc && pfDoc.rows) || [], has = rows.length > 0;
+  $('gdPfSub').textContent = has ? rows.length + ' PowerFilters · see what is due each month' : 'When each PowerFilter is due for a refresh, month by month.';
+  $('pfEmpty').hidden = has; $('pfBody').hidden = !has; if (!has) return;
+  $('pfUpd').textContent = 'Which PowerFilters are due each month, and when.' + (pfDoc.updatedAt ? ' Updated ' + new Date(pfDoc.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (pfDoc.fileName ? ' from ' + pfDoc.fileName : '') + '.' : '');
+  const months = pfMonths(); if (!pfSel || !months.some(m => +m === +pfSel)) pfSel = months[0];
+  const count = {}; rows.forEach(r => count[r.freq] = (count[r.freq] || 0) + 1);
+  $('pfTotal').textContent = rows.length; $('pfFreqSum').textContent = Object.keys(PF_FREQ).filter(f => count[f]).map(f => count[f] + ' ' + f.toLowerCase()).join(' · ');
+  $('pfLegend').innerHTML = Object.keys(PF_FREQ).filter(f => count[f]).map(f => `<button type="button" class="pf-chip${pfFreqOn === f ? ' on' : ''}" data-f="${f}" style="--c:${pfCol(f)}"><i></i>${f}<b>${count[f]}</b></button>`).join('');
+  const nowM = new Date(); const due = (m) => rows.map(r => ({r, d: pfDates(r, m.getFullYear(), m.getMonth())})).filter(x => x.d.length);
+  $('pfMonths').innerHTML = months.map(m => { const list = due(m), n = list.length, by = {}; list.forEach(x => by[x.r.freq] = (by[x.r.freq] || 0) + 1);
+    const isNow = m.getFullYear() === nowM.getFullYear() && m.getMonth() === nowM.getMonth();
+    return `<button type="button" role="tab" class="pf-m${+m === +pfSel ? ' on' : ''}${isNow ? ' now' : ''}" data-m="${+m}" aria-selected="${+m === +pfSel}"><span class="mn">${m.toLocaleDateString(undefined, {month: 'short', year: '2-digit'})}</span><span class="cnt">${n}</span><span class="bar">${Object.keys(PF_FREQ).filter(f => by[f]).map(f => `<i style="--c:${pfCol(f)};width:${by[f] / n * 100}%"></i>`).join('')}</span></button>`; }).join('');
+  const cur = months[0], curList = due(cur); $('pfThisL').textContent = 'Due in ' + cur.toLocaleDateString(undefined, {month: 'long'}); $('pfThis').textContent = curList.length;
+  $('pfThisSub').textContent = curList.length ? 'starting ' + pfFmt(curList.map(x => x.d[0]).sort((a, b) => a - b)[0]) : '';
+  const nexts = rows.map(r => ({r, d: pfNextDue(r)})).filter(x => x.d).sort((a, b) => a.d - b.d);
+  if (nexts.length) { const d0 = +nexts[0].d, same = nexts.filter(x => +x.d === d0); $('pfNext').textContent = pfFmt(nexts[0].d); $('pfNextSub').textContent = same.length + ' PowerFilter' + (same.length === 1 ? '' : 's') + ' due'; }
+  const bi = rows.find(r => r.freq === 'Bi-weekly'); $('pfBi').textContent = bi ? pfFmt(pfNextDue(bi)) : '—';
+  // selected month detail, grouped by frequency
+  const sel = due(pfSel).filter(x => !pfFreqOn || x.r.freq === pfFreqOn);
+  $('pfMonthT').textContent = 'Due in ' + pfSel.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}); $('pfMonthN').textContent = sel.length + ' PowerFilter' + (sel.length === 1 ? '' : 's') + (pfFreqOn ? ' · ' + pfFreqOn : '');
+  $('pfDue').innerHTML = sel.length ? Object.keys(PF_FREQ).map(f => { const g = sel.filter(x => x.r.freq === f); if (!g.length) return '';
+    return `<div class="pf-grp" style="--c:${pfCol(f)}"><h4><i></i>${f} · ${g.length}</h4><div class="pf-items">${g.map(x => `<div class="pf-it" style="--c:${pfCol(f)}"><b>${esc(x.r.name)}</b><span>${esc(x.r.cat || '')} · ${x.d.map(d => d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})).join(', ')}</span><code>${esc(x.r.id)}</code></div>`).join('')}</div></div>`; }).join('') : '<p class="empty">Nothing due this month.</p>';
+  // full table
+  const cats = [...new Set(rows.map(r => r.cat).filter(Boolean))].sort(), kc = $('pfCat').value, kf = $('pfFreq').value;
+  $('pfCat').innerHTML = '<option value="">All categories</option>' + cats.map(c => `<option${c === kc ? ' selected' : ''}>${esc(c)}</option>`).join('');
+  $('pfFreq').innerHTML = '<option value="">All frequencies</option>' + Object.keys(PF_FREQ).filter(f => count[f]).map(f => `<option${f === kf ? ' selected' : ''}>${f}</option>`).join('');
+  const q = $('pfQ').value.toLowerCase(), list = nexts.concat(rows.filter(r => !pfNextDue(r)).map(r => ({r, d: null}))).filter(x => (!q || (x.r.name + ' ' + x.r.id).toLowerCase().includes(q)) && (!kc || x.r.cat === kc) && (!kf || x.r.freq === kf));
+  $('pfRows').innerHTML = list.length ? list.map(x => `<tr><td><b>${esc(x.r.name)}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${esc(x.r.id)}</div></td><td>${esc(x.r.cat || '—')}</td><td><span class="fq" style="--c:${pfCol(x.r.freq)}"><i></i>${esc(x.r.freq)}</span></td><td class="mono">${pfFmt(x.d)}</td><td>${x.r.status ? `<span class="pill ${/done|complete/i.test(x.r.status) ? 'ok' : /progress/i.test(x.r.status) ? 'warn' : 'info'}">${esc(x.r.status)}</span>` : '—'}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No PowerFilters match these filters.</td></tr>';
+}
+$('pfMonths').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; pfSel = new Date(+b.dataset.m); renderPf(); });
+$('pfLegend').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; pfFreqOn = pfFreqOn === b.dataset.f ? '' : b.dataset.f; renderPf(); });
+['pfQ', 'pfCat', 'pfFreq'].forEach(id => $(id).addEventListener(id === 'pfQ' ? 'input' : 'change', renderPf));
+const loadXlsx = () => window.XLSX ? Promise.resolve() : new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+$('pfFile').addEventListener('change', async e => {
+  const f = e.target.files[0], m = $('pfMsg'); if (!f || !isAdmin) return;
+  const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
+  say('Reading ' + f.name + '…');
+  try {
+    await loadXlsx(); const wb = XLSX.read(await f.arrayBuffer(), {cellDates: true});
+    const ws = wb.Sheets['Schedule'] || wb.Sheets[wb.SheetNames[0]]; const raw = XLSX.utils.sheet_to_json(ws, {defval: null});
+    const pick = (o, ...names) => { for (const n of names) { const k = Object.keys(o).find(k => k.trim().toLowerCase() === n); if (k && o[k] != null && o[k] !== '') return o[k]; } return null; };
+    const rows = raw.map(o => ({id: String(pick(o, 'powerfilter id', 'id') || '').trim(), name: String(pick(o, 'powerfilter name', 'name') || '').trim(), cat: pick(o, 'category') || '', freq: String(pick(o, 'frequency') || '').trim(), anchor: +pick(o, 'anchor month') || null, owner: pick(o, 'owner'), status: pick(o, 'status') || '', notes: pick(o, 'notes') || ''}))
+      .filter(r => r.name).map(r => ({...r, freq: /bi/i.test(r.freq) ? 'Bi-weekly' : /half/i.test(r.freq) ? 'Half-yearly' : /quarter/i.test(r.freq) ? 'Quarterly' : /month/i.test(r.freq) ? 'Monthly' : 'Yearly', owner: r.owner && !/^\(/.test(String(r.owner)) ? String(r.owner) : ''}));
+    if (!rows.length) return say('No PowerFilters were found. Check that the workbook has a "Schedule" sheet with a "PowerFilter Name" column.', true);
+    let start = '2026-11-01', biStart = '2026-11-02'; const st = wb.Sheets['Settings'];
+    if (st) { const cells = XLSX.utils.sheet_to_json(st, {header: 1, defval: null}); cells.forEach(r => { const lab = String(r[0] || '').toLowerCase(), v = r[1]; if (v instanceof Date) { const iso = ymd(v); if (lab.includes('bi-weekly')) biStart = iso; else if (lab.includes('schedule start')) start = iso; } }); }
+    await db.doc('guidelines/powerfilter').set({rows, start, biStart, fileName: f.name, updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'});
+    say('Loaded ' + rows.length + ' PowerFilters from ' + f.name + '. Everyone can now see the updated schedule.');
+  } catch (x) { console.error(x); say('The workbook couldn\'t be read (' + ((x && x.code) || (x && x.message) || 'error') + '). Check it is the .xlsx schedule and try again.', true); }
+  e.target.value = '';
+});
+
+/* ---------- project guidelines: documents and source register ---------- */
+const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', bench: 'doc_benchmarking'};
+// only a small set of tags and attributes from uploaded documents is kept
+function cleanHtml(raw){
+  const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE)$/;
+  const walk = el => [...el.children].forEach(c => { if (!OK.test(c.tagName)) { c.replaceWith(...c.childNodes); return walk(el); }
+    [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')); if (!keep) c.removeAttribute(a.name); });
+    if (c.tagName === 'A') { c.target = '_blank'; c.rel = 'noopener'; } walk(c); });
+  const root = doc.body.firstChild; walk(root); return root.innerHTML;
+}
+function renderGuideCards(){
+  const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
+  const src = guides.pfsources; if (src) $('gdSrcSub').textContent = src.rows.length + ' PowerFilters · primary and backup sources with their status';
+  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['bench', 'gdBenchSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; });
+}
+function renderGdoc(){
+  const g = guides[GDOCS[gdKey]], names = {eto: 'Project ETO', roi: 'Project ROI', bench: 'Project Benchmarking'};
+  $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdSub').textContent = (g && g.subtitle) || '';
+  if (!g) { $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been loaded yet.' + (isAdmin ? ' Load the guideline pack on the Project guidelines page, or use Replace with .docx.' : '') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
+  $('gdDoc').innerHTML = cleanHtml(g.html || '');
+  const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
+  $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
+  $('gdUpd').textContent = g.updatedAt ? 'Last updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (g.fileName ? ' from ' + g.fileName : '') : '';
+}
+$('gdToc').addEventListener('click', e => { const a = e.target.closest('[data-to]'); if (!a) return; e.preventDefault(); const h = $(a.dataset.to); if (h) h.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'}); });
+const loadScript = src => new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+$('gdFile').addEventListener('change', async e => {
+  const f = e.target.files[0], m = $('gdMsg'); if (!f || !isAdmin) return; const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
+  say('Reading ' + f.name + '…');
+  try { if (!window.mammoth) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js');
+    const r = await mammoth.convertToHtml({arrayBuffer: await f.arrayBuffer()}, {styleMap: ['p[style-name=\'Title\'] => h1:fresh', 'p[style-name=\'Heading 1\'] => h2:fresh', 'p[style-name=\'Heading 2\'] => h3:fresh']});
+    const tmp = document.createElement('div'); tmp.innerHTML = cleanHtml(r.value); const h1 = tmp.querySelector('h1'), title = h1 ? h1.textContent.trim() : f.name.replace(/\.docx$/i, ''); if (h1) h1.remove();
+    await db.doc('guidelines/' + GDOCS[gdKey]).set({title, subtitle: (guides[GDOCS[gdKey]] || {}).subtitle || '', html: tmp.innerHTML, fileName: f.name, updatedAt: new Date().toISOString()});
+    say('Updated from ' + f.name + '.'); }
+  catch (x) { console.error(x); say('The document couldn\'t be read (' + ((x && x.message) || 'error') + ').', true); }
+  e.target.value = '';
+});
+$('gdPack').addEventListener('change', async e => {
+  const f = e.target.files[0], m = $('gdPackMsg'); if (!f || !isAdmin) return; const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
+  let p; try { p = JSON.parse(await f.text()); } catch (x) { return say('That isn\'t a valid guideline pack.', true); }
+  if (!p || p._format !== 'chrysolite-guidelines-1') return say('That isn\'t a guideline pack. Choose guidelines-pack.json.', true);
+  try { let n = 0; for (const [k, v] of Object.entries(p)) { if (k.startsWith('_')) continue; await db.doc('guidelines/' + k).set(v); n++; } say('Loaded ' + n + ' guideline pages. Everyone can see them now.'); }
+  catch (x) { say('Loading stopped (' + ((x && x.code) || 'error') + '). Check you are signed in as an admin and try again.', true); }
+  e.target.value = '';
+});
+// source register
+const srcPill = t => { t = String(t || ''); const c = /^current \(/i.test(t) ? 'info' : /^current/i.test(t) ? 'ok' : /outdated/i.test(t) ? 'warn' : 'off'; return t ? `<span class="pill ${c}">${esc(t.replace('(confirmed via another source)', '(confirmed)'))}</span>` : ''; };
+const srcLink = (u, t) => u ? `<a href="${/^https?:\/\//i.test(u) ? esc(u) : 'https://' + esc(u)}" target="_blank" rel="noopener">${esc(t || u)}</a>` : '—';
+function renderSrc(){
+  const g = guides.pfsources, rows = (g && g.rows) || []; $('srcEmpty').hidden = !!rows.length; $('srcBody').hidden = !rows.length; if (!rows.length) return;
+  $('srcUpd').textContent = 'Where each PowerFilter\'s data comes from, and whether the source is current.' + (g.updatedAt ? ' Updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + '.' : '');
+  const cnt = f => rows.filter(f).length;
+  $('srcTiles').innerHTML = [['PowerFilters', rows.length, ''], ['Primary source current', cnt(r => /^current/i.test(r.primaryStatus || '')), 'including confirmed via another source'], ['Outdated or not verified', cnt(r => /outdated|not verified/i.test(r.primaryStatus || '')), 'check the backup source'], ['Needs team decision', cnt(r => /yes/i.test(r.decision || '')), 'definition or cadence to agree']].map(([l, v, s], i) => `<div class="tile${i === 3 ? ' hl' : ''}"><span>${l}</span><b>${v}</b><small>${s}</small></div>`).join('');
+  $('srcGuide').innerHTML = (g.guide || []).slice(1).map(t => `<p>${esc(t)}</p>`).join('');
+  const sts = [...new Set(rows.map(r => r.primaryStatus).filter(Boolean))], fqs = [...new Set(rows.map(r => r.freq).filter(Boolean))], ks = $('srcSt').value, kf = $('srcFq').value;
+  $('srcSt').innerHTML = '<option value="">Any primary status</option>' + sts.map(x => `<option${x === ks ? ' selected' : ''}>${esc(x)}</option>`).join('');
+  $('srcFq').innerHTML = '<option value="">All frequencies</option>' + fqs.map(x => `<option${x === kf ? ' selected' : ''}>${esc(x)}</option>`).join('');
+  const q = $('srcQ').value.toLowerCase(), list = rows.filter(r => (!q || [r.name, r.id, r.primary, r.backup].join(' ').toLowerCase().includes(q)) && (!ks || r.primaryStatus === ks) && (!kf || r.freq === kf) && (!$('srcDec').checked || /yes/i.test(r.decision || '')) && (!$('srcAct').checked || r.action));
+  $('srcCount').textContent = list.length + ' of ' + rows.length + ' PowerFilters · click a row for details';
+  $('srcList').innerHTML = list.length ? list.map(r => `<details class="src-it"><summary><div class="nm"><b>${esc(r.name)}</b><code>${esc(r.id)}</code></div><div class="ps">${esc(r.primary || '—')}</div><div class="tags">${r.freq ? `<span class="pill info">${esc(r.freq)}</span>` : ''}${srcPill(r.primaryStatus)}${/yes/i.test(r.decision || '') ? '<span class="pill warn">Team decision</span>' : ''}</div></summary>
+    <div class="src-det">${r.action ? `<div class="src-box act"><h5>Recommended action</h5><div>${esc(r.action)}</div></div>` : ''}
+      <div class="src-box"><h5>Primary source</h5><b>${esc(r.primary || '—')}</b><div>${srcLink(r.primaryUrl)}</div><div>${srcPill(r.primaryStatus)} ${r.type ? `<span class="pill off">${esc(r.type)}</span>` : ''}</div>${r.primaryInfo ? `<div>${esc(r.primaryInfo)}</div>` : ''}${r.cadence || r.access ? `<div style="color:var(--ink-soft)">${esc([r.cadence && 'Published: ' + r.cadence, r.access && 'Access: ' + r.access].filter(Boolean).join(' · '))}</div>` : ''}</div>
+      <div class="src-box"><h5>Backup source</h5><b>${esc(r.backup || '—')}</b><div>${srcLink(r.backupUrl)}</div><div>${srcPill(r.backupStatus)}</div>${r.backupInfo ? `<div>${esc(r.backupInfo)}</div>` : ''}</div>
+      ${r.howTo ? `<div class="src-box" style="grid-column:1/-1"><h5>Notes</h5><div>${esc(r.howTo)}</div></div>` : ''}
+      ${r.edition || r.checked || r.by ? `<div class="src-box" style="grid-column:1/-1"><h5>Last check</h5><div>${esc([r.edition && 'Edition: ' + r.edition, r.checked && 'Checked: ' + r.checked, r.by && 'By: ' + r.by].filter(Boolean).join(' · '))}</div></div>` : ''}</div></details>`).join('') : '<p class="empty" style="padding:16px">No PowerFilters match these filters.</p>';
+}
+['srcQ', 'srcSt', 'srcFq', 'srcDec', 'srcAct'].forEach(id => $(id).addEventListener(id === 'srcQ' ? 'input' : 'change', renderSrc));
+const SRC_COLS = ['n','id','name','freq','primary','type','primaryUrl','primaryInfo','primaryStatus','cadence','access','backup','backupUrl','backupInfo','backupStatus','action','howTo','decision','edition','checked','by'];
+$('srcFile').addEventListener('change', async e => {
+  const f = e.target.files[0], m = $('srcMsg'); if (!f || !isAdmin) return; const say = (t, err) => { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; m.hidden = false; };
+  say('Reading ' + f.name + '…');
+  try { await loadXlsx(); const wb = XLSX.read(await f.arrayBuffer(), {cellDates: true}); const ws = wb.Sheets['Sources'] || wb.Sheets[wb.SheetNames[wb.SheetNames.length - 1]];
+    const rows = XLSX.utils.sheet_to_json(ws, {header: 1, defval: null}).filter(r => r && r[1] && /\./.test(String(r[1]))).map(r => { const o = {}; SRC_COLS.forEach((k, i) => { let v = r[i]; if (v instanceof Date) v = ymd(v); if (v != null && v !== '') o[k] = v; }); return o; });
+    if (!rows.length) return say('No PowerFilters were found in the "Sources" sheet.', true);
+    const howWs = wb.Sheets['How to use'], guide = howWs ? XLSX.utils.sheet_to_json(howWs, {header: 1, defval: null}).map(r => r && r[0]).filter(Boolean).map(String).slice(0, 13) : [];
+    await db.doc('guidelines/pfsources').set({rows, guide, fileName: f.name, updatedAt: new Date().toISOString()}); say('Loaded ' + rows.length + ' PowerFilter sources from ' + f.name + '.'); }
+  catch (x) { console.error(x); say('The workbook couldn\'t be read (' + ((x && x.message) || 'error') + ').', true); }
+  e.target.value = '';
 });
 
 /* ---------- admin: one-time import from the old portal ---------- */
