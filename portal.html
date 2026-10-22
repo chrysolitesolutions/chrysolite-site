@@ -68,6 +68,63 @@ a{color:inherit}
 @keyframes up{from{transform:translateY(16px);opacity:.2}}
 .login-card h1{font-size:32px;font-weight:800}
 .login-card .sub{color:var(--ink-soft)}
+/* ---- sign-in page v2 ---- */
+.login-art{padding-block:36px;gap:18px}
+.login-art .brand.lg-brand{font-size:30px;gap:16px}.login-art .brand.lg-brand img{width:88px;border-radius:20px;padding:6px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5),0 0 0 4px rgba(182,212,65,.18);animation:lgLogo 5s ease-in-out infinite}
+.login-art .brand.lg-brand small{font-size:11px;margin-top:4px;opacity:.75}
+@keyframes lgLogo{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-2deg)}}
+.lg-eye{display:flex;align-items:center;gap:10px;font:600 12px var(--mono)!important;letter-spacing:.16em;text-transform:uppercase;color:#b6d441!important;margin:0 0 14px!important}.lg-eye i{width:28px;height:2px;background:#b6d441;border-radius:2px}
+.lg-copy h2{font-size:clamp(40px,4.4vw,64px)!important;line-height:1.02;max-width:none!important}.lg-copy h2 em{font-style:normal;background:linear-gradient(90deg,#b6d441,#21B3C4,#8DC63F,#b6d441);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 8s linear infinite}
+.lg-copy > p:last-child{font-size:16.5px!important;max-width:44ch!important}
+.lg-stage{position:relative;flex:1;min-height:300px;max-height:420px;margin-inline:-12px}
+#lgScene{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lg-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:12px var(--mono)!important;opacity:.75;margin:0!important;max-width:none!important}
+.lg-chip{position:absolute;display:flex;align-items:center;gap:10px;padding:10px 14px 10px 10px;border-radius:14px;background:rgba(255,255,255,.94);color:#12261f;box-shadow:0 18px 40px -16px rgba(0,0,0,.55);font:600 13px var(--body);animation:lgFloat 6s ease-in-out infinite;white-space:nowrap}
+.lg-chip b{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#e3f1c4;color:#4f7a12;font-size:15px}.lg-chip b.o{background:#fde7c6;color:#c47800}.lg-chip b.g{background:#d6f3ea;color:#11865f}.lg-chip b.b{background:#d9e9fb;color:#1f6fc2}
+.lg-chip span{display:grid;line-height:1.2}.lg-chip small{font:500 11px var(--body);color:#5b6b66}.lg-chip em{font-style:normal}
+.lg-chip.c1{left:6%;top:17%;animation-delay:-1s}.lg-chip.c2{right:3%;top:21%;animation-delay:-3s}.lg-chip.c3{left:37%;top:13%;animation-delay:-4.5s;animation-duration:7s}.lg-chip.c4{left:24%;top:36%;animation-delay:-2s;animation-duration:7.5s}
+.lg-stage{margin-top:6px}
+@keyframes lgFloat{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-12px) rotate(1.5deg)}}
+.lg-chip.pop{animation:lgPop .6s cubic-bezier(.2,1.6,.4,1) both,lgFloat 6s ease-in-out .6s infinite}
+@keyframes lgPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+/* scene parts */
+#lgScene .an{transform-box:fill-box}
+.lg-bounce{animation:lgBounce 1.1s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes lgBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.lg-wave-l{transform-origin:50% 0;animation:lgWaveL .55s ease-in-out infinite alternate}.lg-wave-r{transform-origin:50% 0;animation:lgWaveR .55s ease-in-out infinite alternate}
+@keyframes lgWaveL{from{transform:rotate(140deg)}to{transform:rotate(172deg)}}@keyframes lgWaveR{from{transform:rotate(-140deg)}to{transform:rotate(-172deg)}}
+.lg-hold{transform-origin:50% 0;animation:lgHold 2.4s ease-in-out infinite}@keyframes lgHold{0%,100%{transform:rotate(-112deg)}50%{transform:rotate(-122deg)}}
+.lg-down-l{transform-origin:50% 0;transform:rotate(12deg)}.lg-down-r{transform-origin:50% 0;transform:rotate(-12deg)}
+.lg-clap-l{transform-origin:50% 0;animation:lgClapL .38s ease-in-out infinite alternate}.lg-clap-r{transform-origin:50% 0;animation:lgClapR .38s ease-in-out infinite alternate}
+@keyframes lgClapL{from{transform:rotate(-38deg)}to{transform:rotate(-62deg)}}@keyframes lgClapR{from{transform:rotate(38deg)}to{transform:rotate(62deg)}}
+.lg-type-l{transform-origin:50% 0;animation:lgTypeL .26s ease-in-out infinite alternate}.lg-type-r{transform-origin:50% 0;animation:lgTypeR .31s ease-in-out infinite alternate}
+@keyframes lgTypeL{from{transform:rotate(-58deg)}to{transform:rotate(-66deg)}}@keyframes lgTypeR{from{transform:rotate(58deg)}to{transform:rotate(66deg)}}
+.lg-nod{transform-origin:50% 100%;animation:lgNod 2.6s ease-in-out infinite}@keyframes lgNod{0%,100%{transform:rotate(0)}30%{transform:rotate(-5deg)}60%{transform:rotate(3deg)}}
+.lg-walk{animation:lgWalk 16s linear infinite}@keyframes lgWalk{0%{transform:translateX(700px)}100%{transform:translateX(-160px)}}
+.lg-step-a{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate}.lg-step-b{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate-reverse}
+@keyframes lgStep{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+.lg-swing-a{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate-reverse}.lg-cup{transform-origin:50% 0;transform:rotate(-70deg)}
+.lg-star{transform-origin:50% 50%;animation:lgStar 1.6s ease-in-out infinite}@keyframes lgStar{0%,100%{transform:scale(.7) rotate(0);opacity:.6}50%{transform:scale(1.25) rotate(40deg);opacity:1}}
+.lg-spark{transform-origin:50% 50%;animation:lgSpark 2s ease-in-out infinite}@keyframes lgSpark{0%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}70%{opacity:0}}
+.lg-bar{transform-origin:50% 100%;animation:lgBar 2.8s ease-in-out infinite}@keyframes lgBar{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.lg-leaf{transform-origin:50% 100%;animation:lgLeaf 3.4s ease-in-out infinite}@keyframes lgLeaf{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.lg-win{animation:lgWin 3s ease-in-out infinite}@keyframes lgWin{0%,100%{opacity:.25}50%{opacity:.9}}
+.lg-steam{animation:lgSteam 2.4s ease-in-out infinite}@keyframes lgSteam{0%{transform:translateY(4px);opacity:0}50%{opacity:.8}100%{transform:translateY(-10px);opacity:0}}
+.lg-conf{animation:lgConf 2.6s linear infinite}@keyframes lgConf{0%{transform:translateY(-30px) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(120px) rotate(320deg);opacity:0}}
+.lg-cursor{animation:lgBlink 1s steps(1) infinite}@keyframes lgBlink{50%{opacity:0}}
+/* card */
+.login-card .m-brand{display:none}
+.lg-badge{display:flex;align-items:center;gap:8px;font:600 11.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gem-ink);margin:0}.lg-badge i{width:9px;height:9px;border-radius:50%;background:#8DC63F;box-shadow:0 0 0 0 rgba(141,198,63,.6);animation:lgPulse 2s infinite}
+@keyframes lgPulse{70%{box-shadow:0 0 0 9px rgba(141,198,63,0)}100%{box-shadow:0 0 0 0 rgba(141,198,63,0)}}
+.login-card h1{font-size:40px!important;letter-spacing:-.02em}.login-card h1 .dot{color:#8DC63F;display:inline-block;animation:lgBounce 1.6s ease-in-out infinite}
+.in-ic{position:relative}.in-ic > svg{position:absolute;left:13px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;z-index:1}.in-ic input{padding-left:40px!important}
+.in-ic:focus-within > svg{color:var(--gem-ink)}
+.lg-go{position:relative;overflow:hidden;font-size:16px}.lg-go::after{content:"→";display:inline-block;margin-left:10px;transition:transform .25s}.lg-go:hover::after{transform:translateX(5px)}
+.lg-go::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:lgShine 3.8s ease-in-out infinite}
+@keyframes lgShine{0%,60%{left:-60%}100%{left:130%}}
+.lg-sec{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin:0;justify-content:center;text-align:center}.lg-sec svg{color:#11865f;flex:none}
+@media(max-width:860px){.login-card .m-brand{display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;font-size:24px}.login-card .m-brand img{width:72px;border-radius:18px;background:#fff;padding:5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}.login-card .m-brand small{display:block;font:400 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:.7}}
+@media (prefers-reduced-motion: reduce){#lgScene *,.lg-chip,.lg-brand img,.lg-go::before,.lg-badge i,.login-card h1 .dot{animation:none!important}}
 .f{display:grid;gap:6px}
 label{font-size:13px;font-weight:600}
 input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;width:100%;transition:border-color .2s,box-shadow .2s}
@@ -443,22 +500,33 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 <section class="login" id="loginView">
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="login-art">
-    <div class="brand"><img src="logo.png" alt="" class="logo-img"><span>Chrysolite<small>Solutions</small></span></div>
-    <div>
-      <h2>Your team, shifts and time off in one place.</h2>
-      <p>Sign in to see the project roster, this week's schedule and your leave plans.</p>
+    <div class="brand lg-brand"><img src="logo.png" alt="" class="logo-img"><span>Chrysolite<small>Solutions · Employee portal</small></span></div>
+    <div class="lg-copy">
+      <p class="lg-eye"><i></i>Your digital workspace</p>
+      <h2>Great work<br><em>starts here.</em></h2>
+      <p>Clock in, check your shifts, follow project guidelines and see your hours and pay. All in one secure place.</p>
     </div>
-    <p style="font-family:var(--mono);font-size:12px">Employee portal · internal use only</p>
+    <div class="lg-stage" aria-hidden="true">
+      <svg id="lgScene" viewBox="0 0 640 380" preserveAspectRatio="xMidYMax meet"></svg>
+      <div class="lg-chip c1"><b>✓</b><span>Clocked in<small>09:02 · Morning shift</small></span></div>
+      <div class="lg-chip c2"><b class="o">★</b><span>Task completed<small>PowerFilter refresh</small></span></div>
+      <div class="lg-chip c3"><b class="g">✓</b><span>Leave approved<small>Fri, 2 days</small></span></div>
+      <div class="lg-chip c4"><b class="b">⏱</b><span><em id="lgHrs">38h 20m</em><small>this week</small></span></div>
+    </div>
+    <p class="lg-foot"><span>Employee portal · internal use only</span><span>Built for people. Powered by teamwork.</span></p>
   </div>
   <div class="login-form-wrap">
     <form class="login-card" id="loginForm" novalidate>
-      <h1>Employee sign in</h1>
-      <p class="sub">Use the email and password your admin gave you.</p>
-      <div class="f"><label for="em">Work email</label><input id="em" type="email" autocomplete="username" placeholder="name@company.com" required></div>
-      <div class="f"><label for="pw">Password</label><div class="pw"><input id="pw" type="password" autocomplete="current-password" required><button type="button" id="pwToggle" aria-label="Show password">Show</button></div></div>
+      <div class="m-brand"><img src="logo.png" alt=""><span>Chrysolite<small>Solutions</small></span></div>
+      <p class="lg-badge"><i></i>Employee access portal</p>
+      <h1>Welcome back<span class="dot">.</span></h1>
+      <p class="sub">Sign in with the work email and password your admin gave you.</p>
+      <div class="f"><label for="em">Work email</label><div class="in-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg><input id="em" type="email" autocomplete="username" placeholder="name@chrysolite.in" required></div></div>
+      <div class="f"><label for="pw">Password</label><div class="pw in-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="9" width="12" height="8.5" rx="2"/><path d="M6.5 9V6.5a3.5 3.5 0 0 1 7 0V9"/></svg><input id="pw" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="pwToggle" aria-label="Show password">Show</button></div></div>
       <div class="row"><label><input type="checkbox" id="remember">Keep me signed in</label><button type="button" class="linkbtn" id="forgot">Forgot password?</button></div>
       <div class="msg" id="loginMsg" hidden></div>
-      <button class="btn btn-gem" type="submit" id="signInBtn">Sign in</button>
+      <button class="btn btn-gem lg-go" type="submit" id="signInBtn">Sign in</button>
+      <p class="lg-sec"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Secure sign in · Having trouble? Ask your portal admin.</p>
       <button class="btn btn-ghost admin-entry" type="button" id="adminEntry" hidden><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/></svg>First-time setup: create the admin account</button>
       <a class="back" href="#" id="backLink">← Back to chrysolite website</a>
     </form>
@@ -2276,6 +2344,62 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 })();
 
 function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = accounts.find(a => a.key === me.key); if (!fresh || !fresh.active) { $('signOut').click(); return; } } if (me) { const fresh = accounts.find(a => a.key === me.key); if (fresh) { const changed = fresh.access !== me.access || fresh.clock !== me.clock; me = fresh; if (changed) applyRole(); } } renderRoster(); renderSchedule(); renderLeave(); renderHome(); renderAccounts(); renderLinks(); renderClock(); renderTeamAtt(); renderProfile(); }
+
+/* ---------- sign-in scene: animated team in an office ---------- */
+(function buildScene(){
+  const svg = $('lgScene'); if (!svg) return;
+  const arm = (x, y, cls, c, skin, extra = '') => `<g transform="translate(${x} ${y})"><g class="an ${cls}"><rect x="-5" y="0" width="10" height="44" rx="5" fill="${c}"/><circle cx="0" cy="47" r="6" fill="${skin}"/>${extra}</g></g>`;
+  const leg = (x, cls, c) => `<g transform="translate(${x} -62)"><g class="an ${cls}"><rect x="-6.5" y="0" width="13" height="60" rx="6" fill="${c}"/><ellipse cx="2" cy="61" rx="10" ry="5" fill="#1b2430"/></g></g>`;
+  const face = (skin, hair, style) => {
+    const hairs = {
+      short: `<path d="M-17 -136 q2 -20 18 -20 q17 0 17 19 q-6 -9 -17 -9 q-11 0 -18 10z" fill="${hair}"/>`,
+      bun: `<circle cx="0" cy="-158" r="8" fill="${hair}"/><path d="M-18 -133 q0 -22 18 -22 q18 0 18 22 q-7 -11 -18 -11 q-11 0 -18 11z" fill="${hair}"/>`,
+      long: `<path d="M-19 -128 q-3 -28 19 -28 q22 0 19 28 l2 24 q-7 3 -9 -4 l-2 -22 q-10 -6 -20 0 l-2 22 q-2 7 -9 4z" fill="${hair}"/>`,
+      curly: `<g fill="${hair}"><circle cx="-12" cy="-146" r="8"/><circle cx="0" cy="-152" r="9"/><circle cx="12" cy="-146" r="8"/><circle cx="-16" cy="-136" r="6"/><circle cx="16" cy="-136" r="6"/></g>`,
+      cap: `<path d="M-18 -138 q2 -18 18 -18 q16 0 18 18z" fill="${hair}"/><rect x="0" y="-141" width="26" height="5" rx="2.5" fill="${hair}"/>`};
+    return `<rect x="-6" y="-120" width="12" height="10" fill="${skin}"/><circle cx="0" cy="-135" r="18" fill="${skin}"/>${hairs[style] || ''}<circle cx="-6" cy="-134" r="2" fill="#1b2430"/><circle cx="6" cy="-134" r="2" fill="#1b2430"/><path d="M-5 -126 q5 5 10 0" stroke="#1b2430" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="-11" cy="-128" r="3" fill="#f4a3a3" opacity=".5"/><circle cx="11" cy="-128" r="3" fill="#f4a3a3" opacity=".5"/>`;
+  };
+  const person = ({x, y, s = 1, skin, hair, style, shirt, pants, arms, legs = ['', ''], wrap = '', extraTop = ''}) =>
+    `<g transform="translate(${x} ${y}) scale(${s})"><g class="an ${wrap}">${leg(-8, legs[0], pants)}${leg(8, legs[1], pants)}<rect x="-21" y="-114" width="42" height="58" rx="15" fill="${shirt}"/><path d="M-8 -114 l8 9 l8 -9" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/>${arm(-20, -106, arms[0], shirt, skin, arms[2] || '')}${arm(20, -106, arms[1], shirt, skin, arms[3] || '')}${face(skin, hair, style)}${extraTop}</g></g>`;
+  const trophy = `<g transform="translate(0 52) rotate(112)"><path d="M-11 -2 h22 v8 a11 11 0 0 1 -22 0z" fill="#F2B632"/><path d="M-11 1 h-5 a5 5 0 0 0 5 8 M11 1 h5 a5 5 0 0 1 -5 8" stroke="#F2B632" stroke-width="2.5" fill="none"/><rect x="-2.5" y="16" width="5" height="7" fill="#d99a1e"/><rect x="-8" y="23" width="16" height="5" rx="2" fill="#a86f12"/></g>`;
+  const cup = `<g transform="translate(0 50) rotate(70)"><rect x="-6" y="-4" width="12" height="15" rx="2" fill="#fff"/><rect x="-6" y="0" width="12" height="4" fill="#E2513B"/><path class="lg-steam" d="M-2 -8 q-3 -5 0 -9 M3 -8 q-3 -5 0 -9" stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none"/></g>`;
+  const plant = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-14" y="-26" width="28" height="26" rx="4" fill="#e9eef0"/><g class="an lg-leaf">${[-34, -12, 12, 34, 0].map((r, i) => `<path d="M0 -26 q${-8 + i * 4} -26 0 -${46 + (i % 2) * 10} q${10 - i * 4} 20 0 ${46 + (i % 2) * 10}" fill="${i % 2 ? '#3aa17e' : '#2f8a6a'}" transform="rotate(${r} 0 -26)"/>`).join('')}</g></g>`;
+  // backdrop: windows + skyline
+  let city = ''; for (let i = 0; i < 18; i++) { const w = 18 + (i * 37) % 26, h = 40 + (i * 53) % 90, x = i * 36; city += `<rect x="${x}" y="${250 - h}" width="${w}" height="${h}" fill="rgba(255,255,255,.05)"/>`; for (let j = 0; j < 4; j++) if ((i + j) % 3 === 0) city += `<rect class="lg-win" style="animation-delay:${(i * 0.37 + j * 0.6) % 3}s" x="${x + 5}" y="${250 - h + 10 + j * 16}" width="4" height="6" fill="#f6d77a"/>`; }
+  const monitorBars = [0, 1, 2, 3, 4].map(i => `<rect class="an lg-bar" style="animation-delay:${-i * .45}s" x="${-38 + i * 16}" y="-48" width="10" height="36" rx="2" fill="${['#21B3C4', '#8DC63F', '#F2A33A', '#2E86DE', '#b6d441'][i]}"/>`).join('');
+  const confetti = [...Array(14)].map((_, i) => `<rect class="lg-conf" style="animation-delay:${-i * .19}s" x="${70 + (i * 23) % 160}" y="${20 + (i * 7) % 20}" width="6" height="10" rx="1.5" fill="${['#E2513B', '#F2A33A', '#8DC63F', '#21B3C4', '#2E86DE', '#b6d441'][i % 6]}"/>`).join('');
+  svg.innerHTML = `
+  <defs><linearGradient id="lgFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.08)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></linearGradient></defs>
+  <rect x="20" y="40" width="600" height="250" rx="22" fill="rgba(255,255,255,.035)" stroke="rgba(182,212,65,.18)"/>
+  <g clip-path="inset(0)">${city}</g>
+  <line x1="320" y1="40" x2="320" y2="290" stroke="rgba(182,212,65,.12)" stroke-width="3"/><line x1="20" y1="150" x2="620" y2="150" stroke="rgba(182,212,65,.08)" stroke-width="2"/>
+  <rect x="0" y="290" width="640" height="90" fill="url(#lgFloor)"/>
+  <!-- walker in the back -->
+  <g transform="translate(0 296) scale(.62)"><g class="lg-walk">${person({x: 0, y: 0, skin: '#c98d5a', hair: '#2b1d14', style: 'cap', shirt: '#21B3C4', pants: '#2a3f66', arms: ['an lg-swing-a', 'an lg-cup', '', cup], legs: ['lg-step-a', 'lg-step-b']})}</g></g>
+  <!-- left desk: cheering employee -->
+  <g transform="translate(70 0)">
+    <rect x="0" y="238" width="150" height="10" rx="4" fill="#dfe7ea"/><rect x="10" y="248" width="8" height="80" fill="#b9c5ca"/><rect x="132" y="248" width="8" height="80" fill="#b9c5ca"/>
+    <g transform="translate(78 236)"><rect x="-52" y="-74" width="104" height="66" rx="7" fill="#1b2a3a" stroke="#dfe7ea" stroke-width="4"/>${monitorBars}<rect x="-6" y="-8" width="12" height="10" fill="#b9c5ca"/></g>
+    <path d="M-8 268 h40 v-34 h8 v42 h-48z" fill="#3a4a5c"/>
+  </g>
+  ${person({x: 46, y: 330, skin: '#f1c7a1', hair: '#3b2a20', style: 'short', shirt: '#E2513B', pants: '#2a3f66', arms: ['lg-wave-l', 'lg-wave-r'], wrap: 'lg-bounce'})}
+  ${confetti}
+  <!-- trophy hand-over -->
+  ${person({x: 395, y: 330, skin: '#e0ac7e', hair: '#1f1612', style: 'long', shirt: '#F2A33A', pants: '#1f3a5f', arms: ['lg-down-l', 'lg-hold', '', trophy]})}
+  <g transform="translate(462 168)"><path class="an lg-star" d="M0 -13 l4 9 l10 1 l-8 6 l3 10 l-9 -6 l-9 6 l3 -10 l-8 -6 l10 -1z" fill="#F7D046"/></g>
+  <circle class="an lg-spark" cx="440" cy="150" r="3" fill="#fff"/><circle class="an lg-spark" style="animation-delay:.7s" cx="486" cy="160" r="2.5" fill="#fff"/><circle class="an lg-spark" style="animation-delay:1.3s" cx="470" cy="136" r="2" fill="#F7D046"/>
+  ${person({x: 515, y: 330, skin: '#f6d2b5', hair: '#7a4a2a', style: 'bun', shirt: '#2E86DE', pants: '#26324a', arms: ['lg-clap-l', 'lg-clap-r']})}
+  <!-- right: employee typing on a laptop -->
+  <g transform="translate(250 0)">
+    ${person({x: 40, y: 318, s: .9, skin: '#8d5a3b', hair: '#121212', style: 'curly', shirt: '#8DC63F', pants: '#2a3f66', arms: ['lg-type-l', 'lg-type-r'], wrap: 'lg-nod'})}
+    <rect x="-6" y="250" width="96" height="9" rx="4" fill="#dfe7ea"/><rect x="2" y="259" width="7" height="70" fill="#b9c5ca"/><rect x="76" y="259" width="7" height="70" fill="#b9c5ca"/>
+    <g transform="translate(40 250)"><path d="M-24 0 l5 -30 h38 l5 30z" fill="#c7d2d8"/><rect x="-14" y="-24" width="28" height="3" rx="1.5" fill="#8DC63F"/><rect x="-14" y="-18" width="18" height="3" rx="1.5" fill="#21B3C4"/><rect class="lg-cursor" x="6" y="-18" width="2" height="5" fill="#1b2a3a"/></g>
+  </g>
+  ${plant(612, 330, 1)}${plant(18, 330, .85)}`;
+  // pop one chip at a time, and tick the weekly hours
+  const chips = [...document.querySelectorAll('.lg-chip')]; let ci = 0, mins = 38 * 60 + 20;
+  if (!reduce) setInterval(() => { if ($('loginView').hidden) return; const c = chips[ci++ % chips.length]; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); mins += 1; const h = $('lgHrs'); if (h) h.textContent = Math.floor(mins / 60) + 'h ' + pad(mins % 60) + 'm'; }, 2200);
+})();
 
 /* ---------- sign-in backdrop: drifting network ---------- */
 const cv=$('net'), cx=cv.getContext('2d'); let W,H,pts=[];
