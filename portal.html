@@ -70,7 +70,7 @@ a{color:inherit}
 .login-card .sub{color:var(--ink-soft)}
 /* ---- sign-in page v2 ---- */
 .login-art{padding-block:36px;gap:18px}
-.login-art .brand.lg-brand{font-size:30px;gap:16px}.login-art .brand.lg-brand img{width:88px;border-radius:20px;padding:6px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5),0 0 0 4px rgba(182,212,65,.18);animation:lgLogo 5s ease-in-out infinite}
+.login-art .brand.lg-brand{font-size:30px;gap:16px}.login-art .brand.lg-brand img{width:88px;border-radius:20px;padding:6px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5),0 0 0 4px rgba(182,212,65,.18);}
 .login-art .brand.lg-brand small{font-size:11px;margin-top:4px;opacity:.75}
 @keyframes lgLogo{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-2deg)}}
 .lg-eye{display:flex;align-items:center;gap:10px;font:600 12px var(--mono)!important;letter-spacing:.16em;text-transform:uppercase;color:#b6d441!important;margin:0 0 14px!important}.lg-eye i{width:28px;height:2px;background:#b6d441;border-radius:2px}
@@ -79,48 +79,45 @@ a{color:inherit}
 .lg-stage{position:relative;flex:1;min-height:300px;max-height:420px;margin-inline:-12px}
 #lgScene{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .lg-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:12px var(--mono)!important;opacity:.75;margin:0!important;max-width:none!important}
-.lg-chip{position:absolute;display:flex;align-items:center;gap:10px;padding:10px 14px 10px 10px;border-radius:14px;background:rgba(255,255,255,.94);color:#12261f;box-shadow:0 18px 40px -16px rgba(0,0,0,.55);font:600 13px var(--body);animation:lgFloat 6s ease-in-out infinite;white-space:nowrap}
-.lg-chip b{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#e3f1c4;color:#4f7a12;font-size:15px}.lg-chip b.o{background:#fde7c6;color:#c47800}.lg-chip b.g{background:#d6f3ea;color:#11865f}.lg-chip b.b{background:#d9e9fb;color:#1f6fc2}
-.lg-chip span{display:grid;line-height:1.2}.lg-chip small{font:500 11px var(--body);color:#5b6b66}.lg-chip em{font-style:normal}
-.lg-chip.c1{left:6%;top:17%;animation-delay:-1s}.lg-chip.c2{right:3%;top:21%;animation-delay:-3s}.lg-chip.c3{left:37%;top:13%;animation-delay:-4.5s;animation-duration:7s}.lg-chip.c4{left:24%;top:36%;animation-delay:-2s;animation-duration:7.5s}
+.lg-chip{position:absolute;display:flex;align-items:center;gap:10px;padding:9px 14px 9px 9px;border-radius:12px;background:rgba(10,26,21,.72);border:1px solid rgba(182,212,65,.22);color:#e9f2ec;box-shadow:0 20px 50px -20px rgba(0,0,0,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font:600 12.5px var(--body);animation:lgFloat 9s ease-in-out infinite;white-space:nowrap;letter-spacing:.01em}
+.lg-chip b{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:rgba(182,212,65,.16);color:#c9e36a;font-size:13px}.lg-chip b.o{background:rgba(242,163,58,.16);color:#f5b95c}.lg-chip b.g{background:rgba(33,179,196,.16);color:#5fd3df}.lg-chip b.b{background:rgba(46,134,222,.18);color:#7fb6ee}
+.lg-chip span{display:grid;line-height:1.2}.lg-chip small{font:500 11px var(--body);color:#9db3a9}.lg-chip em{font-style:normal}
+.lg-chip.c1{left:0;top:2%;animation-delay:-1s}.lg-chip.c2{right:0;top:-2%;animation-delay:-3s}.lg-chip.c3,.lg-chip.c4{display:none}
 .lg-stage{margin-top:6px}
-@keyframes lgFloat{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-12px) rotate(1.5deg)}}
+@keyframes lgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .lg-chip.pop{animation:lgPop .6s cubic-bezier(.2,1.6,.4,1) both,lgFloat 6s ease-in-out .6s infinite}
 @keyframes lgPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
-/* scene parts */
+/* scene parts: restrained, product-style motion */
 #lgScene .an{transform-box:fill-box}
-.lg-bounce{animation:lgBounce 1.1s ease-in-out infinite;transform-origin:50% 100%}
-@keyframes lgBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-.lg-wave-l{transform-origin:50% 0;animation:lgWaveL .55s ease-in-out infinite alternate}.lg-wave-r{transform-origin:50% 0;animation:lgWaveR .55s ease-in-out infinite alternate}
-@keyframes lgWaveL{from{transform:rotate(140deg)}to{transform:rotate(172deg)}}@keyframes lgWaveR{from{transform:rotate(-140deg)}to{transform:rotate(-172deg)}}
-.lg-hold{transform-origin:50% 0;animation:lgHold 2.4s ease-in-out infinite}@keyframes lgHold{0%,100%{transform:rotate(-112deg)}50%{transform:rotate(-122deg)}}
-.lg-down-l{transform-origin:50% 0;transform:rotate(12deg)}.lg-down-r{transform-origin:50% 0;transform:rotate(-12deg)}
-.lg-clap-l{transform-origin:50% 0;animation:lgClapL .38s ease-in-out infinite alternate}.lg-clap-r{transform-origin:50% 0;animation:lgClapR .38s ease-in-out infinite alternate}
-@keyframes lgClapL{from{transform:rotate(-38deg)}to{transform:rotate(-62deg)}}@keyframes lgClapR{from{transform:rotate(38deg)}to{transform:rotate(62deg)}}
-.lg-type-l{transform-origin:50% 0;animation:lgTypeL .26s ease-in-out infinite alternate}.lg-type-r{transform-origin:50% 0;animation:lgTypeR .31s ease-in-out infinite alternate}
-@keyframes lgTypeL{from{transform:rotate(-58deg)}to{transform:rotate(-66deg)}}@keyframes lgTypeR{from{transform:rotate(58deg)}to{transform:rotate(66deg)}}
-.lg-nod{transform-origin:50% 100%;animation:lgNod 2.6s ease-in-out infinite}@keyframes lgNod{0%,100%{transform:rotate(0)}30%{transform:rotate(-5deg)}60%{transform:rotate(3deg)}}
-.lg-walk{animation:lgWalk 16s linear infinite}@keyframes lgWalk{0%{transform:translateX(700px)}100%{transform:translateX(-160px)}}
-.lg-step-a{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate}.lg-step-b{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate-reverse}
-@keyframes lgStep{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
-.lg-swing-a{transform-origin:50% 0;animation:lgStep .5s ease-in-out infinite alternate-reverse}.lg-cup{transform-origin:50% 0;transform:rotate(-70deg)}
-.lg-star{transform-origin:50% 50%;animation:lgStar 1.6s ease-in-out infinite}@keyframes lgStar{0%,100%{transform:scale(.7) rotate(0);opacity:.6}50%{transform:scale(1.25) rotate(40deg);opacity:1}}
-.lg-spark{transform-origin:50% 50%;animation:lgSpark 2s ease-in-out infinite}@keyframes lgSpark{0%,100%{transform:scale(0);opacity:0}40%{transform:scale(1);opacity:1}70%{opacity:0}}
-.lg-bar{transform-origin:50% 100%;animation:lgBar 2.8s ease-in-out infinite}@keyframes lgBar{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
-.lg-leaf{transform-origin:50% 100%;animation:lgLeaf 3.4s ease-in-out infinite}@keyframes lgLeaf{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-.lg-win{animation:lgWin 3s ease-in-out infinite}@keyframes lgWin{0%,100%{opacity:.25}50%{opacity:.9}}
-.lg-steam{animation:lgSteam 2.4s ease-in-out infinite}@keyframes lgSteam{0%{transform:translateY(4px);opacity:0}50%{opacity:.8}100%{transform:translateY(-10px);opacity:0}}
-.lg-conf{animation:lgConf 2.6s linear infinite}@keyframes lgConf{0%{transform:translateY(-30px) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(120px) rotate(320deg);opacity:0}}
-.lg-cursor{animation:lgBlink 1s steps(1) infinite}@keyframes lgBlink{50%{opacity:0}}
+.ls-type-a{transform-origin:50% 0;animation:lsTypeA .34s ease-in-out infinite alternate}.ls-type-b{transform-origin:50% 0;animation:lsTypeB .41s ease-in-out infinite alternate}
+@keyframes lsTypeA{from{transform:rotate(-74deg)}to{transform:rotate(-80deg)}}@keyframes lsTypeB{from{transform:rotate(-70deg)}to{transform:rotate(-77deg)}}
+.ls-point{transform-origin:50% 0;animation:lsPoint 3.2s ease-in-out infinite}@keyframes lsPoint{0%,100%{transform:rotate(-118deg)}45%{transform:rotate(-128deg)}70%{transform:rotate(-122deg)}}
+.ls-rest{transform-origin:50% 0;transform:rotate(8deg)}.ls-rest2{transform-origin:50% 0;transform:rotate(-6deg)}
+.ls-hold{transform-origin:50% 0;transform:rotate(-42deg)}.ls-hold2{transform-origin:50% 0;transform:rotate(-24deg)}
+.ls-head{transform-origin:50% 100%;animation:lsHead 5s ease-in-out infinite}@keyframes lsHead{0%,100%{transform:rotate(0)}40%{transform:rotate(-4deg)}60%{transform:rotate(2deg)}}
+.ls-walk{animation:lsWalk 22s linear infinite}@keyframes lsWalk{0%{transform:translateX(900px)}100%{transform:translateX(-260px)}}
+.ls-step-a{transform-origin:50% 0;animation:lsStep .62s ease-in-out infinite alternate}.ls-step-b{transform-origin:50% 0;animation:lsStep .62s ease-in-out infinite alternate-reverse}
+@keyframes lsStep{from{transform:rotate(-17deg)}to{transform:rotate(17deg)}}
+.ls-swing{transform-origin:50% 0;animation:lsStep .62s ease-in-out infinite alternate}
+.ls-line{stroke-dasharray:640;stroke-dashoffset:640;animation:lsDraw 6s cubic-bezier(.4,0,.2,1) infinite}@keyframes lsDraw{0%{stroke-dashoffset:640}55%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:-640}}
+.ls-area{animation:lsArea 6s ease-in-out infinite}@keyframes lsArea{0%,20%{opacity:0}55%,85%{opacity:1}100%{opacity:0}}
+.ls-bar{transform-origin:50% 100%;animation:lsBar 4.2s ease-in-out infinite}@keyframes lsBar{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+.ls-row{animation:lsRow 4.8s steps(1) infinite}@keyframes lsRow{0%{transform:translateY(0)}20%{transform:translateY(11px)}40%{transform:translateY(22px)}60%{transform:translateY(33px)}80%{transform:translateY(44px)}}
+.ls-flow{stroke-dasharray:3 7;animation:lsFlow 1.6s linear infinite}@keyframes lsFlow{to{stroke-dashoffset:-20}}
+.ls-live{animation:lsLive 1.8s ease-in-out infinite}@keyframes lsLive{50%{opacity:.25}}
+.ls-leaf{transform-origin:50% 100%;animation:lsLeaf 6s ease-in-out infinite}@keyframes lsLeaf{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+.ls-glow{animation:lsGlow 4s ease-in-out infinite}@keyframes lsGlow{50%{opacity:.55}}
+.ls-cursor{animation:lsBlink 1.1s steps(1) infinite}
+.ls-min{transform-origin:50% 100%;transform-box:fill-box;animation:lsSpin 60s linear infinite}.ls-hr{transform-origin:50% 100%;transform-box:fill-box;animation:lsSpin 720s linear infinite}@keyframes lsSpin{to{transform:rotate(360deg)}}@keyframes lsBlink{50%{opacity:0}}
 /* card */
 .login-card .m-brand{display:none}
 .lg-badge{display:flex;align-items:center;gap:8px;font:600 11.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gem-ink);margin:0}.lg-badge i{width:9px;height:9px;border-radius:50%;background:#8DC63F;box-shadow:0 0 0 0 rgba(141,198,63,.6);animation:lgPulse 2s infinite}
 @keyframes lgPulse{70%{box-shadow:0 0 0 9px rgba(141,198,63,0)}100%{box-shadow:0 0 0 0 rgba(141,198,63,0)}}
-.login-card h1{font-size:40px!important;letter-spacing:-.02em}.login-card h1 .dot{color:#8DC63F;display:inline-block;animation:lgBounce 1.6s ease-in-out infinite}
+.login-card h1{font-size:40px!important;letter-spacing:-.02em}.login-card h1 .dot{color:#8DC63F}
 .in-ic{position:relative}.in-ic > svg{position:absolute;left:13px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;z-index:1}.in-ic input{padding-left:40px!important}
 .in-ic:focus-within > svg{color:var(--gem-ink)}
 .lg-go{position:relative;overflow:hidden;font-size:16px}.lg-go::after{content:"→";display:inline-block;margin-left:10px;transition:transform .25s}.lg-go:hover::after{transform:translateX(5px)}
-.lg-go::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:lgShine 3.8s ease-in-out infinite}
+.lg-go::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:lgShine 6s ease-in-out infinite}
 @keyframes lgShine{0%,60%{left:-60%}100%{left:130%}}
 .lg-sec{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin:0;justify-content:center;text-align:center}.lg-sec svg{color:#11865f;flex:none}
 @media(max-width:860px){.login-card .m-brand{display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;font-size:24px}.login-card .m-brand img{width:72px;border-radius:18px;background:#fff;padding:5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}.login-card .m-brand small{display:block;font:400 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:.7}}
@@ -507,11 +504,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <p>Clock in, check your shifts, follow project guidelines and see your hours and pay. All in one secure place.</p>
     </div>
     <div class="lg-stage" aria-hidden="true">
-      <svg id="lgScene" viewBox="0 0 640 380" preserveAspectRatio="xMidYMax meet"></svg>
-      <div class="lg-chip c1"><b>✓</b><span>Clocked in<small>09:02 · Morning shift</small></span></div>
-      <div class="lg-chip c2"><b class="o">★</b><span>Task completed<small>PowerFilter refresh</small></span></div>
-      <div class="lg-chip c3"><b class="g">✓</b><span>Leave approved<small>Fri, 2 days</small></span></div>
-      <div class="lg-chip c4"><b class="b">⏱</b><span><em id="lgHrs">38h 20m</em><small>this week</small></span></div>
+      <svg id="lgScene" viewBox="0 0 760 390" preserveAspectRatio="xMidYMax meet"></svg>
     </div>
     <p class="lg-foot"><span>Employee portal · internal use only</span><span>Built for people. Powered by teamwork.</span></p>
   </div>
@@ -2345,60 +2338,114 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 
 function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = accounts.find(a => a.key === me.key); if (!fresh || !fresh.active) { $('signOut').click(); return; } } if (me) { const fresh = accounts.find(a => a.key === me.key); if (fresh) { const changed = fresh.access !== me.access || fresh.clock !== me.clock; me = fresh; if (changed) applyRole(); } } renderRoster(); renderSchedule(); renderLeave(); renderHome(); renderAccounts(); renderLinks(); renderClock(); renderTeamAtt(); renderProfile(); }
 
-/* ---------- sign-in scene: animated team in an office ---------- */
+/* ---------- sign-in scene: a data team at work (faceless, product-style illustration) ---------- */
 (function buildScene(){
   const svg = $('lgScene'); if (!svg) return;
-  const arm = (x, y, cls, c, skin, extra = '') => `<g transform="translate(${x} ${y})"><g class="an ${cls}"><rect x="-5" y="0" width="10" height="44" rx="5" fill="${c}"/><circle cx="0" cy="47" r="6" fill="${skin}"/>${extra}</g></g>`;
-  const leg = (x, cls, c) => `<g transform="translate(${x} -62)"><g class="an ${cls}"><rect x="-6.5" y="0" width="13" height="60" rx="6" fill="${c}"/><ellipse cx="2" cy="61" rx="10" ry="5" fill="#1b2430"/></g></g>`;
-  const face = (skin, hair, style) => {
-    const hairs = {
-      short: `<path d="M-17 -136 q2 -20 18 -20 q17 0 17 19 q-6 -9 -17 -9 q-11 0 -18 10z" fill="${hair}"/>`,
-      bun: `<circle cx="0" cy="-158" r="8" fill="${hair}"/><path d="M-18 -133 q0 -22 18 -22 q18 0 18 22 q-7 -11 -18 -11 q-11 0 -18 11z" fill="${hair}"/>`,
-      long: `<path d="M-19 -128 q-3 -28 19 -28 q22 0 19 28 l2 24 q-7 3 -9 -4 l-2 -22 q-10 -6 -20 0 l-2 22 q-2 7 -9 4z" fill="${hair}"/>`,
-      curly: `<g fill="${hair}"><circle cx="-12" cy="-146" r="8"/><circle cx="0" cy="-152" r="9"/><circle cx="12" cy="-146" r="8"/><circle cx="-16" cy="-136" r="6"/><circle cx="16" cy="-136" r="6"/></g>`,
-      cap: `<path d="M-18 -138 q2 -18 18 -18 q16 0 18 18z" fill="${hair}"/><rect x="0" y="-141" width="26" height="5" rx="2.5" fill="${hair}"/>`};
-    return `<rect x="-6" y="-120" width="12" height="10" fill="${skin}"/><circle cx="0" cy="-135" r="18" fill="${skin}"/>${hairs[style] || ''}<circle cx="-6" cy="-134" r="2" fill="#1b2430"/><circle cx="6" cy="-134" r="2" fill="#1b2430"/><path d="M-5 -126 q5 5 10 0" stroke="#1b2430" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="-11" cy="-128" r="3" fill="#f4a3a3" opacity=".5"/><circle cx="11" cy="-128" r="3" fill="#f4a3a3" opacity=".5"/>`;
+  const C = {navy: '#22324a', char: '#2c3642', sand: '#b9a88e', teal: '#2a6f6c', slate: '#3e4b5a', pant: '#18212d', pant2: '#2b3542', shoe: '#0f151d', white: '#e9eef1', lime: '#b6d441', cyan: '#21B3C4', blue: '#3a8ee6', amber: '#f2a33a'};
+  // a sleeve hanging from the shoulder; rotate it with a CSS class
+  const sleeve = (x, y, cls, col, skin, len = 54, extra = '') => `<g transform="translate(${x} ${y})"><g class="an ${cls}"><path d="M-5.5 0 H5.5 L4.2 ${len} H-4.2 Z" fill="${col}"/><circle cx="0" cy="${len + 4}" r="4.4" fill="${skin}"/>${extra}</g></g>`;
+  const legPath = (x, cls, col) => `<g transform="translate(${x} -92)"><g class="an ${cls}"><path d="M-7 0 H7 L5 86 H-5 Z" fill="${col}"/><path d="M-6 86 H9 a3 3 0 0 1 3 3 V92 H-6 Z" fill="${C.shoe}"/></g></g>`;
+  const head = (skin, hair, style, face = 1) => { // face: 1 faces right, -1 faces left
+    const f = face, hairs = {
+      short: `<path d="M${-11 * f} -170 q${2 * f} -14 ${12 * f} -14 q${11 * f} 0 ${12 * f} 11 q${-7 * f} -4 ${-14 * f} -2 l${-6 * f} 9z" fill="${hair}"/>`,
+      bob: `<path d="M${-13 * f} -164 q0 -20 ${13 * f} -20 q${13 * f} 0 ${13 * f} 18 l${-3 * f} 2 q${-6 * f} -10 ${-14 * f} -9 l${-6 * f} 24 q${-6 * f} -4 ${-3 * f} -15z" fill="${hair}"/>`,
+      bun: `<circle cx="${-10 * f}" cy="-182" r="6.5" fill="${hair}"/><path d="M${-12 * f} -166 q0 -18 ${12 * f} -18 q${12 * f} 0 ${12 * f} 15 q${-8 * f} -7 ${-16 * f} -4 l${-6 * f} 10z" fill="${hair}"/>`,
+      crop: `<path d="M${-11 * f} -171 q${1 * f} -13 ${11 * f} -13 q${11 * f} 0 ${11 * f} 12 q${-10 * f} -6 ${-22 * f} 1z" fill="${hair}"/>`};
+    return `<g class="an ls-head"><rect x="-4.5" y="-156" width="9" height="9" fill="${skin}"/><ellipse cx="${1 * f}" cy="-167" rx="10.5" ry="12.5" fill="${skin}"/>${hairs[style] || ''}</g>`;
   };
-  const person = ({x, y, s = 1, skin, hair, style, shirt, pants, arms, legs = ['', ''], wrap = '', extraTop = ''}) =>
-    `<g transform="translate(${x} ${y}) scale(${s})"><g class="an ${wrap}">${leg(-8, legs[0], pants)}${leg(8, legs[1], pants)}<rect x="-21" y="-114" width="42" height="58" rx="15" fill="${shirt}"/><path d="M-8 -114 l8 9 l8 -9" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/>${arm(-20, -106, arms[0], shirt, skin, arms[2] || '')}${arm(20, -106, arms[1], shirt, skin, arms[3] || '')}${face(skin, hair, style)}${extraTop}</g></g>`;
-  const trophy = `<g transform="translate(0 52) rotate(112)"><path d="M-11 -2 h22 v8 a11 11 0 0 1 -22 0z" fill="#F2B632"/><path d="M-11 1 h-5 a5 5 0 0 0 5 8 M11 1 h5 a5 5 0 0 1 -5 8" stroke="#F2B632" stroke-width="2.5" fill="none"/><rect x="-2.5" y="16" width="5" height="7" fill="#d99a1e"/><rect x="-8" y="23" width="16" height="5" rx="2" fill="#a86f12"/></g>`;
-  const cup = `<g transform="translate(0 50) rotate(70)"><rect x="-6" y="-4" width="12" height="15" rx="2" fill="#fff"/><rect x="-6" y="0" width="12" height="4" fill="#E2513B"/><path class="lg-steam" d="M-2 -8 q-3 -5 0 -9 M3 -8 q-3 -5 0 -9" stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none"/></g>`;
-  const plant = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-14" y="-26" width="28" height="26" rx="4" fill="#e9eef0"/><g class="an lg-leaf">${[-34, -12, 12, 34, 0].map((r, i) => `<path d="M0 -26 q${-8 + i * 4} -26 0 -${46 + (i % 2) * 10} q${10 - i * 4} 20 0 ${46 + (i % 2) * 10}" fill="${i % 2 ? '#3aa17e' : '#2f8a6a'}" transform="rotate(${r} 0 -26)"/>`).join('')}</g></g>`;
-  // backdrop: windows + skyline
-  let city = ''; for (let i = 0; i < 18; i++) { const w = 18 + (i * 37) % 26, h = 40 + (i * 53) % 90, x = i * 36; city += `<rect x="${x}" y="${250 - h}" width="${w}" height="${h}" fill="rgba(255,255,255,.05)"/>`; for (let j = 0; j < 4; j++) if ((i + j) % 3 === 0) city += `<rect class="lg-win" style="animation-delay:${(i * 0.37 + j * 0.6) % 3}s" x="${x + 5}" y="${250 - h + 10 + j * 16}" width="4" height="6" fill="#f6d77a"/>`; }
-  const monitorBars = [0, 1, 2, 3, 4].map(i => `<rect class="an lg-bar" style="animation-delay:${-i * .45}s" x="${-38 + i * 16}" y="-48" width="10" height="36" rx="2" fill="${['#21B3C4', '#8DC63F', '#F2A33A', '#2E86DE', '#b6d441'][i]}"/>`).join('');
-  const confetti = [...Array(14)].map((_, i) => `<rect class="lg-conf" style="animation-delay:${-i * .19}s" x="${70 + (i * 23) % 160}" y="${20 + (i * 7) % 20}" width="6" height="10" rx="1.5" fill="${['#E2513B', '#F2A33A', '#8DC63F', '#21B3C4', '#2E86DE', '#b6d441'][i % 6]}"/>`).join('');
+  const jacket = (col, shirt = C.white) => `<path d="M-19 -150 q19 -9 38 0 l4 58 h-46z" fill="${col}"/><path d="M-5 -151 l5 13 l5 -13z" fill="${shirt}"/><path d="M0 -138 V-96" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/>`;
+  const standing = ({x, y, s = 1, face = 1, skin, hair, style, coat, pant, arms, legs = ['', ''], extra = ''}) =>
+    `<g transform="translate(${x} ${y}) scale(${s * face} ${s})">${legPath(-6, legs[0], pant)}${legPath(6, legs[1], pant)}${jacket(coat)}${sleeve(-18, -146, arms[0], coat, skin, 54, arms[2] || '')}${sleeve(18, -146, arms[1], coat, skin, 54, arms[3] || '')}${head(skin, hair, style, 1)}${extra}</g>`;
+  // seated profile at a desk, facing right
+  const seated = ({x, y, skin, hair, style, coat, pant}) => `<g transform="translate(${x} ${y})">
+      <path d="M-14 -58 h40 a6 6 0 0 1 6 6 v6 h-46z" fill="${pant}"/><path d="M24 -50 h10 l-2 46 h-9z" fill="${pant}"/><path d="M22 -4 h18 a3 3 0 0 1 3 3 v3 h-21z" fill="${C.shoe}"/>
+      <path d="M-18 -114 q14 -8 30 0 l4 58 h-36z" fill="${coat}"/>
+      ${sleeve(6, -108, 'ls-type-a', coat, skin, 40)}${sleeve(-2, -108, 'ls-type-b', coat, skin, 40)}
+      <g transform="translate(0 38)">${head(skin, hair, style, 1).replace('class="an ls-head"', 'class="an"')}</g></g>`;
+  const chair = (x, y) => `<g transform="translate(${x} ${y})"><path d="M-30 -60 h36 a5 5 0 0 1 5 5 v4 h-46 a5 5 0 0 1 5 -9z" fill="#2a3542"/><path d="M-32 -118 q-4 30 2 58 h8 q-6 -28 -2 -58z" fill="#2a3542"/><rect x="-12" y="-51" width="5" height="34" fill="#55626f"/><path d="M-34 -14 h50" stroke="#55626f" stroke-width="4" stroke-linecap="round"/><circle cx="-32" cy="-10" r="3.5" fill="#55626f"/><circle cx="14" cy="-10" r="3.5" fill="#55626f"/></g>`;
+  // live data wall
+  const pts = [[0, 62], [34, 54], [68, 58], [102, 40], [136, 46], [170, 30], [204, 34], [238, 18]], line = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' ');
+  const wall = `<g transform="translate(150 54)">
+      <rect width="300" height="186" rx="12" fill="#0d1b17" stroke="rgba(182,212,65,.28)"/><rect width="300" height="186" rx="12" fill="url(#lsScreen)"/>
+      <circle cx="16" cy="15" r="3" fill="#e2513b"/><circle cx="27" cy="15" r="3" fill="#f2a33a"/><circle cx="38" cy="15" r="3" fill="#8dc63f"/>
+      <text x="56" y="19" fill="#9fb5ab" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1">OPERATIONS · TODAY</text>
+      <circle class="ls-live" cx="252" cy="15" r="3.2" fill="#8dc63f"/><text x="260" y="18.5" fill="#c9e36a" font-family="IBM Plex Mono, monospace" font-size="8.5" font-weight="600">LIVE</text>
+      ${[['Hours tracked', '1,248'], ['On shift', '12'], ['QA pass', '99.2%']].map(([k, v], i) => `<g transform="translate(${14 + i * 94} 32)"><rect width="84" height="38" rx="7" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.07)"/><text x="9" y="14" fill="#8ea69c" font-family="Public Sans, sans-serif" font-size="7.5">${k}</text><text x="9" y="30" fill="#eef4f0" font-family="Bricolage Grotesque, sans-serif" font-size="14" font-weight="700">${v}</text></g>`).join('')}
+      <g transform="translate(16 86)"><path d="${line} L238 80 L0 80Z" fill="url(#lsArea)" class="ls-area"/><path class="ls-line" d="${line}" fill="none" stroke="${C.lime}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        ${[0, 20, 40, 60, 80].map(y => `<line x1="0" x2="238" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.05)"/>`).join('')}</g>
+      <g transform="translate(262 92)">${[0, 1, 2, 3].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .9}s" x="${i * 7}" y="${4 + i * 3}" width="4.5" height="${68 - i * 3}" rx="1.5" fill="${[C.cyan, C.lime, C.blue, C.amber][i]}" opacity=".85"/>`).join('')}</g>
+    </g>`;
+  // workstation monitor with a spreadsheet and a moving selection row
+  const mon = `<g transform="translate(176 232)"><rect x="-44" y="-66" width="88" height="58" rx="5" fill="#0d1b17" stroke="#3a4754" stroke-width="2.5"/>
+      <g transform="translate(-38 -60)">${[0, 1, 2, 3, 4].map(r => `<rect x="0" y="${r * 11}" width="76" height="9" rx="1.5" fill="rgba(255,255,255,${r % 2 ? .035 : .06})"/><rect x="4" y="${r * 11 + 3}" width="${18 + (r * 13) % 20}" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/><rect x="50" y="${r * 11 + 3}" width="10" height="3" rx="1.5" fill="${r === 2 ? C.amber : C.lime}" opacity=".8"/>`).join('')}
+        <rect class="ls-row" x="0" y="0" width="76" height="9" rx="1.5" fill="none" stroke="${C.cyan}" stroke-width="1.2"/></g>
+      <rect x="-3" y="-8" width="6" height="12" fill="#55626f"/><rect x="-16" y="3" width="32" height="3" rx="1.5" fill="#55626f"/></g>`;
+  const plant = (x, y) => `<g transform="translate(${x} ${y})"><rect x="-15" y="-40" width="30" height="40" rx="3" fill="#d9dfe2"/><rect x="-15" y="-40" width="30" height="6" fill="#c3cbcf"/>
+      <g class="an ls-leaf">${[[-26, 70, '#2f6f59'], [-8, 92, '#3b8a6c'], [10, 84, '#2f6f59'], [26, 66, '#468f73'], [0, 104, '#356f5c']].map(([r, h, c]) => `<path d="M0 -40 q-7 ${-h / 2} 0 ${-h} q7 ${h / 2} 0 ${h}" fill="${c}" transform="rotate(${r} 0 -40)"/>`).join('')}</g></g>`;
+  const tablet = `<g transform="translate(0 56) rotate(42)"><rect x="-13" y="-9" width="26" height="18" rx="2.5" fill="#1a2733" stroke="#55626f" stroke-width="1.2"/><rect class="ls-glow" x="-10" y="-6" width="20" height="12" rx="1.5" fill="${C.cyan}" opacity=".35"/></g>`;
+  const laptop = `<g transform="translate(-2 40) rotate(-14)"><rect x="-14" y="-2" width="28" height="4" rx="1.5" fill="#8b98a3"/></g>`;
+  // ---- office surroundings
+  let sky = ''; for (let i = 0; i < 26; i++) { const w = 16 + (i * 29) % 22, h = 26 + (i * 47) % 70, x = 150 + i * 24; sky += `<rect x="${x}" y="${128 - h}" width="${w}" height="${h}" fill="rgba(255,255,255,.045)"/>`; }
+  const windows = `<rect x="140" y="18" width="620" height="112" fill="rgba(140,200,180,.035)"/>${sky}
+    ${[140, 264, 388, 512, 636, 760].map(x => `<line x1="${x}" y1="18" x2="${x}" y2="130" stroke="rgba(182,212,65,.10)" stroke-width="3"/>`).join('')}
+    <line x1="140" y1="18" x2="760" y2="18" stroke="rgba(182,212,65,.12)" stroke-width="3"/><line x1="140" y1="130" x2="760" y2="130" stroke="rgba(182,212,65,.12)" stroke-width="3"/>
+    ${[[170, 30, 230, 128], [420, 30, 480, 128], [640, 30, 700, 128]].map(([a, b, c, d]) => `<path d="M${a} ${b} L${a + 18} ${b} L${c + 18} ${d} L${c} ${d}z" fill="rgba(255,255,255,.025)"/>`).join('')}`;
+  const pendant = x => `<g transform="translate(${x} 0)"><line x1="0" y1="0" x2="0" y2="26" stroke="rgba(233,238,241,.35)" stroke-width="1"/><path d="M-13 38 q13 -14 26 0z" fill="#c9d2d6"/><rect x="-13" y="37" width="26" height="2.5" rx="1" fill="#f6e7b8"/>
+    <path class="ls-glow" d="M-12 40 L-46 150 L46 150 L12 40z" fill="url(#lsCone)"/></g>`;
+  const clock = `<g transform="translate(724 168)"><circle r="17" fill="#e9eef1" stroke="#9aa7b0" stroke-width="2"/>${[...Array(12)].map((_, i) => `<line x1="0" y1="-13" x2="0" y2="-11" stroke="#55626f" stroke-width="1.4" transform="rotate(${i * 30})"/>`).join('')}
+    <line class="ls-hr" x1="0" y1="0" x2="0" y2="-7.5" stroke="#22324a" stroke-width="2.2" stroke-linecap="round"/><line class="ls-min" x1="0" y1="0" x2="0" y2="-11.5" stroke="#22324a" stroke-width="1.5" stroke-linecap="round"/><circle r="1.6" fill="#e2513b"/></g>`;
+  const binders = (x, y) => [0, 1, 2, 3, 4, 5].map(i => `<rect x="${x + i * 8}" y="${y - (i % 3 === 1 ? 22 : 26)}" width="6.5" height="${i % 3 === 1 ? 22 : 26}" rx="1" fill="${['#3e5d7a', '#7a8f6a', '#b9a88e', '#2a6f6c', '#55626f', '#8a6d58'][i]}"/>`).join('');
+  const shelf = `<g><rect x="690" y="222" width="64" height="114" rx="3" fill="#2a3542"/><rect x="694" y="226" width="56" height="106" fill="#1e2832"/>
+    ${[260, 296, 332].map(y => `<rect x="692" y="${y}" width="60" height="3" fill="#55626f"/>`).join('')}${binders(698, 260)}${binders(698, 296)}
+    <rect x="700" y="306" width="18" height="24" rx="2" fill="#c9d2d6"/><rect x="724" y="314" width="20" height="16" rx="2" fill="#8b98a3"/></g>`;
+  const smallPlant = (x, y, sc) => `<g transform="translate(${x} ${y}) scale(${sc})">${plant(0, 0)}</g>`;
+  const meet = `<g>
+    <rect x="8" y="64" width="132" height="272" rx="4" fill="rgba(150,215,195,.05)" stroke="rgba(182,212,65,.22)" stroke-width="2"/>
+    <line x1="74" y1="64" x2="74" y2="336" stroke="rgba(182,212,65,.16)" stroke-width="2"/><rect x="8" y="190" width="132" height="5" fill="rgba(182,212,65,.10)"/>
+    <path d="M22 70 L40 70 L18 330 L8 330 L8 240z" fill="rgba(255,255,255,.04)"/><path d="M92 70 L102 70 L80 330 L70 330z" fill="rgba(255,255,255,.03)"/>
+    <text x="16" y="84" fill="rgba(233,238,241,.55)" font-family="IBM Plex Mono, monospace" font-size="7.5" letter-spacing="1.2">MEETING ROOM 2</text>
+    <g transform="translate(74 118)"><rect x="-34" y="-20" width="68" height="40" rx="3" fill="#0d1b17" stroke="#3a4754" stroke-width="1.5"/>${[0, 1, 2, 3, 4, 5].map(i => `<rect class="an ls-bar" style="animation-delay:${-i * .6}s" x="${-26 + i * 9}" y="${-8 + (i * 5) % 12}" width="5" height="${22 - (i * 5) % 12}" rx="1" fill="${i % 2 ? '#21B3C4' : '#b6d441'}" opacity=".8"/>`).join('')}</g>
+    <g transform="translate(0 336) scale(.62) translate(0 -336)">
+      ${chair(52, 336)}${seated({x: 46, y: 300, skin: '#c68e66', hair: '#1a1410', style: 'crop', coat: '#3e5d7a', pant: '#18212d'})}
+      <g transform="translate(238 0) scale(-1 1)">${chair(52, 336)}${seated({x: 46, y: 300, skin: '#f0cfb3', hair: '#7a4a2a', style: 'bob', coat: '#6d5b4b', pant: '#2b3542'})}</g>
+    </g>
+    <ellipse cx="74" cy="300" rx="34" ry="6" fill="#dfe5e8"/><rect x="71" y="300" width="6" height="34" fill="#8b98a3"/><rect x="58" y="332" width="32" height="4" rx="2" fill="#8b98a3"/>
+    <g transform="translate(74 298)"><rect x="-11" y="-2" width="22" height="3" rx="1" fill="#8b98a3"/><path d="M-10 -2 l2 -12 h16 l2 12z" fill="#c7d2d8"/><rect class="ls-glow" x="-6" y="-12" width="12" height="8" rx="1" fill="#21B3C4" opacity=".4"/></g>
+    ${smallPlant(128, 336, .55)}
+  </g>`;
   svg.innerHTML = `
-  <defs><linearGradient id="lgFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.08)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></linearGradient></defs>
-  <rect x="20" y="40" width="600" height="250" rx="22" fill="rgba(255,255,255,.035)" stroke="rgba(182,212,65,.18)"/>
-  <g clip-path="inset(0)">${city}</g>
-  <line x1="320" y1="40" x2="320" y2="290" stroke="rgba(182,212,65,.12)" stroke-width="3"/><line x1="20" y1="150" x2="620" y2="150" stroke="rgba(182,212,65,.08)" stroke-width="2"/>
-  <rect x="0" y="290" width="640" height="90" fill="url(#lgFloor)"/>
-  <!-- walker in the back -->
-  <g transform="translate(0 296) scale(.62)"><g class="lg-walk">${person({x: 0, y: 0, skin: '#c98d5a', hair: '#2b1d14', style: 'cap', shirt: '#21B3C4', pants: '#2a3f66', arms: ['an lg-swing-a', 'an lg-cup', '', cup], legs: ['lg-step-a', 'lg-step-b']})}</g></g>
-  <!-- left desk: cheering employee -->
-  <g transform="translate(70 0)">
-    <rect x="0" y="238" width="150" height="10" rx="4" fill="#dfe7ea"/><rect x="10" y="248" width="8" height="80" fill="#b9c5ca"/><rect x="132" y="248" width="8" height="80" fill="#b9c5ca"/>
-    <g transform="translate(78 236)"><rect x="-52" y="-74" width="104" height="66" rx="7" fill="#1b2a3a" stroke="#dfe7ea" stroke-width="4"/>${monitorBars}<rect x="-6" y="-8" width="12" height="10" fill="#b9c5ca"/></g>
-    <path d="M-8 268 h40 v-34 h8 v42 h-48z" fill="#3a4a5c"/>
+  <defs>
+    <linearGradient id="lsCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(246,231,184,.16)"/><stop offset="1" stop-color="rgba(246,231,184,0)"/></linearGradient>
+    <linearGradient id="lsScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(182,212,65,.06)"/><stop offset="1" stop-color="rgba(33,179,196,.03)"/></linearGradient>
+    <linearGradient id="lsArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(182,212,65,.32)"/><stop offset="1" stop-color="rgba(182,212,65,0)"/></linearGradient>
+    <radialGradient id="lsSpot" cx="50%" cy="30%" r="60%"><stop offset="0" stop-color="rgba(182,212,65,.10)"/><stop offset="1" stop-color="rgba(182,212,65,0)"/></radialGradient>
+    <linearGradient id="lsFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.07)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></linearGradient>
+  </defs>
+  ${windows}
+  <line x1="0" y1="336" x2="760" y2="336" stroke="rgba(182,212,65,.22)"/><rect x="0" y="336" width="760" height="54" fill="url(#lsFloor)"/>
+  <ellipse cx="560" cy="342" rx="120" ry="10" fill="rgba(182,212,65,.05)"/>
+  ${pendant(300)}${pendant(450)}${pendant(600)}
+  ${clock}${shelf}
+  <g transform="translate(60 0)">
+  <ellipse cx="300" cy="150" rx="320" ry="170" fill="url(#lsSpot)"/>
+  ${wall}
+  <path class="ls-flow" d="M176 168 C 176 120 150 110 150 110" stroke="rgba(33,179,196,.0)" fill="none"/>
+  <path class="ls-flow" d="M206 200 C 240 200 250 220 262 240" stroke="rgba(182,212,65,.45)" stroke-width="1.4" fill="none"/>
+  <path class="ls-flow" d="M450 150 C 490 150 520 170 540 196" stroke="rgba(33,179,196,.45)" stroke-width="1.4" fill="none"/>
+  <!-- walker in the background, carrying a laptop -->
+  <g transform="translate(0 334) scale(.74)"><g class="ls-walk">${standing({x: 0, y: 0, face: -1, skin: '#c68e66', hair: '#1f1712', style: 'crop', coat: C.slate, pant: C.pant2, arms: ['ls-swing', 'ls-hold2', '', laptop], legs: ['ls-step-a', 'ls-step-b']})}</g></g>
+  <!-- workstation: seated analyst -->
+  <rect x="96" y="240" width="170" height="6" rx="3" fill="#dfe5e8"/><rect x="104" y="246" width="4" height="90" fill="#8b98a3"/><rect x="254" y="246" width="4" height="90" fill="#8b98a3"/>
+  ${mon}<rect x="158" y="234" width="34" height="5" rx="2" fill="#aab5bd"/><rect class="ls-cursor" x="186" y="207" width="2" height="6" fill="${C.cyan}"/>
+  ${chair(118, 336)}
+  ${seated({x: 112, y: 300, skin: '#e8b996', hair: '#2a1e17', style: 'bob', coat: C.navy, pant: C.pant})}
+  <!-- presenter at the data wall -->
+  ${standing({x: 488, y: 336, face: -1, skin: '#8a5a3c', hair: '#14100d', style: 'short', coat: C.char, pant: C.pant, arms: ['ls-rest', 'ls-point']})}
+  <!-- colleague reviewing on a tablet -->
+  ${standing({x: 560, y: 336, s: .97, face: -1, skin: '#f0cfb3', hair: '#5a3a24', style: 'bun', coat: C.sand, pant: C.pant2, arms: ['ls-hold', 'ls-rest2', tablet]})}
+  ${plant(640, 336)}
   </g>
-  ${person({x: 46, y: 330, skin: '#f1c7a1', hair: '#3b2a20', style: 'short', shirt: '#E2513B', pants: '#2a3f66', arms: ['lg-wave-l', 'lg-wave-r'], wrap: 'lg-bounce'})}
-  ${confetti}
-  <!-- trophy hand-over -->
-  ${person({x: 395, y: 330, skin: '#e0ac7e', hair: '#1f1612', style: 'long', shirt: '#F2A33A', pants: '#1f3a5f', arms: ['lg-down-l', 'lg-hold', '', trophy]})}
-  <g transform="translate(462 168)"><path class="an lg-star" d="M0 -13 l4 9 l10 1 l-8 6 l3 10 l-9 -6 l-9 6 l3 -10 l-8 -6 l10 -1z" fill="#F7D046"/></g>
-  <circle class="an lg-spark" cx="440" cy="150" r="3" fill="#fff"/><circle class="an lg-spark" style="animation-delay:.7s" cx="486" cy="160" r="2.5" fill="#fff"/><circle class="an lg-spark" style="animation-delay:1.3s" cx="470" cy="136" r="2" fill="#F7D046"/>
-  ${person({x: 515, y: 330, skin: '#f6d2b5', hair: '#7a4a2a', style: 'bun', shirt: '#2E86DE', pants: '#26324a', arms: ['lg-clap-l', 'lg-clap-r']})}
-  <!-- right: employee typing on a laptop -->
-  <g transform="translate(250 0)">
-    ${person({x: 40, y: 318, s: .9, skin: '#8d5a3b', hair: '#121212', style: 'curly', shirt: '#8DC63F', pants: '#2a3f66', arms: ['lg-type-l', 'lg-type-r'], wrap: 'lg-nod'})}
-    <rect x="-6" y="250" width="96" height="9" rx="4" fill="#dfe7ea"/><rect x="2" y="259" width="7" height="70" fill="#b9c5ca"/><rect x="76" y="259" width="7" height="70" fill="#b9c5ca"/>
-    <g transform="translate(40 250)"><path d="M-24 0 l5 -30 h38 l5 30z" fill="#c7d2d8"/><rect x="-14" y="-24" width="28" height="3" rx="1.5" fill="#8DC63F"/><rect x="-14" y="-18" width="18" height="3" rx="1.5" fill="#21B3C4"/><rect class="lg-cursor" x="6" y="-18" width="2" height="5" fill="#1b2a3a"/></g>
-  </g>
-  ${plant(612, 330, 1)}${plant(18, 330, .85)}`;
-  // pop one chip at a time, and tick the weekly hours
-  const chips = [...document.querySelectorAll('.lg-chip')]; let ci = 0, mins = 38 * 60 + 20;
-  if (!reduce) setInterval(() => { if ($('loginView').hidden) return; const c = chips[ci++ % chips.length]; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); mins += 1; const h = $('lgHrs'); if (h) h.textContent = Math.floor(mins / 60) + 'h ' + pad(mins % 60) + 'm'; }, 2200);
+  ${meet}`;
 })();
 
 /* ---------- sign-in backdrop: drifting network ---------- */
