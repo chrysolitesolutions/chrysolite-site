@@ -230,6 +230,9 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
 .gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
 .gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
+.gd-ack{margin-top:14px;display:grid;gap:12px;border-left:4px solid var(--gem)}.gd-ack h3{margin:0}.gd-ack .ack-ok{display:flex;gap:10px;align-items:center;color:var(--ok);font-weight:600}
+.gd-ack label.ack-chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;font-weight:500;cursor:pointer}.gd-ack label.ack-chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--gem)}
+.gd-card .ack-tag{display:inline-block;margin-top:6px}
 .gd-doc .flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:4px 0 16px;counter-reset:fs}
 .gd-doc .fs{position:relative;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);display:grid;gap:4px}.gd-doc .fs b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gem);color:#10200A;font-size:13px}.gd-doc .fs span{font-size:13px;font-weight:600}
 .gd-doc ul.check{list-style:none;padding:0}.gd-doc ul.check li{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:9px}.gd-doc ul.check li::before{content:"";flex:none;width:16px;height:16px;margin-top:3px;border-radius:4px;border:2px solid var(--gem)}
@@ -870,6 +873,8 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Review</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button>
         <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3. Phone Review</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
       </div>
+      <div class="panel admin-only" hidden style="margin-top:16px;padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Procedure acceptance</h3><span class="hint" id="ackSum"></span></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Profile Review</th><th>Email Review</th><th>Phone Review</th></tr></thead><tbody id="ackRows"></tbody></table></div></div>
     </section>
 
     <!-- PROJECT GUIDELINE DOCUMENT -->
@@ -880,6 +885,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="msg" id="gdMsg" hidden style="margin-bottom:14px"></div>
       <nav class="gd-toc" id="gdToc" aria-label="Sections"></nav>
       <article class="panel gd-doc" id="gdDoc"></article>
+      <div class="panel gd-ack" id="gdAck" hidden></div>
       <p class="hint" id="gdUpd" style="margin-top:10px"></p>
     </section>
 
@@ -1083,7 +1089,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1163,6 +1169,7 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
@@ -1173,6 +1180,7 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
 
 function startAdminData() {
+  watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
   watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
@@ -1945,7 +1953,41 @@ function renderHub(){
   const pf = guides.powerfilter, src = guides.pfsources, n = (pf && pf.rows && pf.rows.length) || (src && src.rows && src.rows.length) || 0;
   if (n) $('gdHubSub').textContent = n + ' PowerFilters · task schedule, progress and sources';
 }
-function renderGuideCards(){ renderHub();
+/* ---------- benchmarking: employees read and accept each procedure ---------- */
+let ackMine = null, ackAll = {};
+const ACK_NAMES = {bprof: 'Profile Review', bemail: 'Email Review', bphone: 'Phone Review'};
+const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
+const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
+const ackVer = k => { const d = ackDoc(k); return d && d.html ? hashStr(d.html) : null; };
+// 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
+function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k]; return !a ? 'no' : a.v === v ? 'ok' : 'old'; }
+const ackFmt = iso => new Date(iso).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
+function renderAck(){
+  const box = $('gdAck'); if (!box) return;
+  const k = gdKey; if (!BENCH_SUB.includes(k) || !me || !ackVer(k)) { box.hidden = true; return; }
+  const st = ackState(ackMine, k), a = ackMine && ackMine.pages && ackMine.pages[k];
+  box.hidden = false;
+  if (st === 'ok') { box.innerHTML = `<div class="ack-ok">✓ You accepted these procedures on ${ackFmt(a.at)}</div><p class="hint" style="margin:0">If the procedures change, you'll be asked to read and accept them again.</p>`; return; }
+  box.innerHTML = `<h3>Read and accept</h3>${st === 'old' ? `<p class="msg warn" style="margin:0">These procedures were updated after you accepted them on ${ackFmt(a.at)}. Please read them again and accept the new version.</p>` : ''}
+    <label class="ack-chk"><input type="checkbox" id="ackChk"> I have read and understood the ${ACK_NAMES[k]} procedures above, and I will follow them in my work.</label>
+    <div><button class="btn btn-gem" type="button" id="ackBtn" disabled>Accept procedures</button></div>`;
+  $('ackChk').onchange = e => $('ackBtn').disabled = !e.target.checked;
+  $('ackBtn').onclick = async () => { const b = $('ackBtn'); b.disabled = true; b.textContent = 'Saving…';
+    const pages = {...((ackMine && ackMine.pages) || {}), [k]: {v: ackVer(k), at: new Date().toISOString(), title: ACK_NAMES[k]}};
+    try { await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; renderAck(); renderAckCards(); toast(ACK_NAMES[k] + ' procedures accepted'); }
+    catch (x) { b.disabled = false; b.textContent = 'Accept procedures'; toast('Your acceptance couldn\'t be saved. Try again.'); } };
+}
+function renderAckCards(){
+  BENCH_SUB.forEach(k => { const card = document.querySelector(`.view[data-view="benchhub"] [data-go="${k}"] > div:last-child`); if (!card) return; let t = card.querySelector('.ack-tag'); const st = me ? ackState(ackMine, k) : null;
+    if (!st) { if (t) t.remove(); return; } if (!t) { t = document.createElement('span'); t.className = 'ack-tag'; card.appendChild(t); }
+    t.innerHTML = st === 'ok' ? '<span class="pill ok">✓ Accepted</span>' : st === 'old' ? '<span class="pill warn">Updated: accept again</span>' : '<span class="pill off">Not accepted yet</span>'; });
+  if (!isAdmin || !$('ackRows')) return;
+  const ps = people(), cell = (rec, k) => { const st = ackState(rec, k), a = rec && rec.pages && rec.pages[k]; return !st ? '<span class="hint">No content yet</span>' : st === 'ok' ? `<span class="pill ok">✓ ${ackFmt(a.at)}</span>` : st === 'old' ? `<span class="pill warn">Old version · ${ackFmt(a.at)}</span>` : '<span class="pill off">Not accepted</span>'; };
+  $('ackRows').innerHTML = ps.map(p => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td>${BENCH_SUB.map(k => `<td>${cell(ackAll[p.key], k)}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="4" class="empty">No employees yet.</td></tr>';
+  const live = BENCH_SUB.filter(k => ackVer(k)), done = ps.filter(p => live.every(k => ackState(ackAll[p.key], k) === 'ok')).length;
+  $('ackSum').textContent = live.length ? done + ' of ' + ps.length + ' employees have accepted every procedure' : '';
+}
+function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
   [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
 }
@@ -1953,8 +1995,8 @@ function renderGdoc(){
   const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'Project ETO', roi: 'Project ROI', csm: 'Project CSM reports', bprof: 'Profile Review', bemail: 'Email Review', bphone: 'Phone Review'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = sub ? 'benchhub' : 'guides'; back.textContent = sub ? '← Project Benchmarking' : '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
-  if (!g) { $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
-  $('gdDoc').innerHTML = cleanHtml(g.html || '');
+  if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
+  $('gdDoc').innerHTML = cleanHtml(g.html || ''); try { renderAck(); } catch (e) {}
   const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
   $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
   $('gdUpd').textContent = g.updatedAt ? 'Last updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (g.fileName ? ' from ' + g.fileName : '') : '';
