@@ -230,6 +230,8 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
 .gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
 .gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
+.h-date{margin:-6px 0 12px;font:500 12.5px var(--mono);letter-spacing:.02em}
+#todayList td{white-space:normal}
 .my-assign{display:grid;gap:12px;border-left:4px solid var(--gem);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 9%,var(--surface)),var(--surface))}.my-assign.done{border-left-color:var(--ok)}.my-assign.off{border-left-color:var(--line)}
 .ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
 .ma-eye{font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.ma-task{font:800 22px var(--display)}.ma-task .shift{font-size:16px;padding:6px 14px}
@@ -624,8 +626,8 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="panel my-assign" id="myAssign"></div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
-        <div class="panel"><h3>Today's team assignments</h3><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
-        <div class="panel"><h3 id="cTasksT">My tasks this week</h3><div class="chart" id="cTasks"></div></div>
+        <div class="panel"><h3>Today's team assignments</h3><p class="hint h-date" id="teamDayT"></p><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
+        <div class="panel"><h3 id="cTasksT">My tasks this week</h3><p class="hint h-date" id="cTasksD"></p><div class="chart" id="cTasks"></div></div>
       </div>
       <div class="tiles admin-only" hidden>
         <div class="tile"><span>Active specialists</span><b id="tActive">0</b></div>
@@ -1510,6 +1512,10 @@ function renderHome(){
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
   $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(a => annRow(a, annAckBtn(a))).join('') : '<p class="empty">No announcements yet.</p>';
   renderMyAssign(di, today);
+  $('teamDayT').textContent = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+  const m0 = monday(0), m6 = new Date(m0); m6.setDate(m6.getDate() + 6), sameM = m0.getMonth() === m6.getMonth();
+  const mo = d => d.toLocaleDateString(undefined, {month: 'short'});
+  $('cTasksD').textContent = 'Mon ' + m0.getDate() + (sameM ? '' : ' ' + mo(m0)) + ' – Sun ' + m6.getDate() + ' ' + mo(m6) + ' ' + m6.getFullYear();
 }
 /* ---------- today's assignment: employees accept it on Home ---------- */
 let asgAcks = {};
