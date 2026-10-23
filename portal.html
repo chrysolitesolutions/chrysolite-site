@@ -345,7 +345,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .pw-dlg{border:1px solid var(--line);border-radius:18px;padding:24px;width:min(460px,calc(100vw - 32px));background:var(--surface);color:var(--ink);box-shadow:0 30px 80px -20px rgba(0,0,0,.45)}
 .ot-box{display:grid;gap:8px}.ot-box.warn{background:color-mix(in srgb,#eda100 14%,transparent);border-color:color-mix(in srgb,#eda100 45%,transparent)}.ot-box .row{display:flex;gap:8px;flex-wrap:wrap}
 .pw-dlg::backdrop{background:rgba(8,20,16,.45);backdrop-filter:blur(3px)}
-.pw-dlg form{display:grid;gap:14px}.pw-dlg h3{margin:0}.pw-dlg .row{display:flex;gap:8px;flex-wrap:wrap}
+.pw-dlg form{display:grid;gap:14px}
+.pw-dlg.te-dlg{width:min(560px,calc(100vw - 24px))}
+.te-head,.te-row{display:grid;grid-template-columns:1fr 1fr 74px 34px;gap:8px;align-items:center}.te-head{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.te-rows{display:grid;gap:8px}.te-row input{width:100%}.te-row .h{font:13px var(--mono);color:var(--ink-soft)}.te-row .h.bad{color:var(--warn)}.te-row button{border:1px solid var(--line);background:var(--surface);border-radius:8px;height:34px;cursor:pointer;color:var(--ink-soft)}
+.te-hist{display:grid;gap:4px;font-size:12.5px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2)}.te-hist i{color:var(--ink-soft)}.te-hist .mono{color:var(--ink-soft)}
+.te-sum{margin:0;font-size:13.5px}.te-sum b{font-family:var(--mono)}.pw-dlg h3{margin:0}.pw-dlg .row{display:flex;gap:8px;flex-wrap:wrap}
 .cred{display:grid;gap:10px;padding:16px;border-radius:12px;border:1px dashed var(--gem);background:color-mix(in srgb,var(--gem) 8%,transparent);animation:up .4s both}
 .cred dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:14px}
 .cred dt{color:var(--ink-soft)}
@@ -714,7 +719,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <div class="seg" role="group" aria-label="View"><button type="button" class="mini on" id="attModeDay">Day</button><button type="button" class="mini" id="attModeMonth">Month</button></div>
             <input type="date" id="attDate" aria-label="Attendance date"><input type="month" id="attMonth" aria-label="Attendance month" hidden>
             <button class="mini" id="attToday" type="button">Today</button><button class="mini" id="attCopy" type="button">Copy as table</button></div></div>
-        <div class="tbl" id="attDayWrap"><table class="att"><thead><tr><th>Employee</th><th>Status</th><th>Sessions</th><th>Session times</th><th>Hours</th></tr></thead><tbody id="teamAtt"></tbody></table></div>
+        <div class="tbl" id="attDayWrap"><table class="att"><thead><tr><th>Employee</th><th>Status</th><th>Sessions</th><th>Session times</th><th>Hours</th><th></th></tr></thead><tbody id="teamAtt"></tbody></table></div>
         <div class="tbl" id="attMonthWrap" hidden><table class="att"><thead><tr><th>Employee</th><th>Days worked</th><th>Sessions</th><th>Average per day</th><th>Total hours</th></tr></thead><tbody id="teamMonth"></tbody></table></div>
         <p class="legend" id="attSum"></p>
       </div>
@@ -969,6 +974,21 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
   <div class="pf-dst"><h5>Status for <span id="pfDlgCyc"></span></h5><div class="pf-seg" id="pfSeg" role="group" aria-label="Status"><button type="button" data-s="Pending">Pending</button><button type="button" data-s="Ongoing">Ongoing</button><button type="button" data-s="Completed">Completed</button></div><p class="hint" id="pfDlgWho" style="margin:6px 0 0"></p></div>
   <div class="src-det" id="pfDlgSrc" style="padding:0"></div>
   <div class="src-box"><h5>Upcoming refresh dates</h5><div id="pfDlgNext"></div></div>
+</dialog>
+<dialog class="pw-dlg te-dlg" id="teDlg" aria-labelledby="teDlgT">
+  <form method="dialog" id="teForm" novalidate>
+    <h3 id="teDlgT">Edit time clock</h3>
+    <p class="hint" id="teWho" style="margin:0"></p>
+    <div class="f"><label for="teDate">Date</label><input id="teDate" type="date"></div>
+    <div><div class="te-head"><span>Clock in</span><span>Clock out</span><span>Hours</span><span></span></div><div id="teRows" class="te-rows"></div>
+      <button class="mini" type="button" id="teAdd" style="margin-top:8px">+ Add session</button></div>
+    <p class="te-sum" id="teSum"></p>
+    <div class="f"><label for="teWhy">Reason for the change</label><input id="teWhy" maxlength="200" placeholder="e.g. Forgot to clock out at 6 pm"></div>
+    <div class="msg err" id="teErr" hidden></div>
+    <div class="row"><button class="btn btn-gem" type="submit" id="teSave">Save times</button><button class="btn btn-ghost" type="button" id="teCancel">Cancel</button></div>
+    <div id="teHist" class="te-hist" hidden></div>
+    <p class="hint" style="margin:0">The employee sees "(edited)" next to changed sessions. Each change is logged with your name, the time and the reason.</p>
+  </form>
 </dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
@@ -1971,7 +1991,7 @@ const monthKey = d => d.getFullYear() + '-' + pad(d.getMonth() + 1);
 const weekKeys = () => [...Array(7)].map((_, i) => { const d = monday(0); d.setDate(d.getDate() + i); return ymd(d); });
 function stats(days, keys){ let ms = 0, sessions = 0, worked = 0; keys.forEach(k => { const l = days[k] || []; if (l.length) { worked++; sessions += l.length; ms += sessMs(l); } }); return {ms, sessions, worked}; }
 const monthDays = (days, m) => Object.keys(days || {}).filter(k => k.startsWith(m)).sort();
-const timesOf = l => l.map(x => fmtT(x.in) + '–' + (x.out ? fmtT(x.out) : 'now') + (x.auto ? ' (auto)' : '')).join(', ');
+const timesOf = l => l.map(x => fmtT(x.in) + '–' + (x.out ? fmtT(x.out) : 'now') + (x.auto ? ' (auto)' : '') + (x.edit ? ' (edited)' : '')).join(', ');
 function renderClock(){
   queueCharts();
   document.querySelectorAll('.self-only').forEach(e => e.hidden = !me);
@@ -2075,7 +2095,7 @@ async function punch(kind){
   else { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; }
   const keys = Object.keys(days).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : 'Clocked out at ' + fmtT(now)); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : 'Clocked out at ' + fmtT(now)); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out');
@@ -2145,10 +2165,10 @@ function renderTeamAtt(){
   $('attModeDay').classList.toggle('on', attMode === 'day'); $('attModeMonth').classList.toggle('on', attMode === 'month');
   $('attToday').textContent = attMode === 'day' ? 'Today' : 'This month';
   const person = p => `<div class="person">${av(p.name)}<div>${esc(p.name)}<div class="mono" style="color:var(--ink-soft)">${esc(p.email)}</div></div></div>`;
-  if (!clockPeople().length) { $('teamAtt').innerHTML = $('teamMonth').innerHTML = '<tr><td colspan="5" class="empty">No employees use the time clock yet. Turn it on for them in Admin.</td></tr>'; $('attSum').textContent = ''; return; }
+  if (!clockPeople().length) { $('teamAtt').innerHTML = $('teamMonth').innerHTML = '<tr><td colspan="6" class="empty">No employees use the time clock yet. Turn it on for them in Admin.</td></tr>'; $('attSum').textContent = ''; return; }
   if (attMode === 'day') {
     const rows = attRows(), pill = s => `<span class="pill ${s==='Working'?'ok':s==='Done'?'info':s==='On leave'?'warn':'off'}">${s}</span>`;
-    $('teamAtt').innerHTML = rows.map(r => `<tr><td>${person(r.p)}</td><td>${pill(r.status)}</td><td class="mono">${r.l.length || '—'}</td><td class="times">${r.l.length ? esc(timesOf(r.l)) : '—'}</td><td class="mono">${r.l.length ? fmtH(r.ms) : '—'}</td></tr>`).join('');
+    $('teamAtt').innerHTML = rows.map(r => `<tr><td>${person(r.p)}</td><td>${pill(r.status)}</td><td class="mono">${r.l.length || '—'}</td><td class="times">${r.l.length ? esc(timesOf(r.l)) : '—'}</td><td class="mono">${r.l.length ? fmtH(r.ms) : '—'}</td><td><button class="mini" type="button" data-tedit="${esc(r.p.key)}">${r.l.length ? 'Edit times' : 'Add times'}</button></td></tr>`).join('');
     const working = rows.filter(r => r.status === 'Working').length, logged = rows.filter(r => r.l.length).length;
     $('attSum').textContent = `${logged} of ${rows.length} logged in on this day · ${working} working now · ${fmtH(rows.reduce((a, r) => a + r.ms, 0))} total`;
   } else {
@@ -2158,6 +2178,52 @@ function renderTeamAtt(){
     $('attSum').textContent = `${label}: ${fmtH(rows.reduce((a, r) => a + r.ms, 0))} across the team · ${rows.filter(r => r.worked).length} of ${rows.length} people worked this month`;
   }
 }
+/* ---------- admin: add or correct an employee's clock times ---------- */
+let teKey = null;
+const hhmm = iso => { if (!iso) return ''; const d = new Date(iso); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+function teRaw(key){ const i = clockIds.indexOf(key); return i >= 0 ? clockDocs[i] : null; }
+function teRow(inV = '', outV = ''){ const r = document.createElement('div'); r.className = 'te-row';
+  r.innerHTML = `<input type="time" class="te-in" value="${inV}" aria-label="Clock in"><input type="time" class="te-out" value="${outV}" aria-label="Clock out"><span class="h">—</span><button type="button" aria-label="Remove session" title="Remove session">✕</button>`;
+  r.querySelector('button').onclick = () => { r.remove(); teCalc(); }; r.querySelectorAll('input').forEach(x => x.addEventListener('input', teCalc)); return r; }
+function teLoad(){ const p = accounts.find(a => a.key === teKey); if (!p) return; const date = $('teDate').value, raw = teRaw(teKey), rec = teamAtt.find(a => a.email === p.email);
+  const l = ((raw && raw.days && raw.days[date]) || (rec && rec.days && rec.days[date]) || []).slice().sort((a, b) => String(a.in).localeCompare(String(b.in)));
+  $('teRows').innerHTML = ''; l.forEach(x => $('teRows').appendChild(teRow(hhmm(x.in), hhmm(x.out)))); if (!l.length) $('teRows').appendChild(teRow('09:00', '17:00'));
+  $('teWho').textContent = p.name + ' · ' + p.email; $('teErr').hidden = true;
+  const hist = ((raw && raw.edits) || []).filter(x => x.date === date).slice(-5).reverse();
+  $('teHist').hidden = !hist.length; $('teHist').innerHTML = '<b>Change history for this day</b>' + hist.map(x => `<div><span class="mono">${new Date(x.at).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'})}</span> ${esc(x.by)}: ${esc(x.before)} → ${esc(x.after)} <i>${esc(x.note)}</i></div>`).join('');
+  teCalc(); }
+// turn the rows into sessions; an out time earlier than the in time means the shift ended after midnight
+function teSessions(){ const date = $('teDate').value, today = todayStr(), out = [], errs = [];
+  [...$('teRows').children].forEach((r, i) => { const a = r.querySelector('.te-in').value, b = r.querySelector('.te-out').value; if (!a && !b) return; if (!a) { errs.push('Session ' + (i + 1) + ' needs a clock-in time.'); return; }
+    const st = new Date(date + 'T' + a); let en = b ? new Date(date + 'T' + b) : null; if (en && en <= st) en = new Date(+en + 864e5);
+    if (!en && date !== today) errs.push('Session ' + (i + 1) + ' needs a clock-out time. Only today can have an open session.');
+    out.push({st, en, r}); });
+  out.sort((x, y) => x.st - y.st);
+  out.forEach((x, i) => { if (!x.en && i !== out.length - 1) errs.push('Only the last session of the day can be left open.'); if (i && out[i - 1].en && x.st < out[i - 1].en) errs.push('Sessions ' + i + ' and ' + (i + 1) + ' overlap. Adjust the times.'); if (!x.en && x.st > new Date()) errs.push('An open session can\'t start in the future.'); });
+  return {out, errs}; }
+function teCalc(){ const {out, errs} = teSessions(); let tot = 0, long = false;
+  out.forEach(x => { const ms = (x.en || new Date()) - x.st; tot += Math.max(0, ms); const h = x.r.querySelector('.h'); h.textContent = x.en ? fmtH(ms) + (x.en.getDate() !== x.st.getDate() ? ' +1d' : '') : 'open'; h.classList.toggle('bad', ms > SESSION_MAX); if (ms > SESSION_MAX) long = true; });
+  const p = accounts.find(a => a.key === teKey), allow = DAY_MAX + extraFor(p && otApprAll[p.email], $('teDate').value);
+  $('teSum').innerHTML = `Total <b>${fmtH(tot)}</b>` + (long ? ' · <span style="color:var(--warn)">a session over 8 hours counts as 8 hours</span>' : '') + (tot > allow ? ` · <span style="color:var(--warn)">only ${fmtH(allow)} counts for this day unless overtime is approved</span>` : '');
+  return errs; }
+function openTimeEdit(key, date){ teKey = key; $('teDate').value = date || $('attDate').value || todayStr(); $('teWhy').value = ''; teLoad(); const d = $('teDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
+$('teDate').addEventListener('change', teLoad);
+$('teAdd').onclick = () => { const rows = [...$('teRows').children], last = rows.length && rows[rows.length - 1].querySelector('.te-out').value; $('teRows').appendChild(teRow(last || '', '')); teCalc(); };
+$('teCancel').onclick = () => $('teDlg').close();
+$('teamAtt').addEventListener('click', e => { const b = e.target.closest('[data-tedit]'); if (b && isAdmin) openTimeEdit(b.dataset.tedit); });
+$('teForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return;
+  const err = $('teErr'), fail = t => { err.textContent = t; err.hidden = false; }, errs = teCalc(); if (errs.length) return fail(errs[0]);
+  const why = $('teWhy').value.trim(); if (!why) return fail('Add a short reason for the change, e.g. "Forgot to clock out".');
+  const p = accounts.find(a => a.key === teKey); if (!p) return fail('This employee no longer exists.');
+  const date = $('teDate').value, raw = teRaw(teKey) || {email: p.email, name: p.name, days: {}}, before = (raw.days && raw.days[date]) || [], stamp = {by: me ? me.name : 'Admin', at: new Date().toISOString(), note: why.slice(0, 200)};
+  const list = teSessions().out.map(x => { const o = {in: x.st.toISOString()}; if (x.en) o.out = x.en.toISOString(); const tv = v => v ? +new Date(v) : 0, same = before.find(b => tv(b.in) === tv(o.in) && tv(b.out) === tv(o.out)); return same ? same : {...o, edit: stamp}; });
+  const days = {...(raw.days || {})}; if (list.length) days[date] = list; else delete days[date];
+  const edits = [...(raw.edits || []), {date, ...stamp, before: before.map(x => hhmm(x.in) + '–' + hhmm(x.out)).join(', ') || '—', after: list.map(x => hhmm(x.in) + '–' + hhmm(x.out)).join(', ') || '—'}].slice(-60);
+  const btn = $('teSave'); btn.disabled = true; btn.textContent = 'Saving…';
+  try { await db.doc('timeclock/' + teKey).set({...raw, email: p.email, name: p.name, days, edits}); $('teDlg').close(); toast('Saved ' + p.name + '\'s times for ' + fmtDay(date)); }
+  catch (x) { fail('The times couldn\'t be saved. Check you are signed in as an admin and try again.'); }
+  finally { btn.disabled = false; btn.textContent = 'Save times'; }
+});
 $('attModeDay').onclick = () => { attMode = 'day'; renderTeamAtt(); };
 $('attModeMonth').onclick = () => { attMode = 'month'; renderTeamAtt(); };
 $('attDate').addEventListener('change', renderTeamAtt); $('attMonth').addEventListener('change', renderTeamAtt);
