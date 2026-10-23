@@ -866,7 +866,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="vhead"><div><h1>Project Benchmarking</h1><p>Step-by-step instructions for each review task.</p></div></div>
       <div class="link-grid">
         <button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1. Profile Review</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Review</b><span id="gdBemailSub">Instructions coming soon.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Review</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button>
         <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3. Phone Review</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
       </div>
     </section>
@@ -1869,7 +1869,56 @@ const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instr
 <li>Keep a finger on keys <strong>1, 2 and 3</strong> to work faster.</li>
 <li>When unsure, check LinkedIn before choosing <strong>Can’t decide</strong>.</li>
 <li>Watch the reservation time on long profiles.</li></ul>
-<p class="note">The rules for the other fields will be added here as they are confirmed.</p>`}};
+<p class="note">The rules for the other fields will be added here as they are confirmed.</p>`},
+  bemail: {title: 'Email Review', subtitle: 'Step-by-step instructions for the email review screen', html: `
+<h2>1. Before you start</h2>
+<ul><li>Every profile is <strong>reserved for you for a limited time</strong>, shown top right (e.g. “Reserved for you until 11:21 PM”). Finish it before then, or it goes back to the queue.</li>
+<li>The top bar shows <strong>Today</strong> (profiles done today), <strong>Checkpoint streak</strong> and <strong>Quality (7 days)</strong>. Quality depends on correct answers and good evidence, so take care with every link you paste.</li>
+<li>Use <strong>Exit</strong> (top right) only when you want to stop.</li></ul>
+<h2>2. Read the profile header</h2>
+<p>At the top you see the person’s <strong>name</strong>, <strong>job title at company</strong>, <strong>location</strong>, an <strong>Open LinkedIn ↗</strong> link and, below, their <strong>headline</strong>. Keep these details in mind: you need them to confirm that a page is about this person.</p>
+<h2>3. Understand the question</h2>
+<p class="callout"><strong>Do these emails belong to this person?</strong> Search for each email. Choose <strong>Match</strong> only if you found a page that proves it, and paste that page’s link.</p>
+<p>Each email is shown in its own box with a number (#1, #2 …). Check <strong>every email separately</strong>.</p>
+<h2>4. Search for the email</h2>
+<p>Use the search buttons under each email. Each one opens in a new tab:</p>
+<div class="tblw"><table><thead><tr><th>Button</th><th>What it finds</th></tr></thead><tbody>
+<tr><td>Search “email” ↗</td><td>Pages that contain this exact email address</td></tr>
+<tr><td>Search “email” + name ↗</td><td>Pages with the email and the person’s name together. Usually the strongest results</td></tr>
+<tr><td>Search GitHub ↗</td><td>GitHub profiles and code where the email appears. Useful for developers and engineers</td></tr></tbody></table></div>
+<p>You can also open LinkedIn or the person’s own website if one is listed.</p>
+<h2>5. Decide what counts as proof</h2>
+<h3>Good evidence (Match)</h3>
+<p>A page where the email appears <strong>together with this person’s identity</strong>: the same name, plus a matching company, job, location or photo. For example:</p>
+<ul><li>the person’s own website, portfolio or online CV showing the email</li>
+<li>a GitHub profile or project page with this name and this email</li>
+<li>a conference, speaker, author or company team page listing the person with this email</li></ul>
+<h3>Not enough on its own</h3>
+<ul><li>The email only <em>looks</em> like the name (e.g. narothamrc ≈ Narotham Reddy Chilkuri). That is a hint, not proof.</li>
+<li>A page about a <strong>different person</strong> with a similar name.</li>
+<li>People-search or contact-guessing sites that only list an email without a clear source.</li></ul>
+<p class="note">Follow any extra evidence rules from your team lead. Where they differ, theirs apply.</p>
+<h2>6. Choose an answer for each email</h2>
+<div class="tblw"><table><thead><tr><th>Button</th><th>Use when</th></tr></thead><tbody>
+<tr><td>✓ Match</td><td>You found a page that proves the email belongs to this person. <strong>Paste that page’s link</strong> in <em>Evidence link</em>. It is required for Match.</td></tr>
+<tr><td>✗ Not theirs</td><td>You found that the email belongs to <strong>someone else</strong>, e.g. a page shows it with another person’s name.</td></tr>
+<tr><td>? Can’t verify</td><td>You searched and found nothing that proves it either way.</td></tr></tbody></table></div>
+<p>For the <strong>evidence link</strong>, copy the full address of the exact page that shows the email (not a search results page) and paste it in the box under the buttons.</p>
+<h2>7. None verifiable</h2>
+<p>If you searched every email and <strong>none of them</strong> can be proven, click <strong>None verifiable</strong> (bottom left) instead of answering each one.</p>
+<h2>8. Save and next</h2>
+<p>When every email has an answer (and every Match has an evidence link), click <strong>Save and next</strong> (bottom right). The next profile loads and your <strong>Today</strong> count goes up by one.</p>
+<h2>9. Worked example</h2>
+<p>Person: <strong>Narotham Reddy Chilkuri</strong>, Staff DevOps at Zoom, San Jose. Email #1: <strong>narothamrc@gmail.com</strong>.</p>
+<ol><li>Click <strong>Search “narothamrc@gmail.com”</strong>, then <strong>+ name</strong>, then <strong>Search GitHub</strong>.</li>
+<li>If a GitHub profile or personal site shows <strong>Narotham Reddy Chilkuri</strong> with this email and a matching job (DevOps, Zoom) → <strong>✓ Match</strong> and paste that page’s link.</li>
+<li>If a page shows this email with a <strong>different person</strong> → <strong>✗ Not theirs</strong>.</li>
+<li>If nothing comes up → <strong>? Can’t verify</strong>. Don’t choose Match just because the email looks like the name.</li></ol>
+<h2>10. Quick tips</h2>
+<ul><li>Always try the <strong>email + name</strong> search; it gives the most reliable results.</li>
+<li>One clear proof page is enough. Don’t paste search result pages as evidence.</li>
+<li>Work email domains (e.g. @zoom.us) need the same proof as personal emails.</li>
+<li>Watch the reservation time if a profile has many emails.</li></ul>`}};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
   const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE)$/;
