@@ -1976,7 +1976,7 @@ function tagAllow(days, appr){ Object.entries(days || {}).forEach(([k, l]) => { 
 function enforceDays(days, appr){ let changed = false; const out = JSON.parse(JSON.stringify(days || {}));
   Object.entries(out).forEach(([k, l]) => { if (!Array.isArray(l)) return; const allow = DAY_MAX + extraFor(appr, k); let acc = 0; const now = Date.now();
     l.forEach(x => { const st = +new Date(x.in); if (x.out) { acc += Math.max(0, Math.min(+new Date(x.out), st + SESSION_MAX) - st); return; }
-      const bySess = st + SESSION_MAX, byDay = st + Math.max(0, allow - acc), stop = Math.min(bySess, byDay);
+      const bySess = st + SESSION_MAX, byDay = x.ot ? st + x.ot * 3600000 : st + Math.max(0, allow - acc), stop = Math.min(bySess, byDay);
       if (now >= stop) { x.out = new Date(stop).toISOString(); x.auto = stop === byDay && byDay < bySess ? 'day' : 'session'; changed = true; acc += stop - st; } }); });
   return changed ? out : null; }
 const openSession = days => { const t = days && days[todayStr()]; return t && t.length && !t[t.length - 1].out ? t[t.length - 1] : null; };
@@ -1991,7 +1991,7 @@ const monthKey = d => d.getFullYear() + '-' + pad(d.getMonth() + 1);
 const weekKeys = () => [...Array(7)].map((_, i) => { const d = monday(0); d.setDate(d.getDate() + i); return ymd(d); });
 function stats(days, keys){ let ms = 0, sessions = 0, worked = 0; keys.forEach(k => { const l = days[k] || []; if (l.length) { worked++; sessions += l.length; ms += sessMs(l); } }); return {ms, sessions, worked}; }
 const monthDays = (days, m) => Object.keys(days || {}).filter(k => k.startsWith(m)).sort();
-const timesOf = l => l.map(x => fmtT(x.in) + '–' + (x.out ? fmtT(x.out) : 'now') + (x.auto ? ' (auto)' : '') + (x.edit ? ' (edited)' : '')).join(', ');
+const timesOf = l => l.map(x => fmtT(x.in) + '–' + (x.out ? fmtT(x.out) : 'now') + (x.ot ? ' (overtime)' : x.auto ? ' (auto)' : '') + (x.edit && !x.ot ? ' (edited)' : '')).join(', ');
 function renderClock(){
   queueCharts();
   document.querySelectorAll('.self-only').forEach(e => e.hidden = !me);
@@ -2085,8 +2085,27 @@ $('otList').addEventListener('click', async e => {
   const b = e.target.closest('[data-ot]'); if (!b || !isAdmin) return; b.disabled = true;
   const email = b.dataset.e, k = b.dataset.k, cur = otApprAll[email] || {}, days = JSON.parse(JSON.stringify(cur.days || {}));
   days[k] = {status: b.dataset.ot, hours: +b.dataset.h, by: me ? me.name : 'Admin', at: new Date().toISOString()};
-  try { await db.doc('otApprovals/' + email).set({email, days}); toast(b.dataset.ot === 'approved' ? 'Overtime approved' : 'Overtime rejected'); } catch (x) { b.disabled = false; toast('That decision couldn\'t be saved. Try again.'); }
+  try { await db.doc('otApprovals/' + email).set({email, days}); }
+  catch (x) { b.disabled = false; return toast('That decision couldn\'t be saved. Try again.'); }
+  if (b.dataset.ot !== 'approved') return toast('Overtime rejected');
+  // the clock was stopped at the 8-hour limit: continue it with the approved hours, so the clock-out moves later
+  try { const moved = await extendForOvertime(email, k, +b.dataset.h); toast(moved ? 'Overtime approved · clock-out moved to ' + moved : 'Overtime approved · the limit for that day is now ' + (8 + +b.dataset.h) + ' h'); }
+  catch (x) { toast('Overtime approved, but the clock-out couldn\'t be moved. Use Edit times to add it.'); }
 });
+async function extendForOvertime(email, k, hours){
+  const i = clockIds.indexOf(email); if (i < 0 || !(hours > 0)) return null;
+  const raw = JSON.parse(JSON.stringify(clockDocs[i])), list = (raw.days || {})[k]; if (!list || !list.length) return null;
+  const last = list[list.length - 1]; if (!last.out || !last.auto || list.some(x => x.ot)) return null;   // only when the limit stopped the clock, and only once
+  let worked = 0; list.forEach(x => worked += Math.max(0, Math.min(+new Date(x.out || Date.now()), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)));
+  if (worked < DAY_MAX - 60000) return null;
+  const start = +new Date(last.out), end = start + hours * 3600000, now = Date.now(), stamp = {by: me ? me.name : 'Admin', at: new Date().toISOString(), note: 'Overtime approved: +' + hours + ' h'};
+  const sess = {in: new Date(start).toISOString(), ot: hours, edit: stamp};
+  if (!(k === todayStr() && end > now)) sess.out = new Date(Math.min(end, k === todayStr() ? now : end)).toISOString();
+  list.push(sess);
+  raw.edits = [...(raw.edits || []), {date: k, ...stamp, before: fmtT(last.out) + ' clock-out', after: sess.out ? fmtT(sess.out) + ' clock-out' : 'clock running until ' + fmtT(new Date(end).toISOString())}].slice(-60);
+  await db.doc('timeclock/' + email).set({...raw, updatedAt: new Date().toISOString()});
+  return sess.out ? fmtT(sess.out) : fmtT(new Date(end).toISOString()) + ' (clock running)';
+}
 async function punch(kind){
   const err = $('clkErr'); err.hidden = true;
   const days = JSON.parse(JSON.stringify((myAtt && myAtt.days) || {})), k = todayStr(), now = new Date().toISOString();
