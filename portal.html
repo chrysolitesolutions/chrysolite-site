@@ -335,6 +335,14 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .ev .d small{display:block;font:500 10.5px var(--mono);text-transform:uppercase;color:var(--ink-soft);letter-spacing:.08em}
 .ev b{display:block;font-size:14.5px}
 .ev span{font-size:13px;color:var(--ink-soft)}
+.ann-body{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin-top:2px}.ann-body p{margin:0 0 6px}.ann-body p:last-child{margin:0}.ann-body ul,.ann-body ol{margin:2px 0 6px;padding-left:20px;display:grid;gap:2px}.ann-body strong{color:var(--ink)}
+#anBody{width:100%;resize:vertical;min-height:120px;font:inherit;line-height:1.5;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.ev:has(.ann-body){align-items:start}.ev:has(.ann-body) .d{padding-top:2px}
+.ev.ev-urgent{background:color-mix(in srgb,#e2513b 9%,var(--surface));border-color:color-mix(in srgb,#e2513b 45%,var(--line));animation:up .4s both,annGlow 2.4s ease-in-out .4s infinite}
+.ev.ev-urgent .d{color:#c0392b}.ev.ev-urgent b{color:#a5281c}
+@keyframes annGlow{0%,100%{box-shadow:0 0 0 0 rgba(226,81,59,0);background:color-mix(in srgb,#e2513b 6%,var(--surface))}50%{box-shadow:0 0 0 4px rgba(226,81,59,.16),0 0 26px 2px rgba(226,81,59,.28);background:color-mix(in srgb,#e2513b 15%,var(--surface))}}
+@media (prefers-reduced-motion: reduce){.ev.ev-urgent{animation:none}}
+.an-prev{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--band);color:var(--band-fg);padding:12px 18px;border-radius:12px;font-size:14px;transition:.3s;pointer-events:none;z-index:9}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
@@ -975,7 +983,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
               <div class="g2"><div class="f"><label for="anDate">Date</label><input id="anDate" type="date"></div>
               <div class="f"><label for="anTag">Label</label><select id="anTag"><option value="info">Project</option><option value="warn">Deadline</option><option value="ok">Meeting</option><option value="off">Urgent</option></select></div></div>
               <div class="f"><label for="anTitle">Title</label><input id="anTitle" autocomplete="off" placeholder="e.g. Quarterly QA review"></div>
-              <div class="f"><label for="anBody">Details</label><input id="anBody" autocomplete="off" placeholder="One line employees will see on Home"></div>
+              <div class="f"><label for="anBody">Details</label><textarea id="anBody" rows="7" maxlength="3000" placeholder="Write as many lines as you need.&#10;&#10;Start a line with - for a bullet point&#10;Start a line with 1. for a numbered step&#10;Wrap words in **double stars** to make them bold"></textarea>
+                <small class="hint">Press Enter for a new line. Leave an empty line to start a new paragraph. <b>-</b> bullet · <b>1.</b> numbered · <b>**bold**</b></small></div>
+              <div class="an-prev" id="anPrev" hidden><span class="hint">Preview</span><div class="ann-body" id="anPrevBody"></div></div>
               <div class="msg err" id="anErr" hidden></div>
               <button class="btn btn-gem" type="submit" style="justify-self:start">Post announcement</button>
             </form>
@@ -1519,7 +1529,21 @@ function renderMyAssign(di, today){
     catch (x) { b.disabled = false; b.textContent = 'Accept today\'s assignment'; toast('That couldn\'t be saved. Try again.'); } };
 }
 const TAGS = {info:'Project', warn:'Deadline', ok:'Meeting', off:'Urgent'};
-function annRow(a, extra){ const d = new Date((a.date || todayStr()) + 'T00:00'); return `<div class="ev"><div class="d">${d.getDate()}<small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(a.title)}</b><span>${esc(a.body)}</span></div><div class="acts">${typeof extra === 'string' ? extra : ''}<span class="pill ${TAGS[a.tag] ? a.tag : 'info'}">${TAGS[a.tag] || 'Project'}</span></div></div>`; }
+// announcement text: keeps line breaks and paragraphs, '-'/'*'/'•' bullets, '1.' numbered steps and **bold**
+function annHtml(t){
+  const inl = x => esc(x).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  const out = []; let list = null, para = [];
+  const flushP = () => { if (para.length) { out.push('<p>' + para.map(inl).join('<br>') + '</p>'); para = []; } };
+  const flushL = () => { if (list) { out.push(`<${list.t}>` + list.items.map(i => '<li>' + inl(i) + '</li>').join('') + `</${list.t}>`); list = null; } };
+  String(t || '').replace(/\r/g, '').split('\n').forEach(line => {
+    const b = /^\s*[-*•]\s+(.*)$/.exec(line), n = /^\s*\d+[.)]\s+(.*)$/.exec(line);
+    if (b || n) { flushP(); const tt = b ? 'ul' : 'ol'; if (!list || list.t !== tt) { flushL(); list = {t: tt, items: []}; } list.items.push((b || n)[1]); }
+    else if (!line.trim()) { flushP(); flushL(); }
+    else { flushL(); para.push(line.trim()); }
+  });
+  flushP(); flushL(); return out.join('');
+}
+function annRow(a, extra){ const d = new Date((a.date || todayStr()) + 'T00:00'); return `<div class="ev${a.tag === 'off' ? ' ev-urgent' : ''}"><div class="d">${d.getDate()}<small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(a.title)}</b><div class="ann-body">${annHtml(a.body)}</div></div><div class="acts">${typeof extra === 'string' ? extra : ''}<span class="pill ${TAGS[a.tag] ? a.tag : 'info'}">${TAGS[a.tag] || 'Project'}</span></div></div>`; }
 function count(el,n){ const s=+el.textContent||0, t0=performance.now(); (function f(t){ const p=Math.min(1,(t-t0)/700); el.textContent=Math.round(s+(n-s)*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(f); })(t0); }
 
 /* ---------- timesheet & payroll ---------- */
@@ -2104,6 +2128,7 @@ $('impFile').addEventListener('change', async e => {
 });
 
 /* ---------- admin: announcements ---------- */
+$('anBody').addEventListener('input', () => { const v = $('anBody').value; $('anPrev').hidden = !v.trim(); $('anPrevBody').innerHTML = annHtml(v); });
 function renderAnnAdmin(){
   if (!isAdmin) return;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
@@ -2114,8 +2139,8 @@ $('annForm').addEventListener('submit', async e => {
   e.preventDefault(); const err = $('anErr'), title = $('anTitle').value.trim();
   if (!title) { err.textContent = 'Add a title for the announcement.'; err.hidden = false; return; }
   err.hidden = true;
-  try { await db.collection('announcements').add({date: $('anDate').value || todayStr(), tag: $('anTag').value, title: title.slice(0,120), body: $('anBody').value.trim().slice(0,300), createdAt: new Date().toISOString()});
-    $('anTitle').value = ''; $('anBody').value = ''; toast('Announcement posted'); }
+  try { await db.collection('announcements').add({date: $('anDate').value || todayStr(), tag: $('anTag').value, title: title.slice(0,120), body: $('anBody').value.replace(/\s+$/,'').replace(/^\n+/,'').slice(0,3000), createdAt: new Date().toISOString()});
+    $('anTitle').value = ''; $('anBody').value = ''; $('anPrev').hidden = true; toast('Announcement posted'); }
   catch (x) { err.textContent = 'The announcement couldn\'t be posted. Try again.'; err.hidden = false; }
 });
 $('annAdmin').addEventListener('click', async e => {
