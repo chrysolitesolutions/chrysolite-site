@@ -230,6 +230,9 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
 .gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
 .gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
+.my-assign{display:grid;gap:12px;border-left:4px solid var(--gem);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 9%,var(--surface)),var(--surface))}.my-assign.done{border-left-color:var(--ok)}.my-assign.off{border-left-color:var(--line)}
+.ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
+.ma-eye{font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.ma-task{font:800 22px var(--display)}.ma-task .shift{font-size:16px;padding:6px 14px}
 .gd-ack{margin-top:14px;display:grid;gap:12px;border-left:4px solid var(--gem)}.gd-ack h3{margin:0}.gd-ack .ack-ok{display:flex;gap:10px;align-items:center;color:var(--ok);font-weight:600}
 .gd-ack label.ack-chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;font-weight:500;cursor:pointer}.gd-ack label.ack-chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--gem)}
 .gd-card .ack-tag{display:inline-block;margin-top:6px}
@@ -607,19 +610,17 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="tile hl"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
         <button class="tile hl tile-btn" data-go="clock"><span id="hStatusL">Time clock</span><b id="hStatus" style="font-size:20px">Not clocked in</b><small>Open time clock →</small></button>
       </div>
+      <div class="panel my-assign" id="myAssign"></div>
+      <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
-        <div class="panel"><h3 id="cHoursT">My hours, last 14 days</h3><div class="chart" id="cHours"></div></div>
-        <div class="panel"><h3 id="cTasksT">This week's assignments</h3><div class="chart" id="cTasks"></div></div>
+        <div class="panel"><h3>Today's team assignments</h3><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
+        <div class="panel"><h3 id="cTasksT">My tasks this week</h3><div class="chart" id="cTasks"></div></div>
       </div>
-      <div class="tiles">
+      <div class="tiles admin-only" hidden>
         <div class="tile"><span>Active specialists</span><b id="tActive">0</b></div>
         <div class="tile"><span>Working today</span><b id="tShift">0</b></div>
         <div class="tile"><span>On leave this week</span><b id="tLeave">0</b></div>
         <div class="tile"><span id="tPendLabel">Pending leave requests</span><b id="tPend">0</b></div>
-      </div>
-      <div class="two">
-        <div class="panel"><h3>Today's assignments</h3><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
-        <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       </div>
     </section>
 
@@ -1089,7 +1090,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1155,6 +1156,7 @@ function startData() {
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
+  watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -1460,7 +1462,7 @@ $('rqList').addEventListener('click', async e => {
 /* ---------- home ---------- */
 function renderHours(){
   const now = new Date(), m = monthKey(now), wk = weekKeys(), t = todayStr();
-  const hideHours = !!me && !selfClock() && !isAdmin; document.querySelector('.hours-tiles').hidden = hideHours; $('cHours').closest('.panel').hidden = hideHours;
+  const hideHours = !!me && !selfClock() && !isAdmin; document.querySelector('.hours-tiles').hidden = hideHours;
   if (selfClock()) {
     const days = (myAtt && myAtt.days) || {}, open = openSession(days), ms = stats(days, monthDays(days, m));
     $('hTodayL').textContent = 'My hours today'; $('hWeekL').textContent = 'My hours this week'; $('hMonthL').textContent = 'My hours this month';
@@ -1489,9 +1491,32 @@ function renderHome(){
   const pend = isAdmin ? pendingAll().length : myLeave().filter(d => d.to >= today).reduce((a, d) => a + (d.days || 0), 0);
   $('tPendLabel').textContent = isAdmin ? 'Leave requests to review' : 'My upcoming leave days';
   count($('tPend'), pend);
-  $('todayList').innerHTML = onShift.length ? onShift.slice(0,8).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><span class="shift ${SH[k][0]}">${SH[k][1]}</span></td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
+  $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><span class="shift ${SH[k][0]}">${SH[k][1]}</span></td><td>${asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not yet</span>'}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
   $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(annRow).join('') : '<p class="empty">No announcements yet.</p>';
+  renderMyAssign(di, today);
+}
+/* ---------- today's assignment: employees accept it on Home ---------- */
+let asgAcks = {};
+const asgRec = (email, day) => { const r = asgAcks[String(email).toLowerCase()]; return r && r.days && r.days[day || todayStr()]; };
+const asgAccepted = (email, task, day) => { const a = asgRec(email, day); return !!(a && a.task === task); };
+function renderMyAssign(di, today){
+  const box = $('myAssign'); if (!box) return; if (!me) { box.hidden = true; return; } box.hidden = false;
+  const live = weekOff === 0 || week.key === ymd(monday(0)), k = live ? cellOf(me.email, di) : '', a = asgRec(me.email, today), when = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
+  const head = `<div class="ma-top"><div><span class="ma-eye">My assignment today · ${esc(when)}</span>`;
+  if (onLeave(me.email, today) || k === 'lv') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">You're on leave today</b></div></div><p class="hint" style="margin:0">Enjoy your time off.</p>`; return; }
+  if (k === 'off') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">Day off</b></div></div><p class="hint" style="margin:0">You have no assignment today.</p>`; return; }
+  if (!WORK.includes(k)) { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">No assignment yet</b></div></div><p class="hint" style="margin:0">Your admin hasn't put an assignment on today's schedule. Check back later or ask your Team Lead.</p>`; return; }
+  const done = a && a.task === k, changed = a && a.task !== k;
+  box.className = 'panel my-assign' + (done ? ' done' : '');
+  box.innerHTML = head + `<b class="ma-task"><span class="shift ${SH[k][0]}">${SH[k][1]}</span></b><span class="hint">Project: ${esc(me.project || 'Seekout')}</span></div>
+    <div class="ma-act">${done ? `<span class="pill ok">✓ Accepted at ${fmtT(a.at)}</span>` : `<button class="btn btn-gem" type="button" id="maAccept">Accept today's assignment</button>`}</div></div>
+    ${changed ? `<p class="msg warn" style="margin:0">Your assignment changed after you accepted ${esc((SH[a.task] || [, a.task])[1])}. Please accept the new one.</p>` : done ? '' : '<p class="hint" style="margin:0">Accept to confirm you\'ve seen today\'s assignment and will work on it. Your Team Lead can see who has accepted.</p>'}`;
+  const b = $('maAccept'); if (b) b.onclick = async () => { b.disabled = true; b.textContent = 'Saving…';
+    const cur = asgAcks[me.key] || {email: me.email, name: me.name, days: {}}, days = {...(cur.days || {})}; days[today] = {task: k, at: new Date().toISOString()};
+    const keep = {}; Object.keys(days).sort().slice(-60).forEach(x => keep[x] = days[x]);
+    try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderHome(); toast('Today\'s assignment accepted'); }
+    catch (x) { b.disabled = false; b.textContent = 'Accept today\'s assignment'; toast('That couldn\'t be saved. Try again.'); } };
 }
 const TAGS = {info:'Project', warn:'Deadline', ok:'Meeting', off:'Urgent'};
 function annRow(a, extra){ const d = new Date((a.date || todayStr()) + 'T00:00'); return `<div class="ev"><div class="d">${d.getDate()}<small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(a.title)}</b><span>${esc(a.body)}</span></div><div class="acts">${typeof extra === 'string' ? extra : ''}<span class="pill ${TAGS[a.tag] ? a.tag : 'info'}">${TAGS[a.tag] || 'Project'}</span></div></div>`; }
@@ -2461,12 +2486,6 @@ function stacked(el, cats, series, val, o = {}){
 const hrs = ms => ms / 3600000;
 const fmtHr = v => Math.round(v) + 'h';
 function chartsHome(){
-  const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - 13 + i); return d; });
-  const src = selfClock() ? [{days: (myAtt && myAtt.days) || {}}] : teamAtt;
-  $('cHoursT').textContent = selfClock() ? 'My hours, last 14 days' : 'Team hours, last 14 days';
-  const items = days.map(d => { const k = ymd(d), v = hrs(src.reduce((a, r) => a + sessMs((r.days || {})[k]), 0)); return {label: String(d.getDate()), v, hl: k === todayStr(), c: '--s1', tip: d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}) + ': ' + fmtH(v * 3600000)}; });
-  const worked = items.filter(x => x.v > 0);
-  columns($('cHours'), items, {aria: 'Hours worked per day for the last 14 days', fmtAxis: fmtHr, min: 1, avg: worked.length ? worked.reduce((a, x) => a + x.v, 0) / worked.length : null, empty: me ? 'Clock in on the Time clock page and your hours appear here.' : 'No hours recorded in the last 14 days.'});
   // week task mix from the current schedule
   const cur = (week.key === ymd(monday(0)) ? week.rows : []).filter(r => isAdmin || (me && r.email === me.email));
   const mix = TASKS.map(([k, label, c]) => ({label, c, v: cur.reduce((a, r) => a + (r.s || []).filter(x => x === k).length, 0)})).filter(x => x.v).sort((a, b) => b.v - a.v);
