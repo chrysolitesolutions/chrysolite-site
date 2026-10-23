@@ -777,7 +777,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="guides" hidden>
       <div class="vhead"><div><h1>Projects</h1><p>Guidelines for each project you work on, plus the tools and links you use every day.</p></div></div>
       <div class="link-grid" id="guideGrid">
-        <button class="lk gd-card" type="button" data-go="bench"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project Benchmarking</b><span id="gdBenchSub">Sample creation, enrichment, coverage, freshness and precision checks.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="benchhub"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project Benchmarking</b><span id="gdBenchSub">Profile review, email review and phone review.</span></div></button>
         <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>2. Project Power filter</b><span id="gdHubSub">Task schedule, progress and sources for every PowerFilter.</span></div></button>
         <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>3. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
         <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
@@ -857,6 +857,17 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
           <p class="hint" id="srcCount" style="padding:0 16px"></p>
           <div class="src-list" id="srcList"></div>
         </div>
+      </div>
+    </section>
+
+    <!-- PROJECT BENCHMARKING -->
+    <section class="view" data-view="benchhub" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
+      <div class="vhead"><div><h1>Project Benchmarking</h1><p>Step-by-step instructions for each review task.</p></div></div>
+      <div class="link-grid">
+        <button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1. Profile Review</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Review</b><span id="gdBemailSub">Instructions coming soon.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3. Phone Review</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
       </div>
     </section>
 
@@ -1243,11 +1254,12 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
+  if (v === 'bench') v = 'benchhub';
   if (v === 'leave' && !isAdmin) v = 'profile';
-  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','bench','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links'].includes(v) || GDOCS[v] ? 'guides' : v)));
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub'].includes(v) || GDOCS[v] ? 'guides' : v)));
   history.replaceState(null,'','#'+v); window.scrollTo(0,0); if (v === 'links') { const lh = $('linksHead'); if (lh) setTimeout(() => lh.scrollIntoView({block: 'start'}), 30); }
   const view = document.querySelector('.view[data-view="' + vv + '"]');
   if (view && !reduce) { view.classList.remove('enter'); [...view.children].forEach((c, i) => c.style.setProperty('--i', i)); void view.offsetWidth; view.classList.add('enter'); }
@@ -1812,7 +1824,52 @@ $('pfFile').addEventListener('change', async e => {
 });
 
 /* ---------- project guidelines: documents and source register ---------- */
-const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bench: 'doc_benchmarking'};
+const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bprof: 'doc_bench_profile', bemail: 'doc_bench_email', bphone: 'doc_bench_phone'};
+const BENCH_SUB = ['bprof', 'bemail', 'bphone'];
+// built-in content shown until an admin uploads a Word document for the page
+const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the profile review screen', html: `
+<h2>1. Before you start</h2>
+<ul><li>Every profile is <strong>reserved for you for a limited time</strong>, shown top right (e.g. “Reserved for you until 11:05 PM”). Finish it before then, or it goes back to the queue.</li>
+<li>The top bar shows your progress: <strong>Today</strong> (profiles done today), <strong>Checkpoint streak</strong> and <strong>Accuracy (30 days)</strong>. Some answers are peer-checked, so accuracy matters more than speed.</li>
+<li>Use <strong>Exit</strong> (top right) only when you want to stop.</li></ul>
+<h2>2. Read the profile header</h2>
+<p>At the top you see the person’s <strong>name</strong>, <strong>job title at company</strong>, <strong>location</strong>, and below it their <strong>headline</strong>. Read these first so you know who you are checking.</p>
+<h2>3. Open LinkedIn (recommended)</h2>
+<ol><li>Click <strong>Open LinkedIn ↗</strong>. It opens in a new tab.</li>
+<li>Make sure it is the <strong>same person</strong>: name, photo, location and work history.</li>
+<li>Come back and answer <strong>“Checked on LinkedIn?”</strong> (optional, but do it whenever you opened LinkedIn):
+<ul><li><strong>✓ Public profile matches LinkedIn</strong>: the public profile on the right agrees with LinkedIn.</li><li><strong>✗ Doesn’t match LinkedIn</strong>: LinkedIn shows something different, e.g. a newer job.</li></ul></li>
+<li>If the public profile looks old or empty, click <strong>↻ Refresh public profile</strong> and wait for it to reload.</li></ol>
+<h2>4. Check each field (8 in total)</h2>
+<p>The dots above the field name show where you are, e.g. <strong>FIELD 2 OF 8</strong>. For every field:</p>
+<ol><li>Read the question, e.g. “Is the current job title the same?”</li>
+<li>Compare the two boxes: <strong>THE FILE SAYS</strong> (what the client database has) and <strong>PUBLIC PROFILE SAYS</strong> (what the public profile shows). <strong>Words highlighted in blue are the differences.</strong></li>
+<li>Read the <strong>rule box</strong> below the two boxes. It explains what counts as “the same” for that field.</li>
+<li>Choose one answer, by clicking or with the keyboard (see the table below).</li>
+<li>You move to the next field automatically. Use <strong>← Back</strong> to change an earlier answer.</li></ol>
+<div class="tblw"><table><thead><tr><th>Button</th><th>Key</th><th>Use when</th></tr></thead><tbody>
+<tr><td>✗ Not a match</td><td>1</td><td>The information is really different</td></tr>
+<tr><td>✓ Match</td><td>2</td><td>The same, following the rule box</td></tr>
+<tr><td>? Can’t decide</td><td>3</td><td>Not enough information or truly unclear. Use sparingly</td></tr></tbody></table></div>
+<h2>5. Job title rule (field 2)</h2>
+<ul><li><strong>Short forms are OK:</strong> Snr = Senior, Dev = Developer, Mgr = Manager.</li>
+<li><strong>The level must be the same:</strong> II, III, Senior, Lead and Principal must all match.</li></ul>
+<div class="tblw"><table><thead><tr><th>File says</th><th>Public profile says</th><th>Answer</th></tr></thead><tbody>
+<tr><td>Snr Dev II</td><td>Senior Developer II</td><td>✓ Match</td></tr>
+<tr><td>Senior Developer II</td><td>Senior Developer</td><td>✗ Not a match (level II missing)</td></tr>
+<tr><td>DevOps Engineer</td><td>Senior DevOps Engineer</td><td>✗ Not a match (Senior missing)</td></tr></tbody></table></div>
+<h3>Worked example</h3>
+<p>File: <strong>“AWS DevOps Architect”</strong> at Amazon. Public profile: <strong>“Amazon Web Services (AWS) — DevOps Architect”</strong>.</p>
+<p>The actual title in both is <strong>DevOps Architect</strong>, with no level difference. The extra “Amazon Web Services (AWS)” is the company name, not part of the title.</p>
+<p class="callout">Answer: <strong>✓ Match (2)</strong>. The company (Amazon vs AWS) is not part of this question. Judge it only where the company is the field being checked.</p>
+<h2>6. Finish the profile</h2>
+<p>After field 8 the profile is complete and the next one loads. Your <strong>Today</strong> count goes up by one.</p>
+<h2>7. Quick tips</h2>
+<ul><li>Judge only the question on screen. Don’t let other differences affect it.</li>
+<li>Keep a finger on keys <strong>1, 2 and 3</strong> to work faster.</li>
+<li>When unsure, check LinkedIn before choosing <strong>Can’t decide</strong>.</li>
+<li>Watch the reservation time on long profiles.</li></ul>
+<p class="note">The rules for the other fields will be added here as they are confirmed.</p>`}};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
   const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE)$/;
@@ -1827,11 +1884,12 @@ function renderHub(){
 }
 function renderGuideCards(){ renderHub();
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
-  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bench', 'gdBenchSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; });
+  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
 }
 function renderGdoc(){
-  const g = guides[GDOCS[gdKey]], names = {eto: 'Project ETO', roi: 'Project ROI', csm: 'Project CSM reports', bench: 'Project Benchmarking'};
-  $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = g ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
+  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'Project ETO', roi: 'Project ROI', csm: 'Project CSM reports', bprof: 'Profile Review', bemail: 'Email Review', bphone: 'Phone Review'};
+  const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = sub ? 'benchhub' : 'guides'; back.textContent = sub ? '← Project Benchmarking' : '← Projects';
+  $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
   $('gdDoc').innerHTML = cleanHtml(g.html || '');
   const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
