@@ -229,6 +229,7 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc a{color:var(--gem-ink);word-break:break-all}.gd-doc .note{font-size:13px;color:var(--ink-soft);font-style:italic}
 .gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
 .gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+.gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
 .gd-doc .flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:4px 0 16px;counter-reset:fs}
 .gd-doc .fs{position:relative;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);display:grid;gap:4px}.gd-doc .fs b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gem);color:#10200A;font-size:13px}.gd-doc .fs span{font-size:13px;font-weight:600}
 .gd-doc ul.check{list-style:none;padding:0}.gd-doc ul.check li{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:9px}.gd-doc ul.check li::before{content:"";flex:none;width:16px;height:16px;margin-top:3px;border-radius:4px;border:2px solid var(--gem)}
@@ -1840,8 +1841,8 @@ const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instr
 <li>Come back and answer <strong>“Checked on LinkedIn?”</strong> (optional, but do it whenever you opened LinkedIn):
 <ul><li><strong>✓ Public profile matches LinkedIn</strong>: the public profile on the right agrees with LinkedIn.</li><li><strong>✗ Doesn’t match LinkedIn</strong>: LinkedIn shows something different, e.g. a newer job.</li></ul></li>
 <li>If the public profile looks old or empty, click <strong>↻ Refresh public profile</strong> and wait for it to reload.</li></ol>
-<h2>4. Check each field (8 in total)</h2>
-<p>The dots above the field name show where you are, e.g. <strong>FIELD 2 OF 8</strong>. For every field:</p>
+<h2>4. Check each field</h2>
+<p>The dots above the field name show where you are, e.g. <strong>FIELD 2 OF 8</strong>. The number of fields can change from profile to profile, because the system only asks about fields it has data for. For every field:</p>
 <ol><li>Read the question, e.g. “Is the current job title the same?”</li>
 <li>Compare the two boxes: <strong>THE FILE SAYS</strong> (what the client database has) and <strong>PUBLIC PROFILE SAYS</strong> (what the public profile shows). <strong>Words highlighted in blue are the differences.</strong></li>
 <li>Read the <strong>rule box</strong> below the two boxes. It explains what counts as “the same” for that field.</li>
@@ -1851,7 +1852,20 @@ const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instr
 <tr><td>✗ Not a match</td><td>1</td><td>The information is really different</td></tr>
 <tr><td>✓ Match</td><td>2</td><td>The same, following the rule box</td></tr>
 <tr><td>? Can’t decide</td><td>3</td><td>Not enough information or truly unclear. Use sparingly</td></tr></tbody></table></div>
-<h2>5. Job title rule (field 2)</h2>
+<h2>5. The fields you will check</h2>
+<p>These are the fields in a profile review. Each screen shows its own <strong>rule box</strong>. Always follow the rule box; the guidance below helps where it doesn’t say.</p>
+<div class="tblw"><table><thead><tr><th>Field</th><th>What to compare</th><th>Match when</th><th>Not a match when</th></tr></thead><tbody>
+<tr><td><strong>Name</strong></td><td>First and last name</td><td>Same person. Short forms and nicknames (Bob = Robert), a missing middle name or initial, and accents (José = Jose) are fine</td><td>A different first or last name. If the last name changed (e.g. after marriage) and you can’t confirm it’s the same person, choose Can’t decide</td></tr>
+<tr><td><strong>Job title</strong></td><td>Current job title</td><td>Same title. Short forms are OK (Snr = Senior). The level must be the same. See section 6</td><td>A different role, or a different level (II, III, Senior, Lead, Principal)</td></tr>
+<tr><td><strong>Company</strong></td><td>Current employer</td><td>Same company. Legal endings (Inc, Ltd, LLC) and common short forms (IBM = International Business Machines) are fine</td><td>A different company. For brands or subsidiaries (e.g. AWS / Amazon), follow the rule box; if it doesn’t say, choose Can’t decide</td></tr>
+<tr><td><strong>Years in current role</strong></td><td>Time in the current job title</td><td>The number of years matches the start date of the current role on the public profile or LinkedIn</td><td>The start date of the current role gives a clearly different number of years</td></tr>
+<tr><td><strong>Years at company</strong></td><td>Total time at the current company, across all roles there</td><td>Counting from the first role at this company gives the same number of years</td><td>The first start date at this company gives a clearly different number of years</td></tr>
+<tr><td><strong>Still in this job?</strong></td><td>Whether the person still holds this role</td><td>The role is shown as current (“Present”, no end date)</td><td>The role has an end date, or a newer job is listed above it</td></tr>
+<tr><td><strong>Location</strong></td><td>City, state or region, and country</td><td>The same place. A city and its metro area (San Jose = San Francisco Bay Area) or a missing state is fine</td><td>A different city, region or country</td></tr>
+<tr><td><strong>Headline</strong></td><td>The short line under the name</td><td>The same headline, or the same words with small differences (punctuation, symbols, order)</td><td>A different headline that describes a different role or focus</td></tr>
+<tr><td><strong>Summary / About</strong></td><td>The About text</td><td>The same text, even if one version is shorter or cut off</td><td>Clearly different text, or one side is empty and the other is not</td></tr></tbody></table></div>
+<p class="note">Years: work out the years from the start date shown (e.g. “Jan 2021 – Present” in late 2026 ≈ 5 years). If the difference is only rounding (e.g. 4.8 vs 5), treat it as the same unless the rule box says otherwise.</p>
+<h2>6. Job title rule</h2>
 <ul><li><strong>Short forms are OK:</strong> Snr = Senior, Dev = Developer, Mgr = Manager.</li>
 <li><strong>The level must be the same:</strong> II, III, Senior, Lead and Principal must all match.</li></ul>
 <div class="tblw"><table><thead><tr><th>File says</th><th>Public profile says</th><th>Answer</th></tr></thead><tbody>
@@ -1862,14 +1876,14 @@ const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instr
 <p>File: <strong>“AWS DevOps Architect”</strong> at Amazon. Public profile: <strong>“Amazon Web Services (AWS) — DevOps Architect”</strong>.</p>
 <p>The actual title in both is <strong>DevOps Architect</strong>, with no level difference. The extra “Amazon Web Services (AWS)” is the company name, not part of the title.</p>
 <p class="callout">Answer: <strong>✓ Match (2)</strong>. The company (Amazon vs AWS) is not part of this question. Judge it only where the company is the field being checked.</p>
-<h2>6. Finish the profile</h2>
-<p>After field 8 the profile is complete and the next one loads. Your <strong>Today</strong> count goes up by one.</p>
-<h2>7. Quick tips</h2>
+<h2>7. Finish the profile</h2>
+<p>After the last field the profile is complete and the next one loads. Your <strong>Today</strong> count goes up by one.</p>
+<h2>8. Quick tips</h2>
 <ul><li>Judge only the question on screen. Don’t let other differences affect it.</li>
 <li>Keep a finger on keys <strong>1, 2 and 3</strong> to work faster.</li>
 <li>When unsure, check LinkedIn before choosing <strong>Can’t decide</strong>.</li>
 <li>Watch the reservation time on long profiles.</li></ul>
-<p class="note">The rules for the other fields will be added here as they are confirmed.</p>`},
+<p class="note">Where the rule box on screen gives a different rule from this page, the rule box applies.</p>`},
   bemail: {title: 'Email Review', subtitle: 'Step-by-step instructions for the email review screen', html: `
 <h2>1. Before you start</h2>
 <ul><li>Every profile is <strong>reserved for you for a limited time</strong>, shown top right (e.g. “Reserved for you until 11:21 PM”). Finish it before then, or it goes back to the queue.</li>
