@@ -23,7 +23,7 @@
   --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
   --gem:#9BB52A;--gem-ink:#4C5F0C;--band:#0F2620;--band-fg:#E7EFE4;--band-soft:#A9BDB2;
   --ok:#2F7D5B;--warn:#B07A12;--off:#B4513A;--info:#2D6E9E;
-  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#7b5bd6;
   --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
   --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
@@ -31,11 +31,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
   --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
-  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;color-scheme:dark}}
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
   --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
-  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;color-scheme:dark}
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
 h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
@@ -310,6 +310,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .s-eto{background:color-mix(in srgb,var(--s3) 20%,transparent);box-shadow:inset 3px 0 0 var(--s3)}
 .s-roi{background:color-mix(in srgb,var(--s4) 22%,transparent);box-shadow:inset 3px 0 0 var(--s4)}
 .s-pf{background:color-mix(in srgb,var(--s5) 22%,transparent);box-shadow:inset 3px 0 0 var(--s5)}
+.s-esc{background:color-mix(in srgb,var(--s6) 22%,transparent);box-shadow:inset 3px 0 0 var(--s6)}
 .s-off{color:var(--ink-soft)}
 .s-lv{background:color-mix(in srgb,var(--off) 14%,transparent);color:var(--off)}
 .wk{display:flex;align-items:center;gap:8px}
@@ -659,11 +660,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="schedule" hidden>
       <div class="vhead"><div><h1>Schedule</h1><p id="weekLabel"></p></div>
         <div class="wk"><button id="prevWk" aria-label="Previous week">‹</button><button class="btn btn-ghost" id="thisWk" style="padding:9px 14px">This week</button><button id="nextWk" aria-label="Next week">›</button></div></div>
-      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to change the assignment: blank → Profile mapper → Email mapper → Sutherland / Peraton ETO → ROI → Power Filter → Off → Leave. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
+      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to change the assignment: blank → Profile mapper → Email mapper → Sutherland / Peraton ETO → ROI → Power Filter → Escalations → Off → Leave. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
       <div class="panel admin-only" hidden><h3>Assignments per day</h3><div class="chart" id="cDay"></div></div>
       <div class="panel contrib-only"><h3 id="myWkT">My assignments for the next two weeks</h3><div id="myTasks"></div><p class="legend" id="myTasksSum" hidden></p></div>
       <h2 class="sec-title">Team assignments</h2>
-      <div class="legend"><span class="shift s-prof">Profile mapper</span><span class="shift s-mail">Email mapper</span><span class="shift s-eto">Sutherland / Peraton ETO</span><span class="shift s-roi">ROI</span><span class="shift s-pf">Power Filter</span><span class="shift s-off">Off</span><span class="shift s-lv">Leave</span>Approved leave shows automatically.</div>
+      <div class="legend"><span class="shift s-prof">Profile mapper</span><span class="shift s-mail">Email mapper</span><span class="shift s-eto">Sutherland / Peraton ETO</span><span class="shift s-roi">ROI</span><span class="shift s-pf">Power Filter</span><span class="shift s-esc">Escalations</span><span class="shift s-off">Off</span><span class="shift s-lv">Leave</span>Approved leave shows automatically.</div>
       <div class="panel" style="padding:0"><div class="tbl"><table class="sched"><thead id="schedHead"></thead><tbody id="schedBody"></tbody></table></div></div>
     </section>
 
@@ -1314,9 +1315,9 @@ function renderRoster(){
 ['q','fTeam','fStatus'].forEach(id => $(id).addEventListener('input', renderRoster));
 
 /* ---------- schedule ---------- */
-const SH = {'':['s-none','—'],prof:['s-prof','Profile mapper'],mail:['s-mail','Email mapper'],eto:['s-eto','Sutherland / Peraton ETO'],roi:['s-roi','ROI'],pf:['s-pf','Power Filter'],off:['s-off','Off'],lv:['s-lv','Leave']};
-const WORK = ['prof','mail','eto','roi','pf'];
-const CYCLE = ['', 'prof', 'mail', 'eto', 'roi', 'pf', 'off', 'lv'];
+const SH = {'':['s-none','—'],prof:['s-prof','Profile mapper'],mail:['s-mail','Email mapper'],eto:['s-eto','Sutherland / Peraton ETO'],roi:['s-roi','ROI'],pf:['s-pf','Power Filter'],esc:['s-esc','Escalations'],off:['s-off','Off'],lv:['s-lv','Leave']};
+const WORK = ['prof','mail','eto','roi','pf','esc'];
+const CYCLE = ['', 'prof', 'mail', 'eto', 'roi', 'pf', 'esc', 'off', 'lv'];
 let weekOff = 0, saveT = null, dirty = false;
 function monday(off){ const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)+off*7); return d; }
 function weekDays(){ const m = monday(weekOff); return [...Array(7)].map((_,i)=>{ const d=new Date(m); d.setDate(m.getDate()+i); return d; }); }
@@ -2492,7 +2493,7 @@ $('attCopy').onclick = () => {
 setInterval(() => { if (isAdmin && !$('appView').hidden) renderTeamAtt(); }, 60000);
 
 /* ---------- charts (real portal data) ---------- */
-const TASKS = [['prof','Profile mapper','--s1'],['mail','Email mapper','--s2'],['eto','Sutherland / Peraton ETO','--s3'],['roi','ROI','--s4'],['pf','Power Filter','--s5']];
+const TASKS = [['prof','Profile mapper','--s1'],['mail','Email mapper','--s2'],['eto','Sutherland / Peraton ETO','--s3'],['roi','ROI','--s4'],['pf','Power Filter','--s5'],['esc','Escalations','--s6']];
 const SER = ['--s1','--s2','--s3','--s4','--s5'];
 const nf = n => (Math.round(n * 10) / 10).toLocaleString();
 const widthOf = el => Math.max(300, Math.round(el.clientWidth || (el.parentElement && el.parentElement.clientWidth) || 600));
