@@ -342,6 +342,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .ev.ev-urgent .d{color:#c0392b}.ev.ev-urgent b{color:#a5281c}
 @keyframes annGlow{0%,100%{box-shadow:0 0 0 0 rgba(226,81,59,0);background:color-mix(in srgb,#e2513b 6%,var(--surface))}50%{box-shadow:0 0 0 4px rgba(226,81,59,.16),0 0 26px 2px rgba(226,81,59,.28);background:color-mix(in srgb,#e2513b 15%,var(--surface))}}
 @media (prefers-reduced-motion: reduce){.ev.ev-urgent{animation:none}}
+.mini.ack-btn{background:var(--gem);color:#13240a;border-color:transparent;font-weight:700;padding:7px 16px}.ev.ev-urgent .mini.ack-btn{background:#e2513b;color:#fff}
+.ev .acts{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.ann-stat summary{list-style:none;cursor:pointer}.ann-stat summary::-webkit-details-marker{display:none}.ann-stat > div{font-size:12px;color:var(--ink-soft);max-width:260px;margin-top:6px;display:grid;gap:4px;text-align:right}
 .an-prev{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--band);color:var(--band-fg);padding:12px 18px;border-radius:12px;font-size:14px;transition:.3s;pointer-events:none;z-index:9}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -1100,7 +1103,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1181,6 +1184,7 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
   if (!db || !me) return;
@@ -1192,6 +1196,7 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
 
 function startAdminData() {
+  watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
   watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
   if (!db || !isAdmin || unsub.requests) return;
@@ -1503,7 +1508,7 @@ function renderHome(){
   count($('tPend'), pend);
   $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><span class="shift ${SH[k][0]}">${SH[k][1]}</span></td><td>${asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not yet</span>'}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
-  $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(annRow).join('') : '<p class="empty">No announcements yet.</p>';
+  $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(a => annRow(a, annAckBtn(a))).join('') : '<p class="empty">No announcements yet.</p>';
   renderMyAssign(di, today);
 }
 /* ---------- today's assignment: employees accept it on Home ---------- */
@@ -1528,6 +1533,18 @@ function renderMyAssign(di, today){
     try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderHome(); toast('Today\'s assignment accepted'); }
     catch (x) { b.disabled = false; b.textContent = 'Accept today\'s assignment'; toast('That couldn\'t be saved. Try again.'); } };
 }
+/* ---------- announcements: employees acknowledge them ---------- */
+let annAckMine = null, annAckAll = {};
+const annAckAt = (rec, key) => rec && rec.anns && rec.anns[key];
+function annAckBtn(a){ if (!me) return ''; const at = annAckAt(annAckMine, a.key);
+  return at ? `<span class="pill ok" title="Accepted ${esc(new Date(at).toLocaleString())}">✓ Accepted</span>` : `<button class="mini ack-btn" type="button" data-annack="${esc(a.key)}">Accept</button>`; }
+function annAckStats(a){ const ps = people(), done = ps.filter(p => annAckAt(annAckAll[p.key], a.key)), wait = ps.filter(p => !annAckAt(annAckAll[p.key], a.key));
+  return `<details class="ann-stat"><summary><span class="pill ${wait.length ? 'warn' : 'ok'}">${done.length}/${ps.length} accepted</span></summary><div>${done.length ? '<b>Accepted:</b> ' + done.map(p => esc(p.name)).join(', ') : ''}${wait.length ? `<div><b>Waiting:</b> ${wait.map(p => esc(p.name)).join(', ')}</div>` : ''}</div></details>`; }
+document.addEventListener('click', async e => { const b = e.target.closest('[data-annack]'); if (!b || !me) return; b.disabled = true; b.textContent = 'Saving…';
+  const anns2 = {...((annAckMine && annAckMine.anns) || {}), [b.dataset.annack]: new Date().toISOString()}, live = new Set(anns.map(a => a.key)), keep = {};
+  Object.entries(anns2).forEach(([k, v]) => { if (live.has(k)) keep[k] = v; });
+  try { await db.doc('annAck/' + me.key).set({email: me.email, name: me.name, anns: keep}); annAckMine = {email: me.email, name: me.name, anns: keep}; renderHome(); toast('Announcement accepted'); }
+  catch (x) { b.disabled = false; b.textContent = 'Accept'; toast('That couldn\'t be saved. Try again.'); } });
 const TAGS = {info:'Project', warn:'Deadline', ok:'Meeting', off:'Urgent'};
 // announcement text: keeps line breaks and paragraphs, '-'/'*'/'•' bullets, '1.' numbered steps and **bold**
 function annHtml(t){
@@ -2132,7 +2149,7 @@ $('anBody').addEventListener('input', () => { const v = $('anBody').value; $('an
 function renderAnnAdmin(){
   if (!isAdmin) return;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
-  $('annAdmin').innerHTML = sorted.length ? sorted.map(a => annRow(a, `<button class="mini danger" data-ann="${esc(a.key)}">Delete</button>`)).join('') : '<p class="empty">No announcements posted.</p>';
+  $('annAdmin').innerHTML = sorted.length ? sorted.map(a => annRow(a, annAckStats(a) + `<button class="mini danger" data-ann="${esc(a.key)}">Delete</button>`)).join('') : '<p class="empty">No announcements posted.</p>';
 }
 $('anDate').value = todayStr();
 $('annForm').addEventListener('submit', async e => {
