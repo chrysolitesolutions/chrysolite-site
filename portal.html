@@ -232,6 +232,13 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
 .h-date{margin:-6px 0 12px;font:500 12.5px var(--mono);letter-spacing:.02em}
 #todayList td{white-space:normal}
+.cellstack{display:grid;gap:3px;justify-items:start}.cellstack.row{display:flex;flex-wrap:wrap;gap:6px}.cellstack .shift{font-size:11.5px;padding:3px 8px;white-space:nowrap}
+.cellbtn.cellstack{background:none;border:1px dashed transparent;border-radius:8px;padding:3px;cursor:pointer;width:100%;font:inherit}.cellbtn.cellstack:hover{border-color:var(--line)}
+.cellpick{position:absolute;z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px -20px rgba(0,0,0,.45);padding:14px;display:grid;gap:10px}
+.cp-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.cp-h span{font:12px var(--mono);color:var(--ink-soft)}
+.cp-tasks{display:flex;flex-wrap:wrap;gap:6px}.cp-t{cursor:pointer;border:0;font:600 12.5px var(--body);padding:6px 10px;opacity:.62}.cp-t.on{opacity:1;outline:2px solid currentColor;outline-offset:1px}.cp-t:disabled{opacity:.3;cursor:not-allowed}
+.cp-row{display:flex;flex-wrap:wrap;gap:6px}.cp-row .mini.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface))}.cp-done{margin-left:auto;background:var(--gem)!important;color:#13240a;border-color:transparent!important}
+.my-assign.need{border-left-color:var(--warn);animation:maGlow 2.6s ease-in-out infinite}@keyframes maGlow{0%,100%{box-shadow:0 0 0 0 rgba(227,176,75,0)}50%{box-shadow:0 0 0 4px rgba(227,176,75,.18),0 0 24px rgba(227,176,75,.3)}}
 .my-assign{display:grid;gap:12px;border-left:4px solid var(--gem);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 9%,var(--surface)),var(--surface))}.my-assign.done{border-left-color:var(--ok)}.my-assign.off{border-left-color:var(--line)}
 .ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
 .ma-eye{font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.ma-task{font:800 22px var(--display)}.ma-task .shift{font-size:16px;padding:6px 14px}
@@ -624,7 +631,6 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="tile hl"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
         <button class="tile hl tile-btn" data-go="clock"><span id="hStatusL">Time clock</span><b id="hStatus" style="font-size:20px">Not clocked in</b><small>Open time clock →</small></button>
       </div>
-      <div class="panel my-assign" id="myAssign"></div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
         <div class="panel"><h3>Today's team assignments</h3><p class="hint h-date" id="teamDayT"></p><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
@@ -660,7 +666,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="schedule" hidden>
       <div class="vhead"><div><h1>Schedule</h1><p id="weekLabel"></p></div>
         <div class="wk"><button id="prevWk" aria-label="Previous week">‹</button><button class="btn btn-ghost" id="thisWk" style="padding:9px 14px">This week</button><button id="nextWk" aria-label="Next week">›</button></div></div>
-      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to change the assignment: blank → Profile mapper → Email mapper → Sutherland / Peraton ETO → ROI → Power Filter → Escalations → Off → Leave. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
+      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to choose up to 3 tasks for that day, or set Off or Leave. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
       <div class="panel admin-only" hidden><h3>Assignments per day</h3><div class="chart" id="cDay"></div></div>
       <div class="panel contrib-only"><h3 id="myWkT">My assignments for the next two weeks</h3><div id="myTasks"></div><p class="legend" id="myTasksSum" hidden></p></div>
       <h2 class="sec-title">Team assignments</h2>
@@ -701,6 +707,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <!-- TIME CLOCK -->
     <section class="view" data-view="clock" hidden>
       <div class="vhead"><div><h1>Time clock</h1><p>Clock in and out as many times as you need each day. Every login–logout pair is saved as a session, and the sessions add up to your daily, weekly and monthly hours.</p></div></div>
+      <div class="panel my-assign self-only" id="myAssign"></div>
       <div class="two self-only">
         <div class="panel clock-card">
           <div class="clock-now"><b id="clkTime">--:--</b><span id="clkDate"></span></div>
@@ -710,9 +717,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
           <div class="clock-btns"><button class="btn btn-gem big-btn" id="clkIn" type="button">Clock in</button><button class="btn btn-ghost big-btn" id="clkOut" type="button" disabled>Clock out</button></div>
           <div class="msg err" id="clkErr" hidden></div>
           <div class="ring-wrap"><div class="clock-today" style="flex:1;border:0;padding:0;display:grid;gap:4px"><span>Today's total</span><b id="clkToday">0h 00m</b><small class="hint">Ring shows progress toward an 8-hour day.</small></div><svg class="ring" id="cRing" viewBox="0 0 132 132" role="img" aria-label="Today's hours toward 8"><circle class="trk" cx="66" cy="66" r="54"/><circle class="val" id="cRingVal" cx="66" cy="66" r="54" stroke-dasharray="339.3" stroke-dashoffset="339.3"/><text id="cRingTxt" x="66" y="70" text-anchor="middle" font-size="24">0%</text><text class="sub" x="66" y="88" text-anchor="middle">of 8h</text></svg></div>
-          <div><h3 style="font-size:14px;margin-bottom:8px">Today's sessions</h3><div class="sess-list" id="clkSessions"></div></div>
         </div>
+        <div style="display:grid;gap:16px;align-content:start;min-width:0">
+        <div class="panel"><h3>Today's sessions</h3><div class="sess-list" id="clkSessions"></div></div>
         <div class="panel"><h3>My week</h3><div class="tbl"><table class="att"><thead><tr><th>Day</th><th>Sessions</th><th>Hours</th></tr></thead><tbody id="myWeek"></tbody></table></div><p class="legend" id="weekTotal"></p></div>
+        </div>
       </div>
       <div class="panel self-only">
         <div class="vhead" style="align-items:center"><h3 style="margin:0">My month</h3>
@@ -1172,7 +1181,7 @@ function startData() {
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
-  watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); });
+  watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); renderClock(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -1324,11 +1333,18 @@ function weekDays(){ const m = monday(weekOff); return [...Array(7)].map((_,i)=>
 function watchWeek(){
   if (!db) return;
   const key = ymd(monday(weekOff)); week = {key, rows: []};
-  watch('week', db.doc('schedule/' + key), s => { if (dirty) return; week = {key, rows: s.exists ? (s.data().rows || []).map(r => ({email: r.email, s: [...(r.s || [])]})) : []}; renderSchedule(); renderHome(); });
+  watch('week', db.doc('schedule/' + key), s => { if (dirty) return; week = {key, rows: s.exists ? (s.data().rows || []).map(r => ({email: r.email, s: [...(r.s || [])]})) : []}; renderSchedule(); renderHome(); try { renderClock(); } catch (e) {} });
   const nk = ymd(monday(weekOff + 1)); nextWeek = {key: nk, rows: []};
   watch('weekNext', db.doc('schedule/' + nk), s => { nextWeek = {key: nk, rows: s.exists ? (s.data().rows || []).map(r => ({email: r.email, s: [...(r.s || [])]})) : []}; if (!isAdmin) myTasksStrip(); });
 }
-const cellOf = (email, i) => { const r = week.rows.find(x => x.email === email); const v = r && r.s ? (r.s[i] || '') : ''; return SH[v] ? v : ''; };
+// a schedule cell holds '' | 'off' | 'lv' | up to 3 work tasks joined with '+', e.g. 'prof+esc'
+const MAX_TASKS = 3;
+const parseCell = v => { v = String(v || ''); if (v === 'off' || v === 'lv') return [v]; const seen = []; v.split('+').forEach(k => { if (WORK.includes(k) && !seen.includes(k) && seen.length < MAX_TASKS) seen.push(k); }); return seen; };
+const normCell = v => parseCell(v).join('+');
+const isWorkCell = v => parseCell(v).some(k => WORK.includes(k));
+const cellLabel = v => { const ks = parseCell(v); return ks.length ? ks.map(k => SH[k][1]).join(' + ') : '—'; };
+const cellPills = (v, extra = '') => { const ks = parseCell(v); return ks.length ? ks.map(k => `<span class="shift ${SH[k][0]}${extra}">${SH[k][1]}</span>`).join('') : `<span class="shift s-none${extra}">—</span>`; };
+const cellOf = (email, i) => { const r = week.rows.find(x => x.email === email); return normCell(r && r.s ? r.s[i] : ''); };
 function renderSchedule(){
   queueCharts();
   const days = weekDays(), today = todayStr();
@@ -1338,16 +1354,27 @@ function renderSchedule(){
   if (!isAdmin) { $('myWkT').textContent = me ? me.name + "'s assignments for the next two weeks" : 'Assignments for the next two weeks'; }
   if (!list.length) { $('schedBody').innerHTML = `<tr><td colspan="8" class="empty">No one to schedule yet. ${isAdmin ? 'Add employees in Admin first.' : ''}</td></tr>`; return; }
   $('schedBody').innerHTML = list.map(p => '<tr' + (me && p.email === me.email ? ' class="me-row"' : '') + '><td><div class="person">' + av(p.name) + '<div>' + esc(p.name) + '<div style="font-size:12px;color:var(--ink-soft)">' + esc(p.project||'') + '</div></div></div></td>' +
-    days.map((d, i) => { let k = cellOf(p.email, i); if (!k && onLeave(p.email, ymd(d))) k = 'lv'; const cls = SH[k] || SH['']; return `<td>${isAdmin ? `<button type="button" class="shift ${cls[0]} cellbtn" data-e="${esc(p.email)}" data-i="${i}" aria-label="${esc(p.name)}, ${d.toLocaleDateString(undefined,{weekday:'long'})}: ${cls[1]}">${cls[1]}</button>` : `<span class="shift ${cls[0]}">${cls[1]}</span>`}</td>`; }).join('') + '</tr>').join('');
+    days.map((d, i) => { let k = cellOf(p.email, i); if (!k && onLeave(p.email, ymd(d))) k = 'lv'; const lab = cellLabel(k); return `<td>${isAdmin ? `<button type="button" class="cellbtn cellstack" data-e="${esc(p.email)}" data-i="${i}" aria-label="${esc(p.name)}, ${d.toLocaleDateString(undefined,{weekday:'long'})}: ${esc(lab)}">${cellPills(k)}</button>` : `<div class="cellstack">${cellPills(k)}</div>`}</td>`; }).join('') + '</tr>').join('');
 }
-$('schedBody').addEventListener('click', e => {
-  const b = e.target.closest('.cellbtn'); if (!b || !isAdmin) return;
-  const email = b.dataset.e, i = +b.dataset.i;
-  let r = week.rows.find(x => x.email === email); if (!r) { r = {email, s: ['','','','','','','']}; week.rows.push(r); }
-  r.s = [...r.s]; const at = CYCLE.indexOf(r.s[i] || ''); r.s[i] = at < 0 ? CYCLE[1] : CYCLE[(at + 1) % CYCLE.length];
-  dirty = true; $('saveState').textContent = 'Unsaved changes…'; renderSchedule();
-  clearTimeout(saveT); saveT = setTimeout(saveWeek, 700);
-});
+// admin picks up to 3 tasks for a day in a small panel next to the cell
+let pick = null;
+const pickEl = document.createElement('div'); pickEl.className = 'cellpick'; pickEl.hidden = true; pickEl.setAttribute('role', 'dialog'); document.body.appendChild(pickEl);
+function setCell(email, i, v){ let r = week.rows.find(x => x.email === email); if (!r) { r = {email, s: ['','','','','','','']}; week.rows.push(r); }
+  r.s = [...r.s]; r.s[i] = v; dirty = true; $('saveState').textContent = 'Unsaved changes…'; renderSchedule(); clearTimeout(saveT); saveT = setTimeout(saveWeek, 700); }
+function drawPick(){ if (!pick) return; const cur = parseCell(cellOf(pick.email, pick.i)), work = cur.filter(k => WORK.includes(k)), full = work.length >= MAX_TASKS, p = people().find(x => x.email === pick.email);
+  pickEl.innerHTML = `<div class="cp-h"><b>${esc(p ? p.name : pick.email)}</b><span>${esc(pick.day)}</span></div><p class="hint" style="margin:0">Choose up to ${MAX_TASKS} tasks.</p>
+    <div class="cp-tasks">${WORK.map(k => { const on = work.includes(k); return `<button type="button" class="shift ${SH[k][0]} cp-t${on ? ' on' : ''}" data-k="${k}" ${!on && full ? 'disabled' : ''} aria-pressed="${on}">${on ? '✓ ' : ''}${SH[k][1]}</button>`; }).join('')}</div>
+    <div class="cp-row"><button type="button" class="mini${cur[0] === 'off' ? ' on' : ''}" data-set="off">Off</button><button type="button" class="mini${cur[0] === 'lv' ? ' on' : ''}" data-set="lv">Leave</button><button type="button" class="mini" data-set="">Clear</button><button type="button" class="mini cp-done" data-done="1">Done</button></div>`; }
+function openPick(b){ const d = weekDays()[+b.dataset.i]; pick = {email: b.dataset.e, i: +b.dataset.i, day: d.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'})}; drawPick(); pickEl.hidden = false;
+  const r = b.getBoundingClientRect(), w = Math.min(320, innerWidth - 24); pickEl.style.width = w + 'px'; pickEl.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + scrollX)) + 'px'; pickEl.style.top = (r.bottom + scrollY + 6) + 'px'; }
+const closePick = () => { pick = null; pickEl.hidden = true; };
+$('schedBody').addEventListener('click', e => { const b = e.target.closest('.cellbtn'); if (!b || !isAdmin) return; e.stopPropagation(); openPick(b); });
+pickEl.addEventListener('click', e => { e.stopPropagation(); if (!pick) return; const t = e.target.closest('[data-k]'), st = e.target.closest('[data-set]');
+  if (e.target.closest('[data-done]')) return closePick();
+  if (t && !t.disabled) { const cur = parseCell(cellOf(pick.email, pick.i)).filter(k => WORK.includes(k)), k = t.dataset.k, nx = cur.includes(k) ? cur.filter(x => x !== k) : cur.concat(k).slice(0, MAX_TASKS); setCell(pick.email, pick.i, nx.join('+')); drawPick(); }
+  if (st) { setCell(pick.email, pick.i, st.dataset.set); st.dataset.set ? drawPick() : closePick(); } });
+document.addEventListener('click', e => { if (pick && !pickEl.contains(e.target)) closePick(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && pick) closePick(); });
 async function saveWeek(){
   const key = week.key, rows = week.rows.map(r => ({email: r.email, s: r.s}));
   try { await db.doc('schedule/' + key).set({rows, updatedAt: new Date().toISOString()}); $('saveState').textContent = 'Saved'; }
@@ -1501,7 +1528,7 @@ function renderHome(){
   queueCharts(); renderWa();
   renderHours();
   const list = people(), di = (new Date().getDay() + 6) % 7, today = todayStr();
-  const onShift = weekOff === 0 || week.key === ymd(monday(0)) ? list.map(p => [p, cellOf(p.email, di)]).filter(([p,k]) => WORK.includes(k) && !onLeave(p.email, today)) : [];
+  const onShift = weekOff === 0 || week.key === ymd(monday(0)) ? list.map(p => [p, cellOf(p.email, di)]).filter(([p,k]) => isWorkCell(k) && !onLeave(p.email, today)) : [];
   const days = [...Array(7)].map((_,i) => { const d = monday(0); d.setDate(d.getDate()+i); return ymd(d); });
   count($('tActive'), list.filter(p => (p.status||'Active') === 'Active').length);
   count($('tShift'), onShift.length);
@@ -1509,10 +1536,9 @@ function renderHome(){
   const pend = isAdmin ? pendingAll().length : myLeave().filter(d => d.to >= today).reduce((a, d) => a + (d.days || 0), 0);
   $('tPendLabel').textContent = isAdmin ? 'Leave requests to review' : 'My upcoming leave days';
   count($('tPend'), pend);
-  $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><span class="shift ${SH[k][0]}">${SH[k][1]}</span></td><td>${asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not yet</span>'}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
+  $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><div class="cellstack">${cellPills(k)}</div></td><td>${asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not yet</span>'}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
   $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(a => annRow(a, annAckBtn(a))).join('') : '<p class="empty">No announcements yet.</p>';
-  renderMyAssign(di, today);
   $('teamDayT').textContent = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
   const m0 = monday(0), m6 = new Date(m0); m6.setDate(m6.getDate() + 6), sameM = m0.getMonth() === m6.getMonth();
   const mo = d => d.toLocaleDateString(undefined, {month: 'short'});
@@ -1522,22 +1548,29 @@ function renderHome(){
 let asgAcks = {};
 const asgRec = (email, day) => { const r = asgAcks[String(email).toLowerCase()]; return r && r.days && r.days[day || todayStr()]; };
 const asgAccepted = (email, task, day) => { const a = asgRec(email, day); return !!(a && a.task === task); };
-function renderMyAssign(di, today){
-  const box = $('myAssign'); if (!box) return; if (!me) { box.hidden = true; return; } box.hidden = false;
-  const live = weekOff === 0 || week.key === ymd(monday(0)), k = live ? cellOf(me.email, di) : '', a = asgRec(me.email, today), when = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
-  const head = `<div class="ma-top"><div><span class="ma-eye">My assignment today · ${esc(when)}</span>`;
-  if (onLeave(me.email, today) || k === 'lv') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">You're on leave today</b></div></div><p class="hint" style="margin:0">Enjoy your time off.</p>`; return; }
-  if (k === 'off') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">Day off</b></div></div><p class="hint" style="margin:0">You have no assignment today.</p>`; return; }
-  if (!WORK.includes(k)) { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">No assignment yet</b></div></div><p class="hint" style="margin:0">Your admin hasn't put an assignment on today's schedule. Check back later or ask your Team Lead.</p>`; return; }
-  const done = a && a.task === k, changed = a && a.task !== k;
-  box.className = 'panel my-assign' + (done ? ' done' : '');
-  box.innerHTML = head + `<b class="ma-task"><span class="shift ${SH[k][0]}">${SH[k][1]}</span></b><span class="hint">Project: ${esc(me.project || 'Seekout')}</span></div>
-    <div class="ma-act">${done ? `<span class="pill ok">✓ Accepted at ${fmtT(a.at)}</span>` : `<button class="btn btn-gem" type="button" id="maAccept">Accept today's assignment</button>`}</div></div>
-    ${changed ? `<p class="msg warn" style="margin:0">Your assignment changed after you accepted ${esc((SH[a.task] || [, a.task])[1])}. Please accept the new one.</p>` : done ? '' : '<p class="hint" style="margin:0">Accept to confirm you\'ve seen today\'s assignment and will work on it. Your Team Lead can see who has accepted.</p>'}`;
+function todayTask(){ if (!me) return {k: '', state: 'none'}; const di = (new Date().getDay() + 6) % 7, today = todayStr();
+  const k = weekLoadedToday() ? cellOf(me.email, di) : '', a = asgRec(me.email, today);
+  if (onLeave(me.email, today) || k === 'lv') return {k, state: 'leave'}; if (k === 'off') return {k, state: 'off'}; if (!isWorkCell(k)) return {k, state: 'none'};
+  return {k, a, state: a && a.task === k ? 'accepted' : a ? 'changed' : 'pending'}; }
+function weekLoadedToday(){ return week.key === ymd(monday(0)); }
+// clock-in is allowed only after today's assignment is accepted (when there is one)
+const clockGate = () => { const t = todayTask(); return t.state === 'pending' || t.state === 'changed' ? 'Accept today\'s assignment above before you clock in.' : ''; };
+function renderMyAssign(){
+  const box = $('myAssign'); if (!box) return; if (!me || !selfClock()) { box.hidden = true; return; } box.hidden = false;
+  const t = todayTask(), today = todayStr(), when = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
+  const head = `<div class="ma-top"><div><span class="ma-eye">Step 1 · Today's assignment · ${esc(when)}</span>`;
+  if (t.state === 'leave') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">You're on leave today</b></div></div>`; return; }
+  if (t.state === 'off') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">Day off</b></div></div><p class="hint" style="margin:0">You have no assignment today.</p>`; return; }
+  if (t.state === 'none') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">No assignment yet</b></div></div><p class="hint" style="margin:0">Nothing is on today's schedule for you. You can still clock in; check with your Team Lead what to work on.</p>`; return; }
+  const n = parseCell(t.k).length, done = t.state === 'accepted';
+  box.className = 'panel my-assign' + (done ? ' done' : ' need');
+  box.innerHTML = head + `<div class="ma-task cellstack row">${cellPills(t.k)}</div><span class="hint">${n} task${n === 1 ? '' : 's'} today · Project: ${esc(me.project || 'Seekout')}</span></div>
+    <div class="ma-act">${done ? `<span class="pill ok">✓ Accepted at ${fmtT(t.a.at)}</span>` : `<button class="btn btn-gem" type="button" id="maAccept">Accept today's assignment</button>`}</div></div>
+    ${t.state === 'changed' ? `<p class="msg warn" style="margin:0">Your assignment changed after you accepted “${esc(cellLabel(t.a.task))}”. Please accept the new one.</p>` : done ? '<p class="hint" style="margin:0">Step 2 · You can now clock in below.</p>' : '<p class="hint" style="margin:0">Accept to confirm you\'ve seen today\'s tasks. The <b>Clock in</b> button unlocks once you accept.</p>'}`;
   const b = $('maAccept'); if (b) b.onclick = async () => { b.disabled = true; b.textContent = 'Saving…';
-    const cur = asgAcks[me.key] || {email: me.email, name: me.name, days: {}}, days = {...(cur.days || {})}; days[today] = {task: k, at: new Date().toISOString()};
+    const cur = asgAcks[me.key] || {email: me.email, name: me.name, days: {}}, days = {...(cur.days || {})}; days[today] = {task: t.k, at: new Date().toISOString()};
     const keep = {}; Object.keys(days).sort().slice(-60).forEach(x => keep[x] = days[x]);
-    try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderHome(); toast('Today\'s assignment accepted'); }
+    try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderClock(); renderHome(); toast('Today\'s assignment accepted. You can clock in now.'); }
     catch (x) { b.disabled = false; b.textContent = 'Accept today\'s assignment'; toast('That couldn\'t be saved. Try again.'); } };
 }
 /* ---------- announcements: employees acknowledge them ---------- */
@@ -2236,8 +2269,9 @@ function renderClock(){
   const block = attBlock(), days = (myAtt && myAtt.days) || {}, open = openSession(days);
   $('clkBlock').hidden = !block; $('clkBlock').textContent = block;
   const capped = !!me && todayWorked() >= todayAllow() - 1000;
-  $('clkIn').disabled = !!block || !!open; $('clkOut').disabled = !!block || !open; if (capped && !open) $('clkIn').textContent = 'Daily limit reached'; renderOtBox();
-  if (!(capped && !open)) $('clkIn').textContent = (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
+  const gate = clockGate(); renderMyAssign();
+  $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !open; if (capped && !open) $('clkIn').textContent = 'Daily limit reached'; renderOtBox();
+  if (!(capped && !open)) $('clkIn').textContent = gate && !open ? 'Accept assignment first' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
   const todayList = days[todayStr()] || [];
   st.textContent = open ? 'Clocked in since ' + fmtT(open.in) + ' · session ' + todayList.length : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
@@ -2347,7 +2381,7 @@ async function punch(kind){
   const err = $('clkErr'); err.hidden = true;
   const days = JSON.parse(JSON.stringify((myAtt && myAtt.days) || {})), k = todayStr(), now = new Date().toISOString();
   const list = days[k] || (days[k] = []);
-  if (kind === 'in') { if (openSession(days)) return; if (todayWorked() >= todayAllow() - 1000) { askOvertime(false); return; } list.push({in: now}); }
+  if (kind === 'in') { if (openSession(days)) return; const g = clockGate(); if (g) { err.textContent = g; err.hidden = false; return; } if (todayWorked() >= todayAllow() - 1000) { askOvertime(false); return; } list.push({in: now}); }
   else { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; }
   const keys = Object.keys(days).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : $('clkOut'); btn.disabled = true;
@@ -2537,7 +2571,7 @@ const fmtHr = v => Math.round(v) + 'h';
 function chartsHome(){
   // week task mix from the current schedule
   const cur = (week.key === ymd(monday(0)) ? week.rows : []).filter(r => isAdmin || (me && r.email === me.email));
-  const mix = TASKS.map(([k, label, c]) => ({label, c, v: cur.reduce((a, r) => a + (r.s || []).filter(x => x === k).length, 0)})).filter(x => x.v).sort((a, b) => b.v - a.v);
+  const mix = TASKS.map(([k, label, c]) => ({label, c, v: cur.reduce((a, r) => a + (r.s || []).filter(x => parseCell(x).includes(k)).length, 0)})).filter(x => x.v).sort((a, b) => b.v - a.v);
   mix.forEach(x => x.tip = x.label + ': ' + x.v + ' person-day' + (x.v === 1 ? '' : 's'));
   $('cTasksT').textContent = isAdmin ? "This week's assignments" : 'My tasks this week';
   hbars($('cTasks'), mix, {lw: 190, aria: 'Person-days per task this week', fmt: v => v + (v === 1 ? ' day' : ' days'), empty: 'No assignments on this week\'s schedule yet.'});
@@ -2553,7 +2587,7 @@ function chartsSchedule(){
   if (!isAdmin) return myTasksStrip();
   const days = weekDays(), list = people();
   stacked($('cDay'), days.map(d => ({label: d.toLocaleDateString(undefined, {weekday: 'short'}), hl: ymd(d) === todayStr()})), TASKS.map(([k, label, c]) => ({k, label, c})),
-    (i, k) => list.filter(p => cellOf(p.email, i) === k).length, {aria: 'People assigned to each task per day', empty: isAdmin ? 'Click cells in the grid below to assign tasks, and this chart fills in.' : 'Nothing is assigned this week yet.'});
+    (i, k) => list.filter(p => parseCell(cellOf(p.email, i)).includes(k)).length, {aria: 'People assigned to each task per day', empty: isAdmin ? 'Click cells in the grid below to assign tasks, and this chart fills in.' : 'Nothing is assigned this week yet.'});
 }
 function myTasksStrip(){
   const el = $('myTasks');
@@ -2562,9 +2596,9 @@ function myTasksStrip(){
   el.innerHTML = [[weekOff, week], [weekOff + 1, nextWeek]].map(([off, wk], w) => {
     const m = monday(off), days = [...Array(7)].map((_, i) => { const d = new Date(m); d.setDate(m.getDate() + i); return d; });
     const row = wk.rows.find(x => x.email === me.email), count = {};
-    const cards = days.map((d, i) => { const k = ymd(d); let v = row && row.s ? (row.s[i] || '') : ''; if (!SH[v]) v = ''; if (!v && onLeave(me.email, k)) v = 'lv';
-      const t = TASKS.find(x => x[0] === v); if (t) count[t[1]] = (count[t[1]] || 0) + 1;
-      const label = SH[v] ? SH[v][1] : '—', color = t ? `var(${t[2]})` : v === 'lv' ? 'var(--off)' : 'var(--line)';
+    const cards = days.map((d, i) => { const k = ymd(d); let v = normCell(row && row.s ? row.s[i] : ''); if (!v && onLeave(me.email, k)) v = 'lv';
+      const ks = parseCell(v), t = TASKS.find(x => x[0] === ks[0]); ks.forEach(q => { const tt = TASKS.find(x => x[0] === q); if (tt) count[tt[1]] = (count[tt[1]] || 0) + 1; });
+      const label = cellLabel(v), color = t ? `var(${t[2]})` : v === 'lv' ? 'var(--off)' : 'var(--line)';
       return `<div class="mt${k === todayStr() ? ' today' : ''}${v ? '' : ' none'}" style="--c:${color};animation-delay:${(w * 7 + i) * 45}ms"><span class="d">${d.toLocaleDateString(undefined, {weekday: 'short'})}<b>${d.getDate()}</b></span><span class="task">${esc(label)}</span>${k === todayStr() ? '<span class="tag">Today</span>' : ''}</div>`; }).join('');
     const parts = Object.entries(count).map(([n, c]) => `${n} ${c} day${c === 1 ? '' : 's'}`);
     const name = off === 0 ? 'This week' : off === 1 ? 'Next week' : off === -1 ? 'Last week' : 'Week of ' + fmt(m);
