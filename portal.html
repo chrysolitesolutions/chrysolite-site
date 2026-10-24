@@ -308,6 +308,9 @@ tbody tr:hover{background:var(--surface-2)}
 .cp-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.cp-h span{font:12px var(--mono);color:var(--ink-soft)}
 .cp-tasks{display:flex;flex-wrap:wrap;gap:6px}.cp-t{cursor:pointer;border:0;font:600 12.5px var(--body);padding:6px 10px;opacity:.62}.cp-t.on{opacity:1;outline:2px solid currentColor;outline-offset:1px}.cp-t:disabled{opacity:.3;cursor:not-allowed}
 .cp-row{display:flex;flex-wrap:wrap;gap:6px}.cp-row .mini.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface))}.cp-done{margin-left:auto;background:var(--gem)!important;color:#13240a;border-color:transparent!important}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))!important}@media(max-width:700px){.g4{grid-template-columns:1fr 1fr!important}}
+#cHeat,#cHeatScale{display:none!important}
+.wk-row td{background:var(--surface-2);font-size:13px}.wk-row.cur td{background:color-mix(in srgb,var(--gem) 14%,var(--surface))}.today-row td{font-weight:700}
 .clock-status.brk{background:color-mix(in srgb,var(--warn) 18%,var(--surface));color:#8a5a00}#clkToday .pend{display:block;font:600 13px var(--body);color:#a86a00;margin-top:4px}
 #otWhy{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
 .my-assign{padding:26px 28px!important;border-left-width:6px!important;gap:16px!important}
@@ -742,12 +745,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         </button>
       </div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
-      <div class="two hm-fun">
+      <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
           <p class="hint admin-only" hidden id="moodTeam" style="margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line)"></p></div>
-        <div class="panel hm-game"><div class="vhead" style="margin:0 0 6px;align-items:baseline"><h3 style="margin:0">Quick break: catch the gems</h3><span class="hint" id="gmBest"></span></div>
-          <p class="hint" style="margin:0 0 10px">Tap 8 gems as fast as you can. A 10-second smile, then back to work.</p>
-          <div class="gm-area" id="gmArea"><button type="button" class="btn btn-gem" id="gmStart">Start</button></div><p class="mood-msg" id="gmMsg"></p></div>
       </div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
@@ -852,11 +852,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         </div>
         <div style="display:grid;gap:16px;align-content:start;min-width:0">
         <div class="panel"><h3>Today's sessions</h3><div class="sess-list" id="clkSessions"></div></div>
-        <div class="panel"><h3>My week</h3><div class="tbl"><table class="att"><thead><tr><th>Day</th><th>Sessions</th><th>Hours</th></tr></thead><tbody id="myWeek"></tbody></table></div><p class="legend" id="weekTotal"></p></div>
         </div>
       </div>
       <div class="panel self-only">
-        <div class="vhead" style="align-items:center"><h3 style="margin:0">My month</h3>
+        <div class="vhead" style="align-items:center"><h3 style="margin:0">My hours</h3>
           <div class="toolbar" style="flex:0 1 auto"><input type="month" id="myMonth" aria-label="Month"><button class="mini" id="myMonthCopy" type="button">Copy as table</button></div></div>
         <div class="tiles mini-tiles">
           <div class="tile"><span>Hours worked</span><b id="mmHours">0h 00m</b></div>
@@ -866,7 +865,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         </div>
         <div class="heat" id="cHeat"></div>
         <div class="heat-scale" id="cHeatScale"></div>
-        <div class="tbl" style="margin-top:12px"><table class="att"><thead><tr><th>Date</th><th>Sessions</th><th>Session times</th><th>Hours</th></tr></thead><tbody id="myMonthBody"></tbody></table></div>
+        <div class="tbl" style="margin-top:12px"><table class="att"><thead><tr><th>Day</th><th>Sessions</th><th>Session times</th><th>Hours</th></tr></thead><tbody id="myMonthBody"></tbody></table></div>
       </div>
       <div class="panel admin-only" id="otPanel" hidden>
         <h3>Overtime requests</h3>
@@ -1077,10 +1076,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
               <div class="f"><label for="aLoc">Location</label><input id="aLoc" autocomplete="off" placeholder="e.g. Kochi, Kerala"></div>
             </div>
             <fieldset class="allow"><legend>Leave allowance per year (days)</legend>
-              <div class="g3">
+              <div class="g3 g4">
                 <div class="f"><label for="alA">Annual</label><input id="alA" type="number" min="0" max="365" value="18"></div>
                 <div class="f"><label for="alS">Sick</label><input id="alS" type="number" min="0" max="365" value="10"></div>
                 <div class="f"><label for="alP">Personal</label><input id="alP" type="number" min="0" max="365" value="3"></div>
+                <div class="f"><label for="alC">Compensation</label><input id="alC" type="number" min="0" max="365" step="0.5" value="0"><small class="hint" id="alCHint">Days given for extra full days worked</small></div>
               </div>
             </fieldset>
             <fieldset class="allow"><legend>Salary (only this employee and admins can see it)</legend>
@@ -1242,8 +1242,8 @@ let compMine = null, compAll = {};
 const compRec = a => !a ? null : (me && a.key === me.key && !isAdmin ? compMine : compAll[a.key] || (me && a.key === me.key ? compMine : null));
 const compGiven = a => ((compRec(a) || {}).grants || []).reduce((s2, g) => s2 + (+g.days || 0), 0);
 const compUsed = a => decisions.filter(d => a && d.email === a.email && d.status === 'Approved' && d.type === 'Compensation').reduce((s2, d) => s2 + (d.days || 0), 0);
-function compBal(a, pendDays){ const tot = compGiven(a); if (!tot) return ''; const u = compUsed(a), left = Math.max(0, tot - u), pd = pendDays ? pendDays('Compensation') : 0;
-  return `<div class="bal comp"><div class="top"><span><b>Compensation</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${tot ? left / tot * 100 : 0}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }
+function compBal(a, pendDays){ const tot = compGiven(a); const u = compUsed(a), left = Math.max(0, tot - u), pd = pendDays ? pendDays('Compensation') : 0;
+  return `<div class="bal comp"><div class="top"><span><b>Compensation</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${tot ? left / tot * 100 : 0}%"></i></div><div class="bal-sub"><span>${tot ? u + ' used' : 'Given by your admin when you work an extra full day'}</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }
 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
@@ -1779,8 +1779,7 @@ function gmSpawn(){ const area = $('gmArea'), r = area.getBoundingClientRect(), 
 function gmEnd(){ const t = performance.now() - gm.t0, prev = gmShowBest(), best = !prev || t < prev; if (best) { try { localStorage.setItem(gmBestKey(), Math.round(t)); } catch (e) {} }
   $('gmArea').innerHTML = `<div style="text-align:center;display:grid;gap:8px;justify-items:center"><b style="font:800 26px var(--display)">${(t / 1000).toFixed(2)} s ${best ? '🏆' : '🎉'}</b><button type="button" class="btn btn-gem" id="gmStart">Play again</button></div>`;
   $('gmMsg').textContent = best ? 'New personal best! Brilliant reflexes. 🌟' : ['Nice one! 😄', 'Quick hands! 👏', 'Great job, now back to winning the day! 💪'][Math.floor(Math.random() * 3)]; gmShowBest(); gm = null; }
-$('gmArea').addEventListener('click', e => { if (!e.target.closest('#gmStart')) return; $('gmArea').innerHTML = '<span class="gm-hud" id="gmHud">0 / 8</span>'; $('gmMsg').textContent = ''; gm = {n: 0, t0: performance.now()}; gmSpawn(); });
-function renderFun(){ showFact(); renderMood(); gmShowBest(); skyClass(); renderForecast(); renderOrb(); }
+function renderFun(){ showFact(); renderMood(); skyClass(); renderForecast(); renderOrb(); }
 
 /* ---------- today's assignment: employees accept it on Home ---------- */
 let asgAcks = {};
@@ -1968,7 +1967,7 @@ function setEdit(a){
   const al = allowOf(a);
   $('aName').value = a.name || ''; $('aEmail').value = a.email; $('aRole').value = ROLES.includes(a.role) ? a.role : 'Data Executive'; $('aStatus').value = a.status || 'Active'; $('aAccess').value = a.access === 'admin' ? 'admin' : 'contributor'; accessHint();
   $('aProject').value = 'Seekout'; $('aClock').value = a.clock === false ? '0' : '1'; $('aSkills').value = a.skills || ''; $('aLoc').value = a.location || ''; $('aPw').value = '';
-  $('alA').value = al.Annual; $('alS').value = al.Sick; $('alP').value = al.Personal;
+  $('alA').value = al.Annual; $('alS').value = al.Sick; $('alP').value = al.Personal; $('alC').value = compGiven(a); $('alCHint').textContent = compUsed(a) + ' used so far';
   { const py = payAll[a.key] || {}; $('aPayType').value = py.type || ''; $('aPayCur').value = py.currency || 'INR'; $('aPayAmt').value = py.amount ?? ''; $('aPayOt').value = py.otRate ?? ''; payAmtLabel(); }
   $('accErr').hidden = true; $('aName').focus(); window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -1995,6 +1994,8 @@ $('accForm').addEventListener('submit', async e => {
   if (payType && !(payAmt > 0)) return fail('Enter the ' + (payType === 'hourly' ? 'hourly rate' : 'monthly salary') + ', or set Pay type to "Not set".');
   err.hidden = true; btn.disabled = true; const label = btn.textContent; btn.textContent = 'Saving…';
   try {
+    { const prev = editKey ? compGiven(accounts.find(a => a.key === key)) : 0, want = Math.max(0, +$('alC').value || 0);
+      if (want !== prev) { const cur = compAll[key] || {email: key, name: p.name, grants: []}; await db.doc('compLeave/' + key).set({email: key, name: p.name, grants: [...(cur.grants || []), {days: want - prev, reason: want > prev ? 'Added in employee profile' : 'Adjusted in employee profile', at: new Date().toISOString(), by: me ? me.name : 'Admin'}].slice(-100)}); } }
     if (payType || payAll[key]) await db.doc('payroll/' + key).set({email: key, type: payType, amount: payType ? payAmt : null, otRate: payType ? payOt : null, currency: $('aPayCur').value, updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'});
     if (editKey) { await db.doc('accounts/' + key).update(p); toast('Saved changes for ' + p.name); setEdit(null); }
     else { const how = await createLogin(key, pw); await db.doc('accounts/' + key).set({...p, email: key, active: true, createdAt: new Date().toISOString()});
@@ -2520,16 +2521,21 @@ function renderClock(){
   $('clockDot').hidden = !open;
   $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() > 60000 ? ` <small class="pend">+${fmtH(extraPending())} waiting for approval</small>` : '');
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
-  let tot = 0;
-  $('myWeek').innerHTML = weekKeys().map(k => { const d = new Date(k + 'T00:00'), l = days[k] || [], ms = sessMs(l); tot += ms; const isT = k === todayStr();
-    return `<tr${isT ? ' style="font-weight:600"' : ''}><td>${d.toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})}${isT ? ' · today' : ''}</td><td class="mono">${l.length || '—'}${l.length && !l[l.length - 1].out ? ' · working' : ''}</td><td class="mono">${l.length ? fmtH(ms) : '—'}</td></tr>`; }).join('');
-  $('weekTotal').textContent = 'This week: ' + fmtH(tot);
   renderMyMonth();
 }
 function renderMyMonth(){
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value || monthKey(new Date()), keys = monthDays(days, m), st = stats(days, keys);
   $('mmHours').textContent = fmtH(st.ms); $('mmDays').textContent = st.worked; $('mmSess').textContent = st.sessions; $('mmAvg').textContent = fmtH(st.worked ? st.ms / st.worked : 0);
-  $('myMonthBody').innerHTML = keys.length ? keys.slice().reverse().map(k => { const l = days[k]; return `<tr><td>${new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})}</td><td class="mono">${l.length}</td><td class="times">${esc(timesOf(l))}</td><td class="mono">${fmtH(sessMs(l))}</td></tr>`; }).join('') : `<tr><td colspan="4" class="empty">${me ? 'No time recorded in this month.' : 'Sign in with an employee account to see your hours.'}</td></tr>`;
+  if (!me) { $('myMonthBody').innerHTML = '<tr><td colspan="4" class="empty">Sign in with an employee account to see your hours.</td></tr>'; return; }
+  const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), today = todayStr(), weeks = [];
+  for (let i = 1; i <= n; i++) { const d = new Date(Y, M - 1, i), k = ymd(d); if (k > today) break; const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const wk = ymd(mon);
+    if (!weeks.length || weeks[weeks.length - 1].wk !== wk) weeks.push({wk, mon, days: []}); weeks[weeks.length - 1].days.push(k); }
+  const fd = k => new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
+  $('myMonthBody').innerHTML = weeks.length ? weeks.slice().reverse().map(w => { const tot = w.days.reduce((a, k) => a + sessMs(days[k]), 0), cur = w.wk === ymd(monday(0));
+    return `<tr class="wk-row${cur ? ' cur' : ''}"><td colspan="3"><b>${cur ? 'This week' : 'Week of ' + new Date(w.wk + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'})}</b></td><td class="mono"><b>${fmtH(tot)}</b></td></tr>` +
+      w.days.slice().reverse().map(k => { const l = days[k] || [], isT = k === today, open = l.length && !l[l.length - 1].out;
+        return `<tr${isT ? ' class="today-row"' : ''}><td>${fd(k)}${isT ? ' · today' : ''}</td><td class="mono">${l.length ? l.length + (open ? ' · working' : '') : '—'}</td><td class="times">${l.length ? esc(timesOf(l)) : '—'}</td><td class="mono">${l.length ? fmtH(sessMs(l)) : '—'}</td></tr>`; }).join(''); }).join('')
+    : '<tr><td colspan="4" class="empty">No days in this month yet.</td></tr>';
 }
 $('myMonth').value = monthKey(new Date());
 $('myMonth').addEventListener('change', renderMyMonth);
