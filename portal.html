@@ -234,13 +234,38 @@ tbody tr:hover{background:var(--surface-2)}
 .hm-hero{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;margin-bottom:16px}@media(max-width:900px){.hm-hero{grid-template-columns:1fr}}
 .hm-greet{position:relative;overflow:hidden;border-radius:22px;padding:28px 30px;color:#eef6ea;background:linear-gradient(135deg,#12362b 0%,#1d5a45 45%,#2f7d5e 100%);display:grid;gap:12px;min-height:250px;box-shadow:0 24px 60px -30px rgba(10,40,30,.7)}
 .hm-greet.night{background:linear-gradient(135deg,#0b1430 0%,#1b2a5a 55%,#33407a 100%)}.hm-greet.eve{background:linear-gradient(135deg,#3a1f3d 0%,#7a3b4e 50%,#d07a4b 100%)}
-.hm-greet > *:not(.hm-orb){position:relative;z-index:1;max-width:min(620px,calc(100% - 250px))}@media(max-width:700px){.hm-greet > *:not(.hm-orb){max-width:100%}}
+
 .hm-eye{font:600 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.8}
 .hm-greet h1{font-size:clamp(30px,4vw,46px);font-weight:800;margin:0;line-height:1.05;color:#fff}
 .hm-weather{display:inline-flex;align-items:center;gap:10px;justify-self:start;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);font-size:14px}.hm-weather .w-ic{font-size:22px;line-height:1}
 .hm-fact{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);display:grid;gap:4px}.hm-fl{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#d7f07a}
 .hm-fact p{margin:0;font-size:15.5px;line-height:1.5;animation:up .5s both}.hm-fact .linkbtn{justify-self:start;color:#d7f07a;font-size:13px}
-.hm-orb{position:absolute;right:26px;top:50%;width:220px;height:220px;transform:translateY(-50%);pointer-events:none}.hm-orb svg{width:100%;height:100%;overflow:visible}
+.hm-scene{position:absolute;inset:0;pointer-events:none}.hm-scene svg{width:100%;height:100%;display:block}
+.hm-greet{background:var(--sky,linear-gradient(180deg,#7ed0ff,#c8ecff))!important;transition:background 2s;color:#123}
+.hm-greet.ph-dawn{--sky:linear-gradient(180deg,#ffb48a 0%,#ffd9a0 45%,#ffeec7 100%)}.hm-greet.ph-day{--sky:linear-gradient(180deg,#5ec4ff 0%,#9adcff 55%,#d6f1ff 100%)}
+.hm-greet.ph-dusk{--sky:linear-gradient(180deg,#6a5acd 0%,#ff8a7a 55%,#ffc58a 100%)}.hm-greet.ph-night{--sky:linear-gradient(180deg,#0c1844 0%,#1c2f6e 60%,#2d4a8a 100%);color:#fff}
+.hm-greet h1{color:inherit!important}.hm-greet .hm-eye{opacity:.75}
+.sc-mtn1{fill:#6fa8d8}.sc-mtn2{fill:#4f9a8f}.sc-lake{fill:#7fd3ff}.sc-h1{fill:#7fcf5a}.sc-h2{fill:#5cb84a}.sc-path{stroke:#e8c27a}.sc-trunk{fill:#8a5a34}.sc-leaves{fill:#3f9a3f;transform-origin:0 -50px;animation:scSway 5s ease-in-out infinite}.sc-flowers g{animation:scSway 3.5s ease-in-out infinite;transform-box:fill-box}
+.ph-dusk .sc-mtn1{fill:#7a6aa8}.ph-dusk .sc-mtn2{fill:#5a7a8a}.ph-dusk .sc-h1{fill:#6ab050}.ph-dusk .sc-h2{fill:#4f9a40}.ph-dusk .sc-lake{fill:#ffb79a}
+.ph-night .sc-mtn1{fill:#24356e}.ph-night .sc-mtn2{fill:#1d3a5c}.ph-night .sc-h1{fill:#1f4a3c}.ph-night .sc-h2{fill:#173d30}.ph-night .sc-lake{fill:#3b5fa0}.ph-night .sc-path{stroke:#7a7458}.ph-night .sc-leaves{fill:#1d4a32}.ph-night .sc-trunk{fill:#3c2a1c}.ph-night .sc-flowers{opacity:.4}
+.sc-stars circle{fill:#fff;opacity:0;transition:opacity 2s}.ph-night .sc-stars circle{opacity:1;animation:lsLive 2.6s ease-in-out infinite}.ph-dusk .sc-stars circle{opacity:.25}
+.sc-fly circle{fill:#fff59a;opacity:0}.ph-night .sc-fly circle{animation:scFly 4s ease-in-out infinite}
+.sc-bird{animation:scBird 26s linear infinite}.sc-bird .w{fill:none;stroke:#2c3a4a;stroke-width:2.2;stroke-linecap:round}
+.sc-bird .flap{transform-box:fill-box;transform-origin:50% 100%;animation:scFlap .5s ease-in-out infinite alternate}
+@keyframes scBird{0%{transform:translate(860px,var(--y))}25%{transform:translate(640px,calc(var(--y) - 14px))}50%{transform:translate(420px,calc(var(--y) + 6px))}75%{transform:translate(200px,calc(var(--y) - 10px))}100%{transform:translate(-40px,var(--y))}}
+@keyframes scFlap{from{transform:scaleY(1)}to{transform:scaleY(-.55)}}
+.ph-dusk .sc-bird .w{stroke:#3a2440}.ph-night .sc-birds{display:none}
+@media (prefers-reduced-motion: reduce){.sc-birds{display:none}}
+.sc-cl{fill:rgba(255,255,255,.92)}.ph-night .sc-cl{fill:rgba(170,190,240,.25)}.ph-dusk .sc-cl{fill:rgba(255,220,220,.75)}
+.sc-cl.a{animation:scDrift 60s linear infinite}.sc-cl.b{animation:scDrift 80s linear infinite -30s}.sc-cl.c{animation:scDrift 70s linear infinite -50s}
+#scSunG,#scMoonG{transition:transform 60s linear,opacity 2s}
+@keyframes scDrift{from{transform:translate(860px,60px)}to{transform:translate(-80px,60px)}}.sc-cl.b{animation-name:scDrift2}.sc-cl.c{animation-name:scDrift3}
+@keyframes scDrift2{from{transform:translate(860px,105px)}to{transform:translate(-80px,105px)}}@keyframes scDrift3{from{transform:translate(860px,35px)}to{transform:translate(-80px,35px)}}
+@keyframes scSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}@keyframes scFly{0%,100%{opacity:0;transform:translate(0,0)}40%{opacity:1}50%{transform:translate(8px,-10px)}60%{opacity:.8}}
+.hm-greet .hm-weather,.hm-greet .hm-fact{background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.9);color:#123;backdrop-filter:blur(8px)}.hm-greet .fc-l,.hm-greet .hm-fl{color:#3f7a12}.hm-greet .hm-fact .linkbtn{color:#2f6a10}
+.ph-night .hm-weather,.ph-night .hm-fact{background:rgba(10,20,50,.55);border-color:rgba(255,255,255,.18);color:#fff}.ph-night .fc-l,.ph-night .hm-fl,.ph-night .hm-fact .linkbtn{color:#d7f07a}
+.hm-greet > *:not(.hm-scene){position:relative;z-index:1;max-width:min(560px,58%)}@media(max-width:700px){.hm-greet > *:not(.hm-scene){max-width:100%}.hm-scene{opacity:.45}}
+.hm-orb{display:none;position:absolute;right:26px;top:50%;width:220px;height:220px;transform:translateY(-50%);pointer-events:none}.hm-orb svg{width:100%;height:100%;overflow:visible}
 .hm-orb .o-r1,.hm-orb .o-r2,.hm-orb .o-r3,.hm-orb .o-r4{transform-origin:110px 110px}.o-r1{animation:orbSpin 40s linear infinite}.o-r2{animation:orbSpin 14s linear infinite reverse}.o-r4{animation:orbTilt 9s ease-in-out infinite}
 .o-core{transform-origin:110px 110px;animation:orbPulse 3.4s ease-in-out infinite}#orbProg{transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px rgba(215,240,122,.7))}
 .hm-orb .o-txt{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff}.o-txt b{font:800 24px var(--display);text-shadow:0 2px 12px rgba(0,0,0,.35)}.o-txt span{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
@@ -267,7 +292,7 @@ tbody tr:hover{background:var(--surface-2)}
 .mood-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.mood-row button{display:grid;justify-items:center;gap:4px;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:600 12.5px var(--body);color:var(--ink);transition:transform .2s,border-color .2s,background .2s}
 .mood-row button i{font-style:normal;font-size:30px;line-height:1;transition:transform .3s}.mood-row button:hover i{transform:scale(1.2) rotate(-6deg)}.mood-row button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface));transform:translateY(-3px)}.mood-row button.on i{animation:moodPop .5s}
 @keyframes moodPop{40%{transform:scale(1.45) rotate(8deg)}}
-.mood-msg{margin:12px 0 0;font-size:14.5px;min-height:1.2em;animation:up .4s both}
+.mood-msg{margin:14px 0 0;font-size:19px;font-weight:600;line-height:1.45;color:var(--ink);min-height:1.2em;animation:up .4s both}
 .gm-area{position:relative;height:150px;border-radius:14px;background:repeating-linear-gradient(45deg,var(--surface-2) 0 12px,color-mix(in srgb,var(--surface-2) 70%,var(--surface)) 12px 24px);display:grid;place-items:center;overflow:hidden;border:1px solid var(--line)}
 .gm-gem{position:absolute;width:42px;height:42px;border:0;background:none;cursor:pointer;font-size:30px;line-height:1;padding:0;animation:gmIn .25s both}.gm-gem:active{transform:scale(.8)}
 @keyframes gmIn{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
@@ -678,17 +703,27 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="home">
       <div class="hm-hero">
         <div class="hm-greet">
-          <div class="hm-orb" aria-hidden="true">
-            <svg viewBox="0 0 220 220"><defs><radialGradient id="orbCore" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#f4ffd1"/><stop offset=".45" stop-color="#b6d441"/><stop offset="1" stop-color="#1baf7a" stop-opacity="0"/></radialGradient>
-              <linearGradient id="orbArc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d7f07a"/><stop offset="1" stop-color="#5fd3df"/></linearGradient></defs>
-              <g class="o-r1"><circle cx="110" cy="110" r="100" fill="none" stroke="rgba(215,240,122,.28)" stroke-width="1" stroke-dasharray="2 7"/></g>
-              <g class="o-r2"><circle cx="110" cy="110" r="88" fill="none" stroke="rgba(95,211,223,.45)" stroke-width="1.4" stroke-dasharray="60 30 8 30"/><circle cx="110" cy="22" r="3.4" fill="#5fd3df"/></g>
-              <g class="o-r3"><circle cx="110" cy="110" r="76" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/></g>
-              <circle id="orbProg" cx="110" cy="110" r="76" fill="none" stroke="url(#orbArc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="477.5" transform="rotate(-90 110 110)"/>
-              <circle class="o-core" cx="110" cy="110" r="52" fill="url(#orbCore)" opacity=".85"/>
-              <g class="o-r4"><ellipse cx="110" cy="110" rx="66" ry="20" fill="none" stroke="rgba(215,240,122,.5)" stroke-width="1"/><circle cx="176" cy="110" r="2.6" fill="#d7f07a"/></g>
+          <div class="hm-scene" aria-hidden="true">
+            <svg viewBox="0 0 800 320" preserveAspectRatio="xMaxYMax slice">
+              <defs><radialGradient id="scSun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fffbe0"/><stop offset=".5" stop-color="#ffe066"/><stop offset="1" stop-color="#ffc533"/></radialGradient>
+                <radialGradient id="scGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(255,236,150,.55)"/><stop offset="1" stop-color="rgba(255,236,150,0)"/></radialGradient>
+                <radialGradient id="scMoonGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(220,235,255,.5)"/><stop offset="1" stop-color="rgba(220,235,255,0)"/></radialGradient></defs>
+              <g class="sc-stars"><circle cx="251" cy="85" r="0.8" style="animation-delay:2.16s"/><circle cx="500" cy="47" r="0.8" style="animation-delay:0.20s"/><circle cx="421" cy="148" r="1.3" style="animation-delay:2.40s"/><circle cx="70" cy="64" r="1.3" style="animation-delay:0.83s"/><circle cx="186" cy="35" r="1.3" style="animation-delay:0.64s"/><circle cx="36" cy="74" r="1.3" style="animation-delay:0.58s"/><circle cx="327" cy="82" r="1.3" style="animation-delay:0.26s"/><circle cx="630" cy="94" r="1.7" style="animation-delay:1.52s"/><circle cx="192" cy="71" r="1.7" style="animation-delay:0.84s"/><circle cx="570" cy="84" r="0.8" style="animation-delay:2.73s"/><circle cx="596" cy="87" r="1" style="animation-delay:1.24s"/><circle cx="623" cy="81" r="1.7" style="animation-delay:1.35s"/><circle cx="248" cy="86" r="1.3" style="animation-delay:2.44s"/><circle cx="54" cy="28" r="0.8" style="animation-delay:1.39s"/><circle cx="297" cy="140" r="1.7" style="animation-delay:2.10s"/><circle cx="158" cy="58" r="0.8" style="animation-delay:1.24s"/><circle cx="217" cy="170" r="1.7" style="animation-delay:0.83s"/><circle cx="374" cy="119" r="1.3" style="animation-delay:1.90s"/><circle cx="213" cy="90" r="0.8" style="animation-delay:2.52s"/><circle cx="735" cy="66" r="1.3" style="animation-delay:2.30s"/><circle cx="640" cy="68" r="0.8" style="animation-delay:0.99s"/><circle cx="191" cy="82" r="1.7" style="animation-delay:0.08s"/><circle cx="375" cy="29" r="1.3" style="animation-delay:2.20s"/><circle cx="344" cy="12" r="1.3" style="animation-delay:0.87s"/><circle cx="166" cy="113" r="0.8" style="animation-delay:0.88s"/><circle cx="206" cy="121" r="1.3" style="animation-delay:0.41s"/><circle cx="400" cy="161" r="1" style="animation-delay:0.99s"/><circle cx="19" cy="101" r="0.8" style="animation-delay:1.36s"/><circle cx="383" cy="100" r="1.3" style="animation-delay:1.71s"/><circle cx="459" cy="61" r="1.7" style="animation-delay:2.75s"/><circle cx="126" cy="23" r="0.8" style="animation-delay:0.17s"/><circle cx="182" cy="160" r="1" style="animation-delay:1.82s"/><circle cx="569" cy="133" r="1" style="animation-delay:0.96s"/><circle cx="46" cy="39" r="1.3" style="animation-delay:2.32s"/><circle cx="429" cy="59" r="1.7" style="animation-delay:0.61s"/><circle cx="459" cy="113" r="1.7" style="animation-delay:0.11s"/><circle cx="441" cy="121" r="1" style="animation-delay:1.94s"/><circle cx="448" cy="63" r="1.7" style="animation-delay:0.56s"/><circle cx="47" cy="73" r="1.3" style="animation-delay:0.73s"/><circle cx="223" cy="67" r="1.7" style="animation-delay:2.61s"/><circle cx="155" cy="91" r="0.8" style="animation-delay:2.67s"/><circle cx="332" cy="152" r="0.8" style="animation-delay:2.97s"/><circle cx="422" cy="18" r="1.7" style="animation-delay:1.16s"/><circle cx="450" cy="61" r="1" style="animation-delay:1.01s"/><circle cx="682" cy="128" r="1.3" style="animation-delay:2.44s"/><circle cx="550" cy="63" r="1.3" style="animation-delay:1.02s"/><circle cx="411" cy="135" r="0.8" style="animation-delay:2.58s"/><circle cx="296" cy="168" r="1" style="animation-delay:0.13s"/><circle cx="644" cy="40" r="1.3" style="animation-delay:2.00s"/><circle cx="71" cy="50" r="1.7" style="animation-delay:1.71s"/><circle cx="774" cy="111" r="1.7" style="animation-delay:0.66s"/><circle cx="13" cy="62" r="1" style="animation-delay:0.04s"/><circle cx="273" cy="37" r="1.7" style="animation-delay:2.43s"/><circle cx="400" cy="64" r="0.8" style="animation-delay:2.64s"/><circle cx="216" cy="49" r="1.3" style="animation-delay:2.46s"/><circle cx="585" cy="128" r="1.7" style="animation-delay:0.08s"/><circle cx="45" cy="160" r="0.8" style="animation-delay:1.47s"/><circle cx="273" cy="163" r="1" style="animation-delay:0.12s"/><circle cx="91" cy="141" r="0.8" style="animation-delay:0.89s"/><circle cx="365" cy="27" r="0.8" style="animation-delay:2.88s"/><circle cx="474" cy="105" r="1" style="animation-delay:2.36s"/><circle cx="328" cy="107" r="1" style="animation-delay:2.28s"/><circle cx="419" cy="32" r="0.8" style="animation-delay:0.34s"/><circle cx="645" cy="101" r="1.7" style="animation-delay:1.25s"/><circle cx="738" cy="121" r="0.8" style="animation-delay:1.89s"/><circle cx="210" cy="85" r="1.7" style="animation-delay:1.27s"/><circle cx="581" cy="50" r="1.3" style="animation-delay:2.62s"/><circle cx="190" cy="46" r="1.3" style="animation-delay:1.48s"/><circle cx="356" cy="74" r="0.8" style="animation-delay:2.13s"/><circle cx="15" cy="87" r="0.8" style="animation-delay:1.63s"/></g>
+              <g id="scSunG"><circle r="70" fill="url(#scGlow)"/><circle r="30" fill="url(#scSun)"/></g>
+              <g id="scMoonG"><circle r="60" fill="url(#scMoonGlow)"/><circle r="24" fill="#eef3ff"/><circle cx="-7" cy="-5" r="5" fill="#d6deef"/><circle cx="8" cy="6" r="3.5" fill="#d6deef"/><circle cx="4" cy="-11" r="2.5" fill="#d6deef"/></g>
+              <g class="sc-clouds"><g class="sc-cl a"><ellipse cx="0" cy="0" rx="46" ry="14"/><ellipse cx="-14" cy="-10" rx="22" ry="16"/><ellipse cx="12" cy="-12" rx="20" ry="15"/></g>
+                <g class="sc-cl b"><ellipse cx="0" cy="0" rx="36" ry="11"/><ellipse cx="-10" cy="-8" rx="17" ry="12"/><ellipse cx="9" cy="-9" rx="15" ry="11"/></g>
+                <g class="sc-cl c"><ellipse cx="0" cy="0" rx="40" ry="12"/><ellipse cx="-12" cy="-9" rx="19" ry="13"/><ellipse cx="10" cy="-10" rx="17" ry="12"/></g></g>
+              <g class="sc-birds"><g class="sc-bird" style="--y:70px;animation-duration:26s;animation-delay:0s"><g transform="scale(1)"><g class="flap" style="animation-delay:0.00s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:92px;animation-duration:26s;animation-delay:-0.4s"><g transform="scale(0.8)"><g class="flap" style="animation-delay:-0.13s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:60px;animation-duration:26s;animation-delay:-0.9s"><g transform="scale(0.7)"><g class="flap" style="animation-delay:-0.26s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:110px;animation-duration:34s;animation-delay:-12s"><g transform="scale(1.1)"><g class="flap" style="animation-delay:-0.39s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:125px;animation-duration:34s;animation-delay:-12.5s"><g transform="scale(0.85)"><g class="flap" style="animation-delay:-0.52s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:50px;animation-duration:40s;animation-delay:-22s"><g transform="scale(0.6)"><g class="flap" style="animation-delay:-0.65s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g><g class="sc-bird" style="--y:85px;animation-duration:30s;animation-delay:-6s"><g transform="scale(0.9)"><g class="flap" style="animation-delay:-0.78s"><path d="M-9 0 Q-4.5 -5 0 0 Q4.5 -5 9 0" class="w"/></g></g></g></g><path class="sc-mtn1" d="M0 210 L90 150 L160 190 L260 110 L360 180 L450 130 L560 195 L660 120 L800 185 L800 320 L0 320Z"/>
+              <path class="sc-mtn2" d="M0 230 L120 185 L220 215 L330 170 L440 210 L560 175 L700 215 L800 190 L800 320 L0 320Z"/>
+              <path class="sc-lake" d="M300 250 Q480 232 700 248 Q620 262 480 264 Q360 264 300 250Z"/>
+              <path class="sc-h1" d="M0 252 Q150 222 320 246 Q480 270 640 240 Q730 226 800 238 L800 320 L0 320Z"/>
+              <path class="sc-h2" d="M0 282 Q200 252 420 276 Q620 298 800 268 L800 320 L0 320Z"/>
+              <path class="sc-path" d="M560 320 Q600 300 560 288 Q520 278 590 266 Q640 258 610 252" fill="none" stroke-width="14" stroke-linecap="round"/>
+              <g class="sc-tree" transform="translate(735 270)"><rect x="-5" y="-48" width="10" height="50" rx="3" class="sc-trunk"/><g class="sc-leaves"><circle cx="0" cy="-70" r="30"/><circle cx="-24" cy="-54" r="20"/><circle cx="24" cy="-56" r="21"/><circle cx="0" cy="-90" r="19"/></g></g>
+              <g class="sc-flowers"><g transform="translate(380 292)"><circle r="4" fill="#fff"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(430 300)"><circle r="4" fill="#ffd84d"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(470 288)"><circle r="4" fill="#fff"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(520 304)"><circle r="4" fill="#ff9fc4"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(660 296)"><circle r="4" fill="#fff"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(690 306)"><circle r="4" fill="#ffd84d"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(760 300)"><circle r="4" fill="#ff9fc4"/><circle r="1.6" fill="#ffcf3f"/></g><g transform="translate(340 304)"><circle r="4" fill="#ffd84d"/><circle r="1.6" fill="#ffcf3f"/></g></g>
+              <g class="sc-fly"><circle cx="549" cy="301" r="2" style="animation-delay:2.11s"/><circle cx="566" cy="271" r="2" style="animation-delay:1.64s"/><circle cx="450" cy="285" r="2" style="animation-delay:0.92s"/><circle cx="392" cy="240" r="2" style="animation-delay:2.71s"/><circle cx="612" cy="280" r="2" style="animation-delay:2.18s"/><circle cx="765" cy="299" r="2" style="animation-delay:3.13s"/><circle cx="590" cy="279" r="2" style="animation-delay:3.75s"/><circle cx="559" cy="296" r="2" style="animation-delay:2.45s"/><circle cx="526" cy="290" r="2" style="animation-delay:0.56s"/><circle cx="694" cy="286" r="2" style="animation-delay:3.94s"/><circle cx="474" cy="257" r="2" style="animation-delay:1.73s"/><circle cx="610" cy="258" r="2" style="animation-delay:2.70s"/><circle cx="618" cy="262" r="2" style="animation-delay:1.14s"/><circle cx="781" cy="287" r="2" style="animation-delay:0.79s"/></g>
             </svg>
-            <div class="o-txt"><b id="orbVal">0h 00m</b><span id="orbSub">of your 8h day</span></div>
           </div>
           <span class="hm-eye" id="today"></span>
           <h1 id="hello">Good day</h1>
@@ -703,11 +738,6 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         </button>
       </div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
-      <div class="tiles hours-tiles hm-hours">
-        <div class="tile"><span id="hTodayL">My hours today</span><b id="hToday">0h 00m</b></div>
-        <div class="tile"><span id="hWeekL">My hours this week</span><b id="hWeek">0h 00m</b></div>
-        <div class="tile"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
-      </div>
       <div class="two hm-fun">
         <div class="panel hm-mood"><h3>How are you feeling today?</h3><p class="hint" style="margin:-4px 0 12px">Tap one. Only you and your admin can see it.</p>
           <div class="mood-row" id="moodRow"></div><p class="mood-msg" id="moodMsg"></p><p class="hint admin-only" hidden id="moodTeam" style="margin:8px 0 0"></p></div>
@@ -717,7 +747,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       </div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
-        <div class="panel"><h3>Today's team assignments</h3><p class="hint h-date" id="teamDayT"></p><div class="tbl"><table><tbody id="todayList"></tbody></table></div></div>
+        <div class="panel"><h3>Today's team assignments</h3><p class="hint h-date" id="teamDayT"></p><div class="tbl"><table><thead><tr><th>Employee</th><th>Project</th><th>Today's tasks</th><th>Status</th></tr></thead><tbody id="todayList"></tbody></table></div></div>
         <div class="panel"><h3 id="cTasksT">My tasks this week</h3><p class="hint h-date" id="cTasksD"></p><div class="chart" id="cTasks"></div></div>
       </div>
       <div class="tiles admin-only" hidden>
@@ -792,6 +822,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="clock" hidden>
       <div class="vhead"><div><h1>My Workday</h1><p>Accept today's assignment, then clock in. Clock in and out as many times as you need each day. Every login–logout pair is saved as a session, and the sessions add up to your daily, weekly and monthly hours.</p></div></div>
       <div class="panel my-assign self-only" id="myAssign"></div>
+      <div class="tiles hours-tiles hm-hours">
+        <div class="tile"><span id="hTodayL">My hours today</span><b id="hToday">0h 00m</b></div>
+        <div class="tile"><span id="hWeekL">My hours this week</span><b id="hWeek">0h 00m</b></div>
+        <div class="tile"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
+      </div>
       <div class="two self-only">
         <div class="panel clock-card">
           <div class="clock-now"><b id="clkTime">--:--</b><span id="clkDate"></span></div>
@@ -1663,7 +1698,14 @@ function renderForecast(){ const el = $('hmWeatherT'); if (!el) return; const r 
 function renderOrb(){ const v = $('orbVal'); if (!v) return; const l = ((myAtt && myAtt.days) || {})[todayStr()] || [], ms = sessMs(l), pct = Math.min(1, ms / DAY_MAX), open = l.length && !l[l.length - 1].out;
   v.textContent = fmtH(ms); $('orbSub').textContent = ms >= DAY_MAX ? 'day complete ✓' : open ? 'of 8h · in progress' : l.length ? 'of 8h · on break' : 'of your 8h day';
   $('orbProg').style.strokeDashoffset = 477.5 * (1 - pct); }
-function skyClass(){ const g = document.querySelector('.hm-greet'); if (!g) return; const h = new Date().getHours(); g.classList.toggle('night', h < 6 || h >= 19); g.classList.toggle('eve', h >= 17 && h < 19); }
+// sun travels an arc from 6:00 to 18:00, the moon from 18:00 to 6:00; the sky changes colour with them
+function skyClass(){ const g = document.querySelector('.hm-greet'); if (!g) return; const d = new Date(), h = d.getHours() + d.getMinutes() / 60;
+  const ph = h >= 5 && h < 7 ? 'dawn' : h >= 7 && h < 17 ? 'day' : h >= 17 && h < 19 ? 'dusk' : 'night'; ['dawn', 'day', 'dusk', 'night'].forEach(x => g.classList.toggle('ph-' + x, x === ph)); g.classList.remove('night', 'eve');
+  const arc = t => [430 + 340 * t, 180 - 135 * Math.sin(Math.PI * t)], ts = (h - 6) / 12, tm = ((h - 18 + 24) % 24) / 12;
+  const sun = $('scSunG'), moon = $('scMoonG'); if (!sun) return;
+  const sv = ts > -.05 && ts < 1.05, mv = tm > -.05 && tm < 1.05, [sx, sy] = arc(Math.min(1, Math.max(0, ts))), [mx2, my2] = arc(Math.min(1, Math.max(0, tm)));
+  sun.setAttribute('transform', `translate(${sx} ${sy})`); sun.style.opacity = sv ? 1 : 0; moon.setAttribute('transform', `translate(${mx2} ${my2})`); moon.style.opacity = mv && !sv ? 1 : mv ? .3 : 0; }
+setInterval(skyClass, 60000);
 const MOODS = [['great', '🤩', 'Great'], ['good', '😊', 'Good'], ['okay', '😐', 'Okay'], ['tired', '😴', 'Tired'], ['low', '😟', 'Low']];
 const MOOD_MSG = {great: 'Love that energy! Go make today amazing. 🚀', good: 'Nice! Have a smooth and productive day. 🌿', okay: 'Thanks for sharing. One task at a time, you\'ve got this. 💪', tired: 'Take a short stretch and some water. Small breaks help. 💧', low: 'Sorry you\'re feeling low. Be kind to yourself today, and reach out to your Team Lead if you need anything. 💚'};
 let moodMine = null, moodAll = {};
