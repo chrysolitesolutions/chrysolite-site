@@ -230,8 +230,50 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc .callout{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-left:4px solid var(--gem)}
 .gd-doc .tblw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}.gd-doc table{width:100%;border-collapse:collapse;font-size:14px}.gd-doc th{text-align:left;font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);padding:9px 12px}.gd-doc td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
 .gd-doc td,.gd-doc th{white-space:normal!important;vertical-align:top;overflow-wrap:anywhere}.gd-doc td:first-child{min-width:110px}
+/* ---- home v3 ---- */
+.hm-hero{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;margin-bottom:16px}@media(max-width:900px){.hm-hero{grid-template-columns:1fr}}
+.hm-greet{position:relative;overflow:hidden;border-radius:22px;padding:28px 30px;color:#eef6ea;background:linear-gradient(135deg,#12362b 0%,#1d5a45 45%,#2f7d5e 100%);display:grid;gap:12px;min-height:250px;box-shadow:0 24px 60px -30px rgba(10,40,30,.7)}
+.hm-greet.night{background:linear-gradient(135deg,#0b1430 0%,#1b2a5a 55%,#33407a 100%)}.hm-greet.eve{background:linear-gradient(135deg,#3a1f3d 0%,#7a3b4e 50%,#d07a4b 100%)}
+.hm-greet > *:not(.hm-orb){position:relative;z-index:1;max-width:min(620px,calc(100% - 250px))}@media(max-width:700px){.hm-greet > *:not(.hm-orb){max-width:100%}}
+.hm-eye{font:600 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.hm-greet h1{font-size:clamp(30px,4vw,46px);font-weight:800;margin:0;line-height:1.05;color:#fff}
+.hm-weather{display:inline-flex;align-items:center;gap:10px;justify-self:start;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);font-size:14px}.hm-weather .w-ic{font-size:22px;line-height:1}
+.hm-fact{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);display:grid;gap:4px}.hm-fl{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#d7f07a}
+.hm-fact p{margin:0;font-size:15.5px;line-height:1.5;animation:up .5s both}.hm-fact .linkbtn{justify-self:start;color:#d7f07a;font-size:13px}
+.hm-orb{position:absolute;right:26px;top:50%;width:220px;height:220px;transform:translateY(-50%);pointer-events:none}.hm-orb svg{width:100%;height:100%;overflow:visible}
+.hm-orb .o-r1,.hm-orb .o-r2,.hm-orb .o-r3,.hm-orb .o-r4{transform-origin:110px 110px}.o-r1{animation:orbSpin 40s linear infinite}.o-r2{animation:orbSpin 14s linear infinite reverse}.o-r4{animation:orbTilt 9s ease-in-out infinite}
+.o-core{transform-origin:110px 110px;animation:orbPulse 3.4s ease-in-out infinite}#orbProg{transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px rgba(215,240,122,.7))}
+.hm-orb .o-txt{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff}.o-txt b{font:800 24px var(--display);text-shadow:0 2px 12px rgba(0,0,0,.35)}.o-txt span{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+@keyframes orbSpin{to{transform:rotate(360deg)}}@keyframes orbTilt{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(22deg)}}@keyframes orbPulse{50%{transform:scale(1.07);opacity:1}}
+.hm-greet.night .o-core{opacity:.6}
+.fc-l{display:block;font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#d7f07a}
+@media(max-width:700px){.hm-orb{width:120px;height:120px;right:10px;top:16px;transform:none;opacity:.55}.hm-orb .o-txt{display:none}}
+.hm-sky{display:none}
+.hm-sky .sun{position:absolute;right:46px;top:34px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,#fff6c4 0%,#ffd75e 55%,#ffb13b 100%);box-shadow:0 0 0 14px rgba(255,214,94,.16),0 0 0 30px rgba(255,214,94,.08),0 0 60px rgba(255,200,80,.6);animation:hmPulse 5s ease-in-out infinite}
+.hm-sky .moon{display:none;position:absolute;right:56px;top:36px;width:70px;height:70px;border-radius:50%;box-shadow:-16px 8px 0 0 #f3f0d6;filter:drop-shadow(0 0 18px rgba(243,240,214,.5));animation:hmPulse 6s ease-in-out infinite}
+.hm-greet.night .sun{display:none}.hm-greet.night .moon{display:block}
+.hm-sky .cl{position:absolute;width:120px;height:36px;border-radius:40px;background:rgba(255,255,255,.85);filter:blur(.3px);opacity:.85;animation:hmCloud 26s linear infinite}
+.hm-sky .cl::before,.hm-sky .cl::after{content:"";position:absolute;background:inherit;border-radius:50%}.hm-sky .cl::before{width:56px;height:56px;left:16px;top:-26px}.hm-sky .cl::after{width:42px;height:42px;left:58px;top:-18px}
+.hm-sky .c1{top:118px;right:-140px;transform:scale(.9)}.hm-sky .c2{top:60px;right:-140px;transform:scale(.6);animation-duration:34s;animation-delay:-12s;opacity:.6}.hm-sky .c3{top:170px;right:-140px;transform:scale(.75);animation-duration:30s;animation-delay:-20s;opacity:.7}
+.hm-greet.clear .cl{display:none}.hm-greet.night .cl{background:rgba(200,210,240,.35)}
+.hm-sky .rain{display:none;position:absolute;inset:80px 20px 0 0;background:repeating-linear-gradient(105deg,transparent 0 14px,rgba(200,230,255,.45) 14px 15px);background-size:40px 40px;animation:hmRain .6s linear infinite;mask-image:linear-gradient(transparent,#000 20%,#000 70%,transparent)}.hm-greet.rainy .rain{display:block}
+.hm-sky .st{display:none;position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:lsLive 2.2s ease-in-out infinite}.hm-greet.night .st{display:block}.hm-sky .s1{right:30px;top:140px}.hm-sky .s2{right:170px;top:40px;animation-delay:-.7s}.hm-sky .s3{right:120px;top:190px;animation-delay:-1.4s}.hm-sky .s4{right:220px;top:120px;animation-delay:-.3s}
+@keyframes hmPulse{50%{transform:scale(1.06)}}
+@media(max-width:700px){.hm-sky{opacity:.32}.hm-sky .sun{width:56px;height:56px;right:18px;top:18px}.hm-sky .moon{width:48px;height:48px;right:24px;top:20px}.hm-greet{padding:22px 20px}}@keyframes hmCloud{0%{transform:translateX(0);opacity:0}12%{opacity:.85}80%{opacity:.7}100%{transform:translateX(-380px);opacity:0}}@keyframes hmRain{to{background-position:-20px 40px}}
+.hm-status{display:grid;align-content:space-between;gap:10px;text-align:left;padding:22px;border-radius:22px;border:1px solid var(--line);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 14%,var(--surface)),var(--surface));cursor:pointer;font:inherit;color:var(--ink);transition:transform .2s,box-shadow .2s}.hm-status:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px rgba(0,0,0,.35)}
+.hm-sl{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}.hm-status > b{font:800 26px var(--display);line-height:1.15}.hm-st-tasks{display:flex;flex-wrap:wrap;gap:6px}.hm-st-tasks .shift{font-size:12.5px}.hm-go{font-weight:700;color:var(--gem-ink)}
+.hm-hours{grid-template-columns:repeat(3,minmax(0,1fr))!important}@media(max-width:640px){.hm-hours{grid-template-columns:1fr!important}}
+.hm-fun{margin-bottom:16px}
+.mood-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.mood-row button{display:grid;justify-items:center;gap:4px;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:600 12.5px var(--body);color:var(--ink);transition:transform .2s,border-color .2s,background .2s}
+.mood-row button i{font-style:normal;font-size:30px;line-height:1;transition:transform .3s}.mood-row button:hover i{transform:scale(1.2) rotate(-6deg)}.mood-row button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface));transform:translateY(-3px)}.mood-row button.on i{animation:moodPop .5s}
+@keyframes moodPop{40%{transform:scale(1.45) rotate(8deg)}}
+.mood-msg{margin:12px 0 0;font-size:14.5px;min-height:1.2em;animation:up .4s both}
+.gm-area{position:relative;height:150px;border-radius:14px;background:repeating-linear-gradient(45deg,var(--surface-2) 0 12px,color-mix(in srgb,var(--surface-2) 70%,var(--surface)) 12px 24px);display:grid;place-items:center;overflow:hidden;border:1px solid var(--line)}
+.gm-gem{position:absolute;width:42px;height:42px;border:0;background:none;cursor:pointer;font-size:30px;line-height:1;padding:0;animation:gmIn .25s both}.gm-gem:active{transform:scale(.8)}
+@keyframes gmIn{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
+.gm-hud{position:absolute;left:10px;top:8px;font:600 12px var(--mono);color:var(--ink-soft)}
 .h-date{margin:-6px 0 12px;font:500 12.5px var(--mono);letter-spacing:.02em}
-#todayList td{white-space:normal}
+#todayList td{white-space:normal}#todayList .pill{white-space:normal;line-height:1.3}.st-cell{display:grid;gap:4px;justify-items:start;min-width:120px}.live-pill::before{animation:lsLive 1.6s ease-in-out infinite}
 .cellstack{display:grid;gap:3px;justify-items:start}.cellstack.row{display:flex;flex-wrap:wrap;gap:6px}.cellstack .shift{font-size:11.5px;padding:3px 8px;white-space:nowrap}
 .cellbtn.cellstack{background:none;border:1px dashed transparent;border-radius:8px;padding:3px;cursor:pointer;width:100%;font:inherit}.cellbtn.cellstack:hover{border-color:var(--line)}
 .cellpick{position:absolute;z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px -20px rgba(0,0,0,.45);padding:14px;display:grid;gap:10px}
@@ -634,13 +676,44 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- HOME -->
     <section class="view" data-view="home">
-      <div class="vhead"><div><h1 id="hello">Good day</h1><p id="today"></p></div></div>
+      <div class="hm-hero">
+        <div class="hm-greet">
+          <div class="hm-orb" aria-hidden="true">
+            <svg viewBox="0 0 220 220"><defs><radialGradient id="orbCore" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#f4ffd1"/><stop offset=".45" stop-color="#b6d441"/><stop offset="1" stop-color="#1baf7a" stop-opacity="0"/></radialGradient>
+              <linearGradient id="orbArc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d7f07a"/><stop offset="1" stop-color="#5fd3df"/></linearGradient></defs>
+              <g class="o-r1"><circle cx="110" cy="110" r="100" fill="none" stroke="rgba(215,240,122,.28)" stroke-width="1" stroke-dasharray="2 7"/></g>
+              <g class="o-r2"><circle cx="110" cy="110" r="88" fill="none" stroke="rgba(95,211,223,.45)" stroke-width="1.4" stroke-dasharray="60 30 8 30"/><circle cx="110" cy="22" r="3.4" fill="#5fd3df"/></g>
+              <g class="o-r3"><circle cx="110" cy="110" r="76" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/></g>
+              <circle id="orbProg" cx="110" cy="110" r="76" fill="none" stroke="url(#orbArc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="477.5" transform="rotate(-90 110 110)"/>
+              <circle class="o-core" cx="110" cy="110" r="52" fill="url(#orbCore)" opacity=".85"/>
+              <g class="o-r4"><ellipse cx="110" cy="110" rx="66" ry="20" fill="none" stroke="rgba(215,240,122,.5)" stroke-width="1"/><circle cx="176" cy="110" r="2.6" fill="#d7f07a"/></g>
+            </svg>
+            <div class="o-txt"><b id="orbVal">0h 00m</b><span id="orbSub">of your 8h day</span></div>
+          </div>
+          <span class="hm-eye" id="today"></span>
+          <h1 id="hello">Good day</h1>
+          <div class="hm-weather" id="hmWeather"><span class="w-ic" id="hmFcIc">✨</span><span><span class="fc-l">Today's work forecast</span><span id="hmWeatherT"></span></span></div>
+          <div class="hm-fact"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button></div>
+        </div>
+        <button class="hm-status" type="button" data-go="clock">
+          <span class="hm-sl" id="hStatusL">My Workday</span>
+          <b id="hStatus">Not clocked in</b>
+          <span class="hm-st-tasks" id="hmTasks"></span>
+          <span class="hm-go">Open My Workday →</span>
+        </button>
+      </div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
-      <div class="tiles hours-tiles">
-        <div class="tile hl"><span id="hTodayL">My hours today</span><b id="hToday">0h 00m</b></div>
-        <div class="tile hl"><span id="hWeekL">My hours this week</span><b id="hWeek">0h 00m</b></div>
-        <div class="tile hl"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
-        <button class="tile hl tile-btn" data-go="clock"><span id="hStatusL">My Workday</span><b id="hStatus" style="font-size:20px">Not clocked in</b><small>Open My Workday →</small></button>
+      <div class="tiles hours-tiles hm-hours">
+        <div class="tile"><span id="hTodayL">My hours today</span><b id="hToday">0h 00m</b></div>
+        <div class="tile"><span id="hWeekL">My hours this week</span><b id="hWeek">0h 00m</b></div>
+        <div class="tile"><span id="hMonthL">My hours this month</span><b id="hMonth">0h 00m</b><small id="hMonthSub"></small></div>
+      </div>
+      <div class="two hm-fun">
+        <div class="panel hm-mood"><h3>How are you feeling today?</h3><p class="hint" style="margin:-4px 0 12px">Tap one. Only you and your admin can see it.</p>
+          <div class="mood-row" id="moodRow"></div><p class="mood-msg" id="moodMsg"></p><p class="hint admin-only" hidden id="moodTeam" style="margin:8px 0 0"></p></div>
+        <div class="panel hm-game"><div class="vhead" style="margin:0 0 6px;align-items:baseline"><h3 style="margin:0">Quick break: catch the gems</h3><span class="hint" id="gmBest"></span></div>
+          <p class="hint" style="margin:0 0 10px">Tap 8 gems as fast as you can. A 10-second smile, then back to work.</p>
+          <div class="gm-area" id="gmArea"><button type="button" class="btn btn-gem" id="gmStart">Start</button></div><p class="mood-msg" id="gmMsg"></p></div>
       </div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
@@ -1126,7 +1199,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1193,6 +1266,7 @@ function startData() {
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
   watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); renderClock(); });
+  watch('presence', db.collection('presence'), s => { presence = {}; s.docs.forEach(d => presence[d.id] = d.data()); renderHome(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -1207,6 +1281,7 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
@@ -1219,6 +1294,7 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
 
 function startAdminData() {
+  watch('moodAll', db.collection('mood'), s => { moodAll = {}; s.docs.forEach(d => moodAll[d.id] = d.data()); renderMood(); });
   watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
   watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
@@ -1547,14 +1623,72 @@ function renderHome(){
   const pend = isAdmin ? pendingAll().length : myLeave().filter(d => d.to >= today).reduce((a, d) => a + (d.days || 0), 0);
   $('tPendLabel').textContent = isAdmin ? 'Leave requests to review' : 'My upcoming leave days';
   count($('tPend'), pend);
-  $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><div class="cellstack">${cellPills(k)}</div></td><td>${asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not yet</span>'}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
+  $('todayList').innerHTML = onShift.length ? onShift.slice(0,12).map(([p,k]) => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td><td style="color:var(--ink-soft)">${esc(p.project||'')}</td><td><div class="cellstack">${cellPills(k)}</div></td><td class="st-cell">${workPill(p)}${isAdmin ? (asgAccepted(p.email, k) ? '<span class="pill ok">✓ Accepted</span>' : '<span class="pill off">Not accepted</span>') : ''}</td></tr>`).join('') : `<tr><td class="empty">No assignments for today.${isAdmin ? ' Assign them on the Schedule page.' : ''}</td></tr>`;
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
   $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(a => annRow(a, annAckBtn(a))).join('') : '<p class="empty">No announcements yet.</p>';
   $('teamDayT').textContent = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+  { const live = week.key === ymd(monday(0)), k = me && live ? cellOf(me.email, di) : ''; $('hmTasks').innerHTML = me ? (isWorkCell(k) ? cellPills(k) : `<span class="hint">${k === 'off' ? 'Day off today' : k === 'lv' || (me && onLeave(me.email, today)) ? 'On leave today' : 'No tasks on today\'s schedule'}</span>`) : ''; }
+  try { renderFun(); } catch (e) { console.error(e); }
   const m0 = monday(0), m6 = new Date(m0); m6.setDate(m6.getDate() + 6), sameM = m0.getMonth() === m6.getMonth();
   const mo = d => d.toLocaleDateString(undefined, {month: 'short'});
   $('cTasksD').textContent = 'Mon ' + m0.getDate() + (sameM ? '' : ' ' + mo(m0)) + ' – Sun ' + m6.getDate() + ' ' + mo(m6) + ' ' + m6.getFullYear();
 }
+/* ---------- who has started today: a small presence record per employee (no times beyond the first login) ---------- */
+let presence = {}, presLast = '';
+// admins see the first login time; employees only see whether a colleague has started, is working or is on a break
+function workState(p){ const today = todayStr(), fromList = l => !l.length ? {s: 'none'} : {s: !l[l.length - 1].out ? 'on' : 'out', first: l[0].in};
+  if (isAdmin) { const r = teamAtt.find(a => a.email === p.email); return fromList((r && r.days && r.days[today]) || []); }
+  if (me && p.key === me.key) return fromList(((myAtt && myAtt.days) || {})[today] || []);
+  const pr = presence[String(p.email).toLowerCase()]; if (!pr || pr.day !== today || !pr.started) return {s: 'none'}; return {s: pr.working ? 'on' : 'out'}; }
+function workPill(p){ if (p.clock === false) return '<span class="pill off">No time clock</span>'; const w = workState(p), t = isAdmin && w.first ? ' · since ' + fmtT(w.first) : '';
+  return w.s === 'on' ? `<span class="pill ok live-pill">Working${t}</span>` : w.s === 'out' ? `<span class="pill warn">On break${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : '<span class="pill off">Not logged in yet</span>'; }
+// the shared record holds no times: only today's date, started yes/no and working yes/no
+function syncPresence(){ if (!me || !db || !selfClock()) return; const today = todayStr(), l = ((myAtt && myAtt.days) || {})[today] || [], rec = {email: me.email, name: me.name, day: today, started: l.length > 0, working: !!(l.length && !l[l.length - 1].out)};
+  const sig = JSON.stringify(rec); if (sig === presLast) return; presLast = sig; db.doc('presence/' + me.key).set(rec).catch(() => { presLast = ''; }); }
+
+/* ---------- home: weather, fun fact, mood check-in and a tiny game ---------- */
+const FACTS = ['Honey never spoils. Archaeologists have found 3,000-year-old honey in Egyptian tombs that was still edible.','Octopuses have three hearts and blue blood.','A day on Venus is longer than its year.','Bananas are berries, but strawberries are not.','The Eiffel Tower can be about 15 cm taller in summer, because metal expands in the heat.','Sea otters hold hands while they sleep so they don\'t drift apart.','A group of flamingos is called a “flamboyance”.','Your brain uses about 20% of your body\'s energy, despite being about 2% of its weight.','The first computer “bug” was a real moth found in a Harvard computer in 1947.','Kerala has more than 40 rivers flowing to the sea.','Cows have best friends and get stressed when separated.','There are more possible chess games than atoms in the observable universe.','The word “robot” comes from the Czech word for forced work, “robota”.','Wombat poop is cube-shaped.','A bolt of lightning is about five times hotter than the surface of the sun.','Butterflies taste with their feet.','The shortest war in history lasted about 38 minutes.','Smiling, even when you don\'t feel like it, can lift your mood a little.','The @ symbol is about 500 years old.','Koalas sleep up to 22 hours a day.','Humans share about 60% of their DNA with bananas.','The first email was sent in 1971 by Ray Tomlinson.','Penguins propose to their partners with a pebble.','Water can boil and freeze at the same time, at the “triple point”.','The heart of a blue whale is about the size of a small car.','“Typewriter” is one of the longest words you can type using only the top row of the keyboard.','A single cloud can weigh more than a million kilograms.','Dolphins call each other by name using unique whistles.','The Great Wall of China is not visible from space with the naked eye.','Some cats are allergic to humans.','Laughing for 15 minutes a day can burn up to 40 calories.','The QWERTY layout was designed in the 1870s for typewriters.','Elephants are one of the few animals that can recognise themselves in a mirror.','Hot water can freeze faster than cold water: the Mpemba effect.','The coconut is not a nut; it\'s a drupe.','A jiffy is an actual unit of time: 1/100th of a second.','Saturn would float in water, if there were a bathtub big enough.','The first website is still online: info.cern.ch.','Rats laugh when they are tickled.','Kindness is contagious: seeing someone help makes others more likely to help too.','A teaspoon of neutron star would weigh about 6 billion tonnes.','Pineapples take about two years to grow.','The longest hiccup attack lasted 68 years.','Only about 5% of the ocean has been explored.','The unicorn is Scotland\'s national animal.','Taking short breaks helps your brain focus better when you return to a task.'];
+const dayNo = () => Math.floor((Date.now() - new Date(2026, 0, 1)) / 864e5);
+let factOff = 0;
+function showFact(){ const el = $('hmFact'); if (!el) return; el.textContent = FACTS[((dayNo() + factOff) % FACTS.length + FACTS.length) % FACTS.length]; el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; }
+$('hmFactNext').onclick = () => { factOff++; showFact(); };
+// a playful 'work forecast' instead of real weather: works for everyone, wherever they work from
+const FC_SKY = [['☀️', 'Sunny, with a 95% chance of great work'], ['🌤️', 'Mostly bright, with scattered wins all day'], ['🚀', 'A high-pressure focus system is moving in'], ['🌈', 'Clear skies and good vibes after the first task'], ['⚡', 'Strong bursts of productivity expected'], ['🍃', 'A light breeze of good ideas'], ['☕', 'A warm front of coffee arriving mid-morning'], ['🌟', 'Bright spells of teamwork all afternoon'], ['🎯', 'Sharp focus with excellent visibility']];
+const FC_TAIL = ['Perfect conditions for accurate work.', 'Ideal weather for ticking off tasks.', 'Good day to help a teammate.', 'Expect a satisfying finish.', 'Great time to beat yesterday\'s best.', 'Low chance of stress, high chance of smiles.'];
+const FC_MOOD = {tired: ['🌙', 'Gentle pace today, with refreshing breaks recommended'], low: ['🌥️', 'Soft clouds today, clearing with kindness and small wins'], great: ['🔥', 'Record-breaking energy levels detected'], good: ['😎', 'Calm, bright and steady all day'], okay: ['🌤️', 'Steady conditions, improving through the day']};
+const seedRnd = (str) => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; }; };
+function renderForecast(){ const el = $('hmWeatherT'); if (!el) return; const r = seedRnd(todayStr() + (me ? me.key : '')), mood = moodMine && moodMine.days && moodMine.days[todayStr()];
+  const sky = FC_MOOD[mood] || FC_SKY[Math.floor(r() * FC_SKY.length)], tail = FC_TAIL[Math.floor(r() * FC_TAIL.length)];
+  $('hmFcIc').textContent = sky[0]; el.textContent = sky[1] + '. ' + tail; }
+function renderOrb(){ const v = $('orbVal'); if (!v) return; const l = ((myAtt && myAtt.days) || {})[todayStr()] || [], ms = sessMs(l), pct = Math.min(1, ms / DAY_MAX), open = l.length && !l[l.length - 1].out;
+  v.textContent = fmtH(ms); $('orbSub').textContent = ms >= DAY_MAX ? 'day complete ✓' : open ? 'of 8h · in progress' : l.length ? 'of 8h · on break' : 'of your 8h day';
+  $('orbProg').style.strokeDashoffset = 477.5 * (1 - pct); }
+function skyClass(){ const g = document.querySelector('.hm-greet'); if (!g) return; const h = new Date().getHours(); g.classList.toggle('night', h < 6 || h >= 19); g.classList.toggle('eve', h >= 17 && h < 19); }
+const MOODS = [['great', '🤩', 'Great'], ['good', '😊', 'Good'], ['okay', '😐', 'Okay'], ['tired', '😴', 'Tired'], ['low', '😟', 'Low']];
+const MOOD_MSG = {great: 'Love that energy! Go make today amazing. 🚀', good: 'Nice! Have a smooth and productive day. 🌿', okay: 'Thanks for sharing. One task at a time, you\'ve got this. 💪', tired: 'Take a short stretch and some water. Small breaks help. 💧', low: 'Sorry you\'re feeling low. Be kind to yourself today, and reach out to your Team Lead if you need anything. 💚'};
+let moodMine = null, moodAll = {};
+function renderMood(){ const row = $('moodRow'); if (!row) return; const today = todayStr(), cur = moodMine && moodMine.days && moodMine.days[today];
+  row.innerHTML = MOODS.map(([k, e, l]) => `<button type="button" data-mood="${k}" class="${cur === k ? 'on' : ''}" aria-pressed="${cur === k}"><i>${e}</i>${l}</button>`).join('');
+  $('moodMsg').textContent = cur ? MOOD_MSG[cur] : ''; renderForecast();
+  if (isAdmin) { const cnt = {}; Object.values(moodAll).forEach(r => { const m = r.days && r.days[today]; if (m) cnt[m] = (cnt[m] || 0) + 1; }); const n = Object.values(cnt).reduce((a, b) => a + b, 0);
+    $('moodTeam').textContent = n ? 'Team mood today (' + n + '): ' + MOODS.filter(m => cnt[m[0]]).map(m => m[1] + ' ' + cnt[m[0]]).join('  ·  ') : 'No one has shared their mood today yet.'; } }
+$('moodRow').addEventListener('click', async e => { const b = e.target.closest('[data-mood]'); if (!b || !me) return; const today = todayStr(), days = {...((moodMine && moodMine.days) || {}), [today]: b.dataset.mood}, keep = {};
+  Object.keys(days).sort().slice(-60).forEach(k => keep[k] = days[k]); moodMine = {email: me.email, name: me.name, days: keep}; renderMood();
+  try { await db.doc('mood/' + me.key).set(moodMine); } catch (x) { toast('Your mood couldn\'t be saved. Try again.'); } });
+// catch-the-gems mini game; best time is remembered on this device only
+const GEMS = ['💎', '💚', '🔷', '✨', '🟢'];
+let gm = null;
+const gmBestKey = () => 'cs_gem_best_' + (me ? me.key : 'x');
+function gmShowBest(){ let b = null; try { b = +localStorage.getItem(gmBestKey()) || null; } catch (e) {} $('gmBest').textContent = b ? 'Your best: ' + (b / 1000).toFixed(2) + ' s' : ''; return b; }
+function gmSpawn(){ const area = $('gmArea'), r = area.getBoundingClientRect(), g = document.createElement('button'); g.type = 'button'; g.className = 'gm-gem'; g.textContent = GEMS[gm.n % GEMS.length]; g.setAttribute('aria-label', 'Gem');
+  g.style.left = Math.round(8 + Math.random() * Math.max(10, r.width - 58)) + 'px'; g.style.top = Math.round(26 + Math.random() * Math.max(10, r.height - 74)) + 'px';
+  g.onclick = () => { g.remove(); gm.n++; $('gmHud').textContent = gm.n + ' / 8'; if (gm.n >= 8) gmEnd(); else gmSpawn(); }; area.appendChild(g); }
+function gmEnd(){ const t = performance.now() - gm.t0, prev = gmShowBest(), best = !prev || t < prev; if (best) { try { localStorage.setItem(gmBestKey(), Math.round(t)); } catch (e) {} }
+  $('gmArea').innerHTML = `<div style="text-align:center;display:grid;gap:8px;justify-items:center"><b style="font:800 26px var(--display)">${(t / 1000).toFixed(2)} s ${best ? '🏆' : '🎉'}</b><button type="button" class="btn btn-gem" id="gmStart">Play again</button></div>`;
+  $('gmMsg').textContent = best ? 'New personal best! Brilliant reflexes. 🌟' : ['Nice one! 😄', 'Quick hands! 👏', 'Great job, now back to winning the day! 💪'][Math.floor(Math.random() * 3)]; gmShowBest(); gm = null; }
+$('gmArea').addEventListener('click', e => { if (!e.target.closest('#gmStart')) return; $('gmArea').innerHTML = '<span class="gm-hud" id="gmHud">0 / 8</span>'; $('gmMsg').textContent = ''; gm = {n: 0, t0: performance.now()}; gmSpawn(); });
+function renderFun(){ showFact(); renderMood(); gmShowBest(); skyClass(); renderForecast(); renderOrb(); }
+
 /* ---------- today's assignment: employees accept it on Home ---------- */
 let asgAcks = {};
 const asgRec = (email, day) => { const r = asgAcks[String(email).toLowerCase()]; return r && r.days && r.days[day || todayStr()]; };
@@ -2283,7 +2417,7 @@ function renderClock(){
   const block = attBlock(), days = (myAtt && myAtt.days) || {}, open = openSession(days);
   $('clkBlock').hidden = !block; $('clkBlock').textContent = block;
   const capped = !!me && todayWorked() >= todayAllow() - 1000;
-  const gate = clockGate(); renderMyAssign();
+  const gate = clockGate(); renderMyAssign(); syncPresence();
   $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !open; if (capped && !open) $('clkIn').textContent = 'Daily limit reached'; renderOtBox();
   if (!(capped && !open)) $('clkIn').textContent = gate && !open ? 'Accept assignment first' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
