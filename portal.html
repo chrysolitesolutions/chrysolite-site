@@ -289,6 +289,9 @@ tbody tr:hover{background:var(--surface-2)}
 .hm-sl{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}.hm-status > b{font:800 26px var(--display);line-height:1.15}.hm-st-tasks{display:flex;flex-wrap:wrap;gap:6px}.hm-st-tasks .shift{font-size:12.5px}.hm-go{font-weight:700;color:var(--gem-ink)}
 .hm-hours{grid-template-columns:repeat(3,minmax(0,1fr))!important}@media(max-width:640px){.hm-hours{grid-template-columns:1fr!important}}
 .hm-fun{margin-bottom:16px}
+.hm-factp{display:grid;gap:10px;align-content:start;background:linear-gradient(160deg,color-mix(in srgb,#ffd84d 16%,var(--surface)),var(--surface))}.hm-factp .hm-fl{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8a6a00}
+.hm-factp #hmFact{margin:0;font:700 clamp(18px,1.8vw,22px)/1.45 var(--display);color:var(--ink);animation:up .5s both}.hm-factp .linkbtn{justify-self:start}
+.mood-dlg{width:min(560px,calc(100vw - 24px))!important;text-align:center}.mood-dlg h3{font-size:22px!important}.mood-dlg .mood-row button i{font-size:38px}
 .mood-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.mood-row button{display:grid;justify-items:center;gap:4px;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:600 12.5px var(--body);color:var(--ink);transition:transform .2s,border-color .2s,background .2s}
 .mood-row button i{font-style:normal;font-size:30px;line-height:1;transition:transform .3s}.mood-row button:hover i{transform:scale(1.2) rotate(-6deg)}.mood-row button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface));transform:translateY(-3px)}.mood-row button.on i{animation:moodPop .5s}
 @keyframes moodPop{40%{transform:scale(1.45) rotate(8deg)}}
@@ -305,6 +308,8 @@ tbody tr:hover{background:var(--surface-2)}
 .cp-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.cp-h span{font:12px var(--mono);color:var(--ink-soft)}
 .cp-tasks{display:flex;flex-wrap:wrap;gap:6px}.cp-t{cursor:pointer;border:0;font:600 12.5px var(--body);padding:6px 10px;opacity:.62}.cp-t.on{opacity:1;outline:2px solid currentColor;outline-offset:1px}.cp-t:disabled{opacity:.3;cursor:not-allowed}
 .cp-row{display:flex;flex-wrap:wrap;gap:6px}.cp-row .mini.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface))}.cp-done{margin-left:auto;background:var(--gem)!important;color:#13240a;border-color:transparent!important}
+.clock-status.brk{background:color-mix(in srgb,var(--warn) 18%,var(--surface));color:#8a5a00}#clkToday .pend{display:block;font:600 13px var(--body);color:#a86a00;margin-top:4px}
+#otWhy{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
 .my-assign{padding:26px 28px!important;border-left-width:6px!important;gap:16px!important}
 .my-assign .ma-eye{font-size:12.5px}
 .ma-lead{font:600 15px var(--body);color:var(--ink-soft)}
@@ -591,7 +596,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .clock-status.on{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
 .clock-status.on::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.3}}
-.clock-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.clock-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.clock-btns #clkBrk{border-color:color-mix(in srgb,var(--warn) 55%,var(--line))}@media(max-width:520px){.clock-btns{grid-template-columns:1fr}}
 .big-btn{padding:16px;font-size:16px;justify-content:center}
 .big-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 .clock-today{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px}
@@ -728,7 +733,6 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
           <span class="hm-eye" id="today"></span>
           <h1 id="hello">Good day</h1>
           <div class="hm-weather" id="hmWeather"><span class="w-ic" id="hmFcIc">✨</span><span><span class="fc-l">Today's work forecast</span><span id="hmWeatherT"></span></span></div>
-          <div class="hm-fact"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button></div>
         </div>
         <button class="hm-status" type="button" data-go="clock">
           <span class="hm-sl" id="hStatusL">My Workday</span>
@@ -739,8 +743,8 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       </div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
       <div class="two hm-fun">
-        <div class="panel hm-mood"><h3>How are you feeling today?</h3><p class="hint" style="margin:-4px 0 12px">Tap one. Only you and your admin can see it.</p>
-          <div class="mood-row" id="moodRow"></div><p class="mood-msg" id="moodMsg"></p><p class="hint admin-only" hidden id="moodTeam" style="margin:8px 0 0"></p></div>
+        <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
+          <p class="hint admin-only" hidden id="moodTeam" style="margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line)"></p></div>
         <div class="panel hm-game"><div class="vhead" style="margin:0 0 6px;align-items:baseline"><h3 style="margin:0">Quick break: catch the gems</h3><span class="hint" id="gmBest"></span></div>
           <p class="hint" style="margin:0 0 10px">Tap 8 gems as fast as you can. A 10-second smile, then back to work.</p>
           <div class="gm-area" id="gmArea"><button type="button" class="btn btn-gem" id="gmStart">Start</button></div><p class="mood-msg" id="gmMsg"></p></div>
@@ -791,6 +795,15 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <!-- LEAVE -->
     <section class="view" data-view="leave" hidden>
       <div class="vhead"><div><h1>Leave plans</h1><p>Your balance, your leave and team time off. Request leave from your Profile page; admins approve it here.</p></div></div>
+      <div class="panel admin-only" hidden style="margin-bottom:16px"><h3>Give compensation leave</h3>
+        <p class="hint" style="margin:-4px 0 12px">For employees who worked an extra full day because the project needed it. The days are added to their balance under <b>Compensation</b>, and they can request them on their Profile page.</p>
+        <form class="adm-form" id="cmpForm" novalidate>
+          <div class="g2"><div class="f"><label for="cmpWho">Employee</label><select id="cmpWho"></select></div><div class="f"><label for="cmpDays">Days to give</label><input id="cmpDays" type="number" min="0.5" max="30" step="0.5" value="1"></div></div>
+          <div class="g2"><div class="f"><label for="cmpOn">Extra day worked on</label><input id="cmpOn" type="date"></div><div class="f"><label for="cmpWhy">Reason</label><input id="cmpWhy" maxlength="200" placeholder="e.g. Weekend work for the client go-live"></div></div>
+          <div class="msg err" id="cmpErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Give compensation leave</button>
+        </form>
+        <div class="timeline" id="cmpList" style="margin-top:14px"></div>
+      </div>
       <div class="panel admin-only" id="reviewPanel" hidden><h3>Leave requests to review</h3><div class="timeline" id="reviewList"></div></div>
       <div class="two">
         <div class="panel">
@@ -798,7 +811,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <h3>Record leave</h3>
             <form class="lv-form" id="lvForm" novalidate>
               <div class="f full"><label for="lvWho">Employee</label><select id="lvWho"></select></div>
-              <div class="f"><label for="lvType">Type</label><select id="lvType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Unpaid</option></select></div>
+              <div class="f"><label for="lvType">Type</label><select id="lvType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
               <div class="f"><label for="lvDays">Working days</label><input id="lvDays" type="number" value="1" readonly></div>
               <div class="f"><label for="lvFrom">From</label><input id="lvFrom" type="date"></div>
               <div class="f"><label for="lvTo">To</label><input id="lvTo" type="date"></div>
@@ -833,7 +846,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
           <div class="clock-status" id="clkStatus">Not clocked in</div>
           <p class="msg" id="clkBlock" hidden></p>
           <div class="msg ot-box" id="otBox" hidden></div>
-          <div class="clock-btns"><button class="btn btn-gem big-btn" id="clkIn" type="button">Clock in</button><button class="btn btn-ghost big-btn" id="clkOut" type="button" disabled>Clock out</button></div>
+          <div class="clock-btns"><button class="btn btn-gem big-btn" id="clkIn" type="button">Clock in</button><button class="btn btn-ghost big-btn" id="clkBrk" type="button" disabled>☕ Take a break</button><button class="btn btn-ghost big-btn" id="clkOut" type="button" disabled>Clock out</button></div>
           <div class="msg err" id="clkErr" hidden></div>
           <div class="ring-wrap"><div class="clock-today" style="flex:1;border:0;padding:0;display:grid;gap:4px"><span>Today's total</span><b id="clkToday">0h 00m</b><small class="hint">Ring shows progress toward an 8-hour day.</small></div><svg class="ring" id="cRing" viewBox="0 0 132 132" role="img" aria-label="Today's hours toward 8"><circle class="trk" cx="66" cy="66" r="54"/><circle class="val" id="cRingVal" cx="66" cy="66" r="54" stroke-dasharray="339.3" stroke-dashoffset="339.3"/><text id="cRingTxt" x="66" y="70" text-anchor="middle" font-size="24">0%</text><text class="sub" x="66" y="88" text-anchor="middle">of 8h</text></svg></div>
         </div>
@@ -887,7 +900,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="panel" id="rqPanel">
           <h3>Request leave</h3>
           <form class="lv-form" id="rqForm" novalidate>
-            <div class="f"><label for="rqType">Type</label><select id="rqType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Unpaid</option></select></div>
+            <div class="f"><label for="rqType">Type</label><select id="rqType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
             <div class="f"><label for="rqDays">Working days</label><input id="rqDays" type="number" value="1" readonly></div>
             <div class="f"><label for="rqFrom">From</label><input id="rqFrom" type="date"></div>
             <div class="f"><label for="rqTo">To</label><input id="rqTo" type="date"></div>
@@ -1153,12 +1166,20 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <p class="hint" style="margin:0">The employee sees "(edited)" next to changed sessions. Each change is logged with your name, the time and the reason.</p>
   </form>
 </dialog>
+<dialog class="pw-dlg mood-dlg" id="moodDlg" aria-labelledby="moodDlgT">
+  <form method="dialog" style="display:grid;gap:14px">
+    <h3 id="moodDlgT">How are you feeling today?</h3>
+    <p class="hint" style="margin:0">Tap one. Only you and your admin can see it.</p>
+    <div class="mood-row" id="moodRow"></div><p class="mood-msg" id="moodMsg"></p>
+    <div class="row" style="justify-content:center"><button class="btn btn-gem" type="button" id="moodGo">Let's start my day →</button></div>
+  </form>
+</dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
     <h3 id="otDlgT">You've reached 8 hours today</h3>
     <p class="hint" id="otDlgMsg" style="margin:0"></p>
-    <div class="g2"><div class="f"><label for="otHrs">Extra hours needed</label><select id="otHrs"><option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option></select></div></div>
-    <div class="f"><label for="otWhy">Reason</label><input id="otWhy" maxlength="200" placeholder="e.g. finishing today's batch for the client deadline"></div>
+    <div class="g2"><div class="f"><label for="otHrs">Extra hours (over 8)</label><input id="otHrs" type="text" readonly></div></div>
+    <div class="f"><label for="otWhy">Why did you need the extra time?</label><textarea id="otWhy" rows="4" maxlength="500" placeholder="e.g. Finishing today's batch for the client deadline"></textarea></div>
     <div class="msg err" id="otErr" hidden></div>
     <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Request overtime approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
   </form>
@@ -1216,6 +1237,13 @@ const todayStr = () => ymd(new Date());
 const fmtDay = s => new Date(s+'T00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'});
 function workdays(a,b){ let n=0; const d=new Date(a+'T00:00'), e=new Date(b+'T00:00'); while(d<=e){ const w=d.getDay(); if(w&&w<6) n++; d.setDate(d.getDate()+1);} return n; }
 const DEF_ALLOW = {Annual:18, Sick:10, Personal:3};
+// compensation leave: days given by an admin for extra full days worked; balance = given - used (not reset each year)
+let compMine = null, compAll = {};
+const compRec = a => !a ? null : (me && a.key === me.key && !isAdmin ? compMine : compAll[a.key] || (me && a.key === me.key ? compMine : null));
+const compGiven = a => ((compRec(a) || {}).grants || []).reduce((s2, g) => s2 + (+g.days || 0), 0);
+const compUsed = a => decisions.filter(d => a && d.email === a.email && d.status === 'Approved' && d.type === 'Compensation').reduce((s2, d) => s2 + (d.days || 0), 0);
+function compBal(a, pendDays){ const tot = compGiven(a); if (!tot) return ''; const u = compUsed(a), left = Math.max(0, tot - u), pd = pendDays ? pendDays('Compensation') : 0;
+  return `<div class="bal comp"><div class="top"><span><b>Compensation</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${tot ? left / tot * 100 : 0}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }
 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
@@ -1316,6 +1344,7 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
   watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); });
@@ -1329,6 +1358,7 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
 
 function startAdminData() {
+  watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
   watch('moodAll', db.collection('mood'), s => { moodAll = {}; s.docs.forEach(d => moodAll[d.id] = d.data()); renderMood(); });
   watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
@@ -1521,7 +1551,23 @@ function evRow(l, right, i){
   return `<div class="ev" style="animation-delay:${(i||0)*40}ms"><div class="d">${f.getDate()}<small>${f.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(l.name || l.who)} · ${esc(l.type)}</b><span>${range} · ${l.days} working day${l.days===1?'':'s'}${l.note ? ' · ' + esc(l.note) : ''}</span></div>${right}</div>`;
 }
 const myLeave = () => me ? decisions.filter(d => d.email === me.email && d.status === 'Approved').sort((a,b) => b.from.localeCompare(a.from)) : [];
-function renderLeave(){
+function renderComp(){ if (!isAdmin || !$('cmpWho')) return; const keep = $('cmpWho').value;
+  $('cmpWho').innerHTML = '<option value="*">All employees</option>' + people().map(p => `<option value="${esc(p.key)}"${p.key === keep ? ' selected' : ''}>${esc(p.name)}</option>`).join('');
+  if (keep === '*') $('cmpWho').value = '*';
+  const all = []; Object.entries(compAll).forEach(([k, r]) => (r.grants || []).forEach((g, i) => all.push({...g, key: k, i, name: r.name || k})));
+  all.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  $('cmpList').innerHTML = all.length ? all.slice(0, 12).map(g => `<div class="ev"><div class="d">${g.days}<small>day${g.days === 1 ? '' : 's'}</small></div><div><b>${esc(g.name)}</b><span>${g.workedOn ? 'Worked on ' + fmtDay(g.workedOn) + ' · ' : ''}${esc(g.reason || '')} · given by ${esc(g.by || 'Admin')}</span></div><div class="acts"><button class="mini danger" data-cmpdel="${esc(g.key)}" data-i="${g.i}">Remove</button></div></div>`).join('') : '<p class="empty">No compensation leave given yet.</p>'; }
+$('cmpForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const err = $('cmpErr'), fail = t => { err.textContent = t; err.hidden = false; };
+  const days = +$('cmpDays').value, who = $('cmpWho').value, on = $('cmpOn').value, why = $('cmpWhy').value.trim(); if (!(days > 0)) return fail('Enter how many days to give.'); if (!why) return fail('Add a short reason, e.g. the project and the extra day worked.');
+  const targets = who === '*' ? people() : people().filter(p => p.key === who); if (!targets.length) return fail('Pick an employee.'); err.hidden = true;
+  try { for (const p of targets) { const cur = compAll[p.key] || {email: p.email, name: p.name, grants: []}; await db.doc('compLeave/' + p.key).set({email: p.email, name: p.name, grants: [...(cur.grants || []), {days, workedOn: on || null, reason: why.slice(0, 200), at: new Date().toISOString(), by: me ? me.name : 'Admin'}].slice(-100)}); }
+    $('cmpWhy').value = ''; toast('Gave ' + days + ' compensation day' + (days === 1 ? '' : 's') + ' to ' + (who === '*' ? 'all employees' : targets[0].name)); }
+  catch (x) { fail('That couldn\'t be saved. Try again.'); } });
+$('cmpList').addEventListener('click', async e => { const b = e.target.closest('[data-cmpdel]'); if (!b || !isAdmin) return;
+  if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Confirm'; setTimeout(() => { if (b.isConnected) { b.classList.remove('armed'); b.textContent = 'Remove'; } }, 4000); return; }
+  const r = compAll[b.dataset.cmpdel]; if (!r) return; const grants = (r.grants || []).filter((_, i) => i !== +b.dataset.i);
+  try { await db.doc('compLeave/' + b.dataset.cmpdel).set({...r, grants}); toast('Removed'); } catch (x) { toast('Couldn\'t remove. Try again.'); } });
+function renderLeave(){ try { renderComp(); } catch (e) {}
   queueCharts();
   const year = new Date().getFullYear(); $('balYear').textContent = year;
   if (isAdmin) {
@@ -1532,7 +1578,7 @@ function renderLeave(){
   $('myReqs').innerHTML = !me ? '<p class="empty">Sign in with an employee account to see your own leave.</p>' : mine.length ? mine.map((d,i) => evRow({...d, name: 'You'}, `<span class="pill ok">Approved</span>`, i)).join('') : '<p class="empty">No leave recorded for you yet.</p>';
   const allow = allowOf(me), used = t => mine.filter(d => d.type === t && d.from.slice(0,4) == year).reduce((a,d) => a + (d.days||0), 0);
   $('balances').innerHTML = me ? Object.keys(DEF_ALLOW).map(t => { const tot = +allow[t] || 0, u = used(t), left = Math.max(0, tot - u), pc = tot ? left / tot * 100 : 0;
-    return `<div class="bal"><div class="top"><span>${t}</span><span class="mono">${left} of ${tot} days left</span></div><div class="bar"><i style="width:${pc}%"></i></div></div>`; }).join('') : '<p class="empty">Balances show for signed-in employees.</p>';
+    return `<div class="bal"><div class="top"><span>${t}</span><span class="mono">${left} of ${tot} days left</span></div><div class="bar"><i style="width:${pc}%"></i></div></div>`; }).join('') + compBal(me) : '<p class="empty">Balances show for signed-in employees.</p>';
   const b = $('leaveBadge');
   if (isAdmin) {
     const pend = pendingAll().sort((a,b) => a.from.localeCompare(b.from));
@@ -1590,7 +1636,7 @@ function renderProfile(){
   const pendDays = t => myReqs().filter(q => q.type === t && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
   $('profBalYear').textContent = year;
   $('profBal').innerHTML = Object.keys(DEF_ALLOW).map(t => { const tot = +allow[t] || 0, u = used(t), left = Math.max(0, tot - u), pc = tot ? left / tot * 100 : 0, pd = pendDays(t);
-    return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('');
+    return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('') + compBal(me, pendDays);
   const reqs = [...myReqs()].sort((a, b) => String(b.from).localeCompare(String(a.from)));
   $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? d.status : 'Pending';
     return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '<p class="empty">You haven\'t requested any leave yet.</p>';
@@ -1608,6 +1654,8 @@ $('rqForm').addEventListener('submit', async e => {
   if (f < todayStr()) return fail('Leave can\'t start in the past. Ask your admin to record past leave for you.');
   const days = workdays(f, t); if (!days) return fail('That range has no working days. Pick at least one weekday.');
   if (myReqs().some(q => !(decisionOf(q) && decisionOf(q).status === 'Rejected') && q.from <= t && q.to >= f)) return fail('You already have a request covering some of these days.');
+  if ($('rqType').value === 'Compensation') { const left = compGiven(me) - compUsed(me) - myReqs().filter(q => q.type === 'Compensation' && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
+    if (left <= 0) return fail('You have no compensation leave to use. It is added by your admin when you work an extra day.'); if (days > left) return fail('You have ' + left + ' compensation day' + (left === 1 ? '' : 's') + ' left, but this request is for ' + days + '.'); }
   err.hidden = true; btn.disabled = true; btn.textContent = 'Sending…';
   const all = JSON.parse(JSON.stringify((myReqDoc && myReqDoc.requests) || []));
   all.push({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), email: me.email, name: me.name, type: $('rqType').value, from: f, to: t, days, note: $('rqNote').value.trim().slice(0, 200), at: new Date().toISOString()});
@@ -1671,14 +1719,14 @@ function renderHome(){
 /* ---------- who has started today: a small presence record per employee (no times beyond the first login) ---------- */
 let presence = {}, presLast = '';
 // admins see the first login time; employees only see whether a colleague has started, is working or is on a break
-function workState(p){ const today = todayStr(), fromList = l => !l.length ? {s: 'none'} : {s: !l[l.length - 1].out ? 'on' : 'out', first: l[0].in};
+function workState(p){ const today = todayStr(), fromList = l => { if (!l.length) return {s: 'none'}; const last = l[l.length - 1]; return {s: !last.out ? 'on' : last.brk ? 'out' : 'done', first: l[0].in}; };
   if (isAdmin) { const r = teamAtt.find(a => a.email === p.email); return fromList((r && r.days && r.days[today]) || []); }
   if (me && p.key === me.key) return fromList(((myAtt && myAtt.days) || {})[today] || []);
-  const pr = presence[String(p.email).toLowerCase()]; if (!pr || pr.day !== today || !pr.started) return {s: 'none'}; return {s: pr.working ? 'on' : 'out'}; }
+  const pr = presence[String(p.email).toLowerCase()]; if (!pr || pr.day !== today || !pr.started) return {s: 'none'}; return {s: pr.working ? 'on' : pr.onBreak ? 'out' : 'done'}; }
 function workPill(p){ if (p.clock === false) return '<span class="pill off">No time clock</span>'; const w = workState(p), t = isAdmin && w.first ? ' · since ' + fmtT(w.first) : '';
-  return w.s === 'on' ? `<span class="pill ok live-pill">Working${t}</span>` : w.s === 'out' ? `<span class="pill warn">On break${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : '<span class="pill off">Not logged in yet</span>'; }
+  return w.s === 'on' ? `<span class="pill ok live-pill">Working${t}</span>` : w.s === 'out' ? `<span class="pill warn">On break${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : w.s === 'done' ? `<span class="pill info">Finished for today${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : '<span class="pill off">Not logged in yet</span>'; }
 // the shared record holds no times: only today's date, started yes/no and working yes/no
-function syncPresence(){ if (!me || !db || !selfClock()) return; const today = todayStr(), l = ((myAtt && myAtt.days) || {})[today] || [], rec = {email: me.email, name: me.name, day: today, started: l.length > 0, working: !!(l.length && !l[l.length - 1].out)};
+function syncPresence(){ if (!me || !db || !selfClock()) return; const today = todayStr(), l = ((myAtt && myAtt.days) || {})[today] || [], last = l[l.length - 1], rec = {email: me.email, name: me.name, day: today, started: l.length > 0, working: !!(last && !last.out), onBreak: !!(last && last.out && last.brk)};
   const sig = JSON.stringify(rec); if (sig === presLast) return; presLast = sig; db.doc('presence/' + me.key).set(rec).catch(() => { presLast = ''; }); }
 
 /* ---------- home: weather, fun fact, mood check-in and a tiny game ---------- */
@@ -1714,7 +1762,10 @@ function renderMood(){ const row = $('moodRow'); if (!row) return; const today =
   $('moodMsg').textContent = cur ? MOOD_MSG[cur] : ''; renderForecast();
   if (isAdmin) { const cnt = {}; Object.values(moodAll).forEach(r => { const m = r.days && r.days[today]; if (m) cnt[m] = (cnt[m] || 0) + 1; }); const n = Object.values(cnt).reduce((a, b) => a + b, 0);
     $('moodTeam').textContent = n ? 'Team mood today (' + n + '): ' + MOODS.filter(m => cnt[m[0]]).map(m => m[1] + ' ' + cnt[m[0]]).join('  ·  ') : 'No one has shared their mood today yet.'; } }
-$('moodRow').addEventListener('click', async e => { const b = e.target.closest('[data-mood]'); if (!b || !me) return; const today = todayStr(), days = {...((moodMine && moodMine.days) || {}), [today]: b.dataset.mood}, keep = {};
+const closeMood = () => { const d = $('moodDlg'); if (d.open) d.close(); clearTimeout(moodT); };
+let moodT = 0; $('moodGo').onclick = closeMood;
+function askMood(){ if (!me) return; const cur = moodMine && moodMine.days && moodMine.days[todayStr()]; if (cur) return; renderMood(); const d = $('moodDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
+$('moodRow').addEventListener('click', async e => { const b = e.target.closest('[data-mood]'); if (!b || !me) return; clearTimeout(moodT); moodT = setTimeout(closeMood, 2600); const today = todayStr(), days = {...((moodMine && moodMine.days) || {}), [today]: b.dataset.mood}, keep = {};
   Object.keys(days).sort().slice(-60).forEach(k => keep[k] = days[k]); moodMine = {email: me.email, name: me.name, days: keep}; renderMood();
   try { await db.doc('mood/' + me.key).set(moodMine); } catch (x) { toast('Your mood couldn\'t be saved. Try again.'); } });
 // catch-the-gems mini game; best time is remembered on this device only
@@ -1760,7 +1811,7 @@ function renderMyAssign(){
   const b = $('maAccept'); if (b) b.onclick = async () => { b.disabled = true; b.textContent = 'Saving…';
     const cur = asgAcks[me.key] || {email: me.email, name: me.name, days: {}}, days = {...(cur.days || {})}; days[today] = {task: t.k, at: new Date().toISOString()};
     const keep = {}; Object.keys(days).sort().slice(-60).forEach(x => keep[x] = days[x]);
-    try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderClock(); renderHome(); toast('Today\'s assignment accepted. You can clock in now.'); }
+    try { await db.doc('assignAck/' + me.key).set({email: me.email, name: me.name, days: keep}); asgAcks[me.key] = {email: me.email, name: me.name, days: keep}; renderClock(); renderHome(); toast('Today\'s assignment accepted. You can clock in now.'); askMood(); }
     catch (x) { b.disabled = false; b.textContent = 'Accept today\'s assignment'; toast('That couldn\'t be saved. Try again.'); } };
 }
 /* ---------- announcements: employees acknowledge them ---------- */
@@ -2436,7 +2487,7 @@ function tagAllow(days, appr){ Object.entries(days || {}).forEach(([k, l]) => { 
 function enforceDays(days, appr){ let changed = false; const out = JSON.parse(JSON.stringify(days || {}));
   Object.entries(out).forEach(([k, l]) => { if (!Array.isArray(l)) return; const allow = DAY_MAX + extraFor(appr, k); let acc = 0; const now = Date.now();
     l.forEach(x => { const st = +new Date(x.in); if (x.out) { acc += Math.max(0, Math.min(+new Date(x.out), st + SESSION_MAX) - st); return; }
-      const bySess = st + SESSION_MAX, byDay = x.ot ? st + x.ot * 3600000 : st + Math.max(0, allow - acc), stop = Math.min(bySess, byDay);
+      const bySess = st + SESSION_MAX, byDay = x.ot ? st + x.ot * 3600000 : Infinity, stop = Math.min(bySess, byDay);   // the day is no longer stopped at 8h: extra time waits for approval instead
       if (now >= stop) { x.out = new Date(stop).toISOString(); x.auto = stop === byDay && byDay < bySess ? 'day' : 'session'; changed = true; acc += stop - st; } }); });
   return changed ? out : null; }
 const openSession = days => { const t = days && days[todayStr()]; return t && t.length && !t[t.length - 1].out ? t[t.length - 1] : null; };
@@ -2458,15 +2509,16 @@ function renderClock(){
   document.querySelectorAll('.view[data-view="clock"] .self-only').forEach(e => e.hidden = !selfClock());
   const block = attBlock(), days = (myAtt && myAtt.days) || {}, open = openSession(days);
   $('clkBlock').hidden = !block; $('clkBlock').textContent = block;
-  const capped = !!me && todayWorked() >= todayAllow() - 1000;
+  const brk = onBreak(days);
   const gate = clockGate(); renderMyAssign(); syncPresence();
-  $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !open; if (capped && !open) $('clkIn').textContent = 'Daily limit reached'; renderOtBox();
-  if (!(capped && !open)) $('clkIn').textContent = gate && !open ? 'Accept assignment first' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
+  $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !(open || brk); $('clkBrk').disabled = !!block || !open; renderOtBox();
+  $('clkIn').textContent = gate && !open ? 'Accept assignment first' : brk ? '▶ Resume work' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
   const todayList = days[todayStr()] || [];
-  st.textContent = open ? 'Clocked in since ' + fmtT(open.in) + ' · session ' + todayList.length : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
+  st.textContent = open ? 'Working since ' + fmtT(open.in) + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
+  st.className = 'clock-status' + (open ? ' on' : brk ? ' brk' : '');
   $('clockDot').hidden = !open;
-  $('clkToday').textContent = fmtH(sessMs(todayList));
+  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() > 60000 ? ` <small class="pend">+${fmtH(extraPending())} waiting for approval</small>` : '');
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   let tot = 0;
   $('myWeek').innerHTML = weekKeys().map(k => { const d = new Date(k + 'T00:00'), l = days[k] || [], ms = sessMs(l); tot += ms; const isT = k === todayStr();
@@ -2494,7 +2546,7 @@ async function enforceMine(){
   enforcing = true; const tk = todayStr(), tAllow = DAY_MAX + extraFor(otApprMine, tk), dayHit = !!fixed[tk] && fixed[tk].some(x => x.auto) && sessMs(fixed[tk], tAllow) >= tAllow - 1000;
   try { await db.doc('timeclock/' + me.key).set({...JSON.parse(JSON.stringify(myClockRaw)), days: fixed, updatedAt: new Date().toISOString()}); } catch (e) {}
   enforcing = false; toast('Your clock was stopped at the 8-hour limit.');
-  if (dayHit) askOvertime(true);
+
 }
 async function enforceTeam(){
   if (!isAdmin || !db || enforcing) return;
@@ -2504,13 +2556,19 @@ async function enforceTeam(){
 }
 const todayWorked = () => { const l = ((myAtt && myAtt.days) || {})[todayStr()]; return sessMs(l); };
 const todayAllow = () => DAY_MAX + extraFor(otApprMine, todayStr());
+const rawMs = l => capWalk(l || [], 1e15).reduce((a, r) => a + r.d, 0);            // all time worked (each session still max 8h)
+const todayRaw = () => rawMs(((myAtt && myAtt.days) || {})[todayStr()]);
+const extraPending = () => Math.max(0, todayRaw() - todayAllow());
+const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
+const onBreak = days => { const t = (days || {})[todayStr()] || []; const l = t[t.length - 1]; return !!(l && l.out && l.brk); };
 const myOtToday = () => { const k = todayStr(), a = otApprMine && otApprMine.days && otApprMine.days[k], r = otReqMine && otReqMine.days && otReqMine.days[k];
   if (a && (!r || a.at >= r.at)) return {status: a.status, hours: a.hours}; return r ? {status: 'pending', hours: r.hours} : null; };
 function askOvertime(auto){
   const k = todayStr(), st = myOtToday();
-  if (st && st.status === 'pending') return toast('Your overtime request is waiting for an admin.');
+  if (st && st.status === 'pending' && st.hours >= otHoursNeeded()) return toast('Your overtime request is waiting for approval.');
   if (auto && otAsked === k) return; otAsked = k;
-  $('otDlgMsg').textContent = `Your clock stopped at ${fmtH(todayWorked())} for today. To keep working, request overtime and an admin will approve it. You can clock in again once it is approved.`;
+  const need = otHoursNeeded(); $('otHrs').value = need; $('otDlgT').textContent = 'You worked more than 8 hours today';
+  $('otDlgMsg').textContent = `You worked ${fmtH(todayRaw())} today, which is ${fmtH(todayRaw() - DAY_MAX)} over 8 hours. Send the extra time to your Project Manager for approval. Until it's approved, your total shows 8 hours.`;
   $('otErr').hidden = true; $('otWhy').value = ''; const d = $('otDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
 }
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
@@ -2518,21 +2576,21 @@ $('otForm').addEventListener('submit', async e => {
   e.preventDefault(); if (!me) return; const k = todayStr(), btn = $('otSend');
   const why = $('otWhy').value.trim(); if (!why) { $('otErr').textContent = 'Add a short reason for the overtime.'; $('otErr').hidden = false; return; }
   btn.disabled = true; btn.textContent = 'Sending…';
-  const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {hours: +$('otHrs').value, reason: why.slice(0, 200), at: new Date().toISOString()};
+  const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {hours: +$('otHrs').value, reason: why.slice(0, 500), at: new Date().toISOString()};
   Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]);
-  try { await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); $('otLater').click(); toast('Overtime request sent to your admin'); }
+  try { await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); $('otLater').click(); toast('Sent to your Project Manager for approval'); renderClock(); }
   catch (x) { $('otErr').textContent = 'The request couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'; $('otErr').hidden = false; }
   finally { btn.disabled = false; btn.textContent = 'Request overtime approval'; }
 });
 function renderOtBox(){
   const box = $('otBox'); if (!me || !selfClock()) { box.hidden = true; return; }
-  const worked = todayWorked(), allow = todayAllow(), st = myOtToday(), atCap = worked >= allow - 1000;
+  const st = myOtToday(), extra = extraPending(), over = todayRaw() - DAY_MAX, open = openSession((myAtt && myAtt.days) || {});
   let html = '';
-  if (st && st.status === 'pending') html = `<b>Overtime requested: ${st.hours} h</b><span>Waiting for an admin to approve it. You can clock in again once it's approved.</span>`;
-  else if (st && st.status === 'approved') html = `<b>Overtime approved: ${st.hours} h today</b><span>Your limit today is ${fmtH(allow)}.${atCap ? ' You have used all of it.' : ''}</span>`;
-  else if (st && st.status === 'rejected' && atCap) html = `<b>Overtime not approved today</b><span>You've reached the 8-hour limit. The clock stays stopped until tomorrow.</span>`;
-  else if (atCap) html = `<b>You've reached the 8-hour limit for today</b><span>Your clock has stopped. To keep working, ask for overtime approval.</span><div class="row"><button class="mini" type="button" id="otAsk">Request overtime</button></div>`;
-  box.hidden = !html; box.className = 'msg ot-box' + (atCap ? ' warn' : ''); box.innerHTML = html;
+  if (extra > 60000 && st && st.status === 'pending' && st.hours >= otHoursNeeded() - .01) html = `<b>⏳ ${fmtH(extra)} waiting for approval</b><span>Your Project Manager has your request for ${st.hours} h of extra time. Your total updates once it's approved.</span>`;
+  else if (extra > 60000 && st && st.status === 'rejected') html = `<b>Extra time not approved</b><span>Only 8 hours count for today. ${fmtH(extra)} was not approved.</span>`;
+  else if (extra > 60000) html = `<b>You've worked ${fmtH(over)} over 8 hours</b><span>${open ? 'When you clock out, you\'ll be asked to send the extra time for approval.' : 'Send it to your Project Manager for approval so it counts.'}</span>${open ? '' : '<div class="row"><button class="mini" type="button" id="otAsk">Request approval</button></div>'}`;
+  else if (st && st.status === 'approved') html = `<b>✓ Overtime approved: ${st.hours} h today</b><span>Your total for today includes it.</span>`;
+  box.hidden = !html; box.className = 'msg ot-box' + (extra > 60000 ? ' warn' : ''); box.innerHTML = html;
   const b = $('otAsk'); if (b) b.onclick = () => askOvertime(false);
 }
 function renderOt(){
@@ -2556,7 +2614,7 @@ $('otList').addEventListener('click', async e => {
 async function extendForOvertime(email, k, hours){
   const i = clockIds.indexOf(email); if (i < 0 || !(hours > 0)) return null;
   const raw = JSON.parse(JSON.stringify(clockDocs[i])), list = (raw.days || {})[k]; if (!list || !list.length) return null;
-  const last = list[list.length - 1]; if (!last.out || !last.auto || list.some(x => x.ot)) return null;   // only when the limit stopped the clock, and only once
+  const last = list[list.length - 1]; if (!last.out || last.auto !== 'day' || list.some(x => x.ot)) return null;   // only when the limit stopped the clock, and only once
   let worked = 0; list.forEach(x => worked += Math.max(0, Math.min(+new Date(x.out || Date.now()), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)));
   if (worked < DAY_MAX - 60000) return null;
   const start = +new Date(last.out), end = start + hours * 3600000, now = Date.now(), stamp = {by: me ? me.name : 'Admin', at: new Date().toISOString(), note: 'Overtime approved: +' + hours + ' h'};
@@ -2571,14 +2629,15 @@ async function punch(kind){
   const err = $('clkErr'); err.hidden = true;
   const days = JSON.parse(JSON.stringify((myAtt && myAtt.days) || {})), k = todayStr(), now = new Date().toISOString();
   const list = days[k] || (days[k] = []);
-  if (kind === 'in') { if (openSession(days)) return; const g = clockGate(); if (g) { err.textContent = g; err.hidden = false; return; } if (todayWorked() >= todayAllow() - 1000) { askOvertime(false); return; } list.push({in: now}); }
-  else { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; }
+  if (kind === 'in') { if (openSession(days)) return; const g = clockGate(); if (g) { err.textContent = g; err.hidden = false; return; } list.push({in: now}); }
+  else if (kind === 'break') { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; o.brk = true; }
+  else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
-  const btn = kind === 'in' ? $('clkIn') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : 'Clocked out at ' + fmtT(now)); }
+  const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (todayRaw() > todayAllow() + 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
-$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out');
+$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out'); $('clkBrk').onclick = () => punch('break');
 function tick(){ const n = new Date(); $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
   if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {}) && n.getSeconds() === 0) { renderClock(); renderHome(); } }
 setInterval(tick, 1000); tick();
