@@ -238,6 +238,17 @@ tbody tr:hover{background:var(--surface-2)}
 .cp-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.cp-h span{font:12px var(--mono);color:var(--ink-soft)}
 .cp-tasks{display:flex;flex-wrap:wrap;gap:6px}.cp-t{cursor:pointer;border:0;font:600 12.5px var(--body);padding:6px 10px;opacity:.62}.cp-t.on{opacity:1;outline:2px solid currentColor;outline-offset:1px}.cp-t:disabled{opacity:.3;cursor:not-allowed}
 .cp-row{display:flex;flex-wrap:wrap;gap:6px}.cp-row .mini.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface))}.cp-done{margin-left:auto;background:var(--gem)!important;color:#13240a;border-color:transparent!important}
+.my-assign{padding:26px 28px!important;border-left-width:6px!important;gap:16px!important}
+.my-assign .ma-eye{font-size:12.5px}
+.ma-lead{font:600 15px var(--body);color:var(--ink-soft)}
+.ma-big{gap:10px!important}.ma-big .shift{font:800 clamp(20px,2.4vw,28px) var(--display)!important;padding:14px 24px!important;border-radius:16px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.12))}
+.ma-big .s-prof{box-shadow:inset 6px 0 0 var(--s1)}.ma-big .s-mail{box-shadow:inset 6px 0 0 var(--s2)}.ma-big .s-eto{box-shadow:inset 6px 0 0 var(--s3)}.ma-big .s-roi{box-shadow:inset 6px 0 0 var(--s4)}.ma-big .s-pf{box-shadow:inset 6px 0 0 var(--s5)}.ma-big .s-esc{box-shadow:inset 6px 0 0 var(--s6)}
+.ma-meta{font-size:14px;color:var(--ink-soft)}
+.ma-btn{font-size:17px!important;padding:16px 26px!important;border-radius:14px!important}
+.ma-ok{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:14px;background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--ok);font:700 17px var(--body)}.ma-ok i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--ok);color:#fff;font-style:normal;font-size:20px}.ma-ok span{display:grid}.ma-ok small{font:500 12.5px var(--mono);color:var(--ink-soft)}
+.ma-step{margin:0;font-size:14.5px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--ok) 10%,transparent)}.ma-step b{color:var(--ok)}
+.my-assign.done{background:linear-gradient(160deg,color-mix(in srgb,var(--ok) 10%,var(--surface)),var(--surface))!important}
+.my-assign.need{background:linear-gradient(160deg,color-mix(in srgb,var(--warn) 16%,var(--surface)),var(--surface))!important}
 .my-assign.need{border-left-color:var(--warn);animation:maGlow 2.6s ease-in-out infinite}@keyframes maGlow{0%,100%{box-shadow:0 0 0 0 rgba(227,176,75,0)}50%{box-shadow:0 0 0 4px rgba(227,176,75,.18),0 0 24px rgba(227,176,75,.3)}}
 .my-assign{display:grid;gap:12px;border-left:4px solid var(--gem);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 9%,var(--surface)),var(--surface))}.my-assign.done{border-left-color:var(--ok)}.my-assign.off{border-left-color:var(--line)}
 .ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
@@ -1564,9 +1575,9 @@ function renderMyAssign(){
   if (t.state === 'none') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">No assignment yet</b></div></div><p class="hint" style="margin:0">Nothing is on today's schedule for you. You can still clock in; check with your Team Lead what to work on.</p>`; return; }
   const n = parseCell(t.k).length, done = t.state === 'accepted';
   box.className = 'panel my-assign' + (done ? ' done' : ' need');
-  box.innerHTML = head + `<div class="ma-task cellstack row">${cellPills(t.k)}</div><span class="hint">${n} task${n === 1 ? '' : 's'} today · Project: ${esc(me.project || 'Seekout')}</span></div>
-    <div class="ma-act">${done ? `<span class="pill ok">✓ Accepted at ${fmtT(t.a.at)}</span>` : `<button class="btn btn-gem" type="button" id="maAccept">Accept today's assignment</button>`}</div></div>
-    ${t.state === 'changed' ? `<p class="msg warn" style="margin:0">Your assignment changed after you accepted “${esc(cellLabel(t.a.task))}”. Please accept the new one.</p>` : done ? '<p class="hint" style="margin:0">Step 2 · You can now clock in below.</p>' : '<p class="hint" style="margin:0">Accept to confirm you\'ve seen today\'s tasks. The <b>Clock in</b> button unlocks once you accept.</p>'}`;
+  box.innerHTML = head + `<span class="ma-lead">${done ? 'You are working on' : 'You are assigned to'}</span><div class="ma-task cellstack row ma-big">${cellPills(t.k)}</div><span class="ma-meta">${n} task${n === 1 ? '' : 's'} today · Project: ${esc(me.project || 'Seekout')}</span></div>
+    <div class="ma-act">${done ? `<span class="ma-ok"><i>✓</i><span>Accepted<small>at ${fmtT(t.a.at)}</small></span></span>` : `<button class="btn btn-gem ma-btn" type="button" id="maAccept">Accept today's assignment</button>`}</div></div>
+    ${t.state === 'changed' ? `<p class="msg warn" style="margin:0">Your assignment changed after you accepted “${esc(cellLabel(t.a.task))}”. Please accept the new one.</p>` : done ? '<p class="ma-step"><b>Step 2 ·</b> You can now clock in below. ↓</p>' : '<p class="hint" style="margin:0">Accept to confirm you\'ve seen today\'s tasks. The <b>Clock in</b> button unlocks once you accept.</p>'}`;
   const b = $('maAccept'); if (b) b.onclick = async () => { b.disabled = true; b.textContent = 'Saving…';
     const cur = asgAcks[me.key] || {email: me.email, name: me.name, days: {}}, days = {...(cur.days || {})}; days[today] = {task: t.k, at: new Date().toISOString()};
     const keep = {}; Object.keys(days).sort().slice(-60).forEach(x => keep[x] = days[x]);
