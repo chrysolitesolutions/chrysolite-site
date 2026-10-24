@@ -310,6 +310,15 @@ tbody tr:hover{background:var(--surface-2)}
 .cp-row{display:flex;flex-wrap:wrap;gap:6px}.cp-row .mini.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 16%,var(--surface))}.cp-done{margin-left:auto;background:var(--gem)!important;color:#13240a;border-color:transparent!important}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr))!important}@media(max-width:700px){.g4{grid-template-columns:1fr 1fr!important}}
 #cHeat,#cHeatScale{display:none!important}
+.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.mc-h{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);text-align:center;padding:4px 0}
+.mc-c{position:relative;min-height:84px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:8px;display:grid;align-content:start;gap:2px;text-align:left;font:inherit;color:var(--ink);overflow:hidden}
+.mc-c.blank{border:0;background:none}.mc-c.wkend{background:var(--surface-2)}.mc-c.fut{opacity:.45}.mc-c .d{font:700 13px var(--mono);color:var(--ink-soft)}
+.mc-c b{font:800 17px var(--display);margin-top:4px}.mc-c small{font-size:11px;color:var(--ink-soft)}.mc-c small.lv{color:var(--warn);font-weight:600}
+.mc-c.has{cursor:pointer;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-color:color-mix(in srgb,var(--gem) 40%,var(--line));transition:transform .15s,box-shadow .15s}.mc-c.has:hover{transform:translateY(-2px);box-shadow:0 10px 20px -12px rgba(0,0,0,.3)}
+.mc-c.full{background:color-mix(in srgb,var(--gem) 22%,var(--surface))}.mc-c.today{outline:2px solid var(--gem);outline-offset:-2px}.mc-c.today .d{color:var(--gem-ink)}
+.mc-c .bar{position:absolute;left:0;bottom:0;height:4px;width:var(--p);background:var(--gem)}
+@media(max-width:640px){.mc-c{min-height:60px;padding:5px}.mc-c b{font-size:12.5px}.mc-c small{display:none}}
+#dayDlg{width:min(480px,calc(100vw - 24px))}#dayDlgList .sess{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center}
 .wk-row td{background:var(--surface-2);font-size:13px}.wk-row.cur td{background:color-mix(in srgb,var(--gem) 14%,var(--surface))}.today-row td{font-weight:700}
 .clock-status.brk{background:color-mix(in srgb,var(--warn) 18%,var(--surface));color:#8a5a00}#clkToday .pend{display:block;font:600 13px var(--body);color:#a86a00;margin-top:4px}
 #otWhy{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
@@ -865,7 +874,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         </div>
         <div class="heat" id="cHeat"></div>
         <div class="heat-scale" id="cHeatScale"></div>
-        <div class="tbl" style="margin-top:12px"><table class="att"><thead><tr><th>Day</th><th>Sessions</th><th>Session times</th><th>Hours</th></tr></thead><tbody id="myMonthBody"></tbody></table></div>
+        <div class="mcal" id="myCal" style="margin-top:14px"></div><p class="hint" style="margin:8px 0 0">Click a day to see its sessions and times.</p>
       </div>
       <div class="panel admin-only" id="otPanel" hidden>
         <h3>Overtime requests</h3>
@@ -1165,6 +1174,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <div id="teHist" class="te-hist" hidden></div>
     <p class="hint" style="margin:0">The employee sees "(edited)" next to changed sessions. Each change is logged with your name, the time and the reason.</p>
   </form>
+</dialog>
+<dialog class="pw-dlg" id="dayDlg" aria-labelledby="dayDlgT">
+  <div style="display:grid;gap:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3 id="dayDlgT" style="margin:0"></h3><p class="hint" id="dayDlgSub" style="margin:4px 0 0"></p></div><button class="btn btn-ghost" type="button" id="dayDlgX" aria-label="Close">✕</button></div>
+  <div class="sess-list" id="dayDlgList"></div></div>
 </dialog>
 <dialog class="pw-dlg mood-dlg" id="moodDlg" aria-labelledby="moodDlgT">
   <form method="dialog" style="display:grid;gap:14px">
@@ -2526,19 +2539,26 @@ function renderClock(){
 function renderMyMonth(){
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value || monthKey(new Date()), keys = monthDays(days, m), st = stats(days, keys);
   $('mmHours').textContent = fmtH(st.ms); $('mmDays').textContent = st.worked; $('mmSess').textContent = st.sessions; $('mmAvg').textContent = fmtH(st.worked ? st.ms / st.worked : 0);
-  if (!me) { $('myMonthBody').innerHTML = '<tr><td colspan="4" class="empty">Sign in with an employee account to see your hours.</td></tr>'; return; }
-  const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), today = todayStr(), weeks = [];
-  for (let i = 1; i <= n; i++) { const d = new Date(Y, M - 1, i), k = ymd(d); if (k > today) break; const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const wk = ymd(mon);
-    if (!weeks.length || weeks[weeks.length - 1].wk !== wk) weeks.push({wk, mon, days: []}); weeks[weeks.length - 1].days.push(k); }
-  const fd = k => new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
-  $('myMonthBody').innerHTML = weeks.length ? weeks.slice().reverse().map(w => { const tot = w.days.reduce((a, k) => a + sessMs(days[k]), 0), cur = w.wk === ymd(monday(0));
-    return `<tr class="wk-row${cur ? ' cur' : ''}"><td colspan="3"><b>${cur ? 'This week' : 'Week of ' + new Date(w.wk + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'})}</b></td><td class="mono"><b>${fmtH(tot)}</b></td></tr>` +
-      w.days.slice().reverse().map(k => { const l = days[k] || [], isT = k === today, open = l.length && !l[l.length - 1].out;
-        return `<tr${isT ? ' class="today-row"' : ''}><td>${fd(k)}${isT ? ' · today' : ''}</td><td class="mono">${l.length ? l.length + (open ? ' · working' : '') : '—'}</td><td class="times">${l.length ? esc(timesOf(l)) : '—'}</td><td class="mono">${l.length ? fmtH(sessMs(l)) : '—'}</td></tr>`; }).join(''); }).join('')
-    : '<tr><td colspan="4" class="empty">No days in this month yet.</td></tr>';
+  const cal = $('myCal'); if (!cal) return;
+  if (!me) { cal.innerHTML = '<p class="empty">Sign in with an employee account to see your hours.</p>'; return; }
+  const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), lead = (new Date(Y, M - 1, 1).getDay() + 6) % 7, today = todayStr();
+  const lv = k => decisions.some(d => d.email === me.email && d.status === 'Approved' && d.from <= k && d.to >= k);
+  let html = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="mc-h">${d}</div>`).join('') + '<div class="mc-c blank"></div>'.repeat(lead);
+  for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), onLv = lv(k);
+    const cls = ['mc-c', l.length ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
+    html += `<button type="button" class="${cls}" data-day="${k}" ${l.length ? '' : 'aria-disabled="true"'} style="--p:${Math.min(100, ms / DAY_MAX * 100)}%"><span class="d">${i}</span>${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small><i class="bar"></i>` : onLv ? '<small class="lv">On leave</small>' : fut ? '' : '<small>—</small>'}</button>`; }
+  cal.innerHTML = html;
 }
 $('myMonth').value = monthKey(new Date());
 $('myMonth').addEventListener('change', renderMyMonth);
+$('myCal').addEventListener('click', e => { const b = e.target.closest('[data-day]'); if (!b) return; const k = b.dataset.day, l = ((myAtt && myAtt.days) || {})[k] || []; if (!l.length) return;
+  const ms = sessMs(l), raw = rawMs(l), dd = $('dayDlg');
+  $('dayDlgT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+  $('dayDlgSub').innerHTML = `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${raw - ms > 60000 ? ` · <span style="color:#a86a00">${fmtH(raw - ms)} over 8h not approved / waiting</span>` : ''}`;
+  $('dayDlgList').innerHTML = l.map((x, i) => { const d = x.out ? Math.max(0, Math.min(+new Date(x.out), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)) : Date.now() - +new Date(x.in);
+    return `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? '<small style="display:block;color:var(--ink-soft)">then a break</small>' : ''}${x.ot ? '<small style="display:block;color:var(--ink-soft)">overtime</small>' : ''}${x.auto ? '<small style="display:block;color:var(--ink-soft)">stopped automatically</small>' : ''}${x.edit ? `<small style="display:block;color:var(--ink-soft)">edited by ${esc(x.edit.by || 'admin')}</small>` : ''}</span><span class="h mono">${fmtH(d)}</span></div>`; }).join('');
+  try { dd.showModal(); } catch (x) { dd.setAttribute('open', ''); } });
+$('dayDlgX').onclick = () => $('dayDlg').close(); $('dayDlg').addEventListener('click', e => { if (e.target === $('dayDlg')) $('dayDlg').close(); });
 $('myMonthCopy').onclick = () => {
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value, keys = monthDays(days, m);
   const text = ['Date\tSessions\tSession times\tHours'].concat(keys.map(k => [k, days[k].length, timesOf(days[k]), (sessMs(days[k]) / 3600000).toFixed(2)].join('\t'))).concat(['Total\t\t\t' + (stats(days, keys).ms / 3600000).toFixed(2)]).join('\n');
