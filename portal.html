@@ -319,6 +319,11 @@ tbody tr:hover{background:var(--surface-2)}
 .mc-c .bar{position:absolute;left:0;bottom:0;height:4px;width:var(--p);background:var(--gem)}
 @media(max-width:640px){.mc-c{min-height:60px;padding:5px}.mc-c b{font-size:12.5px}.mc-c small{display:none}}
 #dayDlg{width:min(480px,calc(100vw - 24px))}#dayDlgList .sess{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center}
+.ot-big{display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-radius:12px;background:color-mix(in srgb,var(--warn) 16%,var(--surface))}.ot-big b{font:800 30px var(--display);color:#8a5a00}.ot-big span{color:var(--ink-soft)}
+.ot-choice{display:grid;gap:8px}.ot-choice label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;cursor:pointer;font-weight:400}.ot-choice label:has(input:checked){border-color:var(--gem);background:color-mix(in srgb,var(--gem) 10%,var(--surface))}
+.ot-choice label span{display:grid;gap:2px}.ot-choice small{color:var(--ink-soft);font-size:12.5px}.ot-choice label.dis{opacity:.5;cursor:not-allowed}.ot-choice input[type=radio]{all:revert;flex:none;width:18px;height:18px;margin:2px 0 0;accent-color:var(--gem)}.ot-choice label span{flex:1}
+.ot-carry{display:grid;gap:10px;padding:12px;border-radius:12px;background:var(--surface-2)}
+.mc-c small.cin,.cin{color:#2f7d32!important;font-weight:600}.mc-c small.cout,.cout{color:#8a5a00!important;font-weight:600}#clkToday .pend.ok{color:#2f7d32}
 .wk-row td{background:var(--surface-2);font-size:13px}.wk-row.cur td{background:color-mix(in srgb,var(--gem) 14%,var(--surface))}.today-row td{font-weight:700}
 .clock-status.brk{background:color-mix(in srgb,var(--warn) 18%,var(--surface));color:#8a5a00}#clkToday .pend{display:block;font:600 13px var(--body);color:#a86a00;margin-top:4px}
 #otWhy{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
@@ -866,6 +871,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="panel"><h3>Today's sessions</h3><div class="sess-list" id="clkSessions"></div></div>
         </div>
       </div>
+      <div class="panel self-only" id="carryPanel" hidden><h3>Carry-over hours</h3><p class="hint" style="margin:-4px 0 12px">Extra time moved from one day to a shorter day this month. It counts on the new day once approved.</p><div class="timeline" id="carryMine"></div></div>
       <div class="panel self-only">
         <div class="vhead" style="align-items:center"><h3 style="margin:0">My hours</h3>
           <div class="toolbar" style="flex:0 1 auto"><input type="month" id="myMonth" aria-label="Month"><button class="mini" id="myMonthCopy" type="button">Copy as table</button></div></div>
@@ -881,8 +887,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       </div>
       <div class="panel admin-only" id="otPanel" hidden>
         <h3>Overtime requests</h3>
-        <p class="hint" style="margin:-4px 0 12px">Sessions stop automatically after 8 hours, and each day stops at 8 hours unless you approve overtime here.</p>
+        <p class="hint" style="margin:-4px 0 12px">Employees can work past 8 hours. Time over 8 hours counts only after you approve it here, either as overtime on that day or carried over to a shorter day in the same month.</p>
         <div class="timeline" id="otList"></div>
+        <h3 style="margin-top:18px">Carry-over requests</h3>
+        <div class="timeline" id="carryList"></div>
       </div>
       <div class="panel admin-only" hidden>
         <div class="vhead" style="align-items:center"><h3 style="margin:0">Team attendance</h3>
@@ -1194,12 +1202,22 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 </dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
-    <h3 id="otDlgT">You've reached 8 hours today</h3>
+    <h3 id="otDlgT">You worked more than 8 hours today</h3>
     <p class="hint" id="otDlgMsg" style="margin:0"></p>
-    <div class="g2"><div class="f"><label for="otHrs">Extra hours (over 8)</label><input id="otHrs" type="text" readonly></div></div>
-    <div class="f"><label for="otWhy">Why did you need the extra time?</label><textarea id="otWhy" rows="4" maxlength="500" placeholder="e.g. Finishing today's batch for the client deadline"></textarea></div>
+    <div class="ot-big" id="otBig"></div>
+    <div class="ot-choice" role="radiogroup" aria-label="What to do with the extra time">
+      <label><input type="radio" name="otMode" value="ot" checked><span><b>Request overtime for today</b><small>The extra time is paid or counted as overtime on today's date.</small></span></label>
+      <label id="otCarryOpt"><input type="radio" name="otMode" value="carry"><span><b>Carry it over to another day this month</b><small id="otCarryHint">Add it to a shorter day so that day reaches its full hours.</small></span></label>
+    </div>
+    <div class="ot-carry" id="otCarryBox" hidden>
+      <div class="f"><label for="otTo">Add the time to</label><select id="otTo"></select></div>
+      <div class="g2"><div class="f"><label for="otCh">Hours</label><input id="otCh" type="number" min="0" max="8" value="0"></div><div class="f"><label for="otCm">Minutes</label><input id="otCm" type="number" min="0" max="59" step="5" value="0"></div></div>
+      <small class="hint" id="otCarryMax"></small>
+    </div>
+    <input id="otHrs" type="hidden">
+    <div class="f"><label for="otWhy">Reason</label><textarea id="otWhy" rows="4" maxlength="500" placeholder="e.g. Finishing today's batch for the client deadline"></textarea></div>
     <div class="msg err" id="otErr" hidden></div>
-    <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Request overtime approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
+    <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Send for approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
   </form>
 </dialog>
 <dialog class="pw-dlg" id="pwDlg" aria-labelledby="pwDlgT">
@@ -1268,11 +1286,11 @@ let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canW
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
-const SESSION_MAX = 8 * 3600000, DAY_MAX = 8 * 3600000;
+const SESSION_MAX = 16 * 3600000, DAY_MAX = 8 * 3600000;   // DAY_MAX = standard day; SESSION_MAX only stops a clock left running by mistake
 let accounts = [], week = {key:'', rows:[]}, nextWeek = {key:'', rows:[]}, decisions = [], anns = [], requests = [], myReq = null, myReqRaw = null, myReqDoc = null, myClockRaw = null, attDocs = [], clockDocs = [], reqLegacy = [], reqNew = [], links = [], myAtt = null, myAttRaw = null, teamAtt = [];
 // attendance/<claude user id> holds one record per employee email, so several employees using one device or Claude account never share hours
 const attRecs = d => !d ? [] : Array.isArray(d.recs) ? d.recs : (d.email && d.days ? [{email: d.email, name: d.name, days: d.days}] : []);
-function pickMyAtt(){ myAtt = me ? (mergeAtt([myAttRaw, myClockRaw]).find(r => r.email === me.email) || null) : null; if (myAtt) tagAllow(myAtt.days, otApprMine); }
+function pickMyAtt(){ myAtt = me ? (mergeAtt([myAttRaw, myClockRaw]).find(r => r.email === me.email) || null) : null; if (myAtt) { tagAllow(myAtt.days, otApprMine); tagCarry(myAtt.days, myCarry()); } }
 function mergeAtt(docs){ const by = {}; docs.forEach(d => attRecs(d).forEach(r => { if (!r || !r.email) return; const m = by[r.email] || (by[r.email] = {email: r.email, name: r.name, days: {}});
   Object.entries(r.days || {}).forEach(([k, l]) => { const u = {}; (m.days[k] || []).concat(l || []).forEach(x => { if (x && x.in && (!u[x.in] || x.out)) u[x.in] = x; }); m.days[k] = Object.values(u).sort((a, b) => String(a.in).localeCompare(String(b.in))); }); })); return Object.values(by); }
 const unsub = {};
@@ -1280,7 +1298,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1370,6 +1388,8 @@ function watchMine(){
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); });
+  watch('myCarryReq', db.doc('carryReq/' + me.key), s => { carryReqMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
+  watch('myCarryAppr', db.doc('carryAppr/' + me.key), s => { carryApprMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
   watch('myOtReq', db.doc('otRequests/' + me.key), s => { otReqMine = s.exists ? s.data() : null; renderClock(); });
   watch('myOtAppr', db.doc('otApprovals/' + me.key), s => { otApprMine = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); });
 }
@@ -1384,8 +1404,10 @@ function startAdminData() {
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
   watch('requests2', db.collection('leaveRequests'), s => { reqNew = s.docs.map(d => ({uid: d.id, ...d.data()})); setReqs(); });
-  const setAtt = () => { teamAtt = mergeAtt([...attDocs, ...clockDocs]); teamAtt.forEach(r => tagAllow(r.days, otApprAll[r.email])); renderTeamAtt(); renderHome(); renderWa(); };
+  const setAtt = () => { teamAtt = mergeAtt([...attDocs, ...clockDocs]); teamAtt.forEach(r => { tagAllow(r.days, otApprAll[r.email]); tagCarry(r.days, carryItems(carryReqAll[r.email], carryApprAll[r.email])); }); renderTeamAtt(); renderHome(); renderWa(); };
   watch('teamClock', db.collection('timeclock'), s => { clockDocs = s.docs.map(d => d.data()); clockIds = s.docs.map(d => d.id); setAtt(); enforceTeam(); });
+  watch('carryReqAll', db.collection('carryReq'), s => { carryReqAll = {}; s.docs.forEach(d => carryReqAll[d.id] = d.data()); setAtt(); renderOt(); });
+  watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('otReqAll', db.collection('otRequests'), s => { otReqAll = s.docs.map(d => ({key: d.id, ...d.data()})); renderOt(); });
   watch('otApprAll', db.collection('otApprovals'), s => { otApprAll = {}; s.docs.forEach(d => otApprAll[d.id] = d.data()); setAtt(); renderOt(); enforceTeam(); });
   watch('waCfg', db.doc('adminSettings/report'), s => { waCfg = s.exists ? s.data() : {}; renderWa(); });
@@ -2506,9 +2528,18 @@ const fmtT = iso => iso ? new Date(iso).toLocaleTimeString(undefined, {hour: '2-
 const fmtH = ms => { const m = Math.max(0, Math.round(ms / 60000)); return Math.floor(m / 60) + 'h ' + pad(m % 60) + 'm'; };
 function capWalk(list, allow){ let acc = 0; const now = Date.now(), cap = allow || (list && list.allowMs) || DAY_MAX;
   return (list || []).map(x => { const st = +new Date(x.in), end = x.out ? +new Date(x.out) : now; let d = Math.max(0, Math.min(end, st + SESSION_MAX) - st); d = Math.max(0, Math.min(d, cap - acc)); acc += d; return {x, st, d, open: !x.out, acc}; }); }
-const sessMs = (list, allow) => capWalk(list, allow).reduce((a, r) => a + r.d, 0);
+const sessMs = (list, allow) => capWalk(list, allow).reduce((a, r) => a + r.d, 0) + ((list && list.carryIn) || 0);
 const sessOne = (list, x) => { const r = capWalk(list).find(r => r.x === x); return r ? r.d : 0; };
 const extraFor = (appr, k) => { const a = appr && appr.days && appr.days[k]; return a && a.status === 'approved' ? (+a.hours || 0) * 3600000 : 0; };
+/* ---------- carry-over: extra time on one day moved to a shorter day in the same month, after admin approval ---------- */
+let carryReqMine = null, carryApprMine = null, carryReqAll = {}, carryApprAll = {};
+function carryItems(req, appr){ return ((req && req.items) || []).map(x => { const a = appr && appr.items && appr.items[x.id]; return {...x, status: a ? a.status : 'pending', by: a && a.by, decidedAt: a && a.at}; }); }
+const myCarry = () => carryItems(carryReqMine, carryApprMine);
+// marks each day list with carryIn (approved minutes added) and carryOut (minutes sent away, pending or approved)
+function tagCarry(days, items){ Object.values(days || {}).forEach(l => { if (Array.isArray(l)) ['carryIn', 'carryOut', 'carryOutOk'].forEach(p2 => Object.defineProperty(l, p2, {value: 0, configurable: true, writable: true})); });
+  (items || []).forEach(x => { if (x.status === 'rejected') return; const src = days && days[x.from], dst = days && days[x.to];
+    if (Array.isArray(src)) { src.carryOut += x.ms; if (x.status === 'approved') src.carryOutOk += x.ms; }
+    if (x.status === 'approved' && Array.isArray(dst)) dst.carryIn += x.ms; }); return days; }
 function tagAllow(days, appr){ Object.entries(days || {}).forEach(([k, l]) => { if (Array.isArray(l)) Object.defineProperty(l, 'allowMs', {value: DAY_MAX + extraFor(appr, k), configurable: true, writable: true}); }); return days; }
 // close sessions that passed a limit; returns the changed day map or null
 function enforceDays(days, appr){ let changed = false; const out = JSON.parse(JSON.stringify(days || {}));
@@ -2518,7 +2549,7 @@ function enforceDays(days, appr){ let changed = false; const out = JSON.parse(JS
       if (now >= stop) { x.out = new Date(stop).toISOString(); x.auto = stop === byDay && byDay < bySess ? 'day' : 'session'; changed = true; acc += stop - st; } }); });
   return changed ? out : null; }
 const openSession = days => { const t = days && days[todayStr()]; return t && t.length && !t[t.length - 1].out ? t[t.length - 1] : null; };
-const autoTag = x => x.auto ? (x.auto === 'day' ? ' (stopped: 8h day limit)' : ' (stopped: 8h session limit)') : '';
+const autoTag = x => x.auto ? (x.auto === 'day' ? ' (stopped: 8h day limit)' : ' (stopped automatically after 16h)') : '';
 function attBlock(){
   if (!me) return 'Sign in with an employee account to use the time clock.';
   if (!db) return NO_DB;
@@ -2545,7 +2576,7 @@ function renderClock(){
   st.textContent = open ? 'Working since ' + fmtT(open.in) + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
   st.className = 'clock-status' + (open ? ' on' : brk ? ' brk' : '');
   $('clockDot').hidden = !open;
-  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() > 60000 ? ` <small class="pend">+${fmtH(extraPending())} waiting for approval</small>` : '');
+  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() > 60000 ? ` <small class="pend">+${fmtH(extraPending())} over 8h, not counted until approved</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   renderMyMonth();
 }
@@ -2559,15 +2590,21 @@ function renderMyMonth(){
   let html = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="mc-h">${d}</div>`).join('') + '<div class="mc-c blank"></div>'.repeat(lead);
   for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), onLv = lv(k);
     const cls = ['mc-c', l.length ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
-    html += `<button type="button" class="${cls}" data-day="${k}" ${l.length ? '' : 'aria-disabled="true"'} style="--p:${Math.min(100, ms / DAY_MAX * 100)}%"><span class="d">${i}</span>${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small><i class="bar"></i>` : onLv ? '<small class="lv">On leave</small>' : fut ? '' : '<small>—</small>'}</button>`; }
+    const cin = (l && l.carryIn) || 0, cout = (l && l.carryOutOk) || 0;
+    html += `<button type="button" class="${cls}" data-day="${k}" ${l.length ? '' : 'aria-disabled="true"'} style="--p:${Math.min(100, ms / DAY_MAX * 100)}%"><span class="d">${i}</span>${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small>${cin ? `<small class="cin">+${fmtH(cin)} carried in</small>` : ''}${cout ? `<small class="cout">${fmtH(cout)} carried out</small>` : ''}<i class="bar"></i>` : onLv ? '<small class="lv">On leave</small>' : fut ? '' : '<small>—</small>'}</button>`; }
   cal.innerHTML = html;
+  const fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), its = myCarry().filter(x => x.from.startsWith(m) || x.to.startsWith(m)).sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  $('carryPanel').hidden = !its.length;
+  $('carryMine').innerHTML = its.map(x => `<div class="ev"><div class="d">${fmtH(x.ms).replace(' ', '<small>') + '</small>'}</div><div><b>${fd(x.from)} → ${fd(x.to)}</b><span>${esc(x.reason || '')}</span></div><div class="acts"><span class="pill ${x.status === 'approved' ? 'ok' : x.status === 'rejected' ? 'off' : 'warn'}">${x.status === 'approved' ? 'Approved' : x.status === 'rejected' ? 'Not approved' : 'Waiting for approval'}</span></div></div>`).join('');
 }
 $('myMonth').value = monthKey(new Date());
 $('myMonth').addEventListener('change', renderMyMonth);
 $('myCal').addEventListener('click', e => { const b = e.target.closest('[data-day]'); if (!b) return; const k = b.dataset.day, l = ((myAtt && myAtt.days) || {})[k] || []; if (!l.length) return;
   const ms = sessMs(l), raw = rawMs(l), dd = $('dayDlg');
   $('dayDlgT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
-  $('dayDlgSub').innerHTML = `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${raw - ms > 60000 ? ` · <span style="color:#a86a00">${fmtH(raw - ms)} over 8h not approved / waiting</span>` : ''}`;
+  const fdd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), cIn = myCarry().filter(x => x.to === k && x.status === 'approved'), cOut = myCarry().filter(x => x.from === k && x.status !== 'rejected');
+  const left = raw + (l.carryIn || 0) - ms - (l.carryOut || 0);
+  $('dayDlgSub').innerHTML = `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${cIn.map(x => `<div class="cin">+${fmtH(x.ms)} carried over from ${fdd(x.from)}</div>`).join('')}${cOut.map(x => `<div class="cout">${fmtH(x.ms)} carried to ${fdd(x.to)}${x.status === 'pending' ? ' (waiting for approval)' : ''}</div>`).join('')}${left > 60000 ? ` <div style="color:#a86a00">${fmtH(left)} over 8h not approved / waiting</div>` : ''}`;
   $('dayDlgList').innerHTML = l.map((x, i) => { const d = x.out ? Math.max(0, Math.min(+new Date(x.out), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)) : Date.now() - +new Date(x.in);
     return `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? '<small style="display:block;color:var(--ink-soft)">then a break</small>' : ''}${x.ot ? '<small style="display:block;color:var(--ink-soft)">overtime</small>' : ''}${x.auto ? '<small style="display:block;color:var(--ink-soft)">stopped automatically</small>' : ''}${x.edit ? `<small style="display:block;color:var(--ink-soft)">edited by ${esc(x.edit.by || 'admin')}</small>` : ''}</span><span class="h mono">${fmtH(d)}</span></div>`; }).join('');
   try { dd.showModal(); } catch (x) { dd.setAttribute('open', ''); } });
@@ -2597,43 +2634,76 @@ const todayWorked = () => { const l = ((myAtt && myAtt.days) || {})[todayStr()];
 const todayAllow = () => DAY_MAX + extraFor(otApprMine, todayStr());
 const rawMs = l => capWalk(l || [], 1e15).reduce((a, r) => a + r.d, 0);            // all time worked (each session still max 8h)
 const todayRaw = () => rawMs(((myAtt && myAtt.days) || {})[todayStr()]);
-const extraPending = () => Math.max(0, todayRaw() - todayAllow());
-const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
+const dayList = k => ((myAtt && myAtt.days) || {})[k] || [];
+const extraPending = () => Math.max(0, todayRaw() - todayAllow() - (dayList(todayStr()).carryOut || 0));   // extra time today not yet approved or sent anywhere
+const extraUnsent = () => { const st = myOtToday(), ot = st && st.status === 'pending' ? st.hours * 3600000 : 0; return Math.max(0, extraPending() - ot); };
+const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(todayStr()).carryOut || 0) - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
 const onBreak = days => { const t = (days || {})[todayStr()] || []; const l = t[t.length - 1]; return !!(l && l.out && l.brk); };
 const myOtToday = () => { const k = todayStr(), a = otApprMine && otApprMine.days && otApprMine.days[k], r = otReqMine && otReqMine.days && otReqMine.days[k];
   if (a && (!r || a.at >= r.at)) return {status: a.status, hours: a.hours}; return r ? {status: 'pending', hours: r.hours} : null; };
+// days this month (before today) that are short of 8 hours and can receive carried-over time
+function carryTargets(){ const today = todayStr(), m = today.slice(0, 7), days = (myAtt && myAtt.days) || {}, out = [];
+  Object.keys(days).filter(k => k.startsWith(m) && k < today).sort().forEach(k => { const l = days[k], got = sessMs(l), pend = myCarry().filter(x => x.to === k && x.status === 'pending').reduce((a, x) => a + x.ms, 0), short = DAY_MAX - got - pend;
+    if (l && l.length && short >= 5 * 60000) out.push({k, got, short}); }); return out; }
+const fmtMins = ms => { const m2 = Math.round(ms / 60000); return (m2 >= 60 ? Math.floor(m2 / 60) + 'h ' : '') + (m2 % 60 || m2 < 60 ? pad(m2 % 60) + 'm' : '').replace(/^0(\d)m/, '$1m'); };
+function otMode(){ return (document.querySelector('input[name="otMode"]:checked') || {}).value || 'ot'; }
+function otModeUi(){ const c = otMode() === 'carry'; $('otCarryBox').hidden = !c; $('otSend').textContent = c ? 'Send carry-over for approval' : 'Send overtime for approval'; otCarryMax(); }
+function otCarryMax(){ const t = carryTargets().find(x => x.k === $('otTo').value); const max = Math.min(extraUnsent(), t ? t.short : 0);
+  $('otCarryMax').textContent = t ? `You can move up to ${fmtH(max)} to this day (it is ${fmtH(t.short)} short of 8 hours).` : ''; return max; }
+document.querySelectorAll('input[name="otMode"]').forEach(r => r.addEventListener('change', otModeUi));
+$('otTo').addEventListener('change', () => { const mx = otCarryMax(); $('otCh').value = Math.floor(mx / 3600000); $('otCm').value = Math.round((mx % 3600000) / 60000); });
 function askOvertime(auto){
-  const k = todayStr(), st = myOtToday();
-  if (st && st.status === 'pending' && st.hours >= otHoursNeeded()) return toast('Your overtime request is waiting for approval.');
+  const k = todayStr(), extra = extraUnsent(); if (extra < 60000) return;
   if (auto && otAsked === k) return; otAsked = k;
-  const need = otHoursNeeded(); $('otHrs').value = need; $('otDlgT').textContent = 'You worked more than 8 hours today';
-  $('otDlgMsg').textContent = `You worked ${fmtH(todayRaw())} today, which is ${fmtH(todayRaw() - DAY_MAX)} over 8 hours. Send the extra time to your Project Manager for approval. Until it's approved, your total shows 8 hours.`;
+  $('otHrs').value = otHoursNeeded();
+  $('otDlgMsg').textContent = `You worked ${fmtH(todayRaw())} today. Choose what to do with the extra time. It counts only after your Project Manager approves it.`;
+  $('otBig').innerHTML = `<b>${fmtH(extra)}</b><span>over 8 hours${dayList(k).carryOut ? ' still to assign' : ''}</span>`;
+  const tg = carryTargets(); $('otTo').innerHTML = tg.map(t => `<option value="${t.k}">${new Date(t.k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})} · worked ${fmtH(t.got)}, ${fmtH(t.short)} short</option>`).join('');
+  const can = tg.length > 0; $('otCarryOpt').classList.toggle('dis', !can); $('otCarryOpt').querySelector('input').disabled = !can; $('otCarryHint').textContent = can ? 'Add it to a shorter day so that day reaches its full hours.' : 'No shorter days earlier this month to carry it to.';
+  document.querySelector('input[name="otMode"][value="ot"]').checked = true; otModeUi(); $('otTo').dispatchEvent(new Event('change'));
   $('otErr').hidden = true; $('otWhy').value = ''; const d = $('otDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
 }
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
 $('otForm').addEventListener('submit', async e => {
-  e.preventDefault(); if (!me) return; const k = todayStr(), btn = $('otSend');
-  const why = $('otWhy').value.trim(); if (!why) { $('otErr').textContent = 'Add a short reason for the overtime.'; $('otErr').hidden = false; return; }
-  btn.disabled = true; btn.textContent = 'Sending…';
-  const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {hours: +$('otHrs').value, reason: why.slice(0, 500), at: new Date().toISOString()};
-  Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]);
-  try { await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); $('otLater').click(); toast('Sent to your Project Manager for approval'); renderClock(); }
-  catch (x) { $('otErr').textContent = 'The request couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'; $('otErr').hidden = false; }
-  finally { btn.disabled = false; btn.textContent = 'Request overtime approval'; }
+  e.preventDefault(); if (!me) return; const k = todayStr(), btn = $('otSend'), err = $('otErr'), fail = t => { err.textContent = t; err.hidden = false; };
+  const why = $('otWhy').value.trim(); if (!why) return fail('Add a short reason.');
+  const mode = otMode(); btn.disabled = true; const label = btn.textContent; btn.textContent = 'Sending…';
+  try {
+    if (mode === 'carry') { const to = $('otTo').value, ms = ((+$('otCh').value || 0) * 60 + (+$('otCm').value || 0)) * 60000, max = otCarryMax();
+      if (!to) { btn.disabled = false; btn.textContent = label; return fail('Pick the day to add the time to.'); }
+      if (ms < 60000) { btn.disabled = false; btn.textContent = label; return fail('Enter how much time to carry over.'); }
+      if (ms > max + 30000) { btn.disabled = false; btn.textContent = label; return fail('You can move up to ' + fmtH(max) + ' to that day.'); }
+      const items = [...((carryReqMine && carryReqMine.items) || []), {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), from: k, to, ms, reason: why.slice(0, 500), at: new Date().toISOString()}].slice(-120);
+      await db.doc('carryReq/' + me.key).set({email: me.email, name: me.name, items}); carryReqMine = {email: me.email, name: me.name, items}; pickMyAtt();
+      toast('Carry-over sent to your Project Manager for approval'); }
+    else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {hours: otHoursNeeded(), reason: why.slice(0, 500), at: new Date().toISOString()};
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); toast('Overtime sent to your Project Manager for approval'); }
+    $('otLater').click(); renderClock(); renderMyMonth();
+    if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500);
+  } catch (x) { fail('The request couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'); }
+  finally { btn.disabled = false; btn.textContent = mode === 'carry' ? 'Send carry-over for approval' : 'Send overtime for approval'; }
 });
 function renderOtBox(){
   const box = $('otBox'); if (!me || !selfClock()) { box.hidden = true; return; }
-  const st = myOtToday(), extra = extraPending(), over = todayRaw() - DAY_MAX, open = openSession((myAtt && myAtt.days) || {});
-  let html = '';
-  if (extra > 60000 && st && st.status === 'pending' && st.hours >= otHoursNeeded() - .01) html = `<b>⏳ ${fmtH(extra)} waiting for approval</b><span>Your Project Manager has your request for ${st.hours} h of extra time. Your total updates once it's approved.</span>`;
-  else if (extra > 60000 && st && st.status === 'rejected') html = `<b>Extra time not approved</b><span>Only 8 hours count for today. ${fmtH(extra)} was not approved.</span>`;
-  else if (extra > 60000) html = `<b>You've worked ${fmtH(over)} over 8 hours</b><span>${open ? 'When you clock out, you\'ll be asked to send the extra time for approval.' : 'Send it to your Project Manager for approval so it counts.'}</span>${open ? '' : '<div class="row"><button class="mini" type="button" id="otAsk">Request approval</button></div>'}`;
-  else if (st && st.status === 'approved') html = `<b>✓ Overtime approved: ${st.hours} h today</b><span>Your total for today includes it.</span>`;
-  box.hidden = !html; box.className = 'msg ot-box' + (extra > 60000 ? ' warn' : ''); box.innerHTML = html;
+  const k = todayStr(), st = myOtToday(), unsent = extraUnsent(), open = openSession((myAtt && myAtt.days) || {}), fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
+  const parts = [];
+  myCarry().filter(x => x.from === k).forEach(x => parts.push(x.status === 'approved' ? `<div>✓ <b>${fmtH(x.ms)}</b> carried over to ${fd(x.to)}</div>` : x.status === 'rejected' ? `<div>✗ Carry-over of ${fmtH(x.ms)} to ${fd(x.to)} was not approved</div>` : `<div>⏳ <b>${fmtH(x.ms)}</b> carry-over to ${fd(x.to)} waiting for approval</div>`));
+  if (st && st.status === 'pending') parts.push(`<div>⏳ Overtime of <b>${st.hours} h</b> waiting for your Project Manager's approval</div>`);
+  if (st && st.status === 'approved') parts.push(`<div>✓ Overtime approved: <b>${st.hours} h</b></div>`);
+  if (st && st.status === 'rejected') parts.push('<div>✗ Overtime for today was not approved</div>');
+  if (unsent > 60000) parts.push(`<div><b>${fmtH(unsent)}</b> over 8 hours ${open ? 'so far. When you clock out you can send it as overtime or carry it to another day.' : 'not sent yet.'}</div>${open ? '' : '<div class="row"><button class="mini" type="button" id="otAsk">Choose what to do with it</button></div>'}`);
+  box.hidden = !parts.length; box.className = 'msg ot-box' + (unsent > 60000 ? ' warn' : ''); box.innerHTML = parts.join('');
   const b = $('otAsk'); if (b) b.onclick = () => askOvertime(false);
 }
+function renderCarryAdmin(){ if (!isAdmin || !$('carryList')) return; const pend = [], fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
+  Object.entries(carryReqAll).forEach(([key, r]) => carryItems(r, carryApprAll[key]).filter(x => x.status === 'pending').forEach(x => pend.push({...x, key, name: r.name || key})));
+  pend.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  $('carryList').innerHTML = pend.length ? pend.map(x => `<div class="ev"><div class="d">${new Date(x.from + 'T00:00').getDate()}<small>${new Date(x.from + 'T00:00').toLocaleDateString(undefined, {month: 'short'})}</small></div><div><b>${esc(x.name)} · move ${fmtH(x.ms)} from ${fd(x.from)} to ${fd(x.to)}</b><span>${esc(x.reason || '')}</span></div><div class="acts"><button class="mini ok-btn" data-cy="approved" data-e="${esc(x.key)}" data-id="${esc(x.id)}">Approve</button><button class="mini danger" data-cy="rejected" data-e="${esc(x.key)}" data-id="${esc(x.id)}">Reject</button></div></div>`).join('') : '<p class="empty">No carry-over requests waiting.</p>'; }
+$('carryList').addEventListener('click', async e => { const b = e.target.closest('[data-cy]'); if (!b || !isAdmin) return; b.disabled = true; const key = b.dataset.e, cur = carryApprAll[key] || {}, items = {...(cur.items || {})};
+  items[b.dataset.id] = {status: b.dataset.cy, by: me ? me.name : 'Admin', at: new Date().toISOString()};
+  try { await db.doc('carryAppr/' + key).set({email: key, items}); toast(b.dataset.cy === 'approved' ? 'Carry-over approved' : 'Carry-over rejected'); } catch (x) { b.disabled = false; toast('That decision couldn\'t be saved. Try again.'); } });
 function renderOt(){
-  if (!isAdmin) return;
+  if (!isAdmin) return; renderCarryAdmin();
   const pend = [];
   otReqAll.forEach(r => Object.entries(r.days || {}).forEach(([k, q]) => { const a = otApprAll[r.key] && otApprAll[r.key].days && otApprAll[r.key].days[k]; if (!a || a.at < q.at) pend.push({...q, k, email: r.key, name: r.name}); }));
   pend.sort((a, b) => String(b.k).localeCompare(String(a.k)));
@@ -2673,7 +2743,7 @@ async function punch(kind){
   else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (todayRaw() > todayAllow() + 60000) askOvertime(false); }, 400); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out'); $('clkBrk').onclick = () => punch('break');
@@ -2782,7 +2852,7 @@ function teSessions(){ const date = $('teDate').value, today = todayStr(), out =
 function teCalc(){ const {out, errs} = teSessions(); let tot = 0, long = false;
   out.forEach(x => { const ms = (x.en || new Date()) - x.st; tot += Math.max(0, ms); const h = x.r.querySelector('.h'); h.textContent = x.en ? fmtH(ms) + (x.en.getDate() !== x.st.getDate() ? ' +1d' : '') : 'open'; h.classList.toggle('bad', ms > SESSION_MAX); if (ms > SESSION_MAX) long = true; });
   const p = accounts.find(a => a.key === teKey), allow = DAY_MAX + extraFor(p && otApprAll[p.email], $('teDate').value);
-  $('teSum').innerHTML = `Total <b>${fmtH(tot)}</b>` + (long ? ' · <span style="color:var(--warn)">a session over 8 hours counts as 8 hours</span>' : '') + (tot > allow ? ` · <span style="color:var(--warn)">only ${fmtH(allow)} counts for this day unless overtime is approved</span>` : '');
+  $('teSum').innerHTML = `Total <b>${fmtH(tot)}</b>` + (long ? ' · <span style="color:var(--warn)">a session over 16 hours counts as 16 hours</span>' : '') + (tot > allow ? ` · <span style="color:var(--warn)">only ${fmtH(allow)} counts for this day unless overtime is approved</span>` : '');
   return errs; }
 function openTimeEdit(key, date){ teKey = key; $('teDate').value = date || $('attDate').value || todayStr(); $('teWhy').value = ''; teLoad(); const d = $('teDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
 $('teDate').addEventListener('change', teLoad);
