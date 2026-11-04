@@ -359,6 +359,15 @@ tbody tr:hover{background:var(--surface-2)}
 .bf-wiz{display:grid;gap:16px;padding:24px;border-radius:18px;border:1px solid var(--line);background:var(--surface)}.bf-crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.bf-crumbs span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2);font:700 12px var(--mono)}.bf-crumbs span.on{background:var(--gem)}.bf-crumbs i{font-style:normal;color:var(--ink-soft)}
 .bf-node{min-height:150px;animation:up .3s both}.bf-q{font-size:20px;line-height:1.5;margin:0 0 14px}.bf-opts{display:flex;flex-wrap:wrap;gap:10px}.bf-opts .btn{font-size:15px}.bf-yel{display:inline-block;padding:3px 10px;border-radius:8px;background:#fdf0a8;border:2px solid #c98a00;font-weight:800;margin-right:6px}
 .bf-res{display:grid;gap:8px;justify-items:start;padding:18px 20px;border-radius:16px;border:2px solid}.bf-res.m{background:#effaea;border-color:#8dc63f}.bf-res.n{background:#fdf0ee;border-color:#e2513b}.bf-res.c{background:#fff8e6;border-color:#eda100}.bf-res .bf-a{font-size:20px;padding:6px 16px}.bf-res p{margin:0}.bf-res > span:first-child{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+.bf-flowwrap{display:grid;gap:16px}.bf-chart{max-width:1000px;width:100%;justify-self:center}
+.bf-chart{padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--surface)}#wzChart{width:100%;height:auto;display:block;overflow:visible}
+.bf-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.bf-legend span{font:600 11.5px var(--body);padding:3px 9px;border-radius:999px;border:1px solid}.bf-legend .q{border-color:#1f3a5f;color:#1f3a5f}.bf-legend .y{background:#fdf0a8;border-color:#c98a00;color:#6b4a00}.bf-legend .m{background:#dff3d6;border-color:#8dc63f;color:#1f6a2a}.bf-legend .n{background:#fbe0dc;border-color:#e2513b;color:#a5281c}.bf-legend .c{background:#fdf0cf;border-color:#eda100;color:#8a5a00}
+.fe path{fill:none;stroke:#b6c2c8;stroke-width:1.6}.fe text{paint-order:stroke;stroke:var(--surface);stroke-width:6px;stroke-linejoin:round;font:600 16px var(--body);fill:#5b6b66}.fe.hot path{stroke:#5a9a1a;stroke-width:3.4}.fe.hot text{fill:#3f7a12;font-weight:800}
+.fn{cursor:pointer}.fn path,.fn rect{stroke-width:1.6;transition:stroke-width .2s}.fn text{font:600 16px var(--body);pointer-events:none}
+.fn.dia path{fill:#fff;stroke:#1f3a5f}.fn.dia text{fill:#13241d}.fn.pill rect{fill:#1f3a5f;stroke:#1f3a5f}.fn.pill text{fill:#fff;font-weight:800}
+.fn.y rect{fill:#fdf0a8;stroke:#c98a00;stroke-width:2.4}.fn.y text{fill:#6b4a00;font-weight:800}.fn.m rect{fill:#e3f4dc;stroke:#8dc63f}.fn.m text{fill:#1f6a2a;font-weight:800}.fn.n rect{fill:#fbe3df;stroke:#e2513b}.fn.n text{fill:#a5281c;font-weight:800}.fn.c rect{fill:#fdf2d6;stroke:#eda100}.fn.c text{fill:#8a5a00;font-weight:800}
+.fn:hover path,.fn:hover rect{stroke-width:3}.fn.on.dia path{fill:#eef8e4;stroke:#5a9a1a;stroke-width:2.6}.fn.cur path,.fn.cur rect{stroke-width:4;filter:drop-shadow(0 0 8px rgba(141,198,63,.8))}.fn:focus{outline:none}.fn:focus-visible path,.fn:focus-visible rect{stroke:#2a78d6;stroke-width:3}
+:root[data-theme="dark"] .fn.dia path{fill:#1b2a30}:root[data-theme="dark"] .fn.dia text{fill:#e9eef1}
 .bf-flow summary{cursor:pointer;font-weight:700;color:var(--gem-ink)}.bf-flow img{display:block;max-width:560px;width:100%;margin:12px auto 0;border-radius:12px;border:1px solid var(--line);background:#fff}
 .bf-search{width:100%;max-width:440px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:var(--surface);color:var(--ink)}.bf-dt td{white-space:normal!important;font-size:13.5px}
 .bf-chips{display:flex;flex-wrap:wrap;gap:6px}.bf-big{margin:0;padding:12px 16px;border-radius:12px;font:800 18px var(--display);letter-spacing:.02em}.bf-big.n{background:#fdf0ee;color:#a5281c}.bf-big.m{background:#effaea;color:#1f6a2a}
@@ -1132,9 +1141,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       </div>
 
       <div class="bf-pane" data-p="wiz" hidden>
-        <div class="bf-wiz"><div class="bf-crumbs" id="wzCrumbs"></div><div class="bf-node" id="wzNode"></div>
-          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini" type="button" id="wzBack">← Back</button><button class="mini" type="button" id="wzReset">Start again</button></div></div>
-        <details class="bf-flow"><summary>Show the full flowchart</summary><img src="bench-flow.png" alt="Flowchart: one field, start to answer" loading="lazy"></details>
+        <div class="bf-flowwrap">
+          <div class="bf-wiz"><div class="bf-crumbs" id="wzCrumbs"></div><div class="bf-node" id="wzNode"></div>
+            <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini" type="button" id="wzBack">← Back</button><button class="mini" type="button" id="wzReset">Start again</button></div>
+            <p class="hint" style="margin:0">Answer the questions here, or click any box in the flowchart to jump to it. Your path lights up in green.</p></div>
+          <div class="bf-chart"><div class="bf-legend"><span class="q">Question</span><span class="y">LinkedIn (L1: only here)</span><span class="m">Match</span><span class="n">Not a match</span><span class="c">Can't decide</span></div><svg id="wzChart" viewBox="0 0 1100 1060" role="img" aria-label="Flowchart: one field, start to answer"></svg></div>
+        </div>
       </div>
 
       <div class="bf-pane" data-p="tbl" hidden>
@@ -2661,7 +2673,30 @@ $('srcFile').addEventListener('change', async e => {
   const drawWiz = () => { const id = path[path.length - 1], n = N[id];
     $('wzCrumbs').innerHTML = path.map((p2, i) => `<span class="${i === path.length - 1 ? 'on' : ''}">${i + 1}</span>`).join('<i>›</i>');
     $('wzNode').innerHTML = n.a ? `<div class="bf-res ${n.a}"><span>Click</span>${A[n.a]}<p>${n.t}</p></div>` : `<p class="bf-q">${n.q}</p><div class="bf-opts">${n.o.map(([l, to]) => `<button type="button" class="btn btn-ghost" data-to="${to}">${l}</button>`).join('')}</div>`;
-    $('wzBack').disabled = path.length < 2; };
+    $('wzBack').disabled = path.length < 2; drawChart(); };
+  // interactive flowchart drawn in code: the wizard's path is highlighted and every box can be clicked
+  const FC = {start: ['pill', 380, 50, ['START', 'read the field question']], q1: ['dia', 380, 175, ['Is THE FILE SAYS', 'empty?']],
+    q2a: ['dia', 160, 340, ['Is PUBLIC PROFILE', 'SAYS empty?']], q2b: ['dia', 600, 340, ['Is PUBLIC PROFILE', 'SAYS empty?']],
+    r3: ['m', 80, 490, ['✓ MATCH', 'rule 3']], r6: ['n', 240, 490, ['✗ NOT A MATCH', 'rule 6']],
+    q3: ['dia', 860, 490, ['Refresh once.', 'Still empty?']], q4: ['dia', 420, 620, ['Same person,', 'related data?']],
+    q5: ['y', 860, 650, ['Open LinkedIn ↗', 'ONLY CASE FOR L1', 'check this field only']], q6: ['dia', 240, 790, ['Same information', 'under the rule box?']],
+    r5: ['c', 560, 790, ['? CAN\'T DECIDE', 'rule 5']], r1: ['m', 140, 970, ['✓ MATCH', 'rule 1']], r2: ['n', 320, 970, ['✗ NOT A MATCH', 'rule 2']],
+    r4a: ['m', 500, 970, ['✓ MATCH', '4a · same']], r4b: ['n', 650, 970, ['✗ NOT A MATCH', '4b · different']], r4c: ['n', 800, 970, ['✗ NOT A MATCH', '4c · nothing']],
+    r4d: ['c', 950, 970, ['? CAN\'T DECIDE', '4d · won\'t open']], r4e: ['c', 1030, 840, ['? CAN\'T', 'DECIDE', '4e · other person']]};
+  const FE = [['start', 'q1', ''], ['q1', 'q2a', 'Yes'], ['q1', 'q2b', 'No'], ['q2a', 'r3', 'Yes'], ['q2a', 'r6', 'No'], ['q2b', 'q3', 'Yes'], ['q2b', 'q4', 'No'], ['q3', 'q5', 'Yes'], ['q3', 'q4', 'No, data loaded'],
+    ['q4', 'q6', 'Yes'], ['q4', 'r5', 'No'], ['q6', 'r1', 'Yes'], ['q6', 'r2', 'No'], ['q5', 'r4a', 'Same'], ['q5', 'r4b', 'Different'], ['q5', 'r4c', 'Nothing'], ['q5', 'r4d', 'Can\'t open'], ['q5', 'r4e', 'Other person']];
+  const box = id => { const [t, x, y] = FC[id], w = t === 'dia' ? 230 : t === 'pill' ? 210 : t === 'y' ? 220 : 142, h = t === 'dia' ? 120 : t === 'y' ? 90 : t === 'pill' ? 70 : id === 'r4e' ? 86 : 64; return {x, y, w, h}; };
+  // shortest route from the start to any box, used when a box is clicked
+  const routeTo = id => { const prev = {q1: null}, q = ['q1']; while (q.length) { const c = q.shift(); FE.filter(e => e[0] === c).forEach(e => { if (!(e[1] in prev)) { prev[e[1]] = c; q.push(e[1]); } }); } if (!(id in prev)) return ['q1']; const r = []; let c = id; while (c) { r.unshift(c); c = prev[c]; } return r; };
+  function drawChart(){ const svg = $('wzChart'); if (!svg) return; const on = new Set(path), cur = path[path.length - 1], used = new Set(path.slice(1).map((n2, i) => path[i] + '>' + n2)); used.add('start>q1');
+    const edges = FE.map(([a, b2, l]) => { const A2 = box(a), B = box(b2), x1 = A2.x, y1 = A2.y + A2.h / 2, x2 = B.x, y2 = B.y - B.h / 2, my = (y1 + y2) / 2, hot = used.has(a + '>' + b2);
+      return `<g class="fe${hot ? ' hot' : ''}"><path d="M${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2 - 6}" marker-end="url(#fcArr${hot ? 'H' : ''})"/>${l ? (a === 'q5' ? `<text x="${x2}" y="${y2 - 14}" text-anchor="middle">${l}</text>` : `<text x="${(x1 + x2) / 2 + (x2 >= x1 ? 8 : -8)}" y="${my - 4}" text-anchor="${x2 >= x1 ? 'start' : 'end'}">${l}</text>`) : ''}</g>`; }).join('');
+    const nodes = Object.keys(FC).map(id => { const [t] = FC[id], b2 = box(id), lines = FC[id][3], cls = 'fn ' + t + (on.has(id) || id === 'start' ? ' on' : '') + (id === cur ? ' cur' : '');
+      const shape = t === 'dia' ? `<path d="M${b2.x} ${b2.y - b2.h / 2} L${b2.x + b2.w / 2} ${b2.y} L${b2.x} ${b2.y + b2.h / 2} L${b2.x - b2.w / 2} ${b2.y}Z"/>` : `<rect x="${b2.x - b2.w / 2}" y="${b2.y - b2.h / 2}" width="${b2.w}" height="${b2.h}" rx="${t === 'pill' ? 35 : 10}"/>`;
+      return `<g class="${cls}" data-fn="${id}" tabindex="0" role="button" aria-label="${lines.join(' ')}">${shape}${lines.map((ln, i) => `<text x="${b2.x}" y="${b2.y + (i - (lines.length - 1) / 2) * 18 + 6}" text-anchor="middle">${ln}</text>`).join('')}</g>`; }).join('');
+    svg.innerHTML = '<defs><marker id="fcArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a9aa3"/></marker><marker id="fcArrH" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5a9a1a"/></marker></defs>' + edges + nodes; }
+  $('wzChart').addEventListener('click', e => { const g = e.target.closest('[data-fn]'); if (!g) return; const id = g.dataset.fn === 'start' ? 'q1' : g.dataset.fn; path = routeTo(id); drawWiz(); });
+  $('wzChart').addEventListener('keydown', e => { if (e.key === 'Enter') { const g = e.target.closest('[data-fn]'); if (g) { path = routeTo(g.dataset.fn === 'start' ? 'q1' : g.dataset.fn); drawWiz(); } } });
   $('wzNode').addEventListener('click', e => { const b = e.target.closest('[data-to]'); if (b) { path.push(b.dataset.to); drawWiz(); } });
   $('wzBack').onclick = () => { if (path.length > 1) { path.pop(); drawWiz(); } }; $('wzReset').onclick = () => { path = ['q1']; drawWiz(); }; drawWiz();
 
