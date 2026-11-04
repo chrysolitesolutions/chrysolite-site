@@ -342,6 +342,33 @@ tbody tr:hover{background:var(--surface-2)}
 .my-assign{display:grid;gap:12px;border-left:4px solid var(--gem);background:linear-gradient(160deg,color-mix(in srgb,var(--gem) 9%,var(--surface)),var(--surface))}.my-assign.done{border-left-color:var(--ok)}.my-assign.off{border-left-color:var(--line)}
 .ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
 .ma-eye{font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.ma-task{font:800 22px var(--display)}.ma-task .shift{font-size:16px;padding:6px 14px}
+.bf-card{border-color:color-mix(in srgb,var(--gem) 45%,var(--line));background:linear-gradient(150deg,color-mix(in srgb,var(--gem) 12%,var(--surface)),var(--surface))}
+.bf-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.bf-role span{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}.bf-role button,.bf-chips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font:600 13.5px var(--body);cursor:pointer;color:var(--ink)}.bf-role button.on,.bf-chips button.on{background:var(--gem);border-color:var(--gem);color:#13240a}
+.bf-tabs{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;margin-bottom:6px;background:linear-gradient(var(--bg) 70%,transparent)}.bf-tabs button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:9px 14px;font:600 13.5px var(--body);cursor:pointer;color:var(--ink)}.bf-tabs button.on{background:#13362b;color:#fff;border-color:#13362b}
+@media(max-width:700px){.bf-tabs{flex-wrap:nowrap;overflow-x:auto}}
+.bf-pane{display:grid;gap:14px;animation:up .35s both}.bf-h{margin:6px 0 0}.bf-l{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gem-ink)}
+.bf-sum{padding:20px 22px;border-radius:18px;background:linear-gradient(135deg,#13362b,#1f6a50);color:#eef6ea}.bf-sum .bf-l{color:#d7f07a}.bf-sum p{margin:6px 0 0;font-size:17px;line-height:1.55}
+.bf-a{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;font-size:.92em;white-space:nowrap}.bf-a.m{background:#dff3d6;color:#1f6a2a}.bf-a.n{background:#fbe0dc;color:#a5281c}.bf-a.c{background:#fdf0cf;color:#8a5a00}
+.bf-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:860px){.bf-rules{grid-template-columns:1fr}}
+.bf-rule{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;padding:18px;border-radius:16px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;color:var(--ink);transition:transform .2s,box-shadow .2s}.bf-rule:hover{transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(0,0,0,.35)}
+.bf-rule b{grid-row:span 2;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--gem);font:800 20px var(--display);color:#13240a}.bf-rule em{font-style:normal;color:var(--gem-ink);font-weight:700;font-size:13px}
+.bf-steps{display:grid;gap:8px}.bf-steps details{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:0 16px}.bf-steps summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:center;padding:14px 0;font-weight:700;font-size:15.5px}.bf-steps summary::-webkit-details-marker{display:none}
+.bf-steps summary b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:color-mix(in srgb,var(--gem) 25%,var(--surface));font-size:13px}.bf-steps details[open] summary b{background:var(--gem)}.bf-steps details > *:not(summary){margin:0 0 14px}.bf-steps ol,.bf-steps ul{display:grid;gap:6px;padding-left:22px}
+.bf-call{padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--info) 12%,var(--surface));border-left:4px solid var(--info);margin:0}
+.bf-ans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}@media(max-width:760px){.bf-ans{grid-template-columns:1fr}}.bf-ans > div{display:grid;gap:6px;padding:14px;border-radius:14px;border:1px solid var(--line)}.bf-ans .m{background:#effaea;border-color:#bfe3b0}.bf-ans .n{background:#fdf0ee;border-color:#f1c2ba}.bf-ans .c{background:#fff8e6;border-color:#f0d9a0}.bf-ans b{font-size:15px}.bf-ans span{font-size:14px;line-height:1.5}
+.bf-wiz{display:grid;gap:16px;padding:24px;border-radius:18px;border:1px solid var(--line);background:var(--surface)}.bf-crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.bf-crumbs span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2);font:700 12px var(--mono)}.bf-crumbs span.on{background:var(--gem)}.bf-crumbs i{font-style:normal;color:var(--ink-soft)}
+.bf-node{min-height:150px;animation:up .3s both}.bf-q{font-size:20px;line-height:1.5;margin:0 0 14px}.bf-opts{display:flex;flex-wrap:wrap;gap:10px}.bf-opts .btn{font-size:15px}.bf-yel{display:inline-block;padding:3px 10px;border-radius:8px;background:#fdf0a8;border:2px solid #c98a00;font-weight:800;margin-right:6px}
+.bf-res{display:grid;gap:8px;justify-items:start;padding:18px 20px;border-radius:16px;border:2px solid}.bf-res.m{background:#effaea;border-color:#8dc63f}.bf-res.n{background:#fdf0ee;border-color:#e2513b}.bf-res.c{background:#fff8e6;border-color:#eda100}.bf-res .bf-a{font-size:20px;padding:6px 16px}.bf-res p{margin:0}.bf-res > span:first-child{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+.bf-flow summary{cursor:pointer;font-weight:700;color:var(--gem-ink)}.bf-flow img{display:block;max-width:560px;width:100%;margin:12px auto 0;border-radius:12px;border:1px solid var(--line);background:#fff}
+.bf-search{width:100%;max-width:440px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:var(--surface);color:var(--ink)}.bf-dt td{white-space:normal!important;font-size:13.5px}
+.bf-chips{display:flex;flex-wrap:wrap;gap:6px}.bf-big{margin:0;padding:12px 16px;border-radius:12px;font:800 18px var(--display);letter-spacing:.02em}.bf-big.n{background:#fdf0ee;color:#a5281c}.bf-big.m{background:#effaea;color:#1f6a2a}
+.bf-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}@media(max-width:900px){.bf-two{grid-template-columns:1fr}}.bf-calc{display:grid;gap:12px;align-content:start}.bf-calc input{width:100%}
+.bf-yr{display:grid;gap:2px;padding:14px 16px;border-radius:12px;background:var(--surface-2)}.bf-yr b{font:800 24px var(--display)}.bf-yr span{font-size:13.5px;color:var(--ink-soft)}.bf-out{display:grid;gap:10px}
+.bf-ex{display:grid;gap:8px}.bf-ex button{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;color:var(--ink)}.bf-ex button:hover{border-color:var(--gem)}.bf-ex i{color:var(--ink-soft);font-style:normal;font-size:12px}
+.bf-qc{display:grid;gap:14px}.bf-boxes{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:640px){.bf-boxes{grid-template-columns:1fr}}.bf-boxes > div{padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);display:grid;gap:4px}.bf-boxes small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.bf-boxes b{font-size:16px}
+.bf-pick{padding:12px 18px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font:700 15px var(--body);cursor:pointer;color:var(--ink)}.bf-pick.m{border-color:#8dc63f}.bf-pick.n{border-color:#e2513b}.bf-pick.c{border-color:#eda100}.bf-pick.right{background:#dff3d6}.bf-pick.wrong{background:#fbe0dc;text-decoration:line-through}.bf-pick:disabled{cursor:default}
+.bf-tips{display:grid;gap:8px}.bf-tips label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);cursor:pointer;font-weight:400;font-size:14.5px}.bf-tips label.on{background:color-mix(in srgb,var(--gem) 12%,var(--surface));border-color:var(--gem)}.bf-tips input{all:revert;width:18px;height:18px;margin-top:2px;accent-color:var(--gem)}
+#bfAck{margin-top:18px}
 .gd-ack{margin-top:14px;display:grid;gap:12px;border-left:4px solid var(--gem)}.gd-ack h3{margin:0}.gd-ack .ack-ok{display:flex;gap:10px;align-items:center;color:var(--ok);font-weight:600}
 .gd-ack label.ack-chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;font-weight:500;cursor:pointer}.gd-ack label.ack-chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--gem)}
 .gd-card .ack-tag{display:inline-block;margin-top:6px}
@@ -966,6 +993,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>3. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
         <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
         <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>5. Project CSM reports</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
+        <button class="lk gd-card bf-card" type="button" data-go="brief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>6. Benchmarking Briefing</b><span>Interactive guide to Profile Review: decision helper, rules, calculators and practice cases.</span></div></button>
       </div>
       
       <div class="vhead" id="linksHead" style="margin-top:40px"><div><h1>Links</h1><p>Tools and sites you use for Chrysolite work. Each opens in a new tab.</p></div></div>
@@ -1054,7 +1082,92 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3. Phone Review</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
       </div>
       <div class="panel admin-only" hidden style="margin-top:16px;padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Procedure acceptance</h3><span class="hint" id="ackSum"></span></div>
-        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Profile Review</th><th>Email Review</th><th>Phone Review</th></tr></thead><tbody id="ackRows"></tbody></table></div></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Profile Review</th><th>Email Review</th><th>Phone Review</th><th>Briefing</th></tr></thead><tbody id="ackRows"></tbody></table></div></div>
+    </section>
+
+    <!-- BENCHMARKING BRIEFING (interactive) -->
+    <section class="view" data-view="brief" hidden>
+      <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
+      <div class="vhead"><div><h1>Benchmarking Briefing</h1><p>Profile Review · Project Benchmarking (SeekOut). Click through the steps, the decision helper and the practice cards to learn the rules.</p></div>
+        <div class="bf-role" role="group" aria-label="Your level"><span>I am</span><button type="button" data-role="L1" class="on">L1 staff</button><button type="button" data-role="L2">L2 staff</button></div></div>
+      <nav class="bf-tabs" id="bfTabs" role="tablist">
+        <button type="button" data-t="ov" class="on">① Overview</button><button type="button" data-t="wiz">② Decide a field</button><button type="button" data-t="tbl">③ Decision table</button>
+        <button type="button" data-t="fld">④ Field rules</button><button type="button" data-t="yrs">⑤ Years calculator</button><button type="button" data-t="jt">⑥ Job title checker</button>
+        <button type="button" data-t="quiz">⑦ Practice</button><button type="button" data-t="tips">⑧ Quick tips</button></nav>
+
+      <div class="bf-pane" data-p="ov">
+        <div class="bf-sum"><span class="bf-l">In one sentence</span><p>For every field, compare <b>THE FILE SAYS</b> (the SeekOut database) with <b>PUBLIC PROFILE SAYS</b> (LinkedIn data pulled by ZIPLabs). Same information = <span class="bf-a m">Match</span>. Different information = <span class="bf-a n">Not a match</span>. Truly unclear = <span class="bf-a c">Can't decide</span>.</p></div>
+        <h3 class="bf-h">The three most important rules</h3>
+        <div class="bf-rules">
+          <button type="button" class="bf-rule" data-goto="jt"><b>1</b><span><strong>Job title must be EXACTLY the same.</strong> Any extra, missing or different word = Not a match.</span><em>Try the checker →</em></button>
+          <button type="button" class="bf-rule" data-goto="fld" data-field="loc"><b>2</b><span><strong>Location matches if it is the same county or district.</strong></span><em>See the location rule →</em></button>
+          <button type="button" class="bf-rule" data-goto="wiz"><b>3</b><span><strong>L1 staff open LinkedIn only when PUBLIC PROFILE SAYS is empty.</strong></span><em>Walk the flowchart →</em></button>
+        </div>
+        <h3 class="bf-h">Step by step</h3>
+        <div class="bf-steps">
+          <details open><summary><b>1</b>Before you start</summary><ul><li>Each profile is <b>reserved for you for a limited time</b>, shown top right (e.g. "Reserved for you until 11:05 PM"). Finish it before then, or it goes back to the queue.</li><li>The top bar shows <b>Today</b>, <b>Checkpoint streak</b> and <b>Accuracy (30 days)</b>. Some answers are peer-checked, so accuracy matters more than speed.</li><li>Use <b>Exit</b> (top right) only when you want to stop working.</li></ul></details>
+          <details><summary><b>2</b>Read the profile header</summary><p>At the top you see the person's name, job title at company, location, and their headline. Read these first so you know who you are checking. <b>The header is for orientation only:</b> you answer the fields below it.</p></details>
+          <details><summary><b>3</b>LinkedIn: who uses it and when</summary>
+            <div class="bf-only L1"><p class="bf-call"><b>L1 staff:</b> work on this screen only. Do <b>NOT</b> open LinkedIn as a routine step. Open it only when THE FILE SAYS has data and PUBLIC PROFILE SAYS is empty (still empty after one Refresh). Then check that field only, answer, and return.</p>
+              <ol><li>Click <b>↻ Refresh public profile</b> once and wait. If data appears, continue with the normal check.</li><li>Still empty: click <b>Open LinkedIn ↗</b>. It opens in a new tab.</li><li>Make sure it is the same person: name, photo, location. A different person or a page that won't open = <span class="bf-a c">Can't decide</span>.</li><li>Find only the field you are checking (e.g. About, current job title).</li><li>Compare with THE FILE SAYS: same = <span class="bf-a m">Match</span>; different = <span class="bf-a n">Not a match</span>; nothing shown for that field = <span class="bf-a n">Not a match</span>.</li><li>Close the LinkedIn tab and answer on the review screen.</li></ol></div>
+            <div class="bf-only L2" hidden><p class="bf-call"><b>L2 staff:</b> may open LinkedIn on any profile to verify it, and use the "Checked on LinkedIn?" buttons.</p>
+              <ol><li>Click <b>Open LinkedIn ↗</b> and confirm it is the same person: name, photo, location and work history.</li><li>Back on the review screen, answer "Checked on LinkedIn?": <b>✓ Public profile matches LinkedIn</b> or <b>✗ Doesn't match LinkedIn</b> (e.g. a newer job).</li><li>Also resolve cases L1 marked Can't decide where LinkedIn would help (out-of-date profiles, changed last names).</li></ol></div>
+            <p class="hint">If the screen says "It comes back to the queue in a few minutes" after a refresh, move on; the profile returns later.</p></details>
+          <details><summary><b>4</b>Check each field</summary><p>The dots above the field name show where you are (e.g. FIELD 2 OF 8). The number of fields changes, because the system only asks about fields it has data for.</p>
+            <ol><li>Read the question.</li><li>Compare THE FILE SAYS (left) with PUBLIC PROFILE SAYS (right). Highlighted words show the differences.</li><li>Read the grey rule box under the two boxes.</li><li>Follow the <button type="button" class="linkbtn" data-goto="wiz">decision helper</button> and the <button type="button" class="linkbtn" data-goto="fld">field rules</button>.</li><li>Choose one answer. You move on automatically; <b>← Back</b> changes an earlier answer.</li></ol></details>
+          <details><summary><b>5</b>Finish the profile</summary><p>After the last field the profile is complete and the next one loads. Your Today count goes up by one.</p></details>
+        </div>
+        <h3 class="bf-h">The three answers</h3>
+        <div class="bf-ans">
+          <div class="m"><b>✓ Match</b><span>The information is the same, following the rule box and this guide.</span></div>
+          <div class="n"><b>✗ Not a match</b><span>The information is really different, or one side is empty and the other is not.</span></div>
+          <div class="c"><b>? Can't decide</b><span>Data has no connection to the file (another person or company), or LinkedIn can't be checked when the public box is empty. Use sparingly.</span></div>
+        </div>
+        <p class="hint">Keyboard: each button shows its key number (1, 2 or 3). Always check the number printed on the button before using the keyboard.</p>
+      </div>
+
+      <div class="bf-pane" data-p="wiz" hidden>
+        <div class="bf-wiz"><div class="bf-crumbs" id="wzCrumbs"></div><div class="bf-node" id="wzNode"></div>
+          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini" type="button" id="wzBack">← Back</button><button class="mini" type="button" id="wzReset">Start again</button></div></div>
+        <details class="bf-flow"><summary>Show the full flowchart</summary><img src="bench-flow.png" alt="Flowchart: one field, start to answer" loading="lazy"></details>
+      </div>
+
+      <div class="bf-pane" data-p="tbl" hidden>
+        <p class="hint" style="margin-top:0">Find the row that describes what you see; the Answer column gives the button to click. Type to filter.</p>
+        <input type="search" id="dtQ" class="bf-search" placeholder="Search, e.g. placeholder, two jobs, married, AWS">
+        <div id="dtBody"></div>
+      </div>
+
+      <div class="bf-pane" data-p="fld" hidden>
+        <p class="hint" style="margin-top:0">For most fields, capitals, spaces and punctuation are not differences. <b>Job title is the exception: it must be exactly the same.</b> Pick a field.</p>
+        <div class="bf-chips" id="fdChips"></div><div id="fdBody"></div>
+      </div>
+
+      <div class="bf-pane" data-p="yrs" hidden>
+        <div class="bf-two"><div class="panel bf-calc"><h3>Years calculator</h3><p class="hint" style="margin:-4px 0 12px">Real time from the start date to the file's date. The whole years <b>or one more</b> = Match.</p>
+          <div class="g2"><div class="f"><label for="yrStart">Start date (first role at this company for Years at company)</label><input type="month" id="yrStart" value="2019-12"></div><div class="f"><label for="yrTo">Counted to (date shown under the public profile)</label><input type="month" id="yrTo" value="2026-10"></div></div>
+          <div class="f"><label for="yrFile">The file says (years)</label><input type="number" id="yrFile" min="0" max="80" value="7"></div><div class="bf-out" id="yrOut"></div></div>
+          <div class="panel"><h3>Examples</h3><div class="tbl"><table class="att"><thead><tr><th>Real time worked</th><th>Match if the file says</th><th>Not a match</th></tr></thead><tbody>
+            <tr><td>10 y 1 m – 10 y 11 m</td><td>10 or 11</td><td>9, 12 or anything else</td></tr><tr><td>6 y 10 m (Dec 2019 – Oct 2026)</td><td>6 or 7</td><td>5, 8 …</td></tr><tr><td>13 y 1 m (Sep 2013 – Oct 2026)</td><td>13 or 14</td><td>12, 15 …</td></tr><tr><td>3 y 7 m (Mar 2023 – Oct 2026)</td><td>3 or 4</td><td>6, 2, 5</td></tr><tr><td>Under 1 year (e.g. 8 months)</td><td>0 or 1</td><td>2 or more</td></tr></tbody></table></div>
+            <p class="hint">For Years at company use the FIRST role at that company, including earlier company names.</p></div></div>
+      </div>
+
+      <div class="bf-pane" data-p="jt" hidden>
+        <div class="bf-two"><div class="panel bf-calc"><h3>Job title checker</h3><p class="hint" style="margin:-4px 0 12px">Every word must be in both boxes, in the same order. Only capital letters and the rule-box short forms (Snr = Senior, Dev = Developer, Mgr = Manager) may differ.</p>
+          <div class="f"><label for="jtA">THE FILE SAYS</label><input id="jtA" value="Executive Sales Manager"></div><div class="f"><label for="jtB">PUBLIC PROFILE SAYS</label><input id="jtB" value="Executive Sales Manager, Custom Brand Development"></div><div class="bf-out" id="jtOut"></div></div>
+          <div class="panel"><h3>Examples: click one to test it</h3><div class="bf-ex" id="jtEx"></div></div></div>
+      </div>
+
+      <div class="bf-pane" data-p="quiz" hidden>
+        <div class="bf-quiz panel"><div class="vhead" style="margin:0 0 8px;align-items:baseline"><h3 style="margin:0">Practice: what would you click?</h3><span class="hint" id="qzScore"></span></div>
+          <div id="qzCard"></div></div>
+      </div>
+
+      <div class="bf-pane" data-p="tips" hidden>
+        <div class="panel"><h3>Quick tips: tick them off as you read</h3><div class="bf-tips" id="tpList"></div></div>
+      </div>
+
+      <div class="panel gd-ack" id="bfAck"></div>
     </section>
 
     <!-- PROJECT GUIDELINE DOCUMENT -->
@@ -1386,7 +1499,7 @@ function watchMine(){
   watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
   watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
-  watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); });
+  watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
@@ -1489,10 +1602,10 @@ function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench') v = 'benchhub';
   if (v === 'leave' && !isAdmin) v = 'profile';
-  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub'].includes(v) || GDOCS[v] ? 'guides' : v)));
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
   history.replaceState(null,'','#'+v); window.scrollTo(0,0); if (v === 'links') { const lh = $('linksHead'); if (lh) setTimeout(() => lh.scrollIntoView({block: 'start'}), 30); }
   const view = document.querySelector('.view[data-view="' + vv + '"]');
   if (view && !reduce) { view.classList.remove('enter'); [...view.children].forEach((c, i) => c.style.setProperty('--i', i)); void view.offsetWidth; view.classList.add('enter'); }
@@ -2415,7 +2528,7 @@ let ackMine = null, ackAll = {};
 const ACK_NAMES = {bprof: 'Profile Review', bemail: 'Email Review', bphone: 'Phone Review'};
 const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
 const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
-const ackVer = k => { const d = ackDoc(k); return d && d.html ? hashStr(d.html) : null; };
+const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k); return d && d.html ? hashStr(d.html) : null; };
 // 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
 function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k]; return !a ? 'no' : a.v === v ? 'ok' : 'old'; }
 const ackFmt = iso => new Date(iso).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
@@ -2440,8 +2553,8 @@ function renderAckCards(){
     t.innerHTML = st === 'ok' ? '<span class="pill ok">✓ Accepted</span>' : st === 'old' ? '<span class="pill warn">Updated: accept again</span>' : '<span class="pill off">Not accepted yet</span>'; });
   if (!isAdmin || !$('ackRows')) return;
   const ps = people(), cell = (rec, k) => { const st = ackState(rec, k), a = rec && rec.pages && rec.pages[k]; return !st ? '<span class="hint">No content yet</span>' : st === 'ok' ? `<span class="pill ok">✓ ${ackFmt(a.at)}</span>` : st === 'old' ? `<span class="pill warn">Old version · ${ackFmt(a.at)}</span>` : '<span class="pill off">Not accepted</span>'; };
-  $('ackRows').innerHTML = ps.map(p => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td>${BENCH_SUB.map(k => `<td>${cell(ackAll[p.key], k)}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="4" class="empty">No employees yet.</td></tr>';
-  const live = BENCH_SUB.filter(k => ackVer(k)), done = ps.filter(p => live.every(k => ackState(ackAll[p.key], k) === 'ok')).length;
+  $('ackRows').innerHTML = ps.map(p => `<tr><td><div class="person">${av(p.name)}${esc(p.name)}</div></td>${[...BENCH_SUB, 'brief'].map(k => `<td>${cell(ackAll[p.key], k)}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="4" class="empty">No employees yet.</td></tr>';
+  const live = [...BENCH_SUB, 'brief'].filter(k => ackVer(k)), done = ps.filter(p => live.every(k => ackState(ackAll[p.key], k) === 'ok')).length;
   $('ackSum').textContent = live.length ? done + ' of ' + ps.length + ' employees have accepted every procedure' : '';
 }
 function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
@@ -2513,6 +2626,126 @@ $('srcFile').addEventListener('change', async e => {
   catch (x) { console.error(x); say('The workbook couldn\'t be read (' + ((x && x.message) || 'error') + ').', true); }
   e.target.value = '';
 });
+
+/* ---------- Benchmarking Briefing: interactive guide ---------- */
+(function briefing(){
+  const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
+  // role toggle (L1 / L2), remembered on this device
+  let role = 'L1'; try { role = localStorage.getItem('cs_bf_role') || 'L1'; } catch (e) {}
+  const setRole = r => { role = r; try { localStorage.setItem('cs_bf_role', r); } catch (e) {} document.querySelectorAll('.bf-role [data-role]').forEach(b => b.classList.toggle('on', b.dataset.role === r)); document.querySelectorAll('.bf-only').forEach(el => el.hidden = !el.classList.contains(r)); };
+  document.querySelector('.bf-role').addEventListener('click', e => { const b = e.target.closest('[data-role]'); if (b) setRole(b.dataset.role); }); setRole(role);
+  // tabs
+  const showTab = t => { document.querySelectorAll('#bfTabs [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === t)); document.querySelectorAll('.bf-pane').forEach(p => p.hidden = p.dataset.p !== t); };
+  $('bfTabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) showTab(b.dataset.t); });
+  document.querySelector('.view[data-view="brief"]').addEventListener('click', e => { const g = e.target.closest('[data-goto]'); if (!g) return; showTab(g.dataset.goto); if (g.dataset.field) pickField(g.dataset.field); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); });
+
+  // ② decision helper, following the flowchart
+  const N = {
+    q1: {q: 'Is <b>THE FILE SAYS</b> empty?', o: [['Yes, empty', 'q2a'], ['No, it has data', 'q2b']]},
+    q2a: {q: 'Is <b>PUBLIC PROFILE SAYS</b> empty?', o: [['Yes, also empty', 'r3'], ['No, it has data', 'r6']]},
+    q2b: {q: 'Is <b>PUBLIC PROFILE SAYS</b> empty?', o: [['Yes, empty', 'q3'], ['No, it has data', 'q4']]},
+    q3: {q: 'Click <b>↻ Refresh public profile</b> once and wait. Is it <b>still empty</b>?', o: [['Yes, still empty', 'q5'], ['No, data loaded', 'q4']]},
+    q4: {q: 'Is the public profile about the <b>same person</b>, with <b>related data</b> (not another person, unrelated company or role)?', o: [['Yes', 'q6'], ['No, unrelated', 'r5']]},
+    q6: {q: 'Is it the <b>same information under the grey rule box</b> and the <button type="button" class="linkbtn" data-goto="fld">field rules</button>?', o: [['Yes, same', 'r1'], ['No, different', 'r2']]},
+    q5: {q: '<span class="bf-yel">Open LinkedIn ↗</span> This is the <b>only case where L1 staff open LinkedIn</b>. Check <b>this field only</b>. What does LinkedIn show?', o: [['The same as the file', 'r4a'], ['Something different', 'r4b'], ['Nothing for this field', 'r4c'], ['Won\'t open, private, login needed or deleted', 'r4d'], ['A different person', 'r4e']]},
+    r1: {a: 'm', t: 'Rule 1: both boxes have the same data.'}, r2: {a: 'n', t: 'Rule 2: both boxes have data, but it is different under the field rule.'}, r3: {a: 'm', t: 'Rule 3: both boxes are empty, so they agree.'},
+    r5: {a: 'c', t: 'Rule 5: the public data has no connection to the file. Do not open LinkedIn.'}, r6: {a: 'n', t: 'Rule 6: the file is missing information the public profile has.'},
+    r4a: {a: 'm', t: 'Rule 4a: LinkedIn shows the same information.'}, r4b: {a: 'n', t: 'Rule 4b: LinkedIn shows different information.'}, r4c: {a: 'n', t: 'Rule 4c: LinkedIn shows nothing for this field.'},
+    r4d: {a: 'c', t: 'Rule 4d: LinkedIn can\'t be checked.'}, r4e: {a: 'c', t: 'Rule 4e: LinkedIn shows a different person.'}};
+  let path = ['q1'];
+  const drawWiz = () => { const id = path[path.length - 1], n = N[id];
+    $('wzCrumbs').innerHTML = path.map((p2, i) => `<span class="${i === path.length - 1 ? 'on' : ''}">${i + 1}</span>`).join('<i>›</i>');
+    $('wzNode').innerHTML = n.a ? `<div class="bf-res ${n.a}"><span>Click</span>${A[n.a]}<p>${n.t}</p></div>` : `<p class="bf-q">${n.q}</p><div class="bf-opts">${n.o.map(([l, to]) => `<button type="button" class="btn btn-ghost" data-to="${to}">${l}</button>`).join('')}</div>`;
+    $('wzBack').disabled = path.length < 2; };
+  $('wzNode').addEventListener('click', e => { const b = e.target.closest('[data-to]'); if (b) { path.push(b.dataset.to); drawWiz(); } });
+  $('wzBack').onclick = () => { if (path.length > 1) { path.pop(); drawWiz(); } }; $('wzReset').onclick = () => { path = ['q1']; drawWiz(); }; drawWiz();
+
+  // ③ decision table
+  const DT = [
+    ['6.1 Both boxes on screen', ['#', 'THE FILE SAYS', 'PUBLIC PROFILE SAYS', 'Check', 'Answer'], [['1', 'Has data', 'Has the same data', 'Same under the field rule', 'm'], ['2', 'Has data', 'Has different data', 'Different under the field rule', 'n'], ['3', 'Empty', 'Empty', '–', 'm'], ['5', 'Has data', 'Data with no connection to the file (another person, unrelated company or role)', 'Do not open LinkedIn', 'c'], ['6', 'Empty', 'Has data', 'The file is missing information', 'n']]],
+    ['6.2 Public profile box is empty', ['#', 'THE FILE SAYS', 'PUBLIC PROFILE SAYS', 'Check (after one Refresh, open LinkedIn)', 'Answer'], [['4a', 'Has data', 'Empty after refresh', 'LinkedIn shows the same information', 'm'], ['4b', 'Has data', 'Empty after refresh', 'LinkedIn shows different information', 'n'], ['4c', 'Has data', 'Empty after refresh', 'LinkedIn shows nothing for this field', 'n'], ['4d', 'Has data', 'Empty after refresh', 'LinkedIn won\'t open, is private, needs a login, or is deleted', 'c'], ['4e', 'Has data', 'Empty after refresh', 'LinkedIn shows a different person', 'c']]],
+    ['6.3 Special situations', ['#', 'Situation', 'Check', 'Answer'], [['7a', 'Placeholder text such as "N/A", "-", "null", "Unknown"', 'Placeholder on both sides (empty = empty)', 'm'], ['7b', 'Placeholder text such as "N/A", "-", "null", "Unknown"', 'Placeholder on one side, real data on the other', 'n'], ['8a', 'Summary or headline cut off on one side', 'The part both sides show is the same', 'm'], ['8b', 'Summary or headline cut off on one side', 'The part both sides show is different', 'n'], ['9a', 'Two current jobs on the public profile', 'The file matches one of them exactly', 'm'], ['9b', 'Two current jobs on the public profile', 'The file matches neither of them', 'n'], ['9c', 'Two current jobs on the public profile', 'You can\'t tell which one the file means', 'c'], ['10a', 'Summary or headline in another language (not job title)', 'Clearly says the same thing', 'm'], ['10b', 'Summary or headline in another language (not job title)', 'You can\'t confirm what it says', 'c'], ['11a', 'Last name changed (e.g. after marriage)', 'Same first name, same job and company on screen', 'm'], ['11b', 'Last name changed (e.g. after marriage)', 'You can\'t confirm it is the same person', 'c'], ['12a', 'Company: brand vs parent (AWS / Amazon)', 'The rule box says they count as the same', 'm'], ['12b', 'Company: brand vs parent (AWS / Amazon)', 'The rule box doesn\'t say', 'c'], ['13a', 'Public profile looks out of date', 'The two boxes still agree', 'm'], ['13b', 'Public profile looks out of date', 'The two boxes disagree', 'n']]],
+    ['6.4 Don\'t answer yet', ['Situation', 'What to do'], [['Screen says "Asked ZIPLabs again… comes back to the queue in a few minutes"', 'Click OK and move on. Answer when the profile returns'], ['Header at the top disagrees with the field you are checking', 'Ignore the header. Answer only the field on screen'], ['Reservation time is almost over', 'Answer only what you are sure of. Never guess to beat the clock']]]];
+  const drawDT = () => { const q = $('dtQ').value.trim().toLowerCase();
+    $('dtBody').innerHTML = DT.map(([t, h, rows]) => { const rs = rows.filter(r => !q || r.join(' ').toLowerCase().includes(q)); if (!rs.length) return '';
+      return `<h3 class="bf-h">${t}</h3><div class="tbl"><table class="att bf-dt"><thead><tr>${h.map(x => `<th>${x}</th>`).join('')}</tr></thead><tbody>${rs.map(r => `<tr>${r.map((c, i) => `<td>${i === r.length - 1 && A[c] ? A[c] : esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; }).join('') + (role === 'L2' ? '<p class="bf-call"><b>L2 staff:</b> for 11b and 13a/13b you may check LinkedIn and click ✗ Doesn\'t match LinkedIn when it shows something newer.</p>' : '') || '<p class="empty">Nothing matches that search.</p>'; };
+  $('dtQ').addEventListener('input', drawDT); document.querySelector('.bf-role').addEventListener('click', drawDT); drawDT();
+
+  // ④ field rules
+  const FR = [['name', 'Name', 'Same person. Nicknames (Bob = Robert), missing middle name or initial, accents (José = Jose)', 'A different first or last name', 'Last name changed and you can\'t confirm it is the same person'],
+    ['jt', 'Job title', 'Exactly the same words, same order. Only capitals and the rule-box short forms (Snr = Senior, Dev = Developer, Mgr = Manager) may differ', 'Any word added, missing or different: role words, level (II, III, Senior, Lead, Principal), a focus area after a comma, company words inside the title', '–'],
+    ['co', 'Company', 'Same company. Legal endings (Inc, Ltd, LLC), short forms (IBM), spacing (Heavy Connect = HeavyConnect)', 'A different company', 'Brand vs parent or subsidiary and the rule box doesn\'t say'],
+    ['yr', 'Years in current role', 'Real time in the current role, rounded down or up', 'Any other number', '–'],
+    ['yc', 'Years at company', 'Real time from the FIRST role at this company (all roles, earlier company names), rounded down or up', 'Any other number', '–'],
+    ['still', 'Still in this job?', 'Role is current: "Present", no end date', 'Role has an end date, or a newer job is listed above it', '–'],
+    ['loc', 'Location', 'Same county or district: a town or suburb and its city in the same county (McNeil, Texas = Austin, Texas); "Greater X Area" / "X Metro" = city X (Charlotte = Charlotte Metro); missing state or country', 'A different county or district, even in the same state (Austin ≠ Dallas); a different country', 'You can\'t work out which county or district a place is in'],
+    ['hl', 'Headline', 'Same words with small differences (punctuation, symbols, order)', 'A different role or focus', '–'],
+    ['sum', 'Summary / About', 'Same text, small edits, or one version shorter or cut off', 'Rewritten or clearly different text, or one side empty and the other not', '–']];
+  const EXTRA = {jt: '<p class="bf-big n">JOB TITLE MUST BE EXACTLY THE SAME.</p><p>Every word must be in both boxes, in the same order. Any extra, missing or different word = Not a match (e.g. "Executive Sales Manager" vs "Executive Sales Manager, Custom Brand Development"). <button type="button" class="linkbtn" data-goto="jt">Try the job title checker →</button></p>',
+    loc: '<p class="bf-big m">LOCATION: SAME COUNTY OR DISTRICT = MATCH.</p><p>A town or suburb and the city in the same county or district = Match. "Greater X Area" or "X Metro" = the city X. A missing state or country is fine. A different county or district = Not a match, even in the same state. Unsure which county a place is in? A quick map search is allowed (this is not LinkedIn).</p>',
+    yr: '<p><button type="button" class="linkbtn" data-goto="yrs">Open the years calculator →</button></p>', yc: '<p><button type="button" class="linkbtn" data-goto="yrs">Open the years calculator →</button></p>'};
+  let fsel = 'jt';
+  function pickField(k){ fsel = k; $('fdChips').innerHTML = FR.map(f => `<button type="button" data-f="${f[0]}" class="${f[0] === k ? 'on' : ''}">${f[1]}</button>`).join('');
+    const f = FR.find(x => x[0] === k); $('fdBody').innerHTML = `${EXTRA[k] || ''}<div class="bf-ans">${[['m', '✓ Match when', f[2]], ['n', '✗ Not a match when', f[3]], ['c', '? Can\'t decide when', f[4]]].map(([c, l, t]) => `<div class="${c}"><b>${l}</b><span>${esc(t)}</span></div>`).join('')}</div>`; }
+  $('fdChips').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (b) pickField(b.dataset.f); }); pickField('jt');
+
+  // ⑤ years calculator
+  const drawYr = () => { const s = $('yrStart').value, t = $('yrTo').value, f = $('yrFile').value; if (!s || !t) { $('yrOut').innerHTML = ''; return; }
+    const [sy, sm] = s.split('-').map(Number), [ty, tm] = t.split('-').map(Number), mo = (ty - sy) * 12 + (tm - sm); if (mo < 0) { $('yrOut').innerHTML = '<p class="msg err">The start date is after the counted-to date.</p>'; return; }
+    const y = Math.floor(mo / 12), r = mo % 12, ok = f !== '' && (+f === y || +f === y + 1);
+    $('yrOut').innerHTML = `<div class="bf-yr"><span>Real time</span><b>${y} year${y === 1 ? '' : 's'} ${r} month${r === 1 ? '' : 's'}</b><span>Match if the file says <b>${y}</b> or <b>${y + 1}</b></span></div>${f === '' ? '' : `<div class="bf-res ${ok ? 'm' : 'n'}"><span>File says ${+f}:</span>${ok ? A.m : A.n}</div>`}`; };
+  ['yrStart', 'yrTo', 'yrFile'].forEach(id => $(id).addEventListener('input', drawYr)); drawYr();
+
+  // ⑥ job title checker
+  const SHORT = {snr: 'senior', dev: 'developer', mgr: 'manager'};
+  const toks = t => String(t || '').toLowerCase().replace(/[(),;:|/–—-]+/g, ' ').split(/\s+/).map(w => w.replace(/[.'"]/g, '')).filter(Boolean).map(w => SHORT[w] || w);
+  const drawJt = () => { const a = toks($('jtA').value), b = toks($('jtB').value); if (!a.length && !b.length) { $('jtOut').innerHTML = `<div class="bf-res m"><span>Both empty:</span>${A.m}</div>`; return; }
+    if (!a.length || !b.length) { $('jtOut').innerHTML = `<div class="bf-res n"><span>One side is empty:</span>${A.n}</div>`; return; }
+    const same = a.join(' ') === b.join(' '), miss = a.filter(w => !b.includes(w)), extra = b.filter(w => !a.includes(w));
+    const why = same ? 'The same words in the same order (only capitals or the allowed short forms differ).' : [extra.length ? 'Extra word' + (extra.length > 1 ? 's' : '') + ' on the public profile: <b>' + esc(extra.join(', ')) + '</b>.' : '', miss.length ? 'Missing from the public profile: <b>' + esc(miss.join(', ')) + '</b>.' : '', !extra.length && !miss.length ? 'The words are in a different order.' : ''].filter(Boolean).join(' ');
+    $('jtOut').innerHTML = `<div class="bf-res ${same ? 'm' : 'n'}">${same ? A.m : A.n}<p>${why}</p></div>`; };
+  ['jtA', 'jtB'].forEach(id => $(id).addEventListener('input', drawJt));
+  const JT = [['Snr Dev II', 'Senior Developer II', 'm', 'Short forms, same level'], ['Senior Developer II', 'Senior Developer', 'n', 'Level II missing'], ['DevOps Engineer', 'Senior DevOps Engineer', 'n', 'Senior missing'], ['Customer Success Support Manager', 'Customer Success Manager', 'n', '"Support" is an extra role word'], ['Executive Sales Manager', 'Executive Sales Manager, Custom Brand Development', 'n', 'Extra words "Custom Brand Development"'], ['AWS DevOps Architect', 'Amazon Web Services (AWS) - DevOps Architect', 'n', 'Not word-for-word the same'], ['Sales Manager', 'sales manager', 'm', 'Only capital letters differ'], ['Senior Mgr Operations', 'Senior Manager Operations', 'm', 'Only the rule box short form differs']];
+  $('jtEx').innerHTML = JT.map((x, i) => `<button type="button" data-j="${i}"><span>${esc(x[0])} <i>vs</i> ${esc(x[1])}</span>${A[x[2]]}</button>`).join('');
+  $('jtEx').addEventListener('click', e => { const b = e.target.closest('[data-j]'); if (!b) return; const x = JT[+b.dataset.j]; $('jtA').value = x[0]; $('jtB').value = x[1]; drawJt(); }); drawJt();
+
+  // ⑦ practice
+  const QZ = JT.map(x => ({f: 'Job title', a: x[0], b: x[1], ans: x[2], why: x[3]})).concat([
+    {f: 'Location', a: 'Charlotte, North Carolina, United States', b: 'Charlotte Metro', ans: 'm', why: '"X Metro" = city X (rule 1).'},
+    {f: 'Location', a: 'Austin, Texas', b: 'Dallas, Texas', ans: 'n', why: 'A different county, even in the same state.'},
+    {f: 'Years at company', a: '7 years', b: 'Started Dec 2019, counted to Oct 2026 (6 y 10 m)', ans: 'm', why: '6 y 10 m: 6 or 7 = Match (years rule).'},
+    {f: 'Years in current role', a: '6 years', b: 'Started Mar 2023, counted to Oct 2026 (3 y 7 m)', ans: 'n', why: '3 y 7 m: only 3 or 4 match.'},
+    {f: 'Company', a: 'Heavy Connect Inc', b: 'HeavyConnect', ans: 'm', why: 'Legal ending and spacing are not differences.'},
+    {f: 'Company', a: 'Amazon', b: 'Amazon Web Services (AWS), the rule box doesn\'t say', ans: 'c', why: 'Brand vs parent and the rule box doesn\'t say (12b).'},
+    {f: 'Summary / About', a: 'N/A', b: 'Helping therapists build their practice…', ans: 'n', why: 'Placeholder on one side, real data on the other (7b).'},
+    {f: 'Headline', a: '(empty)', b: '(empty)', ans: 'm', why: 'Empty on both sides = Match (rule 3).'},
+    {f: 'Name', a: 'Jennifer Smith', b: 'Jennifer Brown · same job and company', ans: 'm', why: 'Last name changed, same first name, job and company (11a).'},
+    {f: 'Still in this job?', a: 'Yes', b: 'Role shows "2019 – 2024", a newer job is listed above', ans: 'n', why: 'The role has an end date.'}]);
+  let qi = 0, qOk = 0, qN = 0, order = QZ.map((_, i) => i).sort(() => Math.random() - .5), answered = false;
+  const drawQ = () => { const x = QZ[order[qi % order.length]]; answered = false;
+    $('qzScore').textContent = qN ? `${qOk} of ${qN} right` : `${QZ.length} cases`;
+    $('qzCard').innerHTML = `<div class="bf-qc"><span class="bf-l">Field: ${esc(x.f)}</span><div class="bf-boxes"><div><small>THE FILE SAYS</small><b>${esc(x.a)}</b></div><div><small>PUBLIC PROFILE SAYS</small><b>${esc(x.b)}</b></div></div>
+      <div class="bf-opts">${['n', 'm', 'c'].map((k, i) => `<button type="button" class="bf-pick ${k}" data-a="${k}">${['✗ Not a match', '✓ Match', '? Can\'t decide'][i]}</button>`).join('')}</div><div id="qzRes"></div></div>`; };
+  $('qzCard').addEventListener('click', e => { const b = e.target.closest('[data-a]'), nx = e.target.closest('#qzNext'); if (nx) { qi++; drawQ(); return; } if (!b || answered) return; answered = true;
+    const x = QZ[order[qi % order.length]], ok = b.dataset.a === x.ans; qN++; if (ok) qOk++; $('qzScore').textContent = `${qOk} of ${qN} right`;
+    document.querySelectorAll('#qzCard [data-a]').forEach(y => { y.disabled = true; y.classList.toggle('right', y.dataset.a === x.ans); y.classList.toggle('wrong', y === b && !ok); });
+    $('qzRes').innerHTML = `<div class="bf-res ${ok ? 'm' : 'n'}"><span>${ok ? 'Correct! 🎉' : 'Not quite.'}</span>${A[x.ans]}<p>${esc(x.why)}</p></div><button class="btn btn-gem" type="button" id="qzNext">Next case →</button>`; });
+  drawQ();
+
+  // ⑧ tips checklist (ticks remembered on this device)
+  const TIPS = ['Judge only the question on screen. Don\'t let other differences affect it.', 'Job title must be exactly the same. Any extra or missing word = Not a match.', 'Location: same county or district = Match; a different county = Not a match.', 'Other fields: capitals, spaces and punctuation are never differences.', 'Empty vs filled is always Not a match. Empty vs empty is always Match.', 'L1: open LinkedIn only when the public profile box is empty. Everything else is decided on this screen.', 'Can\'t decide is a valid answer for missing or unrelated data. It is not a shortcut for hard cases.', 'Years: whole years or one more = Match.', 'Watch the reservation time on long profiles.', 'Where the grey rule box on screen gives a different rule from this guide, the rule box applies.'];
+  let ticks = {}; try { ticks = JSON.parse(localStorage.getItem('cs_bf_tips') || '{}'); } catch (e) {}
+  const drawTips = () => { const n = TIPS.filter((_, i) => ticks[i]).length; $('tpList').innerHTML = TIPS.map((t, i) => `<label class="${ticks[i] ? 'on' : ''}"><input type="checkbox" data-i="${i}" ${ticks[i] ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('') + `<p class="hint">${n} of ${TIPS.length} ticked${n === TIPS.length ? ' · well done! 🌟' : ''}</p>`; };
+  $('tpList').addEventListener('change', e => { const c = e.target.closest('[data-i]'); if (!c) return; ticks[c.dataset.i] = c.checked; try { localStorage.setItem('cs_bf_tips', JSON.stringify(ticks)); } catch (x) {} drawTips(); }); drawTips();
+})();
+// read & accept for the briefing (same record as the other benchmarking procedures)
+const BRIEF_VER = 'brief-2026-11-1';
+function renderBriefAck(){ const box = $('bfAck'); if (!box) return; if (!me) { box.hidden = true; return; } box.hidden = false; const a = ackMine && ackMine.pages && ackMine.pages.brief;
+  if (a && a.v === BRIEF_VER) { box.innerHTML = `<div class="ack-ok">✓ You accepted the Benchmarking Briefing on ${ackFmt(a.at)}</div>`; return; }
+  box.innerHTML = `<h3>Read and accept</h3><label class="ack-chk"><input type="checkbox" id="bfChk"> I have read and understood the Benchmarking Briefing, and I will follow it in my work.</label><div><button class="btn btn-gem" type="button" id="bfBtn" disabled>Accept briefing</button></div>`;
+  $('bfChk').onchange = e => $('bfBtn').disabled = !e.target.checked;
+  $('bfBtn').onclick = async () => { const pages = {...((ackMine && ackMine.pages) || {}), brief: {v: BRIEF_VER, at: new Date().toISOString(), title: 'Benchmarking Briefing'}};
+    try { await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; renderBriefAck(); renderAckCards(); toast('Briefing accepted'); } catch (x) { toast('That couldn\'t be saved. Try again.'); } }; }
 
 /* ---------- admin: one-time import from the old portal ---------- */
 $('impFile').addEventListener('change', async e => {
