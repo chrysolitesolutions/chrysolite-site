@@ -1,0 +1,184 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Summary Checker · Chrysolite</title><link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=JetBrains+Mono:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
+  --gem:#9BB52A;--gem-ink:#4C5F0C;--band:#0F2620;--band-fg:#E7EFE4;--band-soft:#A9BDB2;
+  --ok:#2F7D5B;--warn:#B07A12;--off:#B4513A;--info:#2D6E9E;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#7b5bd6;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(16px,4vw);background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font:800 18px var(--display)}.brand img{width:34px;height:34px;border-radius:8px}.brand small{display:block;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+main{max-width:1180px;margin:0 auto;padding:24px max(16px,4vw) 60px;display:grid;gap:16px}
+h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:700 17px var(--display)}.lead{margin:6px 0 0;color:var(--ink-soft)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}.hint{color:var(--ink-soft);font-size:13px}.empty{color:var(--ink-soft);text-align:center;padding:20px}
+.vhead{display:flex;justify-content:space-between;gap:12px}.f{display:grid;gap:6px}label{font-size:13px;font-weight:600}
+.btn{border:1px solid transparent;border-radius:999px;padding:10px 20px;font:700 14.5px var(--body);cursor:pointer}.btn-gem{background:var(--gem);color:#13240a}.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.bf-h{margin:18px 0 10px}.bf-l{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gem-ink)}
+.bf-a{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;white-space:nowrap}.bf-a.m{background:#dff3d6;color:#1f6a2a}.bf-a.n{background:#fbe0dc;color:#a5281c}.bf-a.c{background:#fdf0cf;color:#8a5a00}.bf-a.o{background:#e3edf8;color:#1f4f86;white-space:normal}
+.back{font-size:13px;color:var(--gem-ink);font-weight:700;text-decoration:none}
+.sc-in{display:grid;gap:12px}.sc-opts{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sc-tg{display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600}.sc-tg input{all:revert;accent-color:var(--gem)}
+.sc-seg{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px}.sc-seg span{font-size:12.5px;color:var(--ink-soft);padding:0 6px}.sc-seg button{border:0;background:none;border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.sc-seg button.on{background:var(--gem);color:#13240a}
+.sc-exr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-exr > span{font-size:12.5px;color:var(--ink-soft)}#scEx{display:flex;flex-wrap:wrap;gap:6px}#scEx button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:600 12.5px var(--body);cursor:pointer;color:var(--ink)}#scEx button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+.sc-grid,.sc-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:1fr}}.sc-grid textarea{width:100%;font:14px/1.55 var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);resize:vertical}
+.sc-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.sc-ring{position:relative;width:120px;height:120px;flex:none}.sc-ring svg{width:100%;height:100%}.sc-ring circle{transition:stroke-dashoffset .6s}.sc-ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 24px var(--display);margin-top:-8px}.sc-ring span{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:600 11px var(--mono);color:var(--ink-soft);text-transform:uppercase}
+.sc-verdict{flex:1;min-width:240px;display:grid;gap:6px;justify-items:start}.sc-verdict .bf-a{font-size:17px;padding:5px 14px}.sc-verdict p{margin:0}
+.sc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12.5px}.sc-legend span{padding:2px 8px;border-radius:6px}.sc-legend .del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-legend .add{background:#d6f0c6;color:#1f6a2a}.sc-legend .mod{background:#fdeba8;color:#7a5200}.sc-legend .spk{color:var(--ink-soft)}
+.sc-cols > div{display:grid;gap:4px}.sc-cols small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.sc-text{white-space:pre-wrap;font-size:15px;line-height:1.7;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:80px}
+.sc-text mark{border-radius:4px;padding:1px 2px}.sc-text mark.del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-text mark.add{background:#d6f0c6;color:#1f6a2a}.sc-text mark.mod{background:#fdeba8;color:#7a5200;font-weight:600}.sc-text mark.gap{background:none}.sc-text .sc-cut{color:var(--ink-soft);opacity:.55}.sc-text .sp{color:#c06a00;font-weight:800}
+.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > div{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.sc-checks > div > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.sc-checks .ok i{background:#dff3d6;color:#1f6a2a}.sc-checks .warn{border-color:#f0d9a0;background:#fffaf0}.sc-checks .warn i{background:#fdeba8;color:#7a5200}.sc-checks .info i{background:#e3edf8;color:#1f4f86}
+
+</style></head><body>
+<header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Summary checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
+<main>
+  <div><h1>Summary checker</h1><p class="lead">Compare the Summary / About (or Headline) in THE FILE SAYS with PUBLIC PROFILE SAYS. See every difference highlighted, the % match, 20 automatic checks and a suggested answer.</p></div>
+
+        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Summary / About checker</h3>
+          <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
+          <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
+          <div class="sc-exr"><span>Examples:</span><div id="scEx"></div></div>
+          <div class="sc-grid"><div class="f"><label for="scA">THE FILE SAYS (SeekOut)</label><textarea id="scA" rows="7"></textarea></div><div class="f"><label for="scB">PUBLIC PROFILE SAYS (ZIPLabs)</label><textarea id="scB" rows="7"></textarea></div></div>
+          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button></div></div>
+        <div class="panel" id="scOut"></div>
+      
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
+  (function summaryChecker(){
+    const EX = [
+      ['Banio Carpenter', 'Entrepreneurial thinker. Extensive experience leading change. Experienced technical leader in dynamic, international environment. Infrastructure architect. Documentation guru. Experienced Security…', 'Entrepreneurial thinker. Extensive experience leading change.Experienced technical leader in dynamic, international environmentsInfrastructure architect. Documentation guru.Experienced Security…'],
+      ['Nathan Henderson', 'I am DevOps engineer from a development background with experience as and Linux systems administrator. I strive to design and build high performance, distributed, and scalable web…', 'I am DevOps engineer from a development background with experience as and Linux systems administrator. I strive to design and build high performance, distributed, and scalable web…'],
+      ['Napoleon "Ike" Jones', 'I am a back-end software engineer with industry experience building scalable systems using .NET (csharpsharp and VB.NET), LINQ, SQL and NoSQL databases in Azure and on premises. I have…', 'I am a back-end software engineer with industry experience building scalable systems using .NET (C# and VB.NET), LINQ, SQL and NoSQL databases in Azure and on premises. I have experience with…'],
+      ['Prasad Chitibomma', '20+ years of experience in IT. Currently working as DevOps Architect with AAFES. DevOps Team using Amazon Web Services CICD Tools like Cloud Formation Templates, Terraform, Mesos, Jenkins,…', '20+ years of experience in IT. Currently working as DevOps Architect with AAFES. DevOps Team using Amazon Web Services CICD Tools like Cloud Formation Templates, Terraform, Mesos, Jenkins,…'],
+      ['Mitch Wilson-Brown', 'With 20+ years of IT experience, I\'ve covered a lot of ground. I\'ve been "shadow IT", done automation development as a consultant, csharpsharp development in a dev shop, led a transition from…', 'With 20+ years of IT experience, I\'ve covered a lot of ground. I\'ve been "shadow IT", done automation development as a consultant, C# development in a dev shop, led a transition from waterfall to agile, to…']];
+    $('scEx').innerHTML = EX.map((x, i) => `<button type="button" data-sx="${i}">${esc(x[0])}</button>`).join('');
+    let mode = 'word', cs = false;
+    const ELL = /(\.\.\.|…)\s*$/;
+    // words keep inner dots like VB.NET, but a sentence glued to the next one ("change.Experienced") and words glued together ("environmentsInfrastructure") are split
+    const tokW = t => (t.match(/\n|[ \t\r\f\v]+|[\p{L}\p{N}#+_]+(?:['’][\p{L}\p{N}]+)*(?:\.(?!\p{Lu}\p{Ll})[\p{L}\p{N}#+_]+)*|[^\s\p{L}\p{N}]/gu) || []).flatMap(w => /^\s+$/.test(w) ? [w] : w.split(/(?<=\p{Ll}{2})(?=\p{Lu}\p{Ll}{2})/u));
+    const norm = t => /^\n$/.test(t) ? '\n' : /^\s+$/.test(t) ? ' ' : cs ? t : t.toLowerCase();
+    // longest common subsequence diff on token keys → [['=', a, b] | ['-', a] | ['+', b]]
+    function diff(A, B){ const ka = A.map(norm), kb = B.map(norm), n = ka.length, m = kb.length;
+      if (n * m > 6e6) return null;
+      const W = m + 1, L = new Uint16Array((n + 1) * W);
+      for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i * W + j] = ka[i] === kb[j] ? L[(i + 1) * W + j + 1] + 1 : Math.max(L[(i + 1) * W + j], L[i * W + j + 1]);
+      const out = []; let i = 0, j = 0; while (i < n && j < m) { if (ka[i] === kb[j]) { out.push(['=', A[i], B[j]]); i++; j++; } else if (L[(i + 1) * W + j] >= L[i * W + j + 1]) { out.push(['-', A[i]]); i++; } else { out.push(['+', B[j]]); j++; } }
+      while (i < n) out.push(['-', A[i++]]); while (j < m) out.push(['+', B[j++]]); return out; }
+    const words = t => tokW(t).filter(w => /[\p{L}\p{N}]/u.test(w));
+    const lev = (a, b) => { if (Math.abs(a.length - b.length) > 3) return 9; const d = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let p = d[0]; d[0] = i; for (let j = 1; j <= b.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, p + (a[i - 1] === b[j - 1] ? 0 : 1)); p = t; } } return d[b.length]; };
+    const sents = t => t.split(/(?<=[.!?…])\s+|\n+/).map(x => x.trim().toLowerCase()).filter(x => x.length > 3);
+    const setDiff = (a, b) => [a.filter(x => !b.includes(x)), b.filter(x => !a.includes(x))];
+    const uniq = a => [...new Set(a)];
+    function run(){
+      let a = $('scA').value, b = $('scB').value;
+      if (!a.trim() && !b.trim()) { $('scOut').innerHTML = '<p class="empty">Paste the two summaries above, or pick an example.</p>'; return; }
+      // cut-off text: compare only the part both sides show (rule 9a)
+      const cutA = ELL.test(a), cutB = ELL.test(b); let note = '';
+      const A0 = a.replace(ELL, ''), B0 = b.replace(ELL, '');
+      let ta = tokW(A0), tb = tokW(B0);
+      let D = mode === 'char' ? diff([...ta.join('')], [...tb.join('')]) : diff(ta, tb), modeUsed = mode;
+      if (!D) { D = diff(ta, tb); modeUsed = 'word'; }
+      // text past the point where the other side is cut off ("…") is not compared (rule 9a)
+      if (cutA || cutB) { let k = D.length; while (k > 0 && D[k - 1][0] !== '=' && ((D[k - 1][0] === '+' && cutA) || (D[k - 1][0] === '-' && cutB))) k--;
+        const cut = D.slice(k); D = D.slice(0, k); if (cut.some(d => /\S/.test(d[1]))) note = (cutA && cutB ? 'Both sides are cut off' : cutA ? 'The file is cut off' : 'The public profile is cut off') + ', so the extra text after the cut (shown in grey) is not compared (rule 9a).'; else if (cutA || cutB) note = 'Cut-off text (“…”): only the part both sides show is compared (rule 9a).';
+        D.tail = cut.map(d => d[1]).join(''); D.tailSide = cut.length && cut[0][0] === '+' ? 'R' : 'L'; }
+      // similarity on non-space tokens
+      const vis = x => !/^\s+$/.test(x);
+      const same = D.filter(d => d[0] === '=' && vis(d[1])).length, la = D.filter(d => d[0] !== '+' && vis(d[1])).length, lb = D.filter(d => d[0] !== '-' && vis(d[0] === '=' ? d[2] : d[1])).length;
+      const pct = la + lb ? Math.round(200 * same / (la + lb) * 10) / 10 : 100;
+      // pair deletions + additions into modifications for display
+      let L2 = '', R2 = '', mods = [];
+      for (let k = 0; k < D.length; k++) { const d = D[k];
+        if (d[0] === '=') { L2 += esc(d[1]); R2 += esc(d[2]); continue; }
+        let del = '', add = ''; while (k < D.length && D[k][0] !== '=') { if (D[k][0] === '-') del += D[k][1]; else add += D[k][1]; k++; } k--;
+        const show = s2 => esc(s2).replace(/ /g, '<span class="sp">·</span>').replace(/\n/g, '<span class="sp">↵</span>\n');
+        if (del && add) { mods.push([del.trim(), add.trim()]); L2 += `<mark class="mod">${show(del)}</mark>`; R2 += `<mark class="mod">${show(add)}</mark>`; }
+        else if (del) { L2 += `<mark class="del">${show(del)}</mark>`; R2 += `<mark class="gap">${/\S/.test(del) ? '' : '␣'}</mark>`; }
+        else { R2 += `<mark class="add">${show(add)}</mark>`; } }
+      if (D.tail) { const t2 = `<span class="sc-cut">${esc(D.tail)}</span>`; if (D.tailSide === 'R') R2 += t2; else L2 += t2; }
+      // the 20 checks
+      const wa = words(ta.join('')), wb = words(tb.join('')), added = D.filter(d => d[0] === '+' && vis(d[1])).map(d => d[1]), deleted = D.filter(d => d[0] === '-' && vis(d[1])).map(d => d[1]);
+      const isP = t => /^[^\s\p{L}\p{N}]$/u.test(t), addW = added.filter(x => !isP(x)), delW = deleted.filter(x => !isP(x)), addP = added.filter(isP), delP = deleted.filter(isP);
+      const tA = ta.join(''), tB = tb.join('');
+      const caseOnly = (() => { const r = []; const x = words(tA), y = words(tB); const n2 = Math.min(x.length, y.length); for (let i = 0; i < n2; i++) if (x[i] !== y[i] && x[i].toLowerCase() === y[i].toLowerCase()) r.push(x[i] + ' → ' + y[i]); return r; })();
+      const spell = mods.filter(([x, y]) => /^[\p{L}]+$/u.test(x) && /^[\p{L}]+$/u.test(y) && x.length > 3 && x.toLowerCase() !== y.toLowerCase() && lev(x.toLowerCase(), y.toLowerCase()) <= 2).map(m2 => m2.join(' → '));
+      const FUNC = /^(a|an|the|is|are|was|were|be|been|am|of|to|in|on|at|for|and|or|with|as|by|from|that|this|it|its|i|we|my|our|has|have|had)$/i;
+      const gram = [...addW, ...delW].filter(w => FUNC.test(w));
+      const spaceDiff = D.filter(d => d[0] !== '=' && /^[ \t]+$/.test(d[1])).length + mods.filter(([x, y]) => x.replace(/\s/g, '') === y.replace(/\s/g, '')).length;
+      const nl = s2 => (s2.match(/\n/g) || []).length, lbDiff = nl(tA) !== nl(tB);
+      const spec = s2 => uniq(s2.match(/[^\x00-\x7F]|[#+@&%$€£₹©®™§^~|\\<>{}[\]]/g) || []), [spA, spB] = setDiff(spec(tA), spec(tB));
+      const nums = s2 => s2.match(/\d+(?:[.,]\d+)*\+?%?/g) || [], [nA, nB] = setDiff(nums(tA), nums(tB));
+      const MON = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?';
+      const dates = s2 => (s2.match(new RegExp(`\\b(?:\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}|(?:${MON})\\.? \\d{1,4}(?:, \\d{4})?|\\d{1,2} (?:${MON}) \\d{4}|(?:19|20)\\d{2}|\\d{1,2}:\\d{2}\\s?(?:am|pm)?)\\b`, 'gi')) || []).map(x => x.toLowerCase()), [dA, dB] = setDiff(dates(tA), dates(tB));
+      const caps = s2 => uniq((s2.match(/(?<![.!?]\s*)\b[A-Z][\p{L}'’-]+(?:\s+[A-Z][\p{L}'’-]+)*/gu) || []).filter(x => !/^(I|The|A|An|With|In|My|We|Our|Currently)$/.test(x))), [cA, cB] = setDiff(caps(tA), caps(tB));
+      const links = s2 => s2.match(/https?:\/\/\S+|www\.\S+|[\w.+-]+@[\w-]+\.[\w.]+/gi) || [], [uA, uB] = setDiff(links(tA), links(tB));
+      const sa = sents(tA), sb = sents(tB), common = sa.filter(x => sb.includes(x)), orderMoved = common.length > 1 && common.join('|') !== sb.filter(x => sa.includes(x)).join('|');
+      const dupS = s2 => { const ss = sents(s2); return ss.filter((x, i) => ss.indexOf(x) !== i); }, dupW = s2 => (s2.match(/\b(\w+)\s+\1\b/gi) || []), dups = [...dupS(tB), ...dupW(tA), ...dupW(tB), ...(tA.match(/(\w{3,})\1/gi) || []), ...(tB.match(/(\w{3,})\1/gi) || [])];
+      const fmt = s2 => (s2.match(/\*\*|__|^#+ |^\s*[-•*]\s|<\/?(b|i|strong|em|h\d|li)>/gim) || []).length, fmtDiff = fmt(tA) !== fmt(tB);
+      const tech = w => (w = String(w).replace(/^[^\p{L}\p{N}#]+|[^\p{L}\p{N}#+]+$/gu, ''), /[#+.]|\d|[A-Z]{2,}|[a-z][A-Z]/.test(w)), terms = mods.filter(([x, y]) => (tech(x) || tech(y) || /sharp|net|sql|aws|cloud/i.test(x + y)) && !spell.includes(x + ' → ' + y)).map(m2 => m2.join(' → '));
+      const NEG = /^(not|no|never|without|none|nor|cannot|can't|don't|didn't|isn't|wasn't)$/i, negChange = [...addW, ...delW].some(w => NEG.test(w));
+      const meaning = negChange || nA.length || nB.length || pct < 75;
+      const exact = !D.some(d => d[0] !== '=') && (cs ? tA === tB : tA.toLowerCase() === tB.toLowerCase());
+      const C = [
+        ['Exact text match', exact ? 'ok' : 'warn', exact ? 'The compared text is identical.' : 'The texts are not identical.'],
+        ['Added text', addW.length ? 'warn' : 'ok', addW.length ? `${addW.length} word${addW.length === 1 ? '' : 's'} added: ${esc(addW.slice(0, 12).join(', '))}${addW.length > 12 ? '…' : ''}` : 'Nothing added.'],
+        ['Deleted text', delW.length ? 'warn' : 'ok', delW.length ? `${delW.length} word${delW.length === 1 ? '' : 's'} removed: ${esc(delW.slice(0, 12).join(', '))}${delW.length > 12 ? '…' : ''}` : 'Nothing removed.'],
+        ['Modified text', mods.length ? 'warn' : 'ok', mods.length ? mods.slice(0, 6).map(([x, y]) => `“${esc(x || '·')}” → “${esc(y || '·')}”`).join('; ') + (mods.length > 6 ? '…' : '') : 'No words changed.'],
+        ['Spelling differences', spell.length ? 'warn' : 'ok', spell.length ? esc(spell.join(', ')) : 'None found.'],
+        ['Grammar changes', gram.length ? 'warn' : 'ok', gram.length ? 'Small grammar words differ: ' + esc(uniq(gram).join(', ')) : 'None found.'],
+        ['Capitalization', caseOnly.length ? 'warn' : 'ok', caseOnly.length ? esc(caseOnly.slice(0, 6).join(', ')) + (cs ? '' : ' (ignored in the % because Case sensitive is off)') : 'No capital-letter differences.'],
+        ['Punctuation', addP.length + delP.length ? 'warn' : 'ok', addP.length + delP.length ? `Added: ${esc(addP.join(' ') || '–')} · Removed: ${esc(delP.join(' ') || '–')}` : 'No punctuation differences.'],
+        ['Whitespace', spaceDiff ? 'warn' : 'ok', spaceDiff ? `${spaceDiff} place${spaceDiff === 1 ? '' : 's'} with extra or missing spaces (shown as ·)` : 'No spacing differences.'],
+        ['Line breaks', lbDiff ? 'warn' : 'ok', lbDiff ? `File has ${nl(tA)}, public profile has ${nl(tB)} line breaks.` : 'Same line breaks.'],
+        ['Special characters', spA.length + spB.length ? 'warn' : 'ok', spA.length + spB.length ? `Only in file: ${esc(spA.join(' ') || '–')} · Only in public profile: ${esc(spB.join(' ') || '–')}` : 'Same symbols and accents.'],
+        ['Numbers and values', nA.length + nB.length ? 'warn' : 'ok', nA.length + nB.length ? `Only in file: ${esc(nA.join(', ') || '–')} · Only in public profile: ${esc(nB.join(', ') || '–')}` : 'Same numbers.'],
+        ['Dates and times', dA.length + dB.length ? 'warn' : 'ok', dA.length + dB.length ? `Only in file: ${esc(dA.join(', ') || '–')} · Only in public profile: ${esc(dB.join(', ') || '–')}` : 'Same dates and times.'],
+        ['Names and titles', cA.length + cB.length ? 'warn' : 'ok', cA.length + cB.length ? `Only in file: ${esc(cA.slice(0, 6).join(', ') || '–')} · Only in public profile: ${esc(cB.slice(0, 6).join(', ') || '–')}` : 'Same names, companies and titles.'],
+        ['URLs and email addresses', uA.length + uB.length ? 'warn' : 'ok', uA.length + uB.length ? `Only in file: ${esc(uA.join(', ') || '–')} · Only in public profile: ${esc(uB.join(', ') || '–')}` : (links(tA).length ? 'Same links.' : 'No links or emails.')],
+        ['Section order', orderMoved ? 'warn' : 'ok', orderMoved ? 'Some sentences appear in a different order.' : 'Same order.'],
+        ['Duplicate content', dups.length ? 'warn' : 'ok', dups.length ? 'Repeated text: ' + esc(uniq(dups).slice(0, 4).join(', ')) : 'No repeats found.'],
+        ['Formatting differences', fmtDiff ? 'warn' : 'info', fmtDiff ? 'Different list or emphasis markers.' : 'Plain text: no formatting differences found (bold, fonts and headings are not visible in plain text).'],
+        ['Terminology changes', terms.length ? 'warn' : 'ok', terms.length ? esc(terms.slice(0, 5).join(', ')) : 'No technical terms replaced.'],
+        ['Meaning changes', meaning ? 'warn' : 'ok', meaning ? (negChange ? 'A negative word (not, no, never…) was added or removed. ' : '') + (nA.length || nB.length ? 'Numbers changed. ' : '') + (pct < 75 ? 'Large parts are different. ' : '') + 'Read both carefully.' : 'Wording differences do not look like they change the meaning.']];
+      // suggested answer using the Summary / About field rule
+      const big = mods.filter(([x, y]) => x.replace(/\W/g, '').toLowerCase() !== y.replace(/\W/g, '').toLowerCase()).length;
+      let ans, why;
+      if (!tA.trim() !== !tB.trim()) { ans = 'n'; why = 'One side is empty and the other is not.'; }
+      else if (pct >= 97) { ans = 'm'; why = 'Same text with only small edits (spacing, punctuation or a word or two).'; }
+      else if (pct >= 85) { ans = 'm'; why = 'Mostly the same text with small edits. Check the highlighted changes: a small fix like a spelling or C# correction is still the same text.'; }
+      else if (pct >= 70) { ans = 'x'; why = 'Partly the same. Read the highlighted parts and decide if it is small edits (Match) or rewritten text (Not a match).'; }
+      else { ans = 'n'; why = 'Rewritten or clearly different text.'; }
+      const ring = 2 * Math.PI * 34, col = pct >= 85 ? '#5a9a1a' : pct >= 70 ? '#eda100' : '#e2513b';
+      const sug = ans === 'x' ? '<span class="bf-a o">Read carefully, then decide</span>' : A[ans];
+      $('scOut').innerHTML = `<div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
+        <div class="sc-verdict"><span class="bf-l">Suggested answer for Summary / About</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
+        <div class="sc-legend"><span class="del">Removed</span><span class="add">Added</span><span class="mod">Changed</span><span class="spk">· = space · ↵ = line break</span></div>
+        <div class="sc-cols"><div><small>THE FILE SAYS</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div><small>PUBLIC PROFILE SAYS</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
+        <h3 class="bf-h">20-point check</h3><div class="sc-checks">${C.map(([t, st, d], i) => `<div class="${st}"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></div>`).join('')}</div>`; }
+    $('scGo').onclick = run; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(run.t); run.t = setTimeout(run, 350); }));
+    $('scCase').onchange = e => { cs = e.target.checked; run(); };
+    $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); run(); });
+    $('scEx').addEventListener('click', e => { const b = e.target.closest('[data-sx]'); if (!b) return; const x = EX[+b.dataset.sx]; $('scA').value = x[1]; $('scB').value = x[2]; $('scEx').querySelectorAll('button').forEach(y => y.classList.toggle('on', y === b)); run(); });
+    $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; run(); };
+    $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; run(); };
+    $('scEx').querySelector('[data-sx="0"]').click();
+  })();
+</script></body></html>
