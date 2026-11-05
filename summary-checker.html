@@ -40,8 +40,13 @@ h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:70
 .sc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12.5px}.sc-legend span{padding:2px 8px;border-radius:6px}.sc-legend .del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-legend .add{background:#d6f0c6;color:#1f6a2a}.sc-legend .mod{background:#fdeba8;color:#7a5200}.sc-legend .spk{color:var(--ink-soft)}
 .sc-cols > div{display:grid;gap:4px}.sc-cols small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.sc-text{white-space:pre-wrap;font-size:15px;line-height:1.7;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:80px}
 .sc-text mark{border-radius:4px;padding:1px 2px}.sc-text mark.del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-text mark.add{background:#d6f0c6;color:#1f6a2a}.sc-text mark.mod{background:#fdeba8;color:#7a5200;font-weight:600}.sc-text mark.gap{background:none}.sc-text .sc-cut{color:var(--ink-soft);opacity:.55}.sc-text .sp{color:#c06a00;font-weight:800}
-.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > div{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
-.sc-checks > div > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.sc-ck{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}.sc-ck:hover{transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(0,0,0,.3)}
+.sc-what{display:none;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--surface-2);font-style:normal;font-size:13px;line-height:1.5;color:var(--ink)}.sc-what > span:first-child{font-weight:700}.sc-see{display:block;margin-top:4px;color:#7a5200;font-weight:600}
+.sc-ck.open{outline:2px solid var(--gem);outline-offset:-1px}.sc-ck.open .sc-what{display:block}
+.sc-cols.focus mark{opacity:.25}.sc-cols.f-add mark.add,.sc-cols.f-del mark.del,.sc-cols.f-mod mark.mod,.sc-cols.f-all mark{opacity:1;outline:2px solid currentColor;outline-offset:1px}
+.sc-cols.f-sp mark{opacity:.25}.sc-cols.f-sp .sp{background:#ffd36b;border-radius:3px;padding:0 2px}.sc-cols.f-sp mark:has(.sp),.sc-cols.f-sp mark.gap{opacity:1}.sc-cols.f-sp mark.gap{background:#ffd36b}.sc-checks{align-items:start}
+.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > .sc-ck{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.sc-checks > .sc-ck > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
 .sc-checks .ok i{background:#dff3d6;color:#1f6a2a}.sc-checks .warn{border-color:#f0d9a0;background:#fffaf0}.sc-checks .warn i{background:#fdeba8;color:#7a5200}.sc-checks .info i{background:#e3edf8;color:#1f4f86}
 
 </style></head><body>
@@ -51,8 +56,7 @@ h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:70
 
         <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Summary / About checker</h3>
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
-          <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
-          <div class="sc-exr"><span>Examples:</span><div id="scEx"></div></div>
+          <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
           <div class="sc-grid"><div class="f"><label for="scA">THE FILE SAYS (SeekOut)</label><textarea id="scA" rows="7"></textarea></div><div class="f"><label for="scB">PUBLIC PROFILE SAYS (ZIPLabs)</label><textarea id="scB" rows="7"></textarea></div></div>
           <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button></div></div>
         <div class="panel" id="scOut"></div>
@@ -63,13 +67,6 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
   (function summaryChecker(){
-    const EX = [
-      ['Banio Carpenter', 'Entrepreneurial thinker. Extensive experience leading change. Experienced technical leader in dynamic, international environment. Infrastructure architect. Documentation guru. Experienced Security…', 'Entrepreneurial thinker. Extensive experience leading change.Experienced technical leader in dynamic, international environmentsInfrastructure architect. Documentation guru.Experienced Security…'],
-      ['Nathan Henderson', 'I am DevOps engineer from a development background with experience as and Linux systems administrator. I strive to design and build high performance, distributed, and scalable web…', 'I am DevOps engineer from a development background with experience as and Linux systems administrator. I strive to design and build high performance, distributed, and scalable web…'],
-      ['Napoleon "Ike" Jones', 'I am a back-end software engineer with industry experience building scalable systems using .NET (csharpsharp and VB.NET), LINQ, SQL and NoSQL databases in Azure and on premises. I have…', 'I am a back-end software engineer with industry experience building scalable systems using .NET (C# and VB.NET), LINQ, SQL and NoSQL databases in Azure and on premises. I have experience with…'],
-      ['Prasad Chitibomma', '20+ years of experience in IT. Currently working as DevOps Architect with AAFES. DevOps Team using Amazon Web Services CICD Tools like Cloud Formation Templates, Terraform, Mesos, Jenkins,…', '20+ years of experience in IT. Currently working as DevOps Architect with AAFES. DevOps Team using Amazon Web Services CICD Tools like Cloud Formation Templates, Terraform, Mesos, Jenkins,…'],
-      ['Mitch Wilson-Brown', 'With 20+ years of IT experience, I\'ve covered a lot of ground. I\'ve been "shadow IT", done automation development as a consultant, csharpsharp development in a dev shop, led a transition from…', 'With 20+ years of IT experience, I\'ve covered a lot of ground. I\'ve been "shadow IT", done automation development as a consultant, C# development in a dev shop, led a transition from waterfall to agile, to…']];
-    $('scEx').innerHTML = EX.map((x, i) => `<button type="button" data-sx="${i}">${esc(x[0])}</button>`).join('');
     let mode = 'word', cs = false;
     const ELL = /(\.\.\.|…)\s*$/;
     // words keep inner dots like VB.NET, but a sentence glued to the next one ("change.Experienced") and words glued together ("environmentsInfrastructure") are split
@@ -89,7 +86,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     const uniq = a => [...new Set(a)];
     function run(){
       let a = $('scA').value, b = $('scB').value;
-      if (!a.trim() && !b.trim()) { $('scOut').innerHTML = '<p class="empty">Paste the two summaries above, or pick an example.</p>'; return; }
+      if (!a.trim() && !b.trim()) { $('scOut').innerHTML = '<p class="empty">Paste the two summaries above and click Compare.</p>'; return; }
       // cut-off text: compare only the part both sides show (rule 9a)
       const cutA = ELL.test(a), cutB = ELL.test(b); let note = '';
       const A0 = a.replace(ELL, ''), B0 = b.replace(ELL, '');
@@ -137,6 +134,9 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       const NEG = /^(not|no|never|without|none|nor|cannot|can't|don't|didn't|isn't|wasn't)$/i, negChange = [...addW, ...delW].some(w => NEG.test(w));
       const meaning = negChange || nA.length || nB.length || pct < 75;
       const exact = !D.some(d => d[0] !== '=') && (cs ? tA === tB : tA.toLowerCase() === tB.toLowerCase());
+      const WHAT = ['Checks whether the entire content is identical.', 'Finds new words, sentences, paragraphs or sections in the public profile.', 'Finds content in the file that was removed from the public profile.', 'Finds words or sentences that have been changed from one version to the other.', 'Checks for spelling mistakes or corrections (a word changed by only one or two letters).', 'Finds changes in grammar or sentence construction (small words like a, the, is, and, with).', 'Compares uppercase and lowercase letters.', 'Finds changes in commas, full stops, colons, brackets and other punctuation.', 'Detects extra or missing spaces, for example a missing space after a full stop.', 'Finds changes in line endings and paragraph breaks.', 'Compares symbols, Unicode characters and accents (#, +, é, ©…).', 'Finds changes in numbers and values (years of experience, percentages, amounts).', 'Detects changes to dates, deadlines, years and times.', 'Compares personal names, company names and job titles (words starting with a capital letter).', 'Detects changed web links and email addresses.', 'Finds sentences or paragraphs that moved to a different place.', 'Detects repeated words, sentences or paragraphs (e.g. "csharpsharp").', 'Finds changes in bold, italic, headings and lists. Plain text shows only list and emphasis markers.', 'Checks whether technical terms were replaced (e.g. C# vs csharp, AWS vs Amazon Web Services).', 'Decides whether the new wording could change what the text means (negative words, numbers, large rewrites).'];
+      const HI = ['', 'add', 'del', 'mod', 'mod', 'mod', 'mod', 'mod', 'sp', 'sp', 'mod', 'mod', 'mod', 'mod', 'mod', '', '', '', 'mod', 'all'];
+      const DECIDE = 'For Summary / About: same text with small edits = Match; rewritten or clearly different = Not a match.';
       const C = [
         ['Exact text match', exact ? 'ok' : 'warn', exact ? 'The compared text is identical.' : 'The texts are not identical.'],
         ['Added text', addW.length ? 'warn' : 'ok', addW.length ? `${addW.length} word${addW.length === 1 ? '' : 's'} added: ${esc(addW.slice(0, 12).join(', '))}${addW.length > 12 ? '…' : ''}` : 'Nothing added.'],
@@ -168,17 +168,23 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       else { ans = 'n'; why = 'Rewritten or clearly different text.'; }
       const ring = 2 * Math.PI * 34, col = pct >= 85 ? '#5a9a1a' : pct >= 70 ? '#eda100' : '#e2513b';
       const sug = ans === 'x' ? '<span class="bf-a o">Read carefully, then decide</span>' : A[ans];
+      window.__scInfo = {WHAT, HI, DECIDE};
       $('scOut').innerHTML = `<div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
         <div class="sc-verdict"><span class="bf-l">Suggested answer for Summary / About</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
         <div class="sc-legend"><span class="del">Removed</span><span class="add">Added</span><span class="mod">Changed</span><span class="spk">· = space · ↵ = line break</span></div>
         <div class="sc-cols"><div><small>THE FILE SAYS</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div><small>PUBLIC PROFILE SAYS</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
-        <h3 class="bf-h">20-point check</h3><div class="sc-checks">${C.map(([t, st, d], i) => `<div class="${st}"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></div>`).join('')}</div>`; }
+        <h3 class="bf-h">20-point check</h3><p class="hint" style="margin:-4px 0 10px">Click any check to see what it means. Checks with differences also highlight them in the text above.</p><div class="sc-checks">${C.map(([t, st, d], i) => `<button type="button" class="sc-ck ${st}" data-ck="${i}" aria-expanded="false"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small><em class="sc-what"><span>What it checks:</span> ${WHAT[i]}${st === 'warn' && HI[i] ? ' <span class="sc-see">The differences are highlighted in the text above.</span>' : ''}</em></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></button>`).join('')}</div>`; }
+    // click a check: show what it means and highlight the matching differences
+    $('scOut').addEventListener('click', e => { const b = e.target.closest('[data-ck]'); if (!b) return; const was = b.classList.contains('open');
+      document.querySelectorAll('.sc-ck.open').forEach(x => { x.classList.remove('open'); x.setAttribute('aria-expanded', 'false'); });
+      const cols = document.querySelector('.sc-cols'); cols.className = 'sc-cols';
+      if (was) return; b.classList.add('open'); b.setAttribute('aria-expanded', 'true'); const hi = window.__scInfo.HI[+b.dataset.ck];
+      if (b.classList.contains('warn') && hi) { cols.classList.add('focus', 'f-' + hi); cols.scrollIntoView({behavior: 'smooth', block: 'center'}); } });
     $('scGo').onclick = run; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(run.t); run.t = setTimeout(run, 350); }));
     $('scCase').onchange = e => { cs = e.target.checked; run(); };
     $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); run(); });
-    $('scEx').addEventListener('click', e => { const b = e.target.closest('[data-sx]'); if (!b) return; const x = EX[+b.dataset.sx]; $('scA').value = x[1]; $('scB').value = x[2]; $('scEx').querySelectorAll('button').forEach(y => y.classList.toggle('on', y === b)); run(); });
     $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; run(); };
     $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; run(); };
-    $('scEx').querySelector('[data-sx="0"]').click();
+    run();
   })();
 </script></body></html>
