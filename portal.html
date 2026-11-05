@@ -503,6 +503,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .bal{display:grid;gap:8px}
 
 .ep{display:grid;gap:14px;margin-bottom:16px}
+.ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
+.ep-lock.locked{background:color-mix(in srgb,#eda100 10%,var(--surface));border-color:color-mix(in srgb,#eda100 40%,var(--line))}.ep-lock.open{background:color-mix(in srgb,var(--ok) 9%,var(--surface));border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
+.ep-lock .ep-lt{flex:1 1 300px}.ep-lock .ep-lt b{display:block;font-size:15px;margin-bottom:2px}.ep-lock .acts{display:flex;gap:8px;flex-wrap:wrap}
+.ep-lock form{flex-basis:100%;display:grid;gap:8px}.ep-lock textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.prq-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 0;border-top:1px solid var(--line)}.prq-row:first-of-type{border-top:0}.prq-row .who{flex:1 1 260px;font-size:14px}.prq-row .who small{display:block;color:var(--ink-soft)}
+
 .ep-sec{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
 .ep-hd{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
 .ep-hd h3{margin:0;font-size:15.5px;display:flex;align-items:center;gap:8px}.ep-hd h3 svg{flex:none}
@@ -1272,6 +1278,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="msg" id="setupMsg" hidden style="margin-bottom:16px"><b>First-time setup.</b> Create your own account with Admin rights now. After that, the admin area is locked and opens only for people who sign in with an Admin account. When you're done, sign out and sign back in with your new admin email and password.</div>
       <div class="vhead"><div><h1>Admin</h1><p>Manage employee logins and profiles, and post announcements. Edit shifts on the Schedule page and approve leave on Leave plans.</p></div><span class="pill ok" id="accCount">0 accounts</span></div>
       <div class="panel" style="margin-bottom:16px"><h3 id="cTeamT">Team hours this month</h3><div class="chart" id="cTeam"></div></div>
+      <div class="panel" id="prqPanel" style="margin-bottom:16px" hidden><h3>Profile change requests</h3><p class="hint" style="margin:-4px 0 6px">Employees asking to update locked details, and those who have finished and need locking again.</p><div id="prqList"></div></div>
       <div class="panel acc-panel" style="padding:0">
         <div class="toolbar" style="padding:16px"><input id="accQ" type="search" placeholder="Search name or email" aria-label="Search accounts"></div>
         <div class="tbl"><table>
@@ -1488,7 +1495,7 @@ function compBal(a, pendDays){ const tot = compGiven(a); const u = compUsed(a), 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
 const BRIEF_VER = 'brief-2026-11-5';   // change this to ask everyone to read and accept again
-let empInfoMine = null, empDocsMine = null; const epEditing = {};   // employee details: own records, section being edited per container
+let empInfoMine = null, empDocsMine = null, profReqMine = null, profReqAll = {}; const epEditing = {};   // employee details: own records, section being edited per container
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
@@ -1504,7 +1511,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1593,6 +1600,7 @@ function watchMine(){
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
   watch('empInfoMine', db.doc('empInfo/' + me.key), s => { empInfoMine = s.exists ? s.data() : {}; renderProfile(); });
   watch('empDocsMine', db.doc('empDocs/' + me.key), s => { empDocsMine = s.exists ? s.data() : {}; renderProfile(); });
+  watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); });
@@ -1608,6 +1616,7 @@ function startAdminData() {
   watch('moodAll', db.collection('mood'), s => { moodAll = {}; s.docs.forEach(d => moodAll[d.id] = d.data()); renderMood(); });
   watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
+  watch('profReqAll', db.collection('profileReq'), s => { profReqAll = {}; s.docs.forEach(d => profReqAll[d.id] = d.data()); renderProfReqs(); renderAccounts(); });
   watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
@@ -1878,9 +1887,9 @@ function renderProfile(){
   const since = me.createdAt ? new Date(me.createdAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) : '—';
   const F = [['Role', me.role || '—'], ['Project', me.project || '—'], ['Location', me.location || '—'], ['Skills', me.skills || '—'], ['Status', me.status || 'Active'], ['Portal access', me.access === 'admin' ? 'Admin' : 'Contributor'], ['Time clock', selfClock() ? 'Yes, hours tracked' : 'Not used'], ['Member since', since]];
   if (selfClock()) { const days = (myAtt && myAtt.days) || {}, st = stats(days, monthDays(days, monthKey(new Date()))); F.push(['Hours this month', fmtH(st.ms)]); }
-  card.innerHTML = `${epPhoto(me, empInfoMine, true)}<div><h2>${esc(me.name)}</h2><div class="em">${esc(me.email)}</div>${me.designation ? `<div class="hint">${esc(me.designation)}${me.department ? ' · ' + esc(me.department) : ''}</div>` : ''}</div>
+  card.innerHTML = `${epPhoto(me, empInfoMine, !isLocked(me.key))}<div><h2>${esc(me.name)}</h2><div class="em">${esc(me.email)}</div>${me.designation ? `<div class="hint">${esc(me.designation)}${me.department ? ' · ' + esc(me.department) : ''}</div>` : ''}</div>
     <dl class="prof-grid">${F.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
-  { const ctx = {key: me.key, acct: me, info: empInfoMine || {}, docs: empDocsMine || {}, pay: payMine, admin: isAdmin}, el = $('epMine');
+  { const ctx = {key: me.key, acct: acctOf(me.key) || me, info: empInfoMine || {}, docs: empDocsMine || {}, pay: payMine, admin: false, req: profReqMine}, el = $('epMine');
     if (epEditing.epMine && el.querySelector('[data-ep-form]')) el._ctx = ctx; else renderEP(el, ctx); }
   const year = new Date().getFullYear(), mine = myLeave(), allow = allowOf(me), used = t => mine.filter(d => d.type === t && d.from.slice(0,4) == year).reduce((a,d) => a + (d.days||0), 0);
   const pendDays = t => myReqs().filter(q => q.type === t && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
@@ -1914,7 +1923,7 @@ const EP_SECS = [
   {k: 'contact', t: 'Contact details (emergency)', f: [['emPhone', 'Emergency contact number', 'tel'], ['emName', 'Contact person name', 'text'], ['emRelation', 'Relation with contact', 'text'], ['emAddress', 'Address', 'area']]},
   {k: 'personal', t: 'Personal details', f: [['dob', 'Date of birth', 'date'], ['joinDate', 'Company joining date', 'date', 'acct']]},
   {k: 'ref', t: 'Reference', f: [['refName', 'Name', 'text'], ['refPhone', 'Mobile number', 'tel']]}];
-const EP_DOCS = [['aadhaar', 'Aadhaar card'], ['pan', 'PAN card'], ['dl', 'Driving licence']];
+const EP_DOCS = [['aadhaar', 'Aadhaar card'], ['pan', 'PAN card'], ['bankproof', 'Bank passbook or account confirmation']];
 const epVal = (ctx, f) => (f[3] === 'acct' ? ctx.acct : ctx.info)[f[0]];
 const epShow = (f, v, ctx, reveal) => { if (v == null || v === '') return null;
   if (f[2] === 'date') { const d = new Date(v + 'T00:00:00'); return isNaN(d) ? v : d.toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}); }
@@ -1923,16 +1932,42 @@ const epShow = (f, v, ctx, reveal) => { if (v == null || v === '') return null;
 const canEdit = (ctx, f) => ctx.admin || f[3] !== 'acct';
 function epPhoto(acct, info, mine){ const ph = info && info.photo;
   return `<div class="ep-photo">${ph ? `<img src="${esc(ph)}" alt="">` : `<div class="av big" style="background:hsl(${hue(acct.name)} 45% 62%)">${esc(initials(acct.name))}</div>`}${mine ? `<label title="Update photo"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6.5h3l1.5-2h5l1.5 2h3v10H3z"/><circle cx="10" cy="11" r="3"/></svg><input type="file" accept="image/*" data-ep-photo></label>` : ''}</div>`; }
-function renderEP(el, ctx){ if (!el) return; el._ctx = ctx; const ed = epEditing[el.id];
+
+const acctOf = key => accounts.find(a => a.key === key) || (me && me.key === key ? me : null);
+const isLocked = key => { const a = acctOf(key); return !!(a && a.profileLock === true); };
+const fmtDT = t => t ? new Date(t).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) : '';
+function epLockBar(ctx){ const lk = ctx.admin ? ctx.acct.profileLock === true : isLocked(ctx.key), rq = ctx.req || null, st = rq && rq.status;
+  if (ctx.admin) {
+    const pend = st === 'pending' ? `<div class="ep-lt" style="flex-basis:100%"><b>📝 ${esc(ctx.acct.name)} asked to change their details</b>${esc(rq.reason || 'No reason given')} <small class="hint">· ${fmtDT(rq.at)}</small></div>` : st === 'done' ? `<div class="ep-lt" style="flex-basis:100%"><b>✓ ${esc(ctx.acct.name)} has finished their changes</b><small class="hint">${fmtDT(rq.doneAt)}. Check the details, then lock them again.</small></div>` : '';
+    return `<div class="ep-lock ${lk ? 'locked' : 'open'}">${pend}<div class="ep-lt"><b>${lk ? '🔒 Locked: the employee can\'t change these details' : '🔓 Open: the employee can change these details'}</b>${lk ? 'Unlock to let them update something.' : 'Lock them once the details are complete and checked.'}</div>
+      <div class="acts">${st === 'pending' ? `<button class="btn btn-gem" type="button" data-ep-lock="approve">Approve and unlock</button><button class="btn btn-ghost" type="button" data-ep-lock="decline">Decline</button>` : lk ? '<button class="btn btn-gem" type="button" data-ep-lock="unlock">Unlock for the employee</button>' : '<button class="btn btn-gem" type="button" data-ep-lock="lock">🔒 Lock changes</button>'}</div></div>`; }
+  if (lk) { if (st === 'pending') return `<div class="ep-lock locked"><div class="ep-lt"><b>⏳ Request sent, waiting for admin approval</b>You asked on ${fmtDT(rq.at)}: “${esc(rq.reason || '')}”</div><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="cancel">Cancel request</button></div></div>`;
+    return `<div class="ep-lock locked"><div class="ep-lt"><b>🔒 Your details are locked</b>${st === 'declined' ? `Your last request was declined${rq.note ? ': “' + esc(rq.note) + '”' : ''}. ` : ''}Need to change something, like new bank details? Ask your admin for access.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="ask">Request access to update</button></div>
+      <form data-ep-ask hidden><label for="epAskWhy" style="font-weight:600">What do you need to change, and why?</label><textarea id="epAskWhy" rows="2" maxlength="300" placeholder="e.g. I changed my bank account, I need to update the bank details and passbook copy"></textarea><p class="msg err" data-ep-askerr hidden></p><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="askno">Cancel</button><button class="btn btn-gem" type="submit">Send request</button></div></form></div>`; }
+  if (st === 'approved') return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Editing is open</b>Your admin approved your request${rq.by ? ' (' + esc(rq.by) + ')' : ''}. Make your changes, then click “I've finished” so they can check and lock them again.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="done">I've finished my changes</button></div></div>`;
+  if (st === 'done') return `<div class="ep-lock open"><div class="ep-lt"><b>✓ You told your admin you've finished</b>They'll check your details and lock them. You can still make changes until then.</div></div>`;
+  return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Fill in your details</b>Complete every section, including bank details and documents. Once your admin checks them, they will be locked; after that you can ask for access to change them.</div></div>`; }
+async function epLockAct(el, act){ const ctx = el._ctx; if (!ctx) return; const ref = db.doc('profileReq/' + ctx.key), now = new Date().toISOString(), rq = ctx.req || {};
+  try {
+    if (act === 'ask') { const f = el.querySelector('[data-ep-ask]'); f.hidden = false; f.querySelector('textarea').focus(); return; }
+    if (act === 'askno') { el.querySelector('[data-ep-ask]').hidden = true; return; }
+    if (act === 'cancel') { await ref.set({...rq, status: 'cancelled', cancelledAt: now}); toast('Request cancelled'); }
+    if (act === 'done') { await ref.set({...rq, status: 'done', doneAt: now}); toast('Your admin has been told you\'ve finished'); }
+    if (act === 'approve' || act === 'unlock') { await db.doc('accounts/' + ctx.key).update({profileLock: false}); await ref.set({...rq, email: ctx.key, name: ctx.acct.name, status: 'approved', decidedAt: now, by: epWho(), at: rq.at || now}); ctx.acct.profileLock = false; toast('Unlocked: ' + ctx.acct.name + ' can update their details'); }
+    if (act === 'decline') { const note = prompt('Reason for declining (optional, the employee will see it):', '') ; if (note === null) return; await ref.set({...rq, status: 'declined', note: note.slice(0, 200), decidedAt: now, by: epWho()}); toast('Request declined'); }
+    if (act === 'lock') { await db.doc('accounts/' + ctx.key).update({profileLock: true, lockedAt: now, lockedBy: epWho()}); if (rq.status) await ref.set({...rq, status: 'closed', closedAt: now}); ctx.acct.profileLock = true; epEditing[el.id] = null; toast('Locked: ' + ctx.acct.name + '\'s details can\'t be changed now'); }
+    ctx.req = {...rq, ...(await ref.get()).data()}; renderEP(el, ctx);
+  } catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published and try again.'); } }
+function renderEP(el, ctx){ if (!el) return; el._ctx = ctx; const ed = epEditing[el.id]; const locked = !ctx.admin && isLocked(ctx.key);
   const payTxt = ctx.pay && ctx.pay.type ? (ctx.pay.type === 'hourly' ? 'Hourly' : 'Monthly') : null, payAmt = ctx.pay && ctx.pay.type && ctx.pay.amount != null ? (ctx.pay.currency || 'INR') + ' ' + ctx.pay.amount + (ctx.pay.type === 'hourly' ? ' / hour' : ' / month') : null;
   el.innerHTML = EP_SECS.map(S => { const ic = `<svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${EP_IC[S.k]}</svg>`;
     const when = ctx.info['at_' + S.k] ? `<span class="ep-when">Updated ${esc(new Date(ctx.info['at_' + S.k]).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}))}${ctx.info['by_' + S.k] ? ' by ' + esc(ctx.info['by_' + S.k]) : ''}</span>` : '';
-    const editable = S.f.some(f => canEdit(ctx, f));
+    const editable = !locked && S.f.some(f => canEdit(ctx, f));
     let body;
     if (S.k === 'att') body = `<dl class="ep-kv"><div><dt>Time clock</dt><dd>${ctx.acct.clock === false ? '<span class="pill off">Disabled</span>' : '<span class="pill ok">Enabled</span>'}</dd></div><div><dt>Punch in type</dt><dd>${ctx.acct.clock === false ? 'Not used' : 'Portal clock (My Workday)'}</dd></div></dl>`;
     else if (S.k === 'docs') body = `<div class="ep-docs">${EP_DOCS.map(([k, n]) => { const d = ctx.docs[k];
         return `<div class="ep-doc"><b>${n}</b><div class="ep-drop ${d ? 'has' : ''}">${d ? (String(d.type).startsWith('image/') ? `<img src="${esc(d.data)}" alt="${n}">` : '📄') + `<span>${esc(d.name || n)}</span><small>${esc(new Date(d.at).toLocaleDateString())}</small>` : '<span>📄</span><span>Not uploaded</span>'}</div>
-          <div class="acts">${d ? `<button class="mini" type="button" data-ep-view="${k}">View</button>` : ''}<label class="mini" style="cursor:pointer">${d ? 'Replace' : 'Upload'}<input type="file" accept="image/*,application/pdf" data-ep-doc="${k}" hidden></label>${d ? `<button class="mini danger" type="button" data-ep-rm="${k}">Remove</button>` : ''}</div></div>`; }).join('')}</div><p class="hint" style="margin:10px 0 0">Photos (JPG, PNG) or PDF under 300 KB. Photos are shrunk automatically. Only you and portal admins can see these.</p>`;
+          <div class="acts">${d ? `<button class="mini" type="button" data-ep-view="${k}">View</button>` : ''}${locked ? '' : `<label class="mini" style="cursor:pointer">${d ? 'Replace' : 'Upload'}<input type="file" accept="image/*,application/pdf" data-ep-doc="${k}" hidden></label>${d ? `<button class="mini danger" type="button" data-ep-rm="${k}">Remove</button>` : ''}`}</div></div>`; }).join('')}</div><p class="hint" style="margin:10px 0 0">Photos (JPG, PNG) or PDF under 300 KB. Photos are shrunk automatically. Only you and portal admins can see these.</p>`;
     else if (ed === S.k) body = `<form class="ep-form" data-ep-form="${S.k}"><div class="g">${S.f.map(f => { const v = epVal(ctx, f) ?? '', ro = !canEdit(ctx, f), id = el.id + '_' + f[0], lab = `<label for="${id}">${f[1]}${ro ? ' 🔒' : ''}</label>`;
         if (f[2].startsWith('sel:')) return `<div class="f">${lab}<select id="${id}" name="${f[0]}" ${ro ? 'disabled' : ''}><option value="">Not set</option>${f[2].slice(4).split('|').map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select></div>`;
         if (f[2] === 'area') return `<div class="f" style="grid-column:1/-1">${lab}<textarea id="${id}" name="${f[0]}" rows="2" ${ro ? 'readonly' : ''}>${esc(v)}</textarea></div>`;
@@ -1944,6 +1979,7 @@ function renderEP(el, ctx){ if (!el) return; el._ctx = ctx; const ed = epEditing
       if (S.k === 'basic') rows.splice(1, 0, `<div><dt>Email</dt><dd>${esc(ctx.acct.email)}</dd></div>`, `<div><dt>Role</dt><dd>${esc(ctx.acct.role || '---')}</dd></div>`, `<div><dt>Salary type</dt><dd class="${payTxt ? '' : 'none'}">${payTxt || '---'}</dd></div>`, `<div><dt>Salary amount</dt><dd class="${payAmt ? '' : 'none'}">${payAmt || '---'}</dd></div>`);
       body = `<dl class="ep-kv">${rows.join('')}</dl>`; }
     return `<section class="ep-sec" data-ep-sec="${S.k}"><div class="ep-hd"><h3>${ic}${S.t}</h3>${when}${editable && ed !== S.k ? `<button class="ep-ed" type="button" data-ep-edit="${S.k}"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13.5 3.5l3 3L7 16H4v-3z"/></svg>Edit</button>` : ''}</div><div class="ep-bd">${body}</div></section>`; }).join('');
+  el.insertAdjacentHTML('afterbegin', epLockBar(ctx));
 }
 const epWho = () => me ? me.name : 'Admin';
 async function epSaveInfo(ctx, vals, sec){ const ref = db.doc('empInfo/' + ctx.key), now = new Date().toISOString();
@@ -1962,6 +1998,7 @@ const readUrl = file => new Promise((ok, no) => { const r = new FileReader(); r.
 function epBind(el){
   el.addEventListener('click', async e => { const ctx = el._ctx; if (!ctx) return; const t = e.target;
     const edb = t.closest('[data-ep-edit]'); if (edb) { epEditing[el.id] = edb.dataset.epEdit; renderEP(el, ctx); const f = el.querySelector('[data-ep-form] input:not([readonly]),[data-ep-form] select:not([disabled]),[data-ep-form] textarea:not([readonly])'); if (f) f.focus(); return; }
+    const lb = t.closest('[data-ep-lock]'); if (lb) { epLockAct(el, lb.dataset.epLock); return; }
     if (t.closest('[data-ep-cancel]')) { epEditing[el.id] = null; renderEP(el, ctx); return; }
     if (t.closest('[data-ep-reveal]')) { el._reveal = !el._reveal; renderEP(el, ctx); return; }
     const vb = t.closest('[data-ep-view]'); if (vb) { const d = ctx.docs[vb.dataset.epView]; if (!d) return; try { const b = await (await fetch(d.data)).blob(); window.open(URL.createObjectURL(b), '_blank', 'noopener'); } catch (x) { toast('Couldn\'t open the file.'); } return; }
@@ -1976,7 +2013,11 @@ function epBind(el){
       if (JSON.stringify(nd).length > 950000) { toast('The documents together are too large. Use smaller files.'); return; }
       await db.doc('empDocs/' + ctx.key).set(nd); ctx.docs = nd; renderEP(el, ctx); toast('Document uploaded'); }
     catch (x) { toast('The file couldn\'t be uploaded. Try a different photo or PDF.'); } finally { inp.value = ''; } });
-  el.addEventListener('submit', async e => { const fm = e.target.closest('[data-ep-form]'); const ctx = el._ctx; if (!fm || !ctx) return; e.preventDefault();
+  el.addEventListener('submit', async e => { const af = e.target.closest('[data-ep-ask]'); if (af) { e.preventDefault(); const ctx = el._ctx, why = af.querySelector('textarea').value.trim(), er = af.querySelector('[data-ep-askerr]');
+      if (why.length < 5) { er.textContent = 'Say briefly what you need to change.'; er.hidden = false; return; }
+      try { const now = new Date().toISOString(); await db.doc('profileReq/' + ctx.key).set({email: ctx.key, name: ctx.acct.name, status: 'pending', reason: why.slice(0, 300), at: now}); ctx.req = {email: ctx.key, status: 'pending', reason: why, at: now}; renderEP(el, ctx); toast('Request sent to your admin'); }
+      catch (x) { er.textContent = 'The request couldn\'t be sent. Try again.'; er.hidden = false; } return; }
+    const fm = e.target.closest('[data-ep-form]'); const ctx = el._ctx; if (!fm || !ctx) return; e.preventDefault();
     const S = EP_SECS.find(x => x.k === fm.dataset.epForm), err = fm.querySelector('[data-ep-err]'), info = {}, acct = {};
     for (const f of S.f) { if (!canEdit(ctx, f)) continue; const inp = fm.elements[f[0]]; let v = (inp.value || '').trim(); if (f[2] === 'ifsc') v = v.toUpperCase(); if (f[2] === 'acno') v = v.replace(/\s/g, '');
       const bad = epCheck(f, v); if (bad) { err.textContent = bad; err.hidden = false; inp.focus(); return; } (f[3] === 'acct' ? acct : info)[f[0]] = v; }
@@ -1996,7 +2037,7 @@ async function openEmpDlg(key){ const a = accounts.find(x => x.key === key); if 
   $('epDlgT').textContent = a.name; $('epDlgSub').textContent = a.email; $('epDlgPh').innerHTML = epPhoto(a, null, false); $('epAdm').innerHTML = '<p class="hint">Loading…</p>'; epEditing.epAdm = null; $('epAdm')._reveal = false;
   try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); }
   try { const [i, d] = await Promise.all([db.doc('empInfo/' + key).get(), db.doc('empDocs/' + key).get()]); const info = i.exists ? i.data() : {}, docs = d.exists ? d.data() : {};
-    $('epDlgPh').innerHTML = epPhoto(a, info, false); renderEP($('epAdm'), {key, acct: {...a}, info, docs, pay: payAll[key], admin: true}); }
+    $('epDlgPh').innerHTML = epPhoto(a, info, false); renderEP($('epAdm'), {key, acct: {...a}, info, docs, pay: payAll[key], admin: true, req: profReqAll[key] || null}); }
   catch (x) { $('epAdm').innerHTML = '<p class="msg err">The details couldn\'t be loaded. Check that the latest Firestore rules are published.</p>'; } }
 $('epDlgX').onclick = () => $('epDlg').close();
 const decisionOf = q => decisions.find(d => d.key === (q._src || (me && me.key)) + '~' + q.id);
@@ -2341,9 +2382,17 @@ $('payCopy').onclick = () => { const p = payPerson(), m = $('payMonth').value, w
 
 /* ---------- admin: accounts ---------- */
 let editKey = null;
+function renderProfReqs(){ const box = $('prqPanel'); if (!box || !isAdmin) return;
+  const list = Object.entries(profReqAll).filter(([k, r]) => r && (r.status === 'pending' || r.status === 'done' || (r.status === 'approved' && !isLocked(k)))).sort((a, b) => String(b[1].at).localeCompare(String(a[1].at)));
+  box.hidden = !list.length; if (!list.length) { $('prqList').innerHTML = ''; return; }
+  $('prqList').innerHTML = list.map(([k, r]) => { const a = acctOf(k) || {name: r.name || k};
+    const lab = r.status === 'pending' ? '<span class="pill warn">Waiting for approval</span>' : r.status === 'done' ? '<span class="pill ok">Finished, lock again</span>' : '<span class="pill info">Unlocked, editing</span>';
+    return `<div class="prq-row"><div class="who"><b>${esc(a.name)}</b> ${lab}<small>${esc(r.reason || '')} · ${fmtDT(r.at)}</small></div><button class="mini" type="button" data-prq="${esc(k)}">Open details</button></div>`; }).join(''); }
+$('prqList').addEventListener('click', e => { const b = e.target.closest('[data-prq]'); if (b) openEmpDlg(b.dataset.prq); });
 function renderAccounts(){
   queueCharts();
   if (!isAdmin) return;
+  renderProfReqs();
   const q = $('accQ').value.toLowerCase();
   const rows = accounts.filter(a => !q || (a.name + ' ' + a.email).toLowerCase().includes(q)).sort((a,b) => String(a.name).localeCompare(String(b.name)));
   $('accCount').textContent = accounts.length + (accounts.length === 1 ? ' account' : ' accounts');
@@ -2351,7 +2400,7 @@ function renderAccounts(){
   if (!rows.length) { $('accBody').innerHTML = '<tr><td colspan="4" class="empty">No accounts match that search.</td></tr>'; return; }
   $('accBody').innerHTML = rows.map(a => `<tr data-k="${esc(a.key)}"><td><div class="person">${av(a.name||a.email)}<div>${esc(a.name)}<div class="mono" style="color:var(--ink-soft)">${esc(a.email)}</div></div></div></td>
     <td>${esc(a.role||'')}<div style="font-size:12.5px;color:var(--ink-soft)">${esc(a.project||'No project')}</div></td><td>${a.active ? statusPill(a.status) : '<span class="pill off">Login off</span>'} ${a.access === 'admin' ? '<span class="pill admin">Admin</span>' : '<span class="pill info">Contributor</span>'}${a.clock === false ? ' <span class="pill off">No time clock</span>' : ''}</td>
-    <td><div class="acts"><button class="mini" data-act="details">Details</button><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
+    <td><div class="acts"><button class="mini" data-act="details">${a.profileLock ? '🔒 ' : ''}Details${profReqAll[a.key] && profReqAll[a.key].status === 'pending' ? ' <span class="pill warn" style="padding:1px 6px">Request</span>' : ''}</button><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
 }
 $('accQ').addEventListener('input', renderAccounts);
 /* reset or set an employee's password: admin types one or generates it */
