@@ -1057,8 +1057,6 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option></select></div></div>
           <div class="g2"><div class="f"><label for="opBoss">Reports to</label><select id="opBoss"></select></div><div class="f"><label for="opDate">Expected joining date</label><input id="opDate" type="date"></div></div>
           <div class="msg err" id="opErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Add to the Org Chart</button></form></div>
-      <h2 class="gd-group" style="margin-top:22px"><span class="dot on"></span>Teams by project</h2>
-      <div class="org-proj" id="orgProj"></div>
     </section>
     <!-- TIME OFF MANAGEMENT -->
     <section class="view" data-view="timeoff" hidden>
@@ -3962,7 +3960,7 @@ function orgPeople(){ const real = people(), names = new Set(real.map(p => Strin
   return real.concat(orgPlan.filter(x => x.name && !names.has(String(x.name).trim().toLowerCase())).map(x => ({key: 'plan:' + x.id, name: x.name, role: x.role, reportsTo: x.reportsTo, project: x.project || 'Seekout', plan: x}))); }
 function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = orgPeople(), parent = orgParents(ps), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
   $('orgCount').textContent = ps.length + (ps.length === 1 ? ' person' : ' people');
-  if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; $('orgProj').innerHTML = ''; return; }
+  if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; return; }
   const kids = k => ps.filter(p => parent[p.key] === k);
   const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
   const pic = p => photosAll[p.key] ? `<img class="oc-ph" src="${esc(photosAll[p.key])}" alt="">` : `<div class="av oc-ph" style="background:hsl(${hue(p.name)} 45% 62%)">${esc(initials(p.name))}</div>`;
@@ -3973,8 +3971,7 @@ function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = org
   box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`; fitOrg();
   if ($('opBoss')) { const keep = $('opBoss').value; $('opBoss').innerHTML = people().map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); if (keep) $('opBoss').value = keep; }
   $('orgLegend').innerHTML = Object.keys(ROLE_RANK).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 3) === ROLE_RANK[r]).length}</b></span>`).join('');
-  const projs = {}; ps.filter(p => !p.plan).forEach(p => (projs[p.project || 'Seekout'] = projs[p.project || 'Seekout'] || []).push(p));
-  $('orgProj').innerHTML = Object.entries(projs).map(([n, l]) => `<div class="panel org-pc"><h3>${esc(n)} <span class="pill info">${l.length}</span></h3><div class="org-members">${l.sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name))).map(p => `<div class="person">${photosAll[p.key] ? `<img class="av" src="${esc(photosAll[p.key])}" alt="" style="object-fit:cover">` : av(p.name)}<div>${esc(p.name)}<div style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || '')}</div></div></div>`).join('')}</div></div>`).join(''); }
+  /* teams-by-project list removed: the chart already shows everyone */ }
 
 // shrink the chart to fit the page width so it never needs a scroll bar
 function fitOrg(){ const fit = $('orgFit'), tree = $('orgTree'); if (!fit || !tree || !fit.offsetParent) return; tree.style.transform = 'none';
