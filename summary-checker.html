@@ -57,6 +57,9 @@ h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:70
 .sc-text mark{overflow-wrap:anywhere;word-break:break-all}
 .sc-checks small,.sc-what{overflow-wrap:anywhere;word-break:break-word}
 html,body{overflow-x:hidden}
+.sc-grid,.sc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:minmax(0,1fr)}}
+.sc-verdict{min-width:0}.sc-verdict p{overflow-wrap:anywhere}
+.sc-text > i{color:var(--ink-soft)}
 .sc-checks > .sc-ck small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sc-checks > .sc-ck.open small{display:block;-webkit-line-clamp:unset;max-height:160px;overflow:auto;overscroll-behavior:contain}
 .sc-what{max-height:200px;overflow:auto;overscroll-behavior:contain}
@@ -84,8 +87,22 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     const tokW = t => (t.match(/\n|[ \t\r\f\v]+|[\p{L}\p{N}#+_]+(?:['’][\p{L}\p{N}]+)*(?:\.(?!\p{Lu}\p{Ll})[\p{L}\p{N}#+_]+)*|[^\s\p{L}\p{N}]/gu) || []).flatMap(w => /^\s+$/.test(w) ? [w] : w.split(/(?<=\p{Ll}{2})(?=\p{Lu}\p{Ll}{2})/u));
     const norm = t => /^\n$/.test(t) ? '\n' : /^\s+$/.test(t) ? ' ' : cs ? t : t.toLowerCase();
     // longest common subsequence diff on token keys → [['=', a, b] | ['-', a] | ['+', b]]
+    // very long texts: trim the shared start and end, then compare sentence by sentence and only diff the changed sentences word by word
+    function bigDiff(A, B){ let p = 0; while (p < A.length && p < B.length && norm(A[p]) === norm(B[p])) p++;
+      let q = 0; while (q < A.length - p && q < B.length - p && norm(A[A.length - 1 - q]) === norm(B[B.length - 1 - q])) q++;
+      const head = A.slice(0, p).map((t, i) => ['=', t, B[i]]), tail = A.slice(A.length - q).map((t, i) => ['=', t, B[B.length - q + i]]);
+      const a = A.slice(p, A.length - q), b = B.slice(p, B.length - q);
+      if (a.length * b.length <= 6e6) return head.concat(diff(a, b), tail);
+      const seg = T => { const out = []; let cur = []; T.forEach(t => { cur.push(t); if (/[.!?…]$|\n/.test(t)) { out.push(cur); cur = []; } }); if (cur.length) out.push(cur); return out; };
+      const sa = seg(a), sb = seg(b), key = g => g.map(norm).filter(x => /\S/.test(x)).join(' ');
+      let mid;
+      if (sa.length * sb.length > 6e6) mid = a.map(t => ['-', t]).concat(b.map(t => ['+', t]));
+      else { const S = diff(sa.map(key), sb.map(key)); mid = []; let i = 0, j = 0, pa = [], pb = [];
+        const flush = () => { if (pa.length || pb.length) { const x = pa.flat(), y = pb.flat(); mid.push(...(x.length * y.length <= 2e6 ? diff(x, y) : x.map(t => ['-', t]).concat(y.map(t => ['+', t])))); pa = []; pb = []; } };
+        S.forEach(d => { if (d[0] === '=') { flush(); sa[i].forEach((t, k) => mid.push(['=', t, sb[j][k] !== undefined ? sb[j][k] : t])); i++; j++; } else if (d[0] === '-') pa.push(sa[i++]); else pb.push(sb[j++]); }); flush(); }
+      return head.concat(mid, tail); }
     function diff(A, B){ const ka = A.map(norm), kb = B.map(norm), n = ka.length, m = kb.length;
-      if (n * m > 6e6) return null;
+      if (n * m > 6e6) return bigDiff(A, B);
       const W = m + 1, L = new Uint16Array((n + 1) * W);
       for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i * W + j] = ka[i] === kb[j] ? L[(i + 1) * W + j + 1] + 1 : Math.max(L[(i + 1) * W + j], L[i * W + j + 1]);
       const out = []; let i = 0, j = 0; while (i < n && j < m) { if (ka[i] === kb[j]) { out.push(['=', A[i], B[j]]); i++; j++; } else if (L[(i + 1) * W + j] >= L[i * W + j + 1]) { out.push(['-', A[i]]); i++; } else { out.push(['+', B[j]]); j++; } }
@@ -111,7 +128,8 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       // similarity on non-space tokens
       const vis = x => !/^\s+$/.test(x);
       const same = D.filter(d => d[0] === '=' && vis(d[1])).length, la = D.filter(d => d[0] !== '+' && vis(d[1])).length, lb = D.filter(d => d[0] !== '-' && vis(d[0] === '=' ? d[2] : d[1])).length;
-      const pct = la + lb ? Math.round(200 * same / (la + lb) * 10) / 10 : 100;
+      let pct = la + lb ? Math.round(200 * same / (la + lb) * 10) / 10 : 100;
+      if (pct === 100 && D.some(d => d[0] !== '=' && vis(d[1]))) pct = 99.9;   // never show 100% when a word differs
       // pair deletions + additions into modifications for display
       let L2 = '', R2 = '', mods = [];
       for (let k = 0; k < D.length; k++) { const d = D[k];
