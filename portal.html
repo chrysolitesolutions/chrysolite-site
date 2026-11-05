@@ -230,6 +230,8 @@ tbody tr:hover{background:var(--surface-2)}
 .person .av{width:30px;height:30px;font-size:11.5px}
 .gd-card b{display:block;font-size:15.5px;margin-bottom:4px}.gd-card span{color:var(--ink-soft);font-size:13.5px}
 .gd-back{margin-bottom:10px;display:inline-block}
+.gd-group{display:flex;align-items:center;gap:10px;font-size:19px;margin:6px 0 12px}.gd-group .dot{width:10px;height:10px;border-radius:50%}.gd-group .dot.on{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}.gd-group .dot.up{background:var(--info);box-shadow:0 0 0 4px color-mix(in srgb,var(--info) 20%,transparent)}
+#guideGridUp{margin-bottom:8px}#guideGridUp .lk{opacity:.92}
 .gd-toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.gd-toc a{font:500 12.5px var(--body);text-decoration:none;color:var(--ink);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.gd-toc a:hover{border-color:var(--gem)}
 .gd-doc{max-width:980px;line-height:1.65}.gd-doc h2{font-size:21px;margin:26px 0 10px;padding-top:14px;border-top:1px solid var(--line);scroll-margin-top:20px}.gd-doc h2:first-child{margin-top:0;border-top:0;padding-top:0}
 .gd-doc h3{font-size:16px;margin:18px 0 6px;color:var(--gem-ink)}.gd-doc p{margin:0 0 10px}.gd-doc ul,.gd-doc ol{margin:0 0 12px;padding-left:22px;display:grid;gap:4px}
@@ -1106,14 +1108,22 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <!-- PROJECT GUIDELINES -->
     <section class="view" data-view="guides" hidden>
       <div class="vhead"><div><h1>Projects</h1><p>Guidelines for each project you work on, plus the tools and links you use every day.</p></div></div>
+      <h2 class="gd-group"><span class="dot on"></span>Ongoing projects</h2>
       <div class="link-grid" id="guideGrid">
-        <button class="lk gd-card" type="button" data-go="benchhub"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>1. Project Benchmarking</b><span id="gdBenchSub">Profile review, email review and phone review.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>2. Project Power filter</b><span id="gdHubSub">Task schedule, progress and sources for every PowerFilter.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>3. Project ETO</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. Project ROI</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>5. Project CSM reports</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
-        <button class="lk gd-card bf-card" type="button" data-go="brief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>6. Benchmarking Briefing</b><span>Interactive guide to Profile Review: decision helper, rules, calculators and practice cases.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1. Profile Benchmarking</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button>
+        <button class="lk gd-card bf-card bf-sub" type="button" data-go="brief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>Profile Benchmarking · Briefing &amp; practice</b><span>Interactive guide to Profile Review: decision helper, rules, calculators and practice cases.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Benchmarking</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>3. ETO Profile Mapping Project</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>4. ROI Database update Project</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>5. Standard Usage Reporting - CSM Project</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button>
       </div>
+      <h2 class="gd-group"><span class="dot up"></span>Upcoming</h2>
+      <div class="link-grid" id="guideGridUp">
+        <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>1. Phone number benchmarking</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
+        <button class="lk gd-card" type="button" data-go="pf"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/></svg></div><div><b>2. Power Filter updation</b><span id="gdHubSub">Task schedule, progress and sources for every PowerFilter.</span></div></button>
+      </div>
+      <div class="panel admin-only" hidden style="margin-top:24px;padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Procedure acceptance</h3><span class="hint" id="ackSum"></span></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Profile Benchmarking</th><th>Email Benchmarking</th><th>Phone benchmarking</th><th>Briefing</th></tr></thead><tbody id="ackRows"></tbody></table></div></div>
       
       <div class="vhead" id="linksHead" style="margin-top:40px"><div><h1>Links</h1><p>Tools and sites you use for Chrysolite work. Each opens in a new tab.</p></div></div>
       <div class="link-grid" id="linkGrid"></div>
@@ -1196,12 +1206,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
       <div class="vhead"><div><h1>Project Benchmarking</h1><p>Step-by-step instructions for each review task.</p></div></div>
       <div class="link-grid">
-        <button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1. Profile Review</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2. Email Review</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button>
-        <button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3. Phone Review</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button>
       </div>
-      <div class="panel admin-only" hidden style="margin-top:16px;padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Procedure acceptance</h3><span class="hint" id="ackSum"></span></div>
-        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Profile Review</th><th>Email Review</th><th>Phone Review</th><th>Briefing</th></tr></thead><tbody id="ackRows"></tbody></table></div></div>
     </section>
 
     <!-- BENCHMARKING BRIEFING (interactive) -->
@@ -1739,7 +1744,7 @@ $('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
-  if (v === 'bench') v = 'benchhub';
+  if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
   if (!['home','roster','schedule','leave','timeoff','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
@@ -2881,7 +2886,7 @@ function renderAck(){
     catch (x) { b.disabled = false; b.textContent = 'Accept procedures'; toast('Your acceptance couldn\'t be saved. Try again.'); } };
 }
 function renderAckCards(){
-  BENCH_SUB.forEach(k => { const card = document.querySelector(`.view[data-view="benchhub"] [data-go="${k}"] > div:last-child`); if (!card) return; let t = card.querySelector('.ack-tag'); const st = me ? ackState(ackMine, k) : null;
+  BENCH_SUB.forEach(k => { const card = document.querySelector(`.view[data-view="guides"] [data-go="${k}"] > div:last-child`); if (!card) return; let t = card.querySelector('.ack-tag'); const st = me ? ackState(ackMine, k) : null;
     if (!st) { if (t) t.remove(); return; } if (!t) { t = document.createElement('span'); t.className = 'ack-tag'; card.appendChild(t); }
     t.innerHTML = st === 'ok' ? '<span class="pill ok">✓ Accepted</span>' : st === 'old' ? '<span class="pill warn">Updated: accept again</span>' : '<span class="pill off">Not accepted yet</span>'; });
   if (!isAdmin || !$('ackRows')) return;
@@ -2895,8 +2900,8 @@ function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
   [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
 }
 function renderGdoc(){
-  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'Project ETO', roi: 'Project ROI', csm: 'Project CSM reports', bprof: 'Profile Review', bemail: 'Email Review', bphone: 'Phone Review'};
-  const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = sub ? 'benchhub' : 'guides'; back.textContent = sub ? '← Project Benchmarking' : '← Projects';
+  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: 'Profile Benchmarking', bemail: 'Email Benchmarking', bphone: 'Phone number benchmarking'};
+  const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
   $('gdDoc').innerHTML = cleanHtml(g.html || ''); try { renderAck(); } catch (e) {}
