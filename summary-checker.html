@@ -54,7 +54,6 @@ h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:70
 .sc-grid > *,.sc-cols > *,.sc-in,.sc-checks > .sc-ck{min-width:0}
 .sc-grid textarea{height:190px;min-height:120px;max-height:480px;overflow:auto;resize:vertical}
 .sc-text{height:320px;min-height:0;overflow:auto;overflow-wrap:anywhere;word-break:break-word;overscroll-behavior:contain;resize:vertical}
-.sc-text mark{overflow-wrap:anywhere;word-break:break-all}
 .sc-checks small,.sc-what{overflow-wrap:anywhere;word-break:break-word}
 html,body{overflow-x:hidden}
 .sc-grid,.sc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:minmax(0,1fr)}}
@@ -63,6 +62,19 @@ html,body{overflow-x:hidden}
 .sc-checks > .sc-ck small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sc-checks > .sc-ck.open small{display:block;-webkit-line-clamp:unset;max-height:160px;overflow:auto;overscroll-behavior:contain}
 .sc-what{max-height:200px;overflow:auto;overscroll-behavior:contain}
+
+/* clearer difference colours */
+.sc-text mark{padding:1px 3px;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone;word-break:normal;overflow-wrap:anywhere}
+.sc-text mark.del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;text-decoration-thickness:2px;box-shadow:inset 0 -2px 0 #e2513b}
+.sc-text mark.add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}
+.sc-text mark.mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-legend .del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;box-shadow:inset 0 -2px 0 #e2513b}.sc-legend .add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}.sc-legend .mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-status{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);margin-left:6px;min-height:40px}
+.sc-status small{font-weight:400;color:var(--ink-soft)}
+.sc-status.done{color:#1f6a2a;animation:scPop .35s ease-out}.sc-status.err{color:#a5281c}.sc-status.wait,.sc-status.busy{color:var(--ink-soft)}
+.sc-tick{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3d9a2c;color:#fff;font-weight:800}
+.sc-spin{width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:scRot .7s linear infinite}
+@keyframes scRot{to{transform:rotate(360deg)}}@keyframes scPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
 </style></head><body>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Summary checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
@@ -72,7 +84,7 @@ html,body{overflow-x:hidden}
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
           <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
           <div class="sc-grid"><div class="f"><label for="scA">THE FILE SAYS (SeekOut)</label><textarea id="scA" rows="7"></textarea></div><div class="f"><label for="scB">PUBLIC PROFILE SAYS (ZIPLabs or from LinkedIn)</label><textarea id="scB" rows="7"></textarea></div></div>
-          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button></div></div>
+          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button><span class="sc-status" id="scStatus" role="status" aria-live="polite"></span></div></div>
         <div class="panel" id="scOut"></div>
       
 </main>
@@ -135,10 +147,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       for (let k = 0; k < D.length; k++) { const d = D[k];
         if (d[0] === '=') { L2 += esc(d[1]); R2 += esc(d[2]); continue; }
         let del = '', add = ''; while (k < D.length && D[k][0] !== '=') { if (D[k][0] === '-') del += D[k][1]; else add += D[k][1]; k++; } k--;
-        const show = s2 => esc(s2).replace(/ /g, '<span class="sp">·</span>').replace(/\n/g, '<span class="sp">↵</span>\n');
-        if (del && add) { mods.push([del.trim(), add.trim()]); L2 += `<mark class="mod">${show(del)}</mark>`; R2 += `<mark class="mod">${show(add)}</mark>`; }
-        else if (del) { L2 += `<mark class="del">${show(del)}</mark>`; R2 += `<mark class="gap">${/\S/.test(del) ? '' : '␣'}</mark>`; }
-        else { R2 += `<mark class="add">${show(add)}</mark>`; } }
+        // words keep normal spaces so they read clearly; a difference made only of spaces or line breaks is shown with · and ↵
+        const show = s2 => /\S/.test(s2) ? esc(s2) : esc(s2).replace(/ /g, '<span class="sp">·</span>').replace(/\n/g, '<span class="sp">↵</span>\n');
+        if (del && add) { mods.push([del.trim(), add.trim()]); L2 += `<mark class="mod" title="Changed to: ${esc(add.trim())}">${show(del)}</mark>`; R2 += `<mark class="mod" title="Was: ${esc(del.trim())}">${show(add)}</mark>`; }
+        else if (del) { L2 += `<mark class="del" title="Removed: not in the public profile">${show(del)}</mark>`; R2 += `<mark class="gap">${/\S/.test(del) ? '' : '␣'}</mark>`; }
+        else { R2 += `<mark class="add" title="Added: not in the file">${show(add)}</mark>`; } }
       if (D.tail) { const t2 = `<span class="sc-cut">${esc(D.tail)}</span>`; if (D.tailSide === 'R') R2 += t2; else L2 += t2; }
       // the 20 checks
       const wa = words(ta.join('')), wb = words(tb.join('')), added = D.filter(d => d[0] === '+' && vis(d[1])).map(d => d[1]), deleted = D.filter(d => d[0] === '-' && vis(d[1])).map(d => d[1]);
@@ -209,11 +222,15 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       const cols = document.querySelector('.sc-cols'); cols.className = 'sc-cols';
       if (was) return; b.classList.add('open'); b.setAttribute('aria-expanded', 'true'); const hi = window.__scInfo.HI[+b.dataset.ck];
       if (b.classList.contains('warn') && hi) { cols.classList.add('focus', 'f-' + hi); cols.scrollIntoView({behavior: 'smooth', block: 'center'}); } });
-    $('scGo').onclick = run; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(run.t); run.t = setTimeout(run, 350); }));
-    $('scCase').onchange = e => { cs = e.target.checked; run(); };
-    $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); run(); });
-    $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; run(); };
-    $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; run(); };
+    const stat = (k, t) => { const el = $('scStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
+    function go(){ if (!$('scA').value.trim() && !$('scB').value.trim()) { run(); stat('', ''); return; } stat('busy', '<span class="sc-spin"></span>Comparing…');
+      setTimeout(() => { try { run(); const r = document.querySelector('.sc-ring b'); stat('done', `<span class="sc-tick">✓</span>Compare complete${r ? ' · ' + r.textContent + ' match' : ''} <small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'})}</small>`); }
+        catch (e) { console.error(e); stat('err', '⚠ The comparison couldn\'t finish. Try shorter text.'); } }, 30); }
+    $('scGo').onclick = go; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(go.t); stat('wait', 'Text changed: click Compare (updates automatically)'); go.t = setTimeout(go, 600); }));
+    $('scCase').onchange = e => { cs = e.target.checked; go(); };
+    $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); go(); });
+    $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; go(); };
+    $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; go(); };
     run();
   })();
 </script></body></html>
