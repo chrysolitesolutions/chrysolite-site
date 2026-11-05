@@ -541,10 +541,15 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .org-card{width:190px!important;padding:10px!important}.org-card.plan{border-style:dashed;border-top-style:solid;background:color-mix(in srgb,#eda100 6%,var(--surface))}
 .oc-boss{display:grid;gap:2px;margin-top:6px;font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}.oc-boss select{font:500 12px var(--body);padding:3px 6px;border-radius:8px;text-transform:none;letter-spacing:0;width:100%}
 .org-card .mini.danger{margin-top:6px;justify-self:start}
-.org-card{flex-direction:column;align-items:center!important;text-align:center!important;width:170px!important;gap:4px!important;padding:14px 10px 12px!important}
-.org-card .oc-ph{width:64px;height:64px;border-radius:50%;object-fit:cover;font-size:22px;margin-bottom:4px;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--rc)}
-.org-card > b{font-size:14.5px;line-height:1.25}.org-card > span{font-size:12.5px;color:var(--rc);font-weight:700}.oc-soon{font-size:11px;color:#8a5a00;font-weight:700}
+.org-card{flex-direction:column;align-items:center!important;text-align:center!important;width:200px!important;min-height:178px;justify-content:center;gap:6px!important;padding:20px 14px 18px!important}
+.org-card .oc-ph{width:80px;height:80px;border-radius:50%;object-fit:cover;font-size:26px;margin-bottom:6px;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--rc)}
+.org-card > b{font-size:16px;line-height:1.25}.org-card > span{font-size:13.5px;color:var(--rc);font-weight:700}.oc-soon{font-size:11px;color:#8a5a00;font-weight:700}
 .org-card .oc-boss{width:100%;text-align:left}
+.org-tree ul.vert{display:grid;grid-template-columns:repeat(2,auto);gap:14px;padding:16px;margin-top:22px;border:1.5px dashed var(--line);border-radius:18px;background:color-mix(in srgb,var(--surface-2) 55%,transparent)}
+.org-tree ul.vert::before{top:-24px!important;height:22px!important}
+.org-tree ul.vert > li{padding:0!important}.org-tree ul.vert > li::before,.org-tree ul.vert > li::after{display:none!important}
+.org-tree ul.vert > li:only-child{grid-column:1/-1}
+.org-tree .org-card{position:relative;z-index:1}
 .org-proj{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.org-pc h3{display:flex;align-items:center;gap:8px}.org-members{display:grid;gap:10px}
 .ep{display:grid;gap:14px;margin-bottom:16px}
 .ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
@@ -3966,7 +3971,8 @@ function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = org
   const pic = p => photosAll[p.key] ? `<img class="oc-ph" src="${esc(photosAll[p.key])}" alt="">` : `<div class="av oc-ph" style="background:hsl(${hue(p.name)} 45% 62%)">${esc(initials(p.name))}</div>`;
   const card = p => `<div class="org-card${p.plan ? ' plan' : ''}${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${pic(p)}<b>${esc(p.name)}</b><span>${esc(p.designation || p.role || '')}</span>${p.plan ? '<small class="oc-soon">Joining soon</small>' : ''}${bossSel(p)}${isAdmin && p.plan ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div>`;
   const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
-    return `<li>${card(p)}${c.length ? `<ul>${c.map(branch).join('')}</ul>` : ''}</li>`; };
+    const vert = c.length > 1 && c.every(x => !kids(x.key).length);   /* a team with no sub-teams is stacked in a column, so the chart stays narrow and the cards stay large */
+    return `<li>${card(p)}${c.length ? `<ul${vert ? ' class="vert"' : ''}>${c.map(branch).join('')}</ul>` : ''}</li>`; };
   const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
   box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`; fitOrg();
   if ($('opBoss')) { const keep = $('opBoss').value; $('opBoss').innerHTML = people().map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); if (keep) $('opBoss').value = keep; }
