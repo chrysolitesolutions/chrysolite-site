@@ -355,6 +355,11 @@ tbody tr:hover{background:var(--surface-2)}
 .ma-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.ma-top > div:first-child{display:grid;gap:6px}
 .ma-eye{font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.ma-task{font:800 22px var(--display)}.ma-task .shift{font-size:16px;padding:6px 14px}
 .bf-card{border-color:color-mix(in srgb,var(--gem) 45%,var(--line));background:linear-gradient(150deg,color-mix(in srgb,var(--gem) 12%,var(--surface)),var(--surface))}
+.bf-role button[data-role="L2"].on{background:#5b3aa8;border-color:#5b3aa8;color:#fff}
+.view[data-view="brief"].l2mode .l2dim{opacity:.38;transition:opacity .25s}.view[data-view="brief"].l2mode .l2dim:hover{opacity:.8}
+.view[data-view="brief"].l2mode .l2hit{background:color-mix(in srgb,#7a4fc0 13%,var(--surface))!important;box-shadow:inset 4px 0 0 #7a4fc0;border-radius:8px;color:var(--ink);font-weight:500}
+.view[data-view="brief"].l2mode tr.l2hit td{background:color-mix(in srgb,#7a4fc0 13%,var(--surface))!important}.view[data-view="brief"].l2mode tr.l2hit td:first-child{box-shadow:inset 4px 0 0 #7a4fc0}
+.l2note{display:none}.view[data-view="brief"].l2mode .l2note{display:block;margin:0 0 10px;font:600 13px var(--body);color:#5b3aa8}
 .bf-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.bf-role span{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}.bf-role button,.bf-chips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font:600 13.5px var(--body);cursor:pointer;color:var(--ink)}.bf-role button.on,.bf-chips button.on{background:var(--gem);border-color:var(--gem);color:#13240a}
 .bf-tabs{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;margin-bottom:6px;background:linear-gradient(var(--bg) 70%,transparent)}.bf-tabs button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:9px 14px;font:600 13.5px var(--body);cursor:pointer;color:var(--ink)}.bf-tabs button.on{background:#13362b;color:#fff;border-color:#13362b}
 @media(max-width:700px){.bf-tabs{flex-wrap:nowrap;overflow-x:auto}}
@@ -1137,6 +1142,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <button class="linkbtn gd-back" type="button" data-go="guides">← Projects</button>
       <div class="vhead"><div><h1>Benchmarking Briefing</h1><p>Profile Review · Project Benchmarking (SeekOut). Click through the steps, the decision helper and the practice cards to learn the rules.</p></div>
         <div class="bf-role" role="group" aria-label="Your level"><span>I am</span><button type="button" data-role="L1" class="on">L1 staff</button><button type="button" data-role="L2">L2 staff</button></div></div>
+        <p class="l2note">L2 view: your L2 rules and tasks are highlighted in purple; everything else is dimmed (hover to read it).</p>
       <nav class="bf-tabs" id="bfTabs" role="tablist">
         <button type="button" data-t="ov" class="on">① Overview</button><button type="button" data-t="wiz">② Decide a field</button><button type="button" data-t="tbl">③ Decision table</button>
         <button type="button" data-t="fld">④ Field rules</button><button type="button" data-t="yrs">⑤ Years calculator</button><button type="button" data-t="jt">⑥ Job title checker</button>
@@ -2691,7 +2697,21 @@ $('srcFile').addEventListener('change', async e => {
   // role toggle (L1 / L2), remembered on this device
   let role = 'L1'; try { role = localStorage.getItem('cs_bf_role') || 'L1'; } catch (e) {}
   const setRole = r => { role = r; try { localStorage.setItem('cs_bf_role', r); } catch (e) {} document.querySelectorAll('.bf-role [data-role]').forEach(b => b.classList.toggle('on', b.dataset.role === r)); document.querySelectorAll('.bf-only').forEach(el => el.hidden = !el.classList.contains(r)); };
-  document.querySelector('.bf-role').addEventListener('click', e => { const b = e.target.closest('[data-role]'); if (b) setRole(b.dataset.role); }); setRole(role);
+
+  // L2 view: highlight everything about L2, dim the rest (reading content only; tools stay bright)
+  const bfView = document.querySelector('.view[data-view="brief"]');
+  const L2SEL = '.bf-pane .bf-dt tbody tr, .bf-rule, .bf-step p, .bf-step li, .bf-step .bf-call, .bf-ans > div, .bf-pane .bf-big, .bf-pane > p, .bf-sum p, #tpList label, .bf-pane .bf-call, #fdBody > p';
+  const isL2 = el => { const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) if (/\bL2\b/.test(n.nodeValue)) return true; return false; };
+  let l2Busy = false;
+  const markL2 = () => { if (l2Busy) return; l2Busy = true; const on = role === 'L2'; bfView.classList.toggle('l2mode', on);
+    const all = [...bfView.querySelectorAll(L2SEL)];
+    all.forEach(el => { const leaf = !all.some(o => o !== el && el.contains(o)); const hit = on && isL2(el);
+      el.classList.toggle('l2hit', hit && (leaf || el.matches('.bf-rule, .bf-ans > div, tr')));
+      el.classList.toggle('l2dim', on && !hit && leaf && !el.closest('.bf-only.L2') ); });
+    const qc = document.querySelector('#qzCard .bf-qc'); if (qc) qc.classList.toggle('l2hit', on && isL2(qc));
+    l2Busy = false; };
+  new MutationObserver(() => { clearTimeout(markL2.t); markL2.t = setTimeout(markL2, 30); }).observe(bfView, {childList: true, subtree: true});
+  document.querySelector('.bf-role').addEventListener('click', e => { const b = e.target.closest('[data-role]'); if (b) { setRole(b.dataset.role); markL2(); } }); setRole(role); markL2();
   // tabs
   const showTab = t => { document.querySelectorAll('#bfTabs [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === t)); document.querySelectorAll('.bf-pane').forEach(p => p.hidden = p.dataset.p !== t); };
   $('bfTabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) showTab(b.dataset.t); });
