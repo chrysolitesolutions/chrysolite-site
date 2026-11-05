@@ -501,6 +501,30 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--ink-soft)}
 
 .bal{display:grid;gap:8px}
+
+.ep{display:grid;gap:14px;margin-bottom:16px}
+.ep-sec{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.ep-hd{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.ep-hd h3{margin:0;font-size:15.5px;display:flex;align-items:center;gap:8px}.ep-hd h3 svg{flex:none}
+.ep-hd .ep-when{margin-left:auto;font-size:12px;color:var(--ink-soft)}.ep-hd .ep-when + .ep-ed{margin-left:10px}
+.ep-ed{margin-left:auto;border:0;background:none;color:var(--ok);font:600 13px var(--body);cursor:pointer;display:inline-flex;gap:5px;align-items:center;padding:4px 6px;border-radius:8px}.ep-ed:hover{background:color-mix(in srgb,var(--ok) 10%,transparent)}
+.ep-bd{padding:14px 18px}
+.ep-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 28px;margin:0}
+.ep-kv div{display:flex;gap:6px;font-size:14px;min-width:0}.ep-kv dt{color:var(--ink-soft);white-space:nowrap}.ep-kv dt::after{content:":"}.ep-kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}.ep-kv dd.none{color:var(--ink-soft);font-weight:400}
+.ep-kv .lock{font-size:11px;color:var(--ink-soft);font-weight:400;margin-left:4px}
+.ep-form{display:grid;gap:12px}.ep-form .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.ep-form .row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.ep-form .f small{color:var(--ink-soft);font-size:12px}.ep-form input[readonly]{background:var(--surface-2);color:var(--ink-soft)}
+.ep-mask{border:0;background:none;color:var(--info);font:600 12px var(--body);cursor:pointer;padding:0 4px}
+.ep-docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.ep-doc{display:grid;gap:8px;justify-items:center;text-align:center}.ep-doc > b{font-size:13.5px}
+.ep-drop{width:100%;min-height:110px;border:1.5px dashed var(--line);border-radius:12px;background:var(--surface-2);display:grid;place-items:center;gap:4px;padding:10px;color:var(--ink-soft);font-size:12.5px}
+.ep-drop.has{border-style:solid;border-color:color-mix(in srgb,var(--ok) 50%,var(--line));background:color-mix(in srgb,var(--ok) 7%,var(--surface))}
+.ep-drop img{max-width:100%;max-height:90px;border-radius:6px;object-fit:contain}.ep-doc .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ep-photo{position:relative;width:84px;height:84px}.ep-photo img,.ep-photo .av{width:84px;height:84px;border-radius:50%;object-fit:cover;font-size:28px}
+.ep-photo label{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 10px -4px rgba(0,0,0,.3)}
+.ep-photo input{display:none}
+.pw-dlg.ep-dlg{width:min(1000px,calc(100vw - 24px));max-height:92vh;overflow:auto;display:none;gap:14px}.pw-dlg.ep-dlg[open]{display:grid}
+.ep-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.ep-top h2{margin:0}
 .prof-card{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;margin-bottom:16px}
 .prof-card .av.big{width:84px;height:84px;font-size:28px;border-radius:24px}
 .prof-card h2{margin:0;font-size:26px}.prof-card .em{color:var(--ink-soft);font-family:var(--mono);font-size:13px}
@@ -987,8 +1011,9 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- PROFILE -->
     <section class="view" data-view="profile" hidden>
-      <div class="vhead"><div><h1>Profile</h1><p>Your details, leave balances and requests, and when the team is off. To change your details, ask a portal admin.</p></div></div>
+      <div class="vhead"><div><h1>Profile</h1><p>Your details, bank details, documents, leave balances and requests. Click Edit on a section to update it. Fields marked 🔒 are set by a portal admin.</p></div></div>
       <div class="panel prof-card" id="profCard"></div>
+      <div class="ep" id="epMine"></div>
       <div class="two">
         <div class="panel"><h3>My leave <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><p class="hint" style="margin:-4px 0 14px">Days used and left this year.</p><div style="display:grid;gap:18px" id="profBal"></div></div>
         <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
@@ -1367,6 +1392,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
   <div style="display:grid;gap:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3 id="dayDlgT" style="margin:0"></h3><p class="hint" id="dayDlgSub" style="margin:4px 0 0"></p></div><button class="btn btn-ghost" type="button" id="dayDlgX" aria-label="Close">✕</button></div>
   <div class="sess-list" id="dayDlgList"></div></div>
 </dialog>
+<dialog class="pw-dlg ep-dlg" id="epDlg" aria-labelledby="epDlgT">
+  <div class="ep-top"><div id="epDlgPh"></div><div><h2 id="epDlgT">Employee details</h2><div class="hint" id="epDlgSub"></div></div><button class="btn btn-ghost" type="button" id="epDlgX" style="margin-left:auto">Close</button></div>
+  <div class="ep" id="epAdm"></div>
+</dialog>
 <dialog class="pw-dlg mood-dlg" id="moodDlg" aria-labelledby="moodDlgT">
   <form method="dialog" style="display:grid;gap:14px">
     <h3 id="moodDlgT">How are you feeling today?</h3>
@@ -1459,6 +1488,7 @@ function compBal(a, pendDays){ const tot = compGiven(a); const u = compUsed(a), 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
 const BRIEF_VER = 'brief-2026-11-5';   // change this to ask everyone to read and accept again
+let empInfoMine = null, empDocsMine = null; const epEditing = {};   // employee details: own records, section being edited per container
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
@@ -1474,7 +1504,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1560,7 +1590,9 @@ function watchMine(){
   watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); });
-  watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); });
+  watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
+  watch('empInfoMine', db.doc('empInfo/' + me.key), s => { empInfoMine = s.exists ? s.data() : {}; renderProfile(); });
+  watch('empDocsMine', db.doc('empDocs/' + me.key), s => { empDocsMine = s.exists ? s.data() : {}; renderProfile(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); });
@@ -1846,8 +1878,10 @@ function renderProfile(){
   const since = me.createdAt ? new Date(me.createdAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) : '—';
   const F = [['Role', me.role || '—'], ['Project', me.project || '—'], ['Location', me.location || '—'], ['Skills', me.skills || '—'], ['Status', me.status || 'Active'], ['Portal access', me.access === 'admin' ? 'Admin' : 'Contributor'], ['Time clock', selfClock() ? 'Yes, hours tracked' : 'Not used'], ['Member since', since]];
   if (selfClock()) { const days = (myAtt && myAtt.days) || {}, st = stats(days, monthDays(days, monthKey(new Date()))); F.push(['Hours this month', fmtH(st.ms)]); }
-  card.innerHTML = `<div class="av big" style="background:hsl(${hue(me.name)} 45% 62%)">${esc(initials(me.name))}</div><div><h2>${esc(me.name)}</h2><div class="em">${esc(me.email)}</div></div>
+  card.innerHTML = `${epPhoto(me, empInfoMine, true)}<div><h2>${esc(me.name)}</h2><div class="em">${esc(me.email)}</div>${me.designation ? `<div class="hint">${esc(me.designation)}${me.department ? ' · ' + esc(me.department) : ''}</div>` : ''}</div>
     <dl class="prof-grid">${F.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
+  { const ctx = {key: me.key, acct: me, info: empInfoMine || {}, docs: empDocsMine || {}, pay: payMine, admin: isAdmin}, el = $('epMine');
+    if (epEditing.epMine && el.querySelector('[data-ep-form]')) el._ctx = ctx; else renderEP(el, ctx); }
   const year = new Date().getFullYear(), mine = myLeave(), allow = allowOf(me), used = t => mine.filter(d => d.type === t && d.from.slice(0,4) == year).reduce((a,d) => a + (d.days||0), 0);
   const pendDays = t => myReqs().filter(q => q.type === t && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
   $('profBalYear').textContent = year;
@@ -1857,6 +1891,114 @@ function renderProfile(){
   $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? d.status : 'Pending';
     return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '<p class="empty">You haven\'t requested any leave yet.</p>';
 }
+
+/* ---------- employee details: basic, job, bank, documents, emergency contact, personal, reference ----------
+   empInfo/<email>  : details the employee (or an admin) can edit, incl. bank details and photo
+   empDocs/<email>  : Aadhaar, PAN and driving licence copies (compressed images or small PDFs)
+   accounts/<email> : employee code, department, designation, employment type, joining date (admins only) */
+const EP_IC = {
+  basic: '<path d="M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 18c0-3.5 3-6 7-6s7 2.5 7 6"/>',
+  att: '<circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/>',
+  job: '<rect x="2.5" y="6" width="15" height="11" rx="2"/><path d="M7 6V4.5A1.5 1.5 0 0 1 8.5 3h3A1.5 1.5 0 0 1 13 4.5V6"/>',
+  bank: '<path d="M2.5 8 10 3.5 17.5 8M4 8v7M8 8v7M12 8v7M16 8v7M2.5 17h15"/>',
+  docs: '<path d="M5 2.5h6.5L15.5 6.5V17a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z"/><path d="M11 2.5V7h4.5M7.5 11h5M7.5 14h5"/>',
+  contact: '<path d="M4 3h3l1.5 4-2 1.2a9 9 0 0 0 5.3 5.3L13 11.5l4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.6 17 3 11.4 2.5 4.6A1.5 1.5 0 0 1 4 3z"/>',
+  personal: '<rect x="3" y="7" width="14" height="10" rx="2"/><path d="M6 7V5M10 7V4M14 7V5M3 11h14"/>',
+  ref: '<circle cx="8" cy="7" r="3"/><path d="M2.5 17c0-3 2.5-5 5.5-5s5.5 2 5.5 5M14 4.5l1.5 1.5L18 3.5"/>'};
+const EP_SECS = [
+  {k: 'basic', t: 'Basic details', f: [['empCode', 'Employee code', 'text', 'acct'], ['gender', 'Gender', 'sel:Female|Male|Other|Prefer not to say'], ['phone', 'Mobile number', 'tel'], ['bloodGroup', 'Blood group', 'sel:A+|A-|B+|B-|AB+|AB-|O+|O-'], ['address', 'Address', 'area']]},
+  {k: 'att', t: 'Attendance settings', f: []},
+  {k: 'job', t: 'Additional details', f: [['department', 'Department', 'text', 'acct'], ['designation', 'Designation', 'text', 'acct'], ['empType', 'Employment type', 'sel:Full Time|Part Time|Contract|Intern', 'acct']]},
+  {k: 'bank', t: 'Bank details', f: [['bankName', 'Bank name', 'text'], ['accountNo', 'Account number', 'acno'], ['ifsc', 'IFSC code', 'ifsc'], ['branch', 'Branch name', 'text'], ['upi', 'UPI ID', 'text']]},
+  {k: 'docs', t: 'Legal documents', f: []},
+  {k: 'contact', t: 'Contact details (emergency)', f: [['emPhone', 'Emergency contact number', 'tel'], ['emName', 'Contact person name', 'text'], ['emRelation', 'Relation with contact', 'text'], ['emAddress', 'Address', 'area']]},
+  {k: 'personal', t: 'Personal details', f: [['dob', 'Date of birth', 'date'], ['joinDate', 'Company joining date', 'date', 'acct']]},
+  {k: 'ref', t: 'Reference', f: [['refName', 'Name', 'text'], ['refPhone', 'Mobile number', 'tel']]}];
+const EP_DOCS = [['aadhaar', 'Aadhaar card'], ['pan', 'PAN card'], ['dl', 'Driving licence']];
+const epVal = (ctx, f) => (f[3] === 'acct' ? ctx.acct : ctx.info)[f[0]];
+const epShow = (f, v, ctx, reveal) => { if (v == null || v === '') return null;
+  if (f[2] === 'date') { const d = new Date(v + 'T00:00:00'); return isNaN(d) ? v : d.toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}); }
+  if (f[2] === 'acno' && !reveal) return '•••• ' + String(v).slice(-4);
+  return String(v); };
+const canEdit = (ctx, f) => ctx.admin || f[3] !== 'acct';
+function epPhoto(acct, info, mine){ const ph = info && info.photo;
+  return `<div class="ep-photo">${ph ? `<img src="${esc(ph)}" alt="">` : `<div class="av big" style="background:hsl(${hue(acct.name)} 45% 62%)">${esc(initials(acct.name))}</div>`}${mine ? `<label title="Update photo"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6.5h3l1.5-2h5l1.5 2h3v10H3z"/><circle cx="10" cy="11" r="3"/></svg><input type="file" accept="image/*" data-ep-photo></label>` : ''}</div>`; }
+function renderEP(el, ctx){ if (!el) return; el._ctx = ctx; const ed = epEditing[el.id];
+  const payTxt = ctx.pay && ctx.pay.type ? (ctx.pay.type === 'hourly' ? 'Hourly' : 'Monthly') : null, payAmt = ctx.pay && ctx.pay.type && ctx.pay.amount != null ? (ctx.pay.currency || 'INR') + ' ' + ctx.pay.amount + (ctx.pay.type === 'hourly' ? ' / hour' : ' / month') : null;
+  el.innerHTML = EP_SECS.map(S => { const ic = `<svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${EP_IC[S.k]}</svg>`;
+    const when = ctx.info['at_' + S.k] ? `<span class="ep-when">Updated ${esc(new Date(ctx.info['at_' + S.k]).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}))}${ctx.info['by_' + S.k] ? ' by ' + esc(ctx.info['by_' + S.k]) : ''}</span>` : '';
+    const editable = S.f.some(f => canEdit(ctx, f));
+    let body;
+    if (S.k === 'att') body = `<dl class="ep-kv"><div><dt>Time clock</dt><dd>${ctx.acct.clock === false ? '<span class="pill off">Disabled</span>' : '<span class="pill ok">Enabled</span>'}</dd></div><div><dt>Punch in type</dt><dd>${ctx.acct.clock === false ? 'Not used' : 'Portal clock (My Workday)'}</dd></div></dl>`;
+    else if (S.k === 'docs') body = `<div class="ep-docs">${EP_DOCS.map(([k, n]) => { const d = ctx.docs[k];
+        return `<div class="ep-doc"><b>${n}</b><div class="ep-drop ${d ? 'has' : ''}">${d ? (String(d.type).startsWith('image/') ? `<img src="${esc(d.data)}" alt="${n}">` : '📄') + `<span>${esc(d.name || n)}</span><small>${esc(new Date(d.at).toLocaleDateString())}</small>` : '<span>📄</span><span>Not uploaded</span>'}</div>
+          <div class="acts">${d ? `<button class="mini" type="button" data-ep-view="${k}">View</button>` : ''}<label class="mini" style="cursor:pointer">${d ? 'Replace' : 'Upload'}<input type="file" accept="image/*,application/pdf" data-ep-doc="${k}" hidden></label>${d ? `<button class="mini danger" type="button" data-ep-rm="${k}">Remove</button>` : ''}</div></div>`; }).join('')}</div><p class="hint" style="margin:10px 0 0">Photos (JPG, PNG) or PDF under 300 KB. Photos are shrunk automatically. Only you and portal admins can see these.</p>`;
+    else if (ed === S.k) body = `<form class="ep-form" data-ep-form="${S.k}"><div class="g">${S.f.map(f => { const v = epVal(ctx, f) ?? '', ro = !canEdit(ctx, f), id = el.id + '_' + f[0], lab = `<label for="${id}">${f[1]}${ro ? ' 🔒' : ''}</label>`;
+        if (f[2].startsWith('sel:')) return `<div class="f">${lab}<select id="${id}" name="${f[0]}" ${ro ? 'disabled' : ''}><option value="">Not set</option>${f[2].slice(4).split('|').map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select></div>`;
+        if (f[2] === 'area') return `<div class="f" style="grid-column:1/-1">${lab}<textarea id="${id}" name="${f[0]}" rows="2" ${ro ? 'readonly' : ''}>${esc(v)}</textarea></div>`;
+        const ty = {tel: 'tel', date: 'date'}[f[2]] || 'text', hint = {ifsc: 'e.g. SBIN0005795', acno: 'Digits only', tel: 'e.g. +91 98765 43210'}[f[2]] || '';
+        return `<div class="f">${lab}<input id="${id}" name="${f[0]}" type="${ty}" value="${esc(v)}" ${ro ? 'readonly' : ''} ${f[2] === 'ifsc' ? 'style="text-transform:uppercase"' : ''} autocomplete="off">${hint ? `<small>${hint}</small>` : ''}</div>`; }).join('')}</div>
+        <p class="msg err" data-ep-err hidden></p><div class="row"><button class="btn btn-ghost" type="button" data-ep-cancel>Cancel</button><button class="btn btn-gem" type="submit">Save</button></div></form>`;
+    else { const rows = S.f.map(f => { const v = epShow(f, epVal(ctx, f), ctx, el._reveal);
+          return `<div><dt>${f[1]}</dt><dd class="${v == null ? 'none' : ''}">${v == null ? '---' : esc(v)}${f[2] === 'acno' && v != null ? ` <button class="ep-mask" type="button" data-ep-reveal>${el._reveal ? 'Hide' : 'Show'}</button>` : ''}${!canEdit(ctx, f) ? '<span class="lock" title="Set by a portal admin">🔒</span>' : ''}</dd></div>`; });
+      if (S.k === 'basic') rows.splice(1, 0, `<div><dt>Email</dt><dd>${esc(ctx.acct.email)}</dd></div>`, `<div><dt>Role</dt><dd>${esc(ctx.acct.role || '---')}</dd></div>`, `<div><dt>Salary type</dt><dd class="${payTxt ? '' : 'none'}">${payTxt || '---'}</dd></div>`, `<div><dt>Salary amount</dt><dd class="${payAmt ? '' : 'none'}">${payAmt || '---'}</dd></div>`);
+      body = `<dl class="ep-kv">${rows.join('')}</dl>`; }
+    return `<section class="ep-sec" data-ep-sec="${S.k}"><div class="ep-hd"><h3>${ic}${S.t}</h3>${when}${editable && ed !== S.k ? `<button class="ep-ed" type="button" data-ep-edit="${S.k}"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13.5 3.5l3 3L7 16H4v-3z"/></svg>Edit</button>` : ''}</div><div class="ep-bd">${body}</div></section>`; }).join('');
+}
+const epWho = () => me ? me.name : 'Admin';
+async function epSaveInfo(ctx, vals, sec){ const ref = db.doc('empInfo/' + ctx.key), now = new Date().toISOString();
+  const next = {...(ctx.info || {}), ...vals, email: ctx.key, name: ctx.acct.name, updatedAt: now}; if (sec) { next['at_' + sec] = now; next['by_' + sec] = epWho(); }
+  await ref.set(next); ctx.info = next; }
+function epCheck(f, v){ if (!v) return '';
+  if (f[2] === 'tel' && !/^\+?[\d\s-]{8,16}$/.test(v)) return f[1] + ': enter a valid phone number.';
+  if (f[2] === 'ifsc' && !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(v)) return 'IFSC code should look like SBIN0005795 (11 characters, 5th is a zero).';
+  if (f[2] === 'acno' && !/^\d{6,20}$/.test(v)) return 'Account number: digits only (6 to 20).';
+  if (f[0] === 'upi' && !/^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(v)) return 'UPI ID should look like name@bank.';
+  return ''; }
+const shrinkImg = (file, max, q) => new Promise((ok, no) => { const r = new FileReader(); r.onerror = no; r.onload = () => { const im = new Image(); im.onerror = () => no(new Error('bad image')); im.onload = () => {
+  const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+  const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/jpeg', q)); }; im.src = r.result; }; r.readAsDataURL(file); });
+const readUrl = file => new Promise((ok, no) => { const r = new FileReader(); r.onerror = no; r.onload = () => ok(r.result); r.readAsDataURL(file); });
+function epBind(el){
+  el.addEventListener('click', async e => { const ctx = el._ctx; if (!ctx) return; const t = e.target;
+    const edb = t.closest('[data-ep-edit]'); if (edb) { epEditing[el.id] = edb.dataset.epEdit; renderEP(el, ctx); const f = el.querySelector('[data-ep-form] input:not([readonly]),[data-ep-form] select:not([disabled]),[data-ep-form] textarea:not([readonly])'); if (f) f.focus(); return; }
+    if (t.closest('[data-ep-cancel]')) { epEditing[el.id] = null; renderEP(el, ctx); return; }
+    if (t.closest('[data-ep-reveal]')) { el._reveal = !el._reveal; renderEP(el, ctx); return; }
+    const vb = t.closest('[data-ep-view]'); if (vb) { const d = ctx.docs[vb.dataset.epView]; if (!d) return; try { const b = await (await fetch(d.data)).blob(); window.open(URL.createObjectURL(b), '_blank', 'noopener'); } catch (x) { toast('Couldn\'t open the file.'); } return; }
+    const rb = t.closest('[data-ep-rm]'); if (rb) { if (!confirm('Remove this document?')) return; const nd = {...ctx.docs}; delete nd[rb.dataset.epRm];
+      try { await db.doc('empDocs/' + ctx.key).set(nd); ctx.docs = nd; renderEP(el, ctx); toast('Document removed'); } catch (x) { toast('Couldn\'t remove it. Try again.'); } } });
+  el.addEventListener('change', async e => { const ctx = el._ctx; const inp = e.target.closest('[data-ep-doc]'); if (!inp || !ctx || !inp.files[0]) return; const file = inp.files[0], k = inp.dataset.epDoc;
+    try { let data, type = file.type;
+      if (type.startsWith('image/')) { data = await shrinkImg(file, 1600, .72); if (data.length > 330000) data = await shrinkImg(file, 1200, .6); if (data.length > 330000) data = await shrinkImg(file, 900, .55); type = 'image/jpeg'; }
+      else if (type === 'application/pdf') { if (file.size > 300 * 1024) { toast('That PDF is over 300 KB. Upload a photo of the card instead, or a smaller PDF.'); return; } data = await readUrl(file); }
+      else { toast('Upload a photo (JPG or PNG) or a PDF.'); return; }
+      const nd = {...ctx.docs, [k]: {name: file.name.slice(0, 80), type, data, at: new Date().toISOString(), by: epWho()}};
+      if (JSON.stringify(nd).length > 950000) { toast('The documents together are too large. Use smaller files.'); return; }
+      await db.doc('empDocs/' + ctx.key).set(nd); ctx.docs = nd; renderEP(el, ctx); toast('Document uploaded'); }
+    catch (x) { toast('The file couldn\'t be uploaded. Try a different photo or PDF.'); } finally { inp.value = ''; } });
+  el.addEventListener('submit', async e => { const fm = e.target.closest('[data-ep-form]'); const ctx = el._ctx; if (!fm || !ctx) return; e.preventDefault();
+    const S = EP_SECS.find(x => x.k === fm.dataset.epForm), err = fm.querySelector('[data-ep-err]'), info = {}, acct = {};
+    for (const f of S.f) { if (!canEdit(ctx, f)) continue; const inp = fm.elements[f[0]]; let v = (inp.value || '').trim(); if (f[2] === 'ifsc') v = v.toUpperCase(); if (f[2] === 'acno') v = v.replace(/\s/g, '');
+      const bad = epCheck(f, v); if (bad) { err.textContent = bad; err.hidden = false; inp.focus(); return; } (f[3] === 'acct' ? acct : info)[f[0]] = v; }
+    const btn = fm.querySelector('[type=submit]'); btn.disabled = true;
+    try { if (Object.keys(acct).length) { await db.doc('accounts/' + ctx.key).update(acct); Object.assign(ctx.acct, acct); }
+      if (Object.keys(info).length) await epSaveInfo(ctx, info, S.k); else if (Object.keys(acct).length) await epSaveInfo(ctx, {}, S.k);
+      epEditing[el.id] = null; renderEP(el, ctx); toast(S.t + ' saved'); }
+    catch (x) { err.textContent = 'That couldn\'t be saved. Check your connection and try again.'; err.hidden = false; btn.disabled = false; } });
+}
+epBind($('epMine')); epBind($('epAdm'));
+// profile photo (employee's own, from the Profile card)
+$('profCard').addEventListener('change', async e => { const inp = e.target.closest('[data-ep-photo]'); if (!inp || !inp.files[0] || !me) return;
+  try { const data = await shrinkImg(inp.files[0], 320, .82); const ctx = {key: me.key, acct: me, info: empInfoMine || {}}; await epSaveInfo(ctx, {photo: data}, null); empInfoMine = ctx.info; renderProfile(); toast('Photo updated'); }
+  catch (x) { toast('That photo couldn\'t be used. Try a JPG or PNG.'); } finally { inp.value = ''; } });
+// admin: full details of one employee in a dialog
+async function openEmpDlg(key){ const a = accounts.find(x => x.key === key); if (!a) return; const dlg = $('epDlg');
+  $('epDlgT').textContent = a.name; $('epDlgSub').textContent = a.email; $('epDlgPh').innerHTML = epPhoto(a, null, false); $('epAdm').innerHTML = '<p class="hint">Loading…</p>'; epEditing.epAdm = null; $('epAdm')._reveal = false;
+  try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); }
+  try { const [i, d] = await Promise.all([db.doc('empInfo/' + key).get(), db.doc('empDocs/' + key).get()]); const info = i.exists ? i.data() : {}, docs = d.exists ? d.data() : {};
+    $('epDlgPh').innerHTML = epPhoto(a, info, false); renderEP($('epAdm'), {key, acct: {...a}, info, docs, pay: payAll[key], admin: true}); }
+  catch (x) { $('epAdm').innerHTML = '<p class="msg err">The details couldn\'t be loaded. Check that the latest Firestore rules are published.</p>'; } }
+$('epDlgX').onclick = () => $('epDlg').close();
 const decisionOf = q => decisions.find(d => d.key === (q._src || (me && me.key)) + '~' + q.id);
 ['rqFrom','rqTo'].forEach(id => $(id).addEventListener('change', () => { const f = $('rqFrom').value, t = $('rqTo').value || f; if (f && t >= f) $('rqDays').value = workdays(f, t); }));
 async function saveReqs(list){ await db.doc('leaveRequests/' + me.key).set({email: me.email, name: me.name, requests: list, updatedAt: new Date().toISOString()}); }
@@ -2209,7 +2351,7 @@ function renderAccounts(){
   if (!rows.length) { $('accBody').innerHTML = '<tr><td colspan="4" class="empty">No accounts match that search.</td></tr>'; return; }
   $('accBody').innerHTML = rows.map(a => `<tr data-k="${esc(a.key)}"><td><div class="person">${av(a.name||a.email)}<div>${esc(a.name)}<div class="mono" style="color:var(--ink-soft)">${esc(a.email)}</div></div></div></td>
     <td>${esc(a.role||'')}<div style="font-size:12.5px;color:var(--ink-soft)">${esc(a.project||'No project')}</div></td><td>${a.active ? statusPill(a.status) : '<span class="pill off">Login off</span>'} ${a.access === 'admin' ? '<span class="pill admin">Admin</span>' : '<span class="pill info">Contributor</span>'}${a.clock === false ? ' <span class="pill off">No time clock</span>' : ''}</td>
-    <td><div class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
+    <td><div class="acts"><button class="mini" data-act="details">Details</button><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
 }
 $('accQ').addEventListener('input', renderAccounts);
 /* reset or set an employee's password: admin types one or generates it */
@@ -2299,6 +2441,7 @@ $('accForm').addEventListener('submit', async e => {
 $('accBody').addEventListener('click', async e => {
   const b = e.target.closest('button[data-act]'); if (!b) return;
   const key = b.closest('tr').dataset.k, a = accounts.find(x => x.key === key); if (!a) return;
+  if (b.dataset.act === 'details') { openEmpDlg(key); return; }
   const ref = db.doc('accounts/' + key);
   try {
     if (b.dataset.act === 'edit') return setEdit(a);
