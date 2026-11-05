@@ -1,0 +1,292 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Text Checker · Chrysolite</title><link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=JetBrains+Mono:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
+  --gem:#9BB52A;--gem-ink:#4C5F0C;--band:#0F2620;--band-fg:#E7EFE4;--band-soft:#A9BDB2;
+  --ok:#2F7D5B;--warn:#B07A12;--off:#B4513A;--info:#2D6E9E;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#7b5bd6;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(16px,4vw);background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font:800 18px var(--display)}.brand img{width:34px;height:34px;border-radius:8px}.brand small{display:block;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+main{max-width:1180px;margin:0 auto;padding:24px max(16px,4vw) 60px;display:grid;gap:16px}
+h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:700 17px var(--display)}.lead{margin:6px 0 0;color:var(--ink-soft)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}.hint{color:var(--ink-soft);font-size:13px}.empty{color:var(--ink-soft);text-align:center;padding:20px}
+.vhead{display:flex;justify-content:space-between;gap:12px}.f{display:grid;gap:6px}label{font-size:13px;font-weight:600}
+.btn{border:1px solid transparent;border-radius:999px;padding:10px 20px;font:700 14.5px var(--body);cursor:pointer}.btn-gem{background:var(--gem);color:#13240a}.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.bf-h{margin:18px 0 10px}.bf-l{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gem-ink)}
+.bf-a{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;white-space:nowrap}.bf-a.m{background:#dff3d6;color:#1f6a2a}.bf-a.n{background:#fbe0dc;color:#a5281c}.bf-a.c{background:#fdf0cf;color:#8a5a00}.bf-a.o{background:#e3edf8;color:#1f4f86;white-space:normal}
+.back{font-size:13px;color:var(--gem-ink);font-weight:700;text-decoration:none}
+.sc-in{display:grid;gap:12px}.sc-opts{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sc-tg{display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600}.sc-tg input{all:revert;accent-color:var(--gem)}
+.sc-seg{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px}.sc-seg span{font-size:12.5px;color:var(--ink-soft);padding:0 6px}.sc-seg button{border:0;background:none;border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.sc-seg button.on{background:var(--gem);color:#13240a}
+.sc-exr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-exr > span{font-size:12.5px;color:var(--ink-soft)}#scEx{display:flex;flex-wrap:wrap;gap:6px}#scEx button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:600 12.5px var(--body);cursor:pointer;color:var(--ink)}#scEx button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+.sc-grid,.sc-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:1fr}}.sc-grid textarea{width:100%;font:14px/1.55 var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);resize:vertical}
+.sc-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.sc-ring{position:relative;width:120px;height:120px;flex:none}.sc-ring svg{width:100%;height:100%}.sc-ring circle{transition:stroke-dashoffset .6s}.sc-ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 24px var(--display);margin-top:-8px}.sc-ring span{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:600 11px var(--mono);color:var(--ink-soft);text-transform:uppercase}
+.sc-verdict{flex:1;min-width:240px;display:grid;gap:6px;justify-items:start}.sc-verdict .bf-a{font-size:17px;padding:5px 14px}.sc-verdict p{margin:0}
+.sc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12.5px}.sc-legend span{padding:2px 8px;border-radius:6px}.sc-legend .del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-legend .add{background:#d6f0c6;color:#1f6a2a}.sc-legend .mod{background:#fdeba8;color:#7a5200}.sc-legend .spk{color:var(--ink-soft)}
+.sc-cols > div{display:grid;gap:4px}.sc-cols small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.sc-text{white-space:pre-wrap;font-size:15px;line-height:1.7;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:80px}
+.sc-text mark{border-radius:4px;padding:1px 2px}.sc-text mark.del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-text mark.add{background:#d6f0c6;color:#1f6a2a}.sc-text mark.mod{background:#fdeba8;color:#7a5200;font-weight:600}.sc-text mark.gap{background:none}.sc-text .sc-cut{color:var(--ink-soft);opacity:.55}.sc-text .sp{color:#c06a00;font-weight:800}
+.sc-ck{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}.sc-ck:hover{transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(0,0,0,.3)}
+.sc-what{display:none;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--surface-2);font-style:normal;font-size:13px;line-height:1.5;color:var(--ink)}.sc-what > span:first-child{font-weight:700}.sc-see{display:block;margin-top:4px;color:#7a5200;font-weight:600}
+.sc-ck.open{outline:2px solid var(--gem);outline-offset:-1px}.sc-ck.open .sc-what{display:block}
+.sc-cols.focus mark{opacity:.25}.sc-cols.f-add mark.add,.sc-cols.f-del mark.del,.sc-cols.f-mod mark.mod,.sc-cols.f-all mark{opacity:1;outline:2px solid currentColor;outline-offset:1px}
+.sc-cols.f-sp mark{opacity:.25}.sc-cols.f-sp .sp{background:#ffd36b;border-radius:3px;padding:0 2px}.sc-cols.f-sp mark:has(.sp),.sc-cols.f-sp mark.gap{opacity:1}.sc-cols.f-sp mark.gap{background:#ffd36b}.sc-checks{align-items:start}
+.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > .sc-ck{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.sc-checks > .sc-ck > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.sc-checks .ok i{background:#dff3d6;color:#1f6a2a}.sc-checks .warn{border-color:#f0d9a0;background:#fffaf0}.sc-checks .warn i{background:#fdeba8;color:#7a5200}.sc-checks .info i{background:#e3edf8;color:#1f4f86}
+
+
+/* keep every box a fixed size: long text scrolls inside its box instead of stretching the page */
+.sc-grid > *,.sc-cols > *,.sc-in,.sc-checks > .sc-ck{min-width:0}
+.sc-grid textarea{height:190px;min-height:120px;max-height:480px;overflow:auto;resize:vertical}
+.sc-text{height:320px;min-height:0;overflow:auto;overflow-wrap:anywhere;word-break:break-word;overscroll-behavior:contain;resize:vertical}
+.sc-checks small,.sc-what{overflow-wrap:anywhere;word-break:break-word}
+html,body{overflow-x:hidden}
+.sc-grid,.sc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:minmax(0,1fr)}}
+.sc-verdict{min-width:0}.sc-verdict p{overflow-wrap:anywhere}
+.sc-text > i{color:var(--ink-soft)}
+.sc-checks > .sc-ck small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sc-checks > .sc-ck.open small{display:block;-webkit-line-clamp:unset;max-height:160px;overflow:auto;overscroll-behavior:contain}
+.sc-what{max-height:200px;overflow:auto;overscroll-behavior:contain}
+
+/* clearer difference colours */
+.sc-text mark{padding:1px 3px;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone;word-break:normal;overflow-wrap:anywhere}
+.sc-text mark.del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;text-decoration-thickness:2px;box-shadow:inset 0 -2px 0 #e2513b}
+.sc-text mark.add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}
+.sc-text mark.mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-legend .del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;box-shadow:inset 0 -2px 0 #e2513b}.sc-legend .add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}.sc-legend .mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-status{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);margin-left:6px;min-height:40px}
+.sc-status small{font-weight:400;color:var(--ink-soft)}
+.sc-status.done{color:#1f6a2a;animation:scPop .35s ease-out}.sc-status.err{color:#a5281c}.sc-status.wait,.sc-status.busy{color:var(--ink-soft)}
+.sc-tick{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3d9a2c;color:#fff;font-weight:800}
+.sc-spin{width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:scRot .7s linear infinite}
+@keyframes scRot{to{transform:rotate(360deg)}}@keyframes scPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+
+.sc-status{flex:1 1 320px}
+.sc-bar{position:relative;flex:1 1 180px;max-width:320px;height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.sc-bar i{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:linear-gradient(90deg,#8dc63f,#21b3c4);transition:width .6s ease-out}
+.sc-bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:200% 100%;animation:scShine 1s linear infinite}
+@keyframes scShine{from{background-position:200% 0}to{background-position:-200% 0}}
+.sc-status.done{color:#14501d;font-size:15px;padding:6px 12px 6px 6px;border-radius:999px;background:#e9f7e1;border:1px solid #b7e09c}
+.sc-status.done small{margin-left:8px}
+.sc-see-res{border:0;background:#1f6a2a;color:#fff;font:600 13px var(--body);border-radius:999px;padding:7px 12px;cursor:pointer;margin-left:6px}
+#scOut{transition:opacity .25s}#scOut.sc-loading{opacity:.25;pointer-events:none;filter:grayscale(.6)}
+
+/* which side is which: coloured headings and a faint source logo inside each box */
+.sc-side{--sc:#5b2a86;--sc2:#f7821b}.sc-side.li{--sc:#0a66c2;--sc2:#0a66c2}
+.sc-lab{display:flex!important;align-items:center;gap:10px;font:800 15px var(--body)!important;letter-spacing:.02em;color:var(--sc)!important;padding:8px 12px;border-radius:12px 12px 0 0;background:color-mix(in srgb,var(--sc) 10%,var(--surface));border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-bottom:0;margin:0!important}
+.sc-lab em{font-style:normal;font-weight:600;opacity:.85}
+.sc-badge{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sc);color:#fff;font:800 12px var(--mono);flex:none}
+.sc-side.so .sc-badge{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc2) 45%,transparent)}
+.sc-wm{position:relative;border-radius:0 0 12px 12px}
+.sc-wm::before{content:"";position:absolute;inset:0;pointer-events:none;background:center/58% auto no-repeat;opacity:.09;transition:opacity .2s;border-radius:inherit}
+.sc-side.so .sc-wm::before{background-image:url(seekout-logo.png)}.sc-side.li .sc-wm::before{background-image:url(linkedin-logo.png)}
+.sc-wm:has(textarea:placeholder-shown)::before{opacity:.16}
+.sc-side .sc-wm textarea{position:relative;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line))!important;border-top:3px solid var(--sc)!important;border-radius:0 0 12px 12px!important}
+.sc-side .sc-wm textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 22%,transparent)!important}
+.sc-side .sc-wm textarea::placeholder{color:color-mix(in srgb,var(--sc) 55%,var(--ink-soft));font-weight:600}
+.sc-cols > .so small,.sc-cols > .li small{font-weight:800;font-size:12px}.sc-cols > .so small{color:#5b2a86}.sc-cols > .li small{color:#0a66c2}
+.sc-cols > .so .sc-text{border-top:3px solid #5b2a86}.sc-cols > .li .sc-text{border-top:3px solid #0a66c2}
+</style></head><body>
+<header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Text checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
+<main>
+  <div><h1>Text checker</h1><p class="lead">Compare any field (Summary / About, Headline or Job title) in THE FILE SAYS with PUBLIC PROFILE SAYS. See every difference highlighted, the % match, 20 automatic checks and a suggested answer.</p></div>
+
+        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Text checker</h3><div class="sc-seg sc-field" id="scField"><span>Field</span><button type="button" data-f="sum" class="on">Summary / About</button><button type="button" data-f="hl">Headline</button><button type="button" data-f="jt">Job title</button></div>
+          <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
+          <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
+          <div class="sc-grid"><div class="f sc-side so"><label for="scA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><textarea id="scA" rows="7" placeholder="Paste the SeekOut text here (THE FILE SAYS)"></textarea></div></div><div class="f sc-side li"><label for="scB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><textarea id="scB" rows="7" placeholder="Paste the public profile text here (ZIPLabs or LinkedIn)"></textarea></div></div></div>
+          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button><span class="sc-status" id="scStatus" role="status" aria-live="polite"></span></div></div>
+        <div class="panel" id="scOut"></div>
+      
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
+  (function summaryChecker(){
+    let mode = 'word', cs = false, field = 'sum';
+    const FIELD = {sum: 'Summary / About', hl: 'Headline', jt: 'Job title'};
+    const ELL = /(\.\.\.|…)\s*$/;
+    // words keep inner dots like VB.NET, but a sentence glued to the next one ("change.Experienced") and words glued together ("environmentsInfrastructure") are split
+    const tokW = t => (t.match(/\n|[ \t\r\f\v]+|[\p{L}\p{N}#+_]+(?:['’][\p{L}\p{N}]+)*(?:\.(?!\p{Lu}\p{Ll})[\p{L}\p{N}#+_]+)*|[^\s\p{L}\p{N}]/gu) || []).flatMap(w => /^\s+$/.test(w) ? [w] : w.split(/(?<=\p{Ll}{2})(?=\p{Lu}\p{Ll}{2})/u));
+    const norm = t => /^\n$/.test(t) ? '\n' : /^\s+$/.test(t) ? ' ' : cs ? t : t.toLowerCase();
+    // longest common subsequence diff on token keys → [['=', a, b] | ['-', a] | ['+', b]]
+    // very long texts: trim the shared start and end, then compare sentence by sentence and only diff the changed sentences word by word
+    function bigDiff(A, B){ let p = 0; while (p < A.length && p < B.length && norm(A[p]) === norm(B[p])) p++;
+      let q = 0; while (q < A.length - p && q < B.length - p && norm(A[A.length - 1 - q]) === norm(B[B.length - 1 - q])) q++;
+      const head = A.slice(0, p).map((t, i) => ['=', t, B[i]]), tail = A.slice(A.length - q).map((t, i) => ['=', t, B[B.length - q + i]]);
+      const a = A.slice(p, A.length - q), b = B.slice(p, B.length - q);
+      if (a.length * b.length <= 6e6) return head.concat(diff(a, b), tail);
+      const seg = T => { const out = []; let cur = []; T.forEach(t => { cur.push(t); if (/[.!?…]$|\n/.test(t)) { out.push(cur); cur = []; } }); if (cur.length) out.push(cur); return out; };
+      const sa = seg(a), sb = seg(b), key = g => g.map(norm).filter(x => /\S/.test(x)).join(' ');
+      let mid;
+      if (sa.length * sb.length > 6e6) mid = a.map(t => ['-', t]).concat(b.map(t => ['+', t]));
+      else { const S = diff(sa.map(key), sb.map(key)); mid = []; let i = 0, j = 0, pa = [], pb = [];
+        const flush = () => { if (pa.length || pb.length) { const x = pa.flat(), y = pb.flat(); mid.push(...(x.length * y.length <= 2e6 ? diff(x, y) : x.map(t => ['-', t]).concat(y.map(t => ['+', t])))); pa = []; pb = []; } };
+        S.forEach(d => { if (d[0] === '=') { flush(); sa[i].forEach((t, k) => mid.push(['=', t, sb[j][k] !== undefined ? sb[j][k] : t])); i++; j++; } else if (d[0] === '-') pa.push(sa[i++]); else pb.push(sb[j++]); }); flush(); }
+      return head.concat(mid, tail); }
+    function diff(A, B){ const ka = A.map(norm), kb = B.map(norm), n = ka.length, m = kb.length;
+      if (n * m > 6e6) return bigDiff(A, B);
+      const W = m + 1, L = new Uint16Array((n + 1) * W);
+      for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i * W + j] = ka[i] === kb[j] ? L[(i + 1) * W + j + 1] + 1 : Math.max(L[(i + 1) * W + j], L[i * W + j + 1]);
+      const out = []; let i = 0, j = 0; while (i < n && j < m) { if (ka[i] === kb[j]) { out.push(['=', A[i], B[j]]); i++; j++; } else if (L[(i + 1) * W + j] >= L[i * W + j + 1]) { out.push(['-', A[i]]); i++; } else { out.push(['+', B[j]]); j++; } }
+      while (i < n) out.push(['-', A[i++]]); while (j < m) out.push(['+', B[j++]]); return out; }
+    const words = t => tokW(t).filter(w => /[\p{L}\p{N}]/u.test(w));
+    const lev = (a, b) => { if (Math.abs(a.length - b.length) > 3) return 9; const d = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let p = d[0]; d[0] = i; for (let j = 1; j <= b.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, p + (a[i - 1] === b[j - 1] ? 0 : 1)); p = t; } } return d[b.length]; };
+    const sents = t => t.split(/(?<=[.!?…])\s+|\n+/).map(x => x.trim().toLowerCase()).filter(x => x.length > 3);
+    const setDiff = (a, b) => [a.filter(x => !b.includes(x)), b.filter(x => !a.includes(x))];
+    const uniq = a => [...new Set(a)];
+    function run(){
+      let a = $('scA').value, b = $('scB').value;
+      if (!a.trim() && !b.trim()) { $('scOut').innerHTML = '<p class="empty">Paste the two summaries above and click Compare.</p>'; return; }
+      // cut-off text: compare only the part both sides show (rule 9a)
+      const cutA = ELL.test(a), cutB = ELL.test(b); let note = '';
+      const A0 = a.replace(ELL, ''), B0 = b.replace(ELL, '');
+      let ta = tokW(A0), tb = tokW(B0);
+      let D = mode === 'char' ? diff([...ta.join('')], [...tb.join('')]) : diff(ta, tb), modeUsed = mode;
+      if (!D) { D = diff(ta, tb); modeUsed = 'word'; }
+      // text past the point where the other side is cut off ("…") is not compared (rule 9a)
+      if (cutA || cutB) { let k = D.length; while (k > 0 && D[k - 1][0] !== '=' && ((D[k - 1][0] === '+' && cutA) || (D[k - 1][0] === '-' && cutB))) k--;
+        const cut = D.slice(k); D = D.slice(0, k); if (cut.some(d => /\S/.test(d[1]))) note = (cutA && cutB ? 'Both sides are cut off' : cutA ? 'The file is cut off' : 'The public profile is cut off') + ', so the extra text after the cut (shown in grey) is not compared (rule 9a).'; else if (cutA || cutB) note = 'Cut-off text (“…”): only the part both sides show is compared (rule 9a).';
+        D.tail = cut.map(d => d[1]).join(''); D.tailSide = cut.length && cut[0][0] === '+' ? 'R' : 'L'; }
+      // similarity on non-space tokens
+      const vis = x => !/^\s+$/.test(x);
+      const same = D.filter(d => d[0] === '=' && vis(d[1])).length, la = D.filter(d => d[0] !== '+' && vis(d[1])).length, lb = D.filter(d => d[0] !== '-' && vis(d[0] === '=' ? d[2] : d[1])).length;
+      let pct = la + lb ? Math.round(200 * same / (la + lb) * 10) / 10 : 100;
+      if (pct === 100 && D.some(d => d[0] !== '=' && vis(d[1]))) pct = 99.9;   // never show 100% when a word differs
+      // pair deletions + additions into modifications for display
+      let L2 = '', R2 = '', mods = [];
+      for (let k = 0; k < D.length; k++) { const d = D[k];
+        if (d[0] === '=') { L2 += esc(d[1]); R2 += esc(d[2]); continue; }
+        let del = '', add = ''; while (k < D.length && D[k][0] !== '=') { if (D[k][0] === '-') del += D[k][1]; else add += D[k][1]; k++; } k--;
+        // words keep normal spaces so they read clearly; a difference made only of spaces or line breaks is shown with · and ↵
+        const show = s2 => /\S/.test(s2) ? esc(s2) : esc(s2).replace(/ /g, '<span class="sp">·</span>').replace(/\n/g, '<span class="sp">↵</span>\n');
+        if (del && add) { mods.push([del.trim(), add.trim()]); L2 += `<mark class="mod" title="Changed to: ${esc(add.trim())}">${show(del)}</mark>`; R2 += `<mark class="mod" title="Was: ${esc(del.trim())}">${show(add)}</mark>`; }
+        else if (del) { L2 += `<mark class="del" title="Removed: not in the public profile">${show(del)}</mark>`; R2 += `<mark class="gap">${/\S/.test(del) ? '' : '␣'}</mark>`; }
+        else { R2 += `<mark class="add" title="Added: not in the file">${show(add)}</mark>`; } }
+      if (D.tail) { const t2 = `<span class="sc-cut">${esc(D.tail)}</span>`; if (D.tailSide === 'R') R2 += t2; else L2 += t2; }
+      // the 20 checks
+      const wa = words(ta.join('')), wb = words(tb.join('')), added = D.filter(d => d[0] === '+' && vis(d[1])).map(d => d[1]), deleted = D.filter(d => d[0] === '-' && vis(d[1])).map(d => d[1]);
+      const isP = t => /^[^\s\p{L}\p{N}]$/u.test(t), addW = added.filter(x => !isP(x)), delW = deleted.filter(x => !isP(x)), addP = added.filter(isP), delP = deleted.filter(isP);
+      const tA = ta.join(''), tB = tb.join('');
+      const caseOnly = (() => { const r = []; const x = words(tA), y = words(tB); const n2 = Math.min(x.length, y.length); for (let i = 0; i < n2; i++) if (x[i] !== y[i] && x[i].toLowerCase() === y[i].toLowerCase()) r.push(x[i] + ' → ' + y[i]); return r; })();
+      const spell = mods.filter(([x, y]) => /^[\p{L}]+$/u.test(x) && /^[\p{L}]+$/u.test(y) && x.length > 3 && x.toLowerCase() !== y.toLowerCase() && lev(x.toLowerCase(), y.toLowerCase()) <= 2).map(m2 => m2.join(' → '));
+      const FUNC = /^(a|an|the|is|are|was|were|be|been|am|of|to|in|on|at|for|and|or|with|as|by|from|that|this|it|its|i|we|my|our|has|have|had)$/i;
+      const gram = [...addW, ...delW].filter(w => FUNC.test(w));
+      const spaceDiff = D.filter(d => d[0] !== '=' && /^[ \t]+$/.test(d[1])).length + mods.filter(([x, y]) => x.replace(/\s/g, '') === y.replace(/\s/g, '')).length;
+      const nl = s2 => (s2.match(/\n/g) || []).length, lbDiff = nl(tA) !== nl(tB);
+      const spec = s2 => uniq(s2.match(/[^\x00-\x7F]|[#+@&%$€£₹©®™§^~|\\<>{}[\]]/g) || []), [spA, spB] = setDiff(spec(tA), spec(tB));
+      const nums = s2 => s2.match(/\d+(?:[.,]\d+)*\+?%?/g) || [], [nA, nB] = setDiff(nums(tA), nums(tB));
+      const MON = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?';
+      const dates = s2 => (s2.match(new RegExp(`\\b(?:\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}|(?:${MON})\\.? \\d{1,4}(?:, \\d{4})?|\\d{1,2} (?:${MON}) \\d{4}|(?:19|20)\\d{2}|\\d{1,2}:\\d{2}\\s?(?:am|pm)?)\\b`, 'gi')) || []).map(x => x.toLowerCase()), [dA, dB] = setDiff(dates(tA), dates(tB));
+      const caps = s2 => uniq((s2.match(/(?<![.!?]\s*)\b[A-Z][\p{L}'’-]+(?:\s+[A-Z][\p{L}'’-]+)*/gu) || []).filter(x => !/^(I|The|A|An|With|In|My|We|Our|Currently)$/.test(x))), [cA, cB] = setDiff(caps(tA), caps(tB));
+      const links = s2 => s2.match(/https?:\/\/\S+|www\.\S+|[\w.+-]+@[\w-]+\.[\w.]+/gi) || [], [uA, uB] = setDiff(links(tA), links(tB));
+      const sa = sents(tA), sb = sents(tB), common = sa.filter(x => sb.includes(x)), orderMoved = common.length > 1 && common.join('|') !== sb.filter(x => sa.includes(x)).join('|');
+      const dupS = s2 => { const ss = sents(s2); return ss.filter((x, i) => ss.indexOf(x) !== i); }, dupW = s2 => (s2.match(/\b(\w+)\s+\1\b/gi) || []), dups = [...dupS(tB), ...dupW(tA), ...dupW(tB), ...(tA.match(/(\w{3,})\1/gi) || []), ...(tB.match(/(\w{3,})\1/gi) || [])];
+      const fmt = s2 => (s2.match(/\*\*|__|^#+ |^\s*[-•*]\s|<\/?(b|i|strong|em|h\d|li)>/gim) || []).length, fmtDiff = fmt(tA) !== fmt(tB);
+      const tech = w => (w = String(w).replace(/^[^\p{L}\p{N}#]+|[^\p{L}\p{N}#+]+$/gu, ''), /[#+.]|\d|[A-Z]{2,}|[a-z][A-Z]/.test(w)), terms = mods.filter(([x, y]) => (tech(x) || tech(y) || /sharp|net|sql|aws|cloud/i.test(x + y)) && !spell.includes(x + ' → ' + y)).map(m2 => m2.join(' → '));
+      const NEG = /^(not|no|never|without|none|nor|cannot|can't|don't|didn't|isn't|wasn't)$/i, negChange = [...addW, ...delW].some(w => NEG.test(w));
+      const meaning = negChange || nA.length || nB.length || pct < 75;
+      const exact = !D.some(d => d[0] !== '=') && (cs ? tA === tB : tA.toLowerCase() === tB.toLowerCase());
+      const WHAT = ['Checks whether the entire content is identical.', 'Finds new words, sentences, paragraphs or sections in the public profile.', 'Finds content in the file that was removed from the public profile.', 'Finds words or sentences that have been changed from one version to the other.', 'Checks for spelling mistakes or corrections (a word changed by only one or two letters).', 'Finds changes in grammar or sentence construction (small words like a, the, is, and, with).', 'Compares uppercase and lowercase letters.', 'Finds changes in commas, full stops, colons, brackets and other punctuation.', 'Detects extra or missing spaces, for example a missing space after a full stop.', 'Finds changes in line endings and paragraph breaks.', 'Compares symbols, Unicode characters and accents (#, +, é, ©…).', 'Finds changes in numbers and values (years of experience, percentages, amounts).', 'Detects changes to dates, deadlines, years and times.', 'Compares personal names, company names and job titles (words starting with a capital letter).', 'Detects changed web links and email addresses.', 'Finds sentences or paragraphs that moved to a different place.', 'Detects repeated words, sentences or paragraphs (e.g. "csharpsharp").', 'Finds changes in bold, italic, headings and lists. Plain text shows only list and emphasis markers.', 'Checks whether technical terms were replaced (e.g. C# vs csharp, AWS vs Amazon Web Services).', 'Decides whether the new wording could change what the text means (negative words, numbers, large rewrites).'];
+      const HI = ['', 'add', 'del', 'mod', 'mod', 'mod', 'mod', 'mod', 'sp', 'sp', 'mod', 'mod', 'mod', 'mod', 'mod', '', '', '', 'mod', 'all'];
+      const DECIDE = {sum: 'For Summary / About: same text with small edits = Match; rewritten or clearly different = Not a match.', hl: 'For Headline: the same words with small differences (punctuation, symbols, order) = Match; a different role or focus = Not a match.', jt: 'For Job title: every word must be the same, in the same order. Only capitals, the short forms Snr / Sr = Senior, Dev = Developer, Mgr = Manager, and a company name in full or short form (AWS = Amazon Web Services) may differ.'}[field];
+      const C = [
+        ['Exact text match', exact ? 'ok' : 'warn', exact ? 'The compared text is identical.' : 'The texts are not identical.'],
+        ['Added text', addW.length ? 'warn' : 'ok', addW.length ? `${addW.length} word${addW.length === 1 ? '' : 's'} added: ${esc(addW.slice(0, 12).join(', '))}${addW.length > 12 ? '…' : ''}` : 'Nothing added.'],
+        ['Deleted text', delW.length ? 'warn' : 'ok', delW.length ? `${delW.length} word${delW.length === 1 ? '' : 's'} removed: ${esc(delW.slice(0, 12).join(', '))}${delW.length > 12 ? '…' : ''}` : 'Nothing removed.'],
+        ['Modified text', mods.length ? 'warn' : 'ok', mods.length ? mods.slice(0, 6).map(([x, y]) => `“${esc(x || '·')}” → “${esc(y || '·')}”`).join('; ') + (mods.length > 6 ? '…' : '') : 'No words changed.'],
+        ['Spelling differences', spell.length ? 'warn' : 'ok', spell.length ? esc(spell.join(', ')) : 'None found.'],
+        ['Grammar changes', gram.length ? 'warn' : 'ok', gram.length ? 'Small grammar words differ: ' + esc(uniq(gram).join(', ')) : 'None found.'],
+        ['Capitalization', caseOnly.length ? 'warn' : 'ok', caseOnly.length ? esc(caseOnly.slice(0, 6).join(', ')) + (cs ? '' : ' (ignored in the % because Case sensitive is off)') : 'No capital-letter differences.'],
+        ['Punctuation', addP.length + delP.length ? 'warn' : 'ok', addP.length + delP.length ? `Added: ${esc(addP.join(' ') || '–')} · Removed: ${esc(delP.join(' ') || '–')}` : 'No punctuation differences.'],
+        ['Whitespace', spaceDiff ? 'warn' : 'ok', spaceDiff ? `${spaceDiff} place${spaceDiff === 1 ? '' : 's'} with extra or missing spaces (shown as ·)` : 'No spacing differences.'],
+        ['Line breaks', lbDiff ? 'warn' : 'ok', lbDiff ? `File has ${nl(tA)}, public profile has ${nl(tB)} line breaks.` : 'Same line breaks.'],
+        ['Special characters', spA.length + spB.length ? 'warn' : 'ok', spA.length + spB.length ? `Only in file: ${esc(spA.join(' ') || '–')} · Only in public profile: ${esc(spB.join(' ') || '–')}` : 'Same symbols and accents.'],
+        ['Numbers and values', nA.length + nB.length ? 'warn' : 'ok', nA.length + nB.length ? `Only in file: ${esc(nA.join(', ') || '–')} · Only in public profile: ${esc(nB.join(', ') || '–')}` : 'Same numbers.'],
+        ['Dates and times', dA.length + dB.length ? 'warn' : 'ok', dA.length + dB.length ? `Only in file: ${esc(dA.join(', ') || '–')} · Only in public profile: ${esc(dB.join(', ') || '–')}` : 'Same dates and times.'],
+        ['Names and titles', cA.length + cB.length ? 'warn' : 'ok', cA.length + cB.length ? `Only in file: ${esc(cA.slice(0, 6).join(', ') || '–')} · Only in public profile: ${esc(cB.slice(0, 6).join(', ') || '–')}` : 'Same names, companies and titles.'],
+        ['URLs and email addresses', uA.length + uB.length ? 'warn' : 'ok', uA.length + uB.length ? `Only in file: ${esc(uA.join(', ') || '–')} · Only in public profile: ${esc(uB.join(', ') || '–')}` : (links(tA).length ? 'Same links.' : 'No links or emails.')],
+        ['Section order', orderMoved ? 'warn' : 'ok', orderMoved ? 'Some sentences appear in a different order.' : 'Same order.'],
+        ['Duplicate content', dups.length ? 'warn' : 'ok', dups.length ? 'Repeated text: ' + esc(uniq(dups).slice(0, 4).join(', ')) : 'No repeats found.'],
+        ['Formatting differences', fmtDiff ? 'warn' : 'info', fmtDiff ? 'Different list or emphasis markers.' : 'Plain text: no formatting differences found (bold, fonts and headings are not visible in plain text).'],
+        ['Terminology changes', terms.length ? 'warn' : 'ok', terms.length ? esc(terms.slice(0, 5).join(', ')) : 'No technical terms replaced.'],
+        ['Meaning changes', meaning ? 'warn' : 'ok', meaning ? (negChange ? 'A negative word (not, no, never…) was added or removed. ' : '') + (nA.length || nB.length ? 'Numbers changed. ' : '') + (pct < 75 ? 'Large parts are different. ' : '') + 'Read both carefully.' : 'Wording differences do not look like they change the meaning.']];
+      // suggested answer using the rule of the chosen field
+      let ans, why;
+      const wl = t => (t.toLowerCase().match(/[\p{L}\p{N}#+]+/gu) || []);
+      if (!tA.trim() !== !tB.trim()) { ans = 'n'; why = 'One side is empty and the other is not.'; }
+      else if (field === 'jt') {
+        const SF = {snr: 'senior', sr: 'senior', dev: 'developer', mgr: 'manager'};
+        // a company name written in full counts the same as its short form: drop "(AWS)" after "Amazon Web Services", and expand a lone "AWS" to the full name when the other side has it
+        const fold = (w, other) => { const o = [];
+          for (let i = 0; i < w.length; i++) { const x = SF[w[i]] || w[i], prev = o.slice(-6); let ac = false;
+            for (let n = 2; n <= prev.length && !ac; n++) if (prev.slice(-n).map(y => y[0]).join('') === x) ac = true;
+            if (!ac) o.push(x); }
+          const r = []; o.forEach(x => { let done = false; for (let n = 2; n <= 6 && !done; n++) for (let k = 0; k + n <= other.length && !done; k++) { const seg = other.slice(k, k + n); if (seg.map(y => y[0]).join('') === x && seg.length > 1 && x.length === n) { r.push(...seg); done = true; } } if (!done) r.push(x); }); return r; };
+        const a0 = wl(tA).map(x => SF[x] || x), b0 = wl(tB).map(x => SF[x] || x), fa = fold(a0, b0), fb = fold(b0, a0);
+        if (fa.join(' ') === fb.join(' ')) { ans = 'm'; why = 'The same words in the same order (only capitals, short forms or a company short form differ).'; }
+        else { const ex = fb.filter(x => !fa.includes(x)), mi = fa.filter(x => !fb.includes(x)); ans = 'n';
+          why = 'Job title must be exactly the same. ' + (ex.length ? 'Extra on the public profile: ' + esc(ex.join(', ')) + '. ' : '') + (mi.length ? 'Missing from the public profile: ' + esc(mi.join(', ')) + '. ' : '') + (!ex.length && !mi.length ? 'The words are in a different order.' : ''); } }
+      else if (field === 'hl') { const sa = wl(tA).sort().join(' '), sb = wl(tB).sort().join(' ');
+        if (sa === sb) { ans = 'm'; why = 'The same words; only punctuation, symbols or order differ.'; }
+        else if (pct >= 90) { ans = 'x'; why = 'Almost the same. Check whether the changed word changes the role or focus (Not a match) or is only a small edit (Match).'; }
+        else { ans = 'n'; why = 'Different words: the headline describes a different role or focus.'; } }
+      else if (wl(tA).join(' ') === wl(tB).join(' ')) { ans = 'm'; why = 'The same words in the same order: only punctuation, spacing, line breaks or capitals differ.'; }
+      else if (pct >= 97) { ans = 'm'; why = 'Same text with only small edits (spacing, punctuation or a word or two).'; }
+      else if (pct >= 85) { ans = 'm'; why = 'Mostly the same text with small edits. Check the highlighted changes: a small fix like a spelling or C# correction is still the same text.'; }
+      else if (pct >= 70) { ans = 'x'; why = 'Partly the same. Read the highlighted parts and decide if it is small edits (Match) or rewritten text (Not a match).'; }
+      else { ans = 'n'; why = 'Rewritten or clearly different text.'; }
+      const ring = 2 * Math.PI * 34, col = pct >= 85 ? '#5a9a1a' : pct >= 70 ? '#eda100' : '#e2513b';
+      const sug = ans === 'x' ? '<span class="bf-a o">Read carefully, then decide</span>' : A[ans];
+      window.__scInfo = {WHAT, HI, DECIDE};
+      $('scOut').innerHTML = `<div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
+        <div class="sc-verdict"><span class="bf-l">Suggested answer for ${FIELD[field]}</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
+        <div class="sc-legend"><span class="del">Removed</span><span class="add">Added</span><span class="mod">Changed</span><span class="spk">· = space · ↵ = line break</span></div>
+        <div class="sc-cols"><div class="so"><small>THE FILE SAYS (SeekOut)</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div class="li"><small>PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
+        <h3 class="bf-h">20-point check</h3><p class="hint" style="margin:-4px 0 10px">Click any check to see what it means. Checks with differences also highlight them in the text above.</p><div class="sc-checks">${C.map(([t, st, d], i) => `<button type="button" class="sc-ck ${st}" data-ck="${i}" aria-expanded="false"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small><em class="sc-what"><span>What it checks:</span> ${WHAT[i]}${st === 'warn' && HI[i] ? ' <span class="sc-see">The differences are highlighted in the text above.</span>' : ''}</em></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></button>`).join('')}</div>`; }
+    // click a check: show what it means and highlight the matching differences
+    $('scOut').addEventListener('click', e => { const b = e.target.closest('[data-ck]'); if (!b) return; const was = b.classList.contains('open');
+      document.querySelectorAll('.sc-ck.open').forEach(x => { x.classList.remove('open'); x.setAttribute('aria-expanded', 'false'); });
+      const cols = document.querySelector('.sc-cols'); cols.className = 'sc-cols';
+      if (was) return; b.classList.add('open'); b.setAttribute('aria-expanded', 'true'); const hi = window.__scInfo.HI[+b.dataset.ck];
+      if (b.classList.contains('warn') && hi) { cols.classList.add('focus', 'f-' + hi); cols.scrollIntoView({behavior: 'smooth', block: 'center'}); } });
+    const stat = (k, t) => { const el = $('scStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
+    // a short loading bar, then a clear "comparison completed" message; the old result is dimmed until the new one is ready
+    function go(){ const out = $('scOut');
+      if (!$('scA').value.trim() && !$('scB').value.trim()) { run(); stat('', ''); return; }
+      clearTimeout(go.t2); stat('busy', '<span class="sc-bar"><i></i></span><span>Comparing… <b id="scPct">0%</b></span>'); out.classList.add('sc-loading');
+      const bar = document.querySelector('.sc-bar i'), t0 = performance.now(), MIN = 900; let ok = true;
+      requestAnimationFrame(() => { bar.style.width = '70%'; });
+      setTimeout(() => { try { run(); } catch (e) { console.error(e); ok = false; }
+        const left = Math.max(0, MIN - (performance.now() - t0)), b2 = document.querySelector('.sc-bar i'); if (b2) { b2.style.transitionDuration = left + 'ms'; b2.style.width = '100%'; }
+        const pc = $('scPct'); let n = 0; const tick = setInterval(() => { n = Math.min(100, n + 7); if (pc) pc.textContent = n + '%'; if (n >= 100) clearInterval(tick); }, Math.max(12, left / 15));
+        go.t2 = setTimeout(() => { out.classList.remove('sc-loading');
+          if (!ok) { stat('err', '⚠ The comparison couldn\'t finish. Try shorter text.'); return; }
+          const r = document.querySelector('.sc-ring b');
+          stat('done', `<span class="sc-tick">✓</span><span>Comparison completed${r ? ' · <b>' + r.textContent + ' match</b>' : ''}<small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'})}</small></span><button type="button" class="sc-see-res" id="scSeeRes">See the result below ↓</button>`);
+          $('scSeeRes').onclick = () => out.scrollIntoView({behavior: 'smooth', block: 'start'}); }, left + 60); }, 40); }
+    $('scGo').onclick = go; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(go.t); stat('wait', 'Text changed: click Compare (updates automatically)'); go.t = setTimeout(go, 600); }));
+    $('scCase').onchange = e => { cs = e.target.checked; go(); };
+    $('scField').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; field = b.dataset.f; $('scField').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); if ($('scA').value.trim() || $('scB').value.trim()) go(); });
+    $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); go(); });
+    $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; go(); };
+    $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; go(); };
+    run();
+  })();
+</script></body></html>
