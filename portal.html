@@ -3301,7 +3301,7 @@ $('annAdmin').addEventListener('click', async e => {
 const BUILTIN_LINKS = [
   {key: 'b1', name: 'SeekOut', url: 'https://seekout.com', desc: 'Talent search and candidate profiles', builtin: true},
   {key: 'b2', name: 'DataCrunch Bench', url: 'https://datacrunchd-bench.pages.dev/', desc: 'Bench and task workspace', builtin: true},
-  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Compare the file and public profile text (Summary, Headline or Job title): differences, % match and 20 checks', builtin: true},
+  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Summary / Headline / Job Title checker', builtin: true},
 ];
 function safeUrl(u){ try { const x = new URL(/^https?:\/\//i.test(u) ? u : 'https://' + u); return /^https?:$/.test(x.protocol) ? x.href : null; } catch (e) { return null; } }
 function renderLinks(){
