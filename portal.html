@@ -502,6 +502,19 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
 .bal{display:grid;gap:8px}
 
+.to-nav{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 16px}.to-nav button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.to-nav button:hover{border-color:var(--gem)}
+.to-top{align-items:stretch}.to-top > div > .panel{margin:0}
+.tc-nav{display:flex;align-items:center;gap:8px}.tc-nav b{min-width:130px;text-align:center}
+.tc-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12.5px;color:var(--ink-soft)}.tc-legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-2px}
+.tc-legend .lv::before{background:color-mix(in srgb,var(--s2) 55%,var(--surface))}.tc-legend .pd::before{border:1.5px dashed #c98a00}.tc-legend .hol::before{background:#fde8c4}.tc-legend .we::before{background:var(--surface-2)}
+.tc-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.tc-h{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);text-align:center;padding:4px 0}
+.tc-d{min-height:92px;border:1px solid var(--line);border-radius:10px;padding:6px;display:grid;align-content:start;gap:3px;background:var(--surface);font-size:12px;min-width:0}
+.tc-d.we{background:var(--surface-2)}.tc-d.hol{background:#fff4e0;border-color:#f2c879}.tc-d.out{opacity:.35}.tc-d.today{box-shadow:0 0 0 2px var(--gem)}
+.tc-d > b{font-size:12.5px}.tc-d .h{font-weight:700;color:#8a5a00;font-size:11px;line-height:1.2}
+.tc-d .p{display:block;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--s2) 40%,var(--surface));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tc-d .p.pd{background:none;border:1.5px dashed #c98a00}.tc-d .p.me{font-weight:700}
+@media(max-width:700px){.tc-d{min-height:64px;font-size:10.5px;padding:4px}.tc-h{font-size:9.5px}}
+.hl-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--line)}.hl-row:first-child{border-top:0}.hl-row .dt{width:58px;text-align:center;border-radius:10px;background:#fff4e0;padding:6px 0;line-height:1.1}.hl-row .dt b{display:block;font-size:20px}.hl-row .dt small{font:600 10px var(--mono);text-transform:uppercase}
+.hl-row .nm{flex:1}.hl-row .nm small{display:block;color:var(--ink-soft)}.hl-row.past{opacity:.55}
 .ep{display:grid;gap:14px;margin-bottom:16px}
 .ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
 .ep-lock.locked{background:color-mix(in srgb,#eda100 10%,var(--surface));border-color:color-mix(in srgb,#eda100 40%,var(--line))}.ep-lock.open{background:color-mix(in srgb,var(--ok) 9%,var(--surface));border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
@@ -812,12 +825,13 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <nav role="tablist" aria-label="Portal sections">
       <button class="tab" role="tab" data-v="home"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l7-6 7 6v8H3z"/></svg>Home</button>
       <button class="tab" role="tab" data-v="profile"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg>Profile</button>
+      <button class="tab" role="tab" data-v="timeoff"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4" width="15" height="13.5" rx="2"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3M7.5 12.5l2 2 3.5-3.5"/></svg>Time Off Management<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Projects</button>
       <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
       <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>My Workday<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
       <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
-      <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans<span class="badge" id="leaveBadge" hidden>0</span></button>
+      <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans</button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
     </nav>
     <div class="rc" id="railClock" hidden>
@@ -923,31 +937,8 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <!-- LEAVE -->
     <section class="view" data-view="leave" hidden>
       <div class="vhead"><div><h1>Leave plans</h1><p>Your balance, your leave and team time off. Request leave from your Profile page; admins approve it here.</p></div></div>
-      <div class="panel admin-only" hidden style="margin-bottom:16px"><h3>Give compensation leave</h3>
-        <p class="hint" style="margin:-4px 0 12px">For employees who worked an extra full day because the project needed it. The days are added to their balance under <b>Compensation</b>, and they can request them on their Profile page.</p>
-        <form class="adm-form" id="cmpForm" novalidate>
-          <div class="g2"><div class="f"><label for="cmpWho">Employee</label><select id="cmpWho"></select></div><div class="f"><label for="cmpDays">Days to give</label><input id="cmpDays" type="number" min="0.5" max="30" step="0.5" value="1"></div></div>
-          <div class="g2"><div class="f"><label for="cmpOn">Extra day worked on</label><input id="cmpOn" type="date"></div><div class="f"><label for="cmpWhy">Reason</label><input id="cmpWhy" maxlength="200" placeholder="e.g. Weekend work for the client go-live"></div></div>
-          <div class="msg err" id="cmpErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Give compensation leave</button>
-        </form>
-        <div class="timeline" id="cmpList" style="margin-top:14px"></div>
-      </div>
-      <div class="panel admin-only" id="reviewPanel" hidden><h3>Leave requests to review</h3><div class="timeline" id="reviewList"></div></div>
       <div class="two">
         <div class="panel">
-          <div class="admin-only" hidden>
-            <h3>Record leave</h3>
-            <form class="lv-form" id="lvForm" novalidate>
-              <div class="f full"><label for="lvWho">Employee</label><select id="lvWho"></select></div>
-              <div class="f"><label for="lvType">Type</label><select id="lvType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
-              <div class="f"><label for="lvDays">Working days</label><input id="lvDays" type="number" value="1" readonly></div>
-              <div class="f"><label for="lvFrom">From</label><input id="lvFrom" type="date"></div>
-              <div class="f"><label for="lvTo">To</label><input id="lvTo" type="date"></div>
-              <div class="f full"><label for="lvNote">Note</label><input id="lvNote" placeholder="Optional"></div>
-              <div class="msg err full" id="lvErr" hidden></div>
-              <button class="btn btn-gem full" type="submit" id="lvBtn">Record leave</button>
-            </form>
-          </div>
           <p class="msg contrib-only" id="lvRO">To request time off, use the leave request form on your Profile page.</p>
           <div class="self-only"><h3 style="margin-top:20px">My leave</h3><div class="timeline" id="myReqs"></div></div>
         </div>
@@ -1017,19 +1008,21 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- PROFILE -->
     <section class="view" data-view="profile" hidden>
-      <div class="vhead"><div><h1>Profile</h1><p>Your details, bank details, documents, leave balances and requests. Click Edit on a section to update it. Fields marked 🔒 are set by a portal admin.</p></div></div>
+      <div class="vhead"><div><h1>Profile</h1><p>Your personal, job and bank details and documents. Click Edit on a section to update it. Fields marked 🔒 are set by a portal admin.</p></div></div>
       <div class="panel prof-card" id="profCard"></div>
       <div class="ep" id="epMine"></div>
-      <div class="two">
-        <div class="panel"><h3>My leave <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><p class="hint" style="margin:-4px 0 14px">Days used and left this year.</p><div style="display:grid;gap:18px" id="profBal"></div></div>
-        <div class="panel"><h3>My leave requests</h3><div class="timeline" id="rqList"></div></div>
-      </div>
-      <div class="two">
-        <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
-        <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
-      </div>
-      <div class="panel" id="rqPanel">
-          <h3>Request leave</h3>
+    </section>
+
+
+
+    <!-- TIME OFF MANAGEMENT -->
+    <section class="view" data-view="timeoff" hidden>
+      <div class="vhead"><div><h1>Time Off Management</h1><p>Apply for leave, check your balance and history, see who is off and the company holidays.</p></div></div>
+      <nav class="to-nav" id="toNav"><button type="button" data-to="toApply">Apply for leave</button><button type="button" data-to="toBal">My leave balance</button><button type="button" data-to="toHist">Leave history</button><button type="button" data-to="toTeam">Team calendar</button><button type="button" data-to="toHol">Holiday calendar</button><button type="button" data-to="reviewPanel" class="admin-only" hidden>Pending approvals</button></nav>
+      <div class="panel admin-only" id="reviewPanel" hidden style="margin-bottom:16px"><h3>Pending approvals <span class="pill warn" id="pendCount" style="font-size:12px"></span></h3><p class="hint" style="margin:-4px 0 12px">Leave requests waiting for a manager or admin to approve or reject.</p><div class="timeline" id="reviewList"></div></div>
+      <div class="two to-top"><div id="toApply">
+      <div class="panel" id="rqPanel" style="height:100%">
+          <h3>Apply for leave</h3>
           <form class="lv-form" id="rqForm" novalidate>
             <div class="f"><label for="rqType">Type</label><select id="rqType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
             <div class="f"><label for="rqDays">Working days</label><input id="rqDays" type="number" value="1" readonly></div>
@@ -1039,7 +1032,49 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <div class="msg err full" id="rqErr" hidden></div>
             <button class="btn btn-gem full" type="submit" id="rqBtn">Send leave request</button>
           </form>
-          <p class="hint" style="margin-top:10px">Your request goes to the portal admins. You'll see it approved or rejected in My leave requests.</p>
+          <p class="hint" style="margin-top:10px">Your request goes to the portal admins. You'll see it approved or rejected in Leave history.</p>
+      </div>
+          </div><div id="toBal">
+        <div class="panel" style="height:100%"><h3>My leave balance <span class="mono" style="font-size:12px;color:var(--ink-soft)" id="profBalYear"></span></h3><p class="hint" style="margin:-4px 0 14px">Days used and left this year.</p><div style="display:grid;gap:18px" id="profBal"></div></div>
+      </div></div>
+      <div id="toHist">
+        <div class="panel"><h3>Leave history</h3><p class="hint" style="margin:-4px 0 12px">Every leave you requested or the admin recorded for you, newest first.</p><div class="timeline" id="rqList"></div></div>
+      </div>
+      <div class="panel" id="toTeam"><div class="vhead" style="margin:0 0 10px"><h3 style="margin:0">Team calendar</h3><div class="row tc-nav"><button class="mini" type="button" id="tcPrev">‹ Prev</button><b id="tcTitle"></b><button class="mini" type="button" id="tcNext">Next ›</button><button class="mini" type="button" id="tcToday">Today</button></div></div>
+        <div class="tc-legend"><span class="lv">On leave</span><span class="pd admin-only" hidden>Pending request</span><span class="hol">Holiday</span><span class="we">Weekend</span></div>
+        <div class="tc-grid" id="tcGrid"></div></div>
+      <div class="two">
+        <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
+        <div class="panel"><h3>Upcoming team leave</h3><div class="timeline" id="leaveList2"></div></div>
+      </div>
+      <div class="panel" id="toHol"><div class="vhead" style="margin:0 0 10px"><h3 style="margin:0">Holiday calendar</h3><div class="row tc-nav"><button class="mini" type="button" id="hlPrev">‹</button><b id="hlYear"></b><button class="mini" type="button" id="hlNext">›</button></div></div>
+        <div id="hlList"></div>
+        <form class="adm-form admin-only" id="hlForm" hidden novalidate style="margin-top:14px"><h4 style="margin:0">Add a holiday</h4>
+          <div class="g2"><div class="f"><label for="hlDate">Date</label><input id="hlDate" type="date"></div><div class="f"><label for="hlName">Holiday name</label><input id="hlName" maxlength="80" placeholder="e.g. Onam"></div></div>
+          <div class="g2"><div class="f"><label for="hlKind">Type</label><select id="hlKind"><option>Public holiday</option><option>Optional holiday</option><option>Company holiday</option></select></div><div class="f" style="align-self:end"><button class="btn btn-gem" type="submit">Add holiday</button></div></div>
+          <div class="msg err" id="hlErr" hidden></div></form></div>
+      <div class="two">
+      <div class="panel admin-only" hidden>            <h3>Record leave for an employee</h3><p class="hint" style="margin:-4px 0 12px">Leave you add here is approved straight away.</p>
+            <form class="lv-form" id="lvForm" novalidate>
+              <div class="f full"><label for="lvWho">Employee</label><select id="lvWho"></select></div>
+              <div class="f"><label for="lvType">Type</label><select id="lvType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
+              <div class="f"><label for="lvDays">Working days</label><input id="lvDays" type="number" value="1" readonly></div>
+              <div class="f"><label for="lvFrom">From</label><input id="lvFrom" type="date"></div>
+              <div class="f"><label for="lvTo">To</label><input id="lvTo" type="date"></div>
+              <div class="f full"><label for="lvNote">Note</label><input id="lvNote" placeholder="Optional"></div>
+              <div class="msg err full" id="lvErr" hidden></div>
+              <button class="btn btn-gem full" type="submit" id="lvBtn">Record leave</button>
+            </form>
+      </div>
+      <div class="panel admin-only" hidden><h3>Give compensation leave</h3>
+        <p class="hint" style="margin:-4px 0 12px">For employees who worked an extra full day because the project needed it. The days are added to their balance under <b>Compensation</b>, and they can request them under Time Off Management.</p>
+        <form class="adm-form" id="cmpForm" novalidate>
+          <div class="g2"><div class="f"><label for="cmpWho">Employee</label><select id="cmpWho"></select></div><div class="f"><label for="cmpDays">Days to give</label><input id="cmpDays" type="number" min="0.5" max="30" step="0.5" value="1"></div></div>
+          <div class="g2"><div class="f"><label for="cmpOn">Extra day worked on</label><input id="cmpOn" type="date"></div><div class="f"><label for="cmpWhy">Reason</label><input id="cmpWhy" maxlength="200" placeholder="e.g. Weekend work for the client go-live"></div></div>
+          <div class="msg err" id="cmpErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Give compensation leave</button>
+        </form>
+        <div class="timeline" id="cmpList" style="margin-top:14px"></div>
+      </div>
       </div>
     </section>
 
@@ -1482,7 +1517,9 @@ const pad = n => String(n).padStart(2,'0');
 const ymd = d => d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
 const todayStr = () => ymd(new Date());
 const fmtDay = s => new Date(s+'T00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'});
-function workdays(a,b){ let n=0; const d=new Date(a+'T00:00'), e=new Date(b+'T00:00'); while(d<=e){ const w=d.getDay(); if(w&&w<6) n++; d.setDate(d.getDate()+1);} return n; }
+let holidays = [];   // [{date, name, kind}] from holidays/<year>
+const holOn = k => holidays.find(h => h.date === k);
+function workdays(a,b){ let n=0; const d=new Date(a+'T00:00'), e=new Date(b+'T00:00'); while(d<=e){ const w=d.getDay(); if(w&&w<6&&!holOn(ymd(d))) n++; d.setDate(d.getDate()+1);} return n; }
 const DEF_ALLOW = {Annual:18, Sick:10, Personal:3};
 // compensation leave: days given by an admin for extra full days worked; balance = given - used (not reset each year)
 let compMine = null, compAll = {};
@@ -1574,6 +1611,7 @@ function startData() {
   if (!db || unsub.accounts) return;
   watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
+  watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
@@ -1634,8 +1672,8 @@ function applyRole() {
   const wantsAdmin = me ? ((me.access === 'admin' && !!me.active) || me.key === OWNER) : false;
   const was = isAdmin; isAdmin = wantsAdmin && canEditDb;
   $('adminTab').hidden = !isAdmin;
-  document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"], .tab[data-v="leave"]').forEach(e => e.hidden = !isAdmin);
-  if (!isAdmin && document.querySelector('.view[data-view="leave"]:not([hidden])')) setTimeout(() => go('profile'));
+  document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"]').forEach(e => e.hidden = !isAdmin); document.querySelectorAll('.tab[data-v="leave"]').forEach(e => e.hidden = true);
+  if (document.querySelector('.view[data-view="leave"]:not([hidden])')) setTimeout(() => go('timeoff'));
   if (!isAdmin && document.querySelector('.view[data-view="roster"]:not([hidden])')) setTimeout(() => go('home'));
   const ct = document.querySelector('.tab[data-v="clock"]'); if (ct) ct.hidden = !!me && !selfClock() && !isAdmin;
   if (me && !selfClock() && !isAdmin && document.querySelector('.view[data-view="clock"]:not([hidden])')) setTimeout(() => go('home'));
@@ -1702,8 +1740,8 @@ const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench') v = 'benchhub';
-  if (v === 'leave' && !isAdmin) v = 'profile';
-  if (!['home','roster','schedule','leave','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (v === 'leave') v = 'timeoff';
+  if (!['home','roster','schedule','leave','timeoff','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
@@ -1824,7 +1862,7 @@ $('cmpList').addEventListener('click', async e => { const b = e.target.closest('
   if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Confirm'; setTimeout(() => { if (b.isConnected) { b.classList.remove('armed'); b.textContent = 'Remove'; } }, 4000); return; }
   const r = compAll[b.dataset.cmpdel]; if (!r) return; const grants = (r.grants || []).filter((_, i) => i !== +b.dataset.i);
   try { await db.doc('compLeave/' + b.dataset.cmpdel).set({...r, grants}); toast('Removed'); } catch (x) { toast('Couldn\'t remove. Try again.'); } });
-function renderLeave(){ try { renderComp(); } catch (e) {}
+function renderLeave(){ try { renderComp(); } catch (e) {} try { renderTimeOff(); } catch (e) {}
   queueCharts();
   const year = new Date().getFullYear(); $('balYear').textContent = year;
   if (isAdmin) {
@@ -1839,8 +1877,8 @@ function renderLeave(){ try { renderComp(); } catch (e) {}
   const b = $('leaveBadge');
   if (isAdmin) {
     const pend = pendingAll().sort((a,b) => a.from.localeCompare(b.from));
-    $('reviewPanel').hidden = !pend.length;
-    $('reviewList').innerHTML = pend.map((q,i) => evRow(q, `<div class="acts"><button class="mini ok-btn" data-dec="Approved" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Approve</button><button class="mini danger" data-dec="Rejected" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Reject</button></div>`, i)).join('');
+    $('reviewPanel').hidden = false; $('pendCount').textContent = pend.length ? pend.length + ' waiting' : ''; $('pendCount').hidden = !pend.length;
+    $('reviewList').innerHTML = pend.map((q,i) => evRow(q, `<div class="acts"><button class="mini ok-btn" data-dec="Approved" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Approve</button><button class="mini danger" data-dec="Rejected" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Reject</button></div>`, i)).join('') || '<p class="empty">No leave requests waiting. 🎉</p>';
     b.hidden = !pend.length; b.textContent = pend.length;
   } else b.hidden = true;
   const up = approved().filter(d => d.to >= todayStr()).sort((a,b) => a.from.localeCompare(b.from));
@@ -1898,7 +1936,10 @@ function renderProfile(){
     return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('') + compBal(me, pendDays);
   const reqs = [...myReqs()].sort((a, b) => String(b.from).localeCompare(String(a.from)));
   $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? d.status : 'Pending';
-    return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '<p class="empty">You haven\'t requested any leave yet.</p>';
+    return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '';
+  { const linked = new Set(reqs.map(q => { const d = decisionOf(q); return d && d.key; }).filter(Boolean)), rec = myLeave().filter(d => !linked.has(d.key));
+    $('rqList').innerHTML += rec.map((d, i) => evRow({...d, name: 'You'}, '<div class="acts"><span class="pill info">Recorded by admin</span><span class="pill ok">Approved</span></div>', i)).join('');
+    if (!$('rqList').innerHTML) $('rqList').innerHTML = '<p class="empty">No leave yet. Apply for leave above.</p>'; }
 }
 
 /* ---------- employee details: basic, job, bank, documents, emergency contact, personal, reference ----------
@@ -2040,6 +2081,36 @@ async function openEmpDlg(key){ const a = accounts.find(x => x.key === key); if 
     $('epDlgPh').innerHTML = epPhoto(a, info, false); renderEP($('epAdm'), {key, acct: {...a}, info, docs, pay: payAll[key], admin: true, req: profReqAll[key] || null}); }
   catch (x) { $('epAdm').innerHTML = '<p class="msg err">The details couldn\'t be loaded. Check that the latest Firestore rules are published.</p>'; } }
 $('epDlgX').onclick = () => $('epDlg').close();
+
+/* ---------- Time Off Management: team calendar, holiday calendar, leave history extras ---------- */
+let tcMonth = (() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })(), hlYear = new Date().getFullYear();
+function renderTeamCal(){ const g = $('tcGrid'); if (!g) return; const y = tcMonth.getFullYear(), m = tcMonth.getMonth();
+  $('tcTitle').textContent = tcMonth.toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
+  const start = new Date(y, m, 1); start.setDate(1 - ((start.getDay() + 6) % 7)); const end = new Date(y, m + 1, 0); end.setDate(end.getDate() + (7 - ((end.getDay() + 6) % 7) - 1));
+  const ap = approved(), pend = isAdmin ? pendingAll() : [], today = todayStr(), cells = [];
+  for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { const k = ymd(d), w = d.getDay(), h = holOn(k);
+    const on = ap.filter(x => x.from <= k && x.to >= k), pd = pend.filter(x => x.from <= k && x.to >= k), names = new Set();
+    const chip = (x, cls) => { if (names.has(x.email + cls)) return ''; names.add(x.email + cls); const first = String(x.name || x.email).split(' ')[0]; return `<span class="p ${cls}${me && x.email === me.email ? ' me' : ''}" title="${esc((x.name || x.email) + ' · ' + (x.type || 'Leave') + (cls ? ' (pending)' : ''))}">${esc(first)}</span>`; };
+    cells.push(`<div class="tc-d${w === 0 || w === 6 ? ' we' : ''}${h ? ' hol' : ''}${d.getMonth() !== m ? ' out' : ''}${k === today ? ' today' : ''}"><b>${d.getDate()}</b>${h ? `<span class="h">${esc(h.name)}</span>` : ''}${on.map(x => chip(x, '')).join('')}${pd.map(x => chip(x, 'pd')).join('')}</div>`); }
+  g.innerHTML = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div class="tc-h">${x}</div>`).join('') + cells.join(''); }
+function renderHolidays(){ const box = $('hlList'); if (!box) return; $('hlYear').textContent = hlYear; const list = holidays.filter(h => h.date.startsWith(hlYear + '')), today = todayStr();
+  box.innerHTML = list.length ? list.map(h => { const d = new Date(h.date + 'T00:00');
+    return `<div class="hl-row${h.date < today ? ' past' : ''}"><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString(undefined, {month: 'short'})}</small></div><div class="nm"><b>${esc(h.name)}</b><small>${d.toLocaleDateString(undefined, {weekday: 'long'})} · ${esc(h.kind || 'Public holiday')}</small></div>${isAdmin ? `<button class="mini danger" type="button" data-hldel="${esc(h.date)}|${esc(h.name)}">Remove</button>` : ''}</div>`; }).join('')
+    : `<p class="empty">No holidays added for ${hlYear} yet.${isAdmin ? ' Add them below.' : ''}</p>`; }
+function renderTimeOff(){ try { renderTeamCal(); renderHolidays(); } catch (e) { console.error(e); } }
+$('tcPrev').onclick = () => { tcMonth.setMonth(tcMonth.getMonth() - 1); renderTeamCal(); };
+$('tcNext').onclick = () => { tcMonth.setMonth(tcMonth.getMonth() + 1); renderTeamCal(); };
+$('tcToday').onclick = () => { tcMonth = new Date(); tcMonth.setDate(1); tcMonth.setHours(0, 0, 0, 0); renderTeamCal(); };
+$('hlPrev').onclick = () => { hlYear--; renderHolidays(); }; $('hlNext').onclick = () => { hlYear++; renderHolidays(); };
+$('toNav').addEventListener('click', e => { const b = e.target.closest('[data-to]'); if (b) $(b.dataset.to).scrollIntoView({behavior: 'smooth', block: 'start'}); });
+$('hlForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const date = $('hlDate').value, name = $('hlName').value.trim(), kind = $('hlKind').value, err = $('hlErr');
+  if (!date || !name) { err.textContent = 'Pick a date and type the holiday name.'; err.hidden = false; return; }
+  if (holidays.some(h => h.date === date && h.name === name)) { err.textContent = 'That holiday is already on the list.'; err.hidden = false; return; }
+  err.hidden = true; const yr = date.slice(0, 4), items = holidays.filter(h => h.date.startsWith(yr)).concat({date, name: name.slice(0, 80), kind}).sort((a, b) => a.date.localeCompare(b.date));
+  try { await db.doc('holidays/' + yr).set({year: +yr, items, updatedAt: new Date().toISOString()}); $('hlName').value = ''; hlYear = +yr; toast('Holiday added'); } catch (x) { err.textContent = 'It couldn\'t be saved. Check the Firestore rules are published.'; err.hidden = false; } });
+$('hlList').addEventListener('click', async e => { const b = e.target.closest('[data-hldel]'); if (!b || !isAdmin) return; const [date, name] = b.dataset.hldel.split('|'); if (!confirm('Remove ' + name + '?')) return;
+  const yr = date.slice(0, 4), items = holidays.filter(h => h.date.startsWith(yr) && !(h.date === date && h.name === name));
+  try { await db.doc('holidays/' + yr).set({year: +yr, items, updatedAt: new Date().toISOString()}); toast('Holiday removed'); } catch (x) { toast('Couldn\'t remove it. Try again.'); } });
 const decisionOf = q => decisions.find(d => d.key === (q._src || (me && me.key)) + '~' + q.id);
 ['rqFrom','rqTo'].forEach(id => $(id).addEventListener('change', () => { const f = $('rqFrom').value, t = $('rqTo').value || f; if (f && t >= f) $('rqDays').value = workdays(f, t); }));
 async function saveReqs(list){ await db.doc('leaveRequests/' + me.key).set({email: me.email, name: me.name, requests: list, updatedAt: new Date().toISOString()}); }
@@ -3729,7 +3800,7 @@ function chartsAdmin(){
 let chartQ = 0;
 function queueCharts(){ if (chartQ) return; chartQ = requestAnimationFrame(() => { chartQ = 0; if ($('appView').hidden) return;
   const v = (document.querySelector('.view:not([hidden])') || {}).dataset?.view;
-  try { if (v === 'home') chartsHome(); if (v === 'roster') chartsRoster(); if (v === 'schedule') chartsSchedule(); if (v === 'clock') chartsClock(); if (v === 'leave' || v === 'profile') chartsLeave(); if (v === 'pay') chartsPay(); if (v === 'admin') chartsAdmin(); } catch (e) { console.error(e); }
+  try { if (v === 'home') chartsHome(); if (v === 'roster') chartsRoster(); if (v === 'schedule') chartsSchedule(); if (v === 'clock') chartsClock(); if (v === 'leave' || v === 'timeoff') chartsLeave(); if (v === 'pay') chartsPay(); if (v === 'admin') chartsAdmin(); } catch (e) { console.error(e); }
 }); }
 $('myMonth').addEventListener('change', () => queueCharts());
 // shared tooltip for every chart mark and heat-map cell
