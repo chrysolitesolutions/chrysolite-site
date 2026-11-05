@@ -85,6 +85,22 @@ html,body{overflow-x:hidden}
 .sc-status.done small{margin-left:8px}
 .sc-see-res{border:0;background:#1f6a2a;color:#fff;font:600 13px var(--body);border-radius:999px;padding:7px 12px;cursor:pointer;margin-left:6px}
 #scOut{transition:opacity .25s}#scOut.sc-loading{opacity:.25;pointer-events:none;filter:grayscale(.6)}
+
+/* which side is which: coloured headings and a faint source logo inside each box */
+.sc-side{--sc:#5b2a86;--sc2:#f7821b}.sc-side.li{--sc:#0a66c2;--sc2:#0a66c2}
+.sc-lab{display:flex!important;align-items:center;gap:10px;font:800 15px var(--body)!important;letter-spacing:.02em;color:var(--sc)!important;padding:8px 12px;border-radius:12px 12px 0 0;background:color-mix(in srgb,var(--sc) 10%,var(--surface));border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-bottom:0;margin:0!important}
+.sc-lab em{font-style:normal;font-weight:600;opacity:.85}
+.sc-badge{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sc);color:#fff;font:800 12px var(--mono);flex:none}
+.sc-side.so .sc-badge{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc2) 45%,transparent)}
+.sc-wm{position:relative;border-radius:0 0 12px 12px}
+.sc-wm::before{content:"";position:absolute;inset:0;pointer-events:none;background:center/58% auto no-repeat;opacity:.09;transition:opacity .2s;border-radius:inherit}
+.sc-side.so .sc-wm::before{background-image:url(seekout-logo.png)}.sc-side.li .sc-wm::before{background-image:url(linkedin-logo.png)}
+.sc-wm:has(textarea:placeholder-shown)::before{opacity:.16}
+.sc-side .sc-wm textarea{position:relative;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line))!important;border-top:3px solid var(--sc)!important;border-radius:0 0 12px 12px!important}
+.sc-side .sc-wm textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 22%,transparent)!important}
+.sc-side .sc-wm textarea::placeholder{color:color-mix(in srgb,var(--sc) 55%,var(--ink-soft));font-weight:600}
+.sc-cols > .so small,.sc-cols > .li small{font-weight:800;font-size:12px}.sc-cols > .so small{color:#5b2a86}.sc-cols > .li small{color:#0a66c2}
+.sc-cols > .so .sc-text{border-top:3px solid #5b2a86}.sc-cols > .li .sc-text{border-top:3px solid #0a66c2}
 </style></head><body>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Summary checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
@@ -93,7 +109,7 @@ html,body{overflow-x:hidden}
         <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Summary / About checker</h3>
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
           <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
-          <div class="sc-grid"><div class="f"><label for="scA">THE FILE SAYS (SeekOut)</label><textarea id="scA" rows="7"></textarea></div><div class="f"><label for="scB">PUBLIC PROFILE SAYS (ZIPLabs or from LinkedIn)</label><textarea id="scB" rows="7"></textarea></div></div>
+          <div class="sc-grid"><div class="f sc-side so"><label for="scA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><textarea id="scA" rows="7" placeholder="Paste the SeekOut text here (THE FILE SAYS)"></textarea></div></div><div class="f sc-side li"><label for="scB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><textarea id="scB" rows="7" placeholder="Paste the public profile text here (ZIPLabs or LinkedIn)"></textarea></div></div></div>
           <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button><span class="sc-status" id="scStatus" role="status" aria-live="polite"></span></div></div>
         <div class="panel" id="scOut"></div>
       
@@ -224,7 +240,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       $('scOut').innerHTML = `<div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
         <div class="sc-verdict"><span class="bf-l">Suggested answer for Summary / About</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
         <div class="sc-legend"><span class="del">Removed</span><span class="add">Added</span><span class="mod">Changed</span><span class="spk">· = space · ↵ = line break</span></div>
-        <div class="sc-cols"><div><small>THE FILE SAYS</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div><small>PUBLIC PROFILE SAYS</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
+        <div class="sc-cols"><div class="so"><small>THE FILE SAYS (SeekOut)</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div class="li"><small>PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
         <h3 class="bf-h">20-point check</h3><p class="hint" style="margin:-4px 0 10px">Click any check to see what it means. Checks with differences also highlight them in the text above.</p><div class="sc-checks">${C.map(([t, st, d], i) => `<button type="button" class="sc-ck ${st}" data-ck="${i}" aria-expanded="false"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small><em class="sc-what"><span>What it checks:</span> ${WHAT[i]}${st === 'warn' && HI[i] ? ' <span class="sc-see">The differences are highlighted in the text above.</span>' : ''}</em></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></button>`).join('')}</div>`; }
     // click a check: show what it means and highlight the matching differences
     $('scOut').addEventListener('click', e => { const b = e.target.closest('[data-ck]'); if (!b) return; const was = b.classList.contains('open');
