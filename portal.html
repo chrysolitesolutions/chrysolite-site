@@ -1451,6 +1451,7 @@ function compBal(a, pendDays){ const tot = compGiven(a); const u = compUsed(a), 
 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
+const BRIEF_VER = 'brief-2026-11-5';   // change this to ask everyone to read and accept again
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
@@ -2856,23 +2857,73 @@ $('srcFile').addEventListener('change', async e => {
     {f: 'Job title', a: 'Advisor', b: 'Two current jobs: "CTO at Beta" and "Advisor"', ans: 'm', why: 'The file matches one of the current ("Present") roles (10a).'},
     {f: 'Job title', a: 'Consultant', b: 'Two current jobs: "Consultant at Acme" and "Senior Consultant at Beta" · the file doesn\'t say which company', ans: 'm', why: 'The file matches one of the current roles exactly (10a).'},
     {f: 'Headline', a: 'Gerente de Ventas', b: 'Sales leader and growth hacker', ans: 'c', why: 'Not a clear, direct translation (11b).'},
-    {f: 'Location', a: 'Austin, Texas', b: 'N/A', ans: 'c', why: 'Trick case: a placeholder on the public side counts as empty (7c). Refresh once, then check LinkedIn (6.2). If LinkedIn can\'t be opened = Can\'t decide.'},
+    {f: 'Location', a: 'Austin, Texas', b: 'N/A · still N/A after one refresh, and LinkedIn will not open', ans: 'c', why: 'A placeholder on the public side counts as empty (7c). After the refresh, LinkedIn can\'t be checked = Can\'t decide (4d).'},
     {f: 'Job title', a: 'Product Analyst', b: 'Public profile looks out of date (dates stop in 2019): Product Analyst', ans: 'm', why: 'L1: answer from the two boxes. They agree (8a).'},
     {f: 'Job title', a: 'Data Analyst', b: 'Profile belongs to a different person (another name and company)', ans: 'c', why: 'Data with no connection to the file. Do not open LinkedIn (rule 5).'},
     {f: 'Summary / About', a: 'Supporting therapists at SimplePractice…', b: '(empty after refresh) · LinkedIn is private, needs a login', ans: 'c', why: 'LinkedIn can\'t be checked (4d).'},
     {f: 'Summary / About', a: 'Supporting therapists at SimplePractice…', b: '(empty after refresh) · LinkedIn has no About section', ans: 'n', why: 'LinkedIn shows nothing for this field (4c).'},
     {f: 'Name', a: 'Robert Chen', b: 'Bob Chen', ans: 'm', why: 'Nicknames are fine (Bob = Robert).'},
     {f: 'Name', a: 'José Álvarez', b: 'Jose Alvarez', ans: 'm', why: 'Accents are not differences.'},
-    {f: 'Name', a: 'Priya Nair', b: 'Rahul Nair', ans: 'n', why: 'A different first name.'}]);
-  let qi = 0, qOk = 0, qN = 0, order = QZ.map((_, i) => i).sort(() => Math.random() - .5), answered = false;
-  const drawQ = () => { const x = QZ[order[qi % order.length]]; answered = false;
-    $('qzScore').textContent = qN ? `${qOk} of ${qN} right` : `${QZ.length} cases`;
-    $('qzCard').innerHTML = `<div class="bf-qc"><span class="bf-l">Field: ${esc(x.f)}</span><div class="bf-boxes"><div><small>THE FILE SAYS</small><b>${esc(x.a)}</b></div><div><small>PUBLIC PROFILE SAYS</small><b>${esc(x.b)}</b></div></div>
+    {f: 'Name', a: 'Priya Nair', b: 'Rahul Nair', ans: 'n', why: 'A different first name.'},
+    {f: 'Job title', a: 'Marketing Mgr', b: 'Marketing Manager', ans: 'm', why: 'Mgr = Manager is an allowed short form.'},
+    {f: 'Job title', a: 'Senior Product Designer', b: 'Product Designer', ans: 'n', why: 'The level word "Senior" is missing.'},
+    {f: 'Job title', a: 'Staff Engineer', b: 'Staff Software Engineer, Platform', ans: 'n', why: 'Extra words "Software" and "Platform".'},
+    {f: 'Job title', a: 'Head of Sales', b: 'Head of Sales EMEA', ans: 'n', why: 'Extra word "EMEA" (a focus area).'},
+    {f: 'Job title', a: 'Lead Developer', b: 'Lead Dev', ans: 'm', why: 'Dev = Developer is an allowed short form.'},
+    {f: 'Job title', a: 'Software Engineer', b: 'Engineer, Software', ans: 'n', why: 'The words must be in the same order.'},
+    {f: 'Job title', a: 'Senior Developer', b: '"Senior Developer, 2018 – 2022", now "Engineering Manager (Present)"', ans: 'n', why: 'The matching title has an end date: it is a previous position (18a).'},
+    {f: 'Company', a: 'Infosys Limited', b: 'Infosys', ans: 'm', why: 'Legal endings (Limited, Ltd, Inc) are not differences.'},
+    {f: 'Company', a: 'Tata Consultancy Services', b: 'TCS', ans: 'm', why: 'A common short form of the same company name.'},
+    {f: 'Company', a: 'Alphabet', b: 'Google · you are L1', ans: 'c', why: 'Parent vs subsidiary: L1 = Can\'t decide and writes the details in the comment (13a).'},
+    {f: 'Company', a: 'Alphabet', b: 'Google · L2 review, L1 comment says "parent vs subsidiary?"', ans: 'm', why: 'L2: Google is a subsidiary of Alphabet = Match (13b).'},
+    {f: 'Company', a: 'Meta', b: 'Instagram · L2 review of an L1 comment', ans: 'm', why: 'L2: Instagram is owned by Meta = Match (13b).'},
+    {f: 'Company', a: 'Oracle', b: 'Orange Business · L2 review of an L1 comment', ans: 'n', why: 'L2 finds the companies are not related = Not a match (13c).'},
+    {f: 'Company', a: 'Wipro', b: '"Wipro, 2015 – 2025", now "Infosys (Present)"', ans: 'n', why: 'The Wipro role has an end date: it is a previous employer (18a).'},
+    {f: 'Company', a: 'Salesforce', b: 'Slack · you are L1', ans: 'c', why: 'Parent vs subsidiary: L1 = Can\'t decide with a comment (13a). L2 decides.'},
+    {f: 'Years in current role', a: '3 years', b: 'Started Jan 2023, counted to Oct 2026 (3 y 9 m)', ans: 'm', why: '3 y 9 m: 3 or 4 = Match.'},
+    {f: 'Years in current role', a: '4 years', b: 'Started Jan 2023, counted to Oct 2026 (3 y 9 m)', ans: 'm', why: '3 y 9 m: 3 or 4 = Match (whole years or one more).'},
+    {f: 'Years in current role', a: '2 years', b: 'Started Jan 2023, counted to Oct 2026 (3 y 9 m)', ans: 'n', why: '3 y 9 m: only 3 or 4 match.'},
+    {f: 'Years in current role', a: '5 years', b: 'Role shows "Jan 2020 – Dec 2025" (ended)', ans: 'n', why: 'The role has an end date: the years are from a previous position (18a).'},
+    {f: 'Years in current role', a: '1 year', b: 'Started Apr 2025, counted to Oct 2026 (1 y 6 m)', ans: 'm', why: '1 y 6 m: 1 or 2 = Match.'},
+    {f: 'Years at company', a: '6 years', b: 'At Infosys Mar 2020 – Present, counted to Oct 2026 (6 y 7 m)', ans: 'm', why: '6 y 7 m: 6 or 7 = Match.'},
+    {f: 'Years at company', a: '15 years', b: 'At Acme 2010 – 2016, studied 2016 – 2018 (break), back at Acme Jan 2018 – Present (to Oct 2026)', ans: 'n', why: 'The break restarts the count: from Jan 2018 = 8 y 9 m, so only 8 or 9 match (19a).'},
+    {f: 'Years at company', a: '8 years', b: 'At Acme 2010 – 2016, studied 2016 – 2018 (break), back at Acme Jan 2018 – Present (to Oct 2026)', ans: 'm', why: 'Count from Jan 2018, after the break = 8 y 9 m: 8 or 9 = Match (19a).'},
+    {f: 'Years at company', a: '5 years', b: 'At Instagram Jan 2021 – 2023, then Meta 2023 – Present (to Oct 2026), file company: Meta', ans: 'm', why: 'Instagram is part of Meta, so it is one unbroken stretch from Jan 2021 = 5 y 9 m: 5 or 6 = Match (19b).'},
+    {f: 'Years at company', a: '7 years', b: 'At Acme Jan 2016 – Jan 2023, now at Beta Feb 2023 – Present, file company: Acme', ans: 'n', why: 'The Acme role has an end date: it is a previous employer (18a).'},
+    {f: 'Years at company', a: '2 years', b: 'At Acme 2015 – 2020, at Beta 2020 – 2024, back at Acme Mar 2024 – Present (to Oct 2026)', ans: 'm', why: 'Another employer in between restarts the count: from Mar 2024 = 2 y 7 m, so 2 or 3 = Match (19a).'},
+    {f: 'Location', a: 'Bengaluru, Karnataka', b: 'Bangalore Urban, Karnataka, India', ans: 'm', why: 'The same city and district (Bangalore = Bengaluru).'},
+    {f: 'Location', a: 'Chicago, Illinois', b: 'Greater Chicago Area', ans: 'm', why: '"Greater X Area" = city X.'},
+    {f: 'Location', a: 'Boston, Massachusetts', b: 'Boston, Lincolnshire, United Kingdom', ans: 'n', why: 'A different country.'},
+    {f: 'Location', a: 'Thrissur, Kerala', b: 'Kochi, Kerala', ans: 'n', why: 'A different district, even in the same state.'},
+    {f: 'Name', a: 'Elizabeth Taylor', b: 'Liz Taylor', ans: 'm', why: 'Nicknames are fine (Liz = Elizabeth).'},
+    {f: 'Name', a: 'Anna Maria Lopez', b: 'Anna Lopez', ans: 'm', why: 'A missing middle name is fine.'},
+    {f: 'Headline', a: 'Cloud Architect | AWS | Azure', b: 'Azure | AWS | Cloud Architect', ans: 'm', why: 'Headline: the same words in a different order are fine.'},
+    {f: 'Headline', a: 'HR Business Partner', b: '(empty after refresh) · LinkedIn headline: HR Business Partner', ans: 'm', why: 'LinkedIn shows the same information as the file (4a).'},
+    {f: 'Headline', a: 'Talent Acquisition Lead', b: '(empty after refresh) · LinkedIn shows a different person', ans: 'c', why: 'LinkedIn shows a different person: L1 does not guess (4e, 15a).'},
+    {f: 'Still in this job?', a: 'Yes', b: 'Role shows "Mar 2021 – Present", plus a second current role', ans: 'm', why: 'The role is current ("Present", no end date).'}]);
+  window.__bfQuizTotal = QZ.length;
+  // progress: which cases have been answered correctly (kept on this device, per person and briefing version)
+  let good = new Set(), queue = [], qKey = '', answered = false, lastOk = false, tries = 0;
+  const qk = () => 'cs_bf_quiz_' + (typeof BRIEF_VER === 'string' ? BRIEF_VER : '') + '_' + (me && me.email || 'anon');
+  const qSave = () => { try { localStorage.setItem(qKey, JSON.stringify([...good])); } catch (e) {} };
+  const qLoad = () => { if (qKey === qk()) return; qKey = qk(); good = new Set(); try { JSON.parse(localStorage.getItem(qKey) || '[]').forEach(i => { if (QZ[i]) good.add(i); }); } catch (e) {}
+    queue = QZ.map((_, i) => i).filter(i => !good.has(i)).sort(() => Math.random() - .5); window.__bfQuizN = good.size; };
+  const qScore = () => { $('qzScore').innerHTML = `<b>${good.size} of ${QZ.length}</b> correct${queue.length ? ` · ${queue.length} to go` : ''}`; };
+  const drawQ = () => { qLoad(); answered = false; qScore();
+    if (!queue.length) { $('qzCard').innerHTML = `<div class="bf-res m"><span>All ${QZ.length} cases correct 🎉</span><p>You can now tick and accept the Practice page below.</p></div><button class="btn btn-ghost" type="button" id="qzRedo" style="margin-top:10px">Practise again from the start</button>`; return; }
+    const x = QZ[queue[0]];
+    $('qzCard').innerHTML = `<div class="bf-qc"><span class="bf-l">Case ${good.size + 1} of ${QZ.length} · Field: ${esc(x.f)}</span><div class="bf-boxes"><div><small>THE FILE SAYS</small><b>${esc(x.a)}</b></div><div><small>PUBLIC PROFILE SAYS</small><b>${esc(x.b)}</b></div></div>
       <div class="bf-opts">${['n', 'm', 'c'].map((k, i) => `<button type="button" class="bf-pick ${k}" data-a="${k}">${['✗ Not a match', '✓ Match', '? Can\'t decide'][i]}</button>`).join('')}</div><div id="qzRes"></div></div>`; };
-  $('qzCard').addEventListener('click', e => { const b = e.target.closest('[data-a]'), nx = e.target.closest('#qzNext'); if (nx) { qi++; drawQ(); return; } if (!b || answered) return; answered = true;
-    const x = QZ[order[qi % order.length]], ok = b.dataset.a === x.ans; qN++; if (ok) qOk++; window.__bfQuizN = qN; renderBriefAck(); $('qzScore').textContent = `${qOk} of ${qN} right`;
+  window.__bfQuizSync = () => { if (qKey !== qk()) drawQ(); };
+  $('qzCard').addEventListener('click', e => { const b = e.target.closest('[data-a]');
+    if (e.target.closest('#qzRedo')) { good = new Set(); qSave(); qKey = ''; drawQ(); renderBriefAck(); return; }
+    if (e.target.closest('#qzNext')) { const i = queue.shift(); if (!lastOk) queue.push(i); drawQ(); return; }
+    if (!b || answered) return; answered = true; tries++;
+    const i = queue[0], x = QZ[i], ok = lastOk = b.dataset.a === x.ans;
+    if (ok) { good.add(i); qSave(); } window.__bfQuizN = good.size; renderBriefAck();
     document.querySelectorAll('#qzCard [data-a]').forEach(y => { y.disabled = true; y.classList.toggle('right', y.dataset.a === x.ans); y.classList.toggle('wrong', y === b && !ok); });
-    $('qzRes').innerHTML = `<div class="bf-res ${ok ? 'm' : 'n'}"><span>${ok ? 'Correct! 🎉' : 'Not quite.'}</span>${A[x.ans]}<p>${esc(x.why)}</p></div><button class="btn btn-gem" type="button" id="qzNext">Next case →</button>`; });
+    qScore();
+    $('qzRes').innerHTML = `<div class="bf-res ${ok ? 'm' : 'n'}"><span>${ok ? 'Correct! 🎉' : 'Not quite. This case will come back later.'}</span>${A[x.ans]}<p>${esc(x.why)}</p></div><button class="btn btn-gem" type="button" id="qzNext">${ok && queue.length === 1 ? 'Finish →' : 'Next case →'}</button>`; });
   drawQ();
 
   // ⑧ tips checklist (ticks remembered on this device)
@@ -2882,18 +2933,17 @@ $('srcFile').addEventListener('change', async e => {
   $('tpList').addEventListener('change', e => { const c = e.target.closest('[data-i]'); if (!c) return; ticks[c.dataset.i] = c.checked; try { localStorage.setItem('cs_bf_tips', JSON.stringify(ticks)); } catch (x) {} drawTips(); }); drawTips();
 })();
 // read & accept for the briefing (same record as the other benchmarking procedures)
-const BRIEF_VER = 'brief-2026-11-5';   // change this to ask everyone to read and accept again
 const BRIEF_PAGES = [['ov', 'Overview'], ['wiz', 'Decide a field'], ['tbl', 'Decision table'], ['fld', 'Field rules'], ['yrs', 'Years calculator'], ['jt', 'Job title checker'], ['quiz', 'Practice'], ['tips', 'Quick tips']];
-const QUIZ_MIN = 15;
+const QUIZ_MIN = () => window.__bfQuizTotal || 100;   // every practice case must be answered correctly
 const briefParts = () => { const r = ackMine && ackMine.pages && ackMine.pages.brief_parts; return r && r.v === BRIEF_VER ? (r.parts || {}) : {}; };
 async function saveBrief(extra){ const pages = {...((ackMine && ackMine.pages) || {}), ...extra}; await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; }
 function renderBriefAck(){ const box = $('bfAck'); if (!box) return; if (!me) { box.hidden = true; return; } box.hidden = false;
-  const parts = briefParts(), done = BRIEF_PAGES.filter(([k]) => parts[k]), qn = window.__bfQuizN || 0;
+  if (window.__bfQuizSync) window.__bfQuizSync(); const parts = briefParts(), done = BRIEF_PAGES.filter(([k]) => parts[k]), qn = window.__bfQuizN || 0;
   // a read-and-accept strip at the end of every page
   document.querySelectorAll('.bf-pane').forEach(pn => { const k = pn.dataset.p, nm = (BRIEF_PAGES.find(x => x[0] === k) || [])[1]; if (!nm) return; let el = pn.querySelector(':scope > .bf-pack'); if (!el) { el = document.createElement('div'); el.className = 'bf-pack'; pn.appendChild(el); }
     if (parts[k]) { el.className = 'bf-pack ok'; el.innerHTML = `<span>✓ You accepted “${nm}” on ${ackFmt(parts[k])}</span>`; return; }
-    const needQuiz = k === 'quiz' && qn < QUIZ_MIN; el.className = 'bf-pack';
-    el.innerHTML = `<label class="ack-chk"><input type="checkbox" data-pk="${k}" ${needQuiz ? 'disabled' : ''}> I have read and understood the “${nm}” page.</label>${needQuiz ? `<small class="hint">Answer at least ${QUIZ_MIN} practice cases first (${qn} done).</small>` : ''}<button class="btn btn-gem" type="button" data-pkb="${k}" disabled>Accept this page</button>`; });
+    const needQuiz = k === 'quiz' && qn < QUIZ_MIN(); el.className = 'bf-pack';
+    el.innerHTML = `<label class="ack-chk"><input type="checkbox" data-pk="${k}" ${needQuiz ? 'disabled' : ''}> I have read and understood the “${nm}” page.</label>${needQuiz ? `<small class="hint">Answer all ${QUIZ_MIN()} practice cases correctly first (${qn} of ${QUIZ_MIN()} correct). A wrong answer comes back later until you get it right.</small>` : ''}<button class="btn btn-gem" type="button" data-pkb="${k}" disabled>Accept this page</button>`; });
   document.querySelectorAll('#bfTabs [data-t]').forEach(b => { b.classList.toggle('done', !!parts[b.dataset.t]); });
   const a = ackMine && ackMine.pages && ackMine.pages.brief;
   if (a && a.v === BRIEF_VER) { box.innerHTML = `<div class="ack-ok">✓ You accepted the Benchmarking Briefing on ${ackFmt(a.at)}</div>`; return; }
