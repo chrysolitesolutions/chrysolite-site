@@ -75,6 +75,16 @@ html,body{overflow-x:hidden}
 .sc-tick{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3d9a2c;color:#fff;font-weight:800}
 .sc-spin{width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:scRot .7s linear infinite}
 @keyframes scRot{to{transform:rotate(360deg)}}@keyframes scPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+
+.sc-status{flex:1 1 320px}
+.sc-bar{position:relative;flex:1 1 180px;max-width:320px;height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.sc-bar i{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:linear-gradient(90deg,#8dc63f,#21b3c4);transition:width .6s ease-out}
+.sc-bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:200% 100%;animation:scShine 1s linear infinite}
+@keyframes scShine{from{background-position:200% 0}to{background-position:-200% 0}}
+.sc-status.done{color:#14501d;font-size:15px;padding:6px 12px 6px 6px;border-radius:999px;background:#e9f7e1;border:1px solid #b7e09c}
+.sc-status.done small{margin-left:8px}
+.sc-see-res{border:0;background:#1f6a2a;color:#fff;font:600 13px var(--body);border-radius:999px;padding:7px 12px;cursor:pointer;margin-left:6px}
+#scOut{transition:opacity .25s}#scOut.sc-loading{opacity:.25;pointer-events:none;filter:grayscale(.6)}
 </style></head><body>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Summary checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
@@ -223,9 +233,20 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       if (was) return; b.classList.add('open'); b.setAttribute('aria-expanded', 'true'); const hi = window.__scInfo.HI[+b.dataset.ck];
       if (b.classList.contains('warn') && hi) { cols.classList.add('focus', 'f-' + hi); cols.scrollIntoView({behavior: 'smooth', block: 'center'}); } });
     const stat = (k, t) => { const el = $('scStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
-    function go(){ if (!$('scA').value.trim() && !$('scB').value.trim()) { run(); stat('', ''); return; } stat('busy', '<span class="sc-spin"></span>Comparing…');
-      setTimeout(() => { try { run(); const r = document.querySelector('.sc-ring b'); stat('done', `<span class="sc-tick">✓</span>Compare complete${r ? ' · ' + r.textContent + ' match' : ''} <small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'})}</small>`); }
-        catch (e) { console.error(e); stat('err', '⚠ The comparison couldn\'t finish. Try shorter text.'); } }, 30); }
+    // a short loading bar, then a clear "comparison completed" message; the old result is dimmed until the new one is ready
+    function go(){ const out = $('scOut');
+      if (!$('scA').value.trim() && !$('scB').value.trim()) { run(); stat('', ''); return; }
+      clearTimeout(go.t2); stat('busy', '<span class="sc-bar"><i></i></span><span>Comparing… <b id="scPct">0%</b></span>'); out.classList.add('sc-loading');
+      const bar = document.querySelector('.sc-bar i'), t0 = performance.now(), MIN = 900; let ok = true;
+      requestAnimationFrame(() => { bar.style.width = '70%'; });
+      setTimeout(() => { try { run(); } catch (e) { console.error(e); ok = false; }
+        const left = Math.max(0, MIN - (performance.now() - t0)), b2 = document.querySelector('.sc-bar i'); if (b2) { b2.style.transitionDuration = left + 'ms'; b2.style.width = '100%'; }
+        const pc = $('scPct'); let n = 0; const tick = setInterval(() => { n = Math.min(100, n + 7); if (pc) pc.textContent = n + '%'; if (n >= 100) clearInterval(tick); }, Math.max(12, left / 15));
+        go.t2 = setTimeout(() => { out.classList.remove('sc-loading');
+          if (!ok) { stat('err', '⚠ The comparison couldn\'t finish. Try shorter text.'); return; }
+          const r = document.querySelector('.sc-ring b');
+          stat('done', `<span class="sc-tick">✓</span><span>Comparison completed${r ? ' · <b>' + r.textContent + ' match</b>' : ''}<small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'})}</small></span><button type="button" class="sc-see-res" id="scSeeRes">See the result below ↓</button>`);
+          $('scSeeRes').onclick = () => out.scrollIntoView({behavior: 'smooth', block: 'start'}); }, left + 60); }, 40); }
     $('scGo').onclick = go; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(go.t); stat('wait', 'Text changed: click Compare (updates automatically)'); go.t = setTimeout(go, 600); }));
     $('scCase').onchange = e => { cs = e.target.checked; go(); };
     $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); go(); });
