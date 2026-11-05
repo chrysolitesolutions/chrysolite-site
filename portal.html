@@ -541,6 +541,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .org-card{width:190px!important;padding:10px!important}.org-card.plan{border-style:dashed;border-top-style:solid;background:color-mix(in srgb,#eda100 6%,var(--surface))}
 .oc-boss{display:grid;gap:2px;margin-top:6px;font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}.oc-boss select{font:500 12px var(--body);padding:3px 6px;border-radius:8px;text-transform:none;letter-spacing:0;width:100%}
 .org-card .mini.danger{margin-top:6px;justify-self:start}
+.org-card{flex-direction:column;align-items:center!important;text-align:center!important;width:170px!important;gap:4px!important;padding:14px 10px 12px!important}
+.org-card .oc-ph{width:64px;height:64px;border-radius:50%;object-fit:cover;font-size:22px;margin-bottom:4px;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--rc)}
+.org-card > b{font-size:14.5px;line-height:1.25}.org-card > span{font-size:12.5px;color:var(--rc);font-weight:700}.oc-soon{font-size:11px;color:#8a5a00;font-weight:700}
+.org-card .oc-boss{width:100%;text-align:left}
 .org-proj{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.org-pc h3{display:flex;align-items:center;gap:8px}.org-members{display:grid;gap:10px}
 .ep{display:grid;gap:14px;margin-bottom:16px}
 .ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
@@ -1046,7 +1050,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- ORG CHART -->
     <section class="view" data-view="org" hidden>
-      <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team, who they report to, and what everyone is working on today.</p><p class="hint admin-only" hidden style="margin-top:4px">Admins: change who someone reports to with the “Reports to” menu on their card.</p></div><span class="pill ok" id="orgCount"></span></div>
+      <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team and who they report to.</p><p class="hint admin-only" hidden style="margin-top:4px">Admins: change who someone reports to with the “Reports to” menu on their card.</p></div><span class="pill ok" id="orgCount"></span></div>
       <div class="org-legend" id="orgLegend"></div>
       <div class="panel org-panel"><div class="org-fit" id="orgFit"><div class="org-tree" id="orgTree"></div></div></div>
       <div class="panel admin-only" hidden style="margin-top:16px"><h3>Add a planned team member</h3><p class="hint" style="margin:-4px 0 12px">For people joining soon. They show on the chart as “Joining soon” until you create their login with the same name, then the card switches to the real person automatically.</p>
@@ -1593,7 +1597,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1656,6 +1660,7 @@ function startData() {
   if (!db || unsub.accounts) return;
   watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
+  watch('photos', db.collection('photos'), s => { photosAll = {}; s.docs.forEach(d => { const x = d.data(); if (x && x.photo) photosAll[d.id] = x.photo; }); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => ({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
@@ -2117,7 +2122,7 @@ function epBind(el){
 epBind($('epMine')); epBind($('epAdm'));
 // profile photo (employee's own, from the Profile card)
 $('profCard').addEventListener('change', async e => { const inp = e.target.closest('[data-ep-photo]'); if (!inp || !inp.files[0] || !me) return;
-  try { const data = await shrinkImg(inp.files[0], 320, .82); const ctx = {key: me.key, acct: me, info: empInfoMine || {}}; await epSaveInfo(ctx, {photo: data}, null); empInfoMine = ctx.info; renderProfile(); toast('Photo updated'); }
+  try { const data = await shrinkImg(inp.files[0], 320, .82); const ctx = {key: me.key, acct: me, info: empInfoMine || {}}; await epSaveInfo(ctx, {photo: data}, null); empInfoMine = ctx.info; try { await db.doc('photos/' + me.key).set({photo: data, updatedAt: new Date().toISOString()}); } catch (x) {} renderProfile(); toast('Photo updated'); }
   catch (x) { toast('That photo couldn\'t be used. Try a JPG or PNG.'); } finally { inp.value = ''; } });
 // admin: full details of one employee in a dialog
 async function openEmpDlg(key){ const a = accounts.find(x => x.key === key); if (!a) return; const dlg = $('epDlg');
@@ -3949,7 +3954,10 @@ function orgParents(ps = people()){ const byRank = r => ps.filter(p => (ROLE_RAN
   // break any loop an admin may have set by mistake
   ps.forEach(p => { const seen = new Set([p.key]); let q = parent[p.key]; while (q) { if (seen.has(q)) { parent[p.key] = null; break; } seen.add(q); q = parent[q]; } });
   return parent; }
-let orgPlan = [];
+let orgPlan = [], photosAll = {}, photoSynced = false;
+// admins: copy each employee's profile photo to the shared photos/<email> record the Org Chart reads (bank details stay private)
+async function syncPhotos(){ if (!isAdmin || photoSynced || !db) return; photoSynced = true;
+  for (const p of people()) { try { const d = await db.doc('empInfo/' + p.key).get(); const ph = d.exists && d.data().photo; if (ph && photosAll[p.key] !== ph) await db.doc('photos/' + p.key).set({photo: ph, updatedAt: new Date().toISOString()}); } catch (x) {} } }
 function orgPeople(){ const real = people(), names = new Set(real.map(p => String(p.name).trim().toLowerCase()));
   return real.concat(orgPlan.filter(x => x.name && !names.has(String(x.name).trim().toLowerCase())).map(x => ({key: 'plan:' + x.id, name: x.name, role: x.role, reportsTo: x.reportsTo, project: x.project || 'Seekout', plan: x}))); }
 function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = orgPeople(), parent = orgParents(ps), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
@@ -3957,11 +3965,8 @@ function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = org
   if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; $('orgProj').innerHTML = ''; return; }
   const kids = k => ps.filter(p => parent[p.key] === k);
   const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
-  const card = p => { if (p.plan) { const d = p.plan.joinDate ? new Date(p.plan.joinDate + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'}) : '';
-      return `<div class="org-card plan" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}</b><span>${esc(p.role || '')}</span><div class="oc-tasks"><span class="pill warn">Joining soon${d ? ' · ' + d : ''}</span></div>${bossSel(p)}${isAdmin ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div></div>`; }
-    const k = live ? cellOf(p.email, di) : '', off = onLeave(p.email, today) || k === 'lv';
-    const tasks = off ? '<span class="pill off">On leave today</span>' : k === 'off' ? '<span class="pill">Day off</span>' : isWorkCell(k) ? cellPills(k) : '<span class="hint">No task today</span>';
-    return `<div class="org-card${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}${me && p.key === me.key ? ' <span class="pill info" style="padding:1px 7px">You</span>' : ''}</b><span>${esc(p.designation || p.role || '')}</span>${p.department ? `<small>${esc(p.department)}</small>` : ''}<div class="oc-proj"><span class="pill ok">${esc(p.project || 'Seekout')}</span></div><div class="oc-tasks">${tasks}</div>${bossSel(p)}</div></div>`; };
+  const pic = p => photosAll[p.key] ? `<img class="oc-ph" src="${esc(photosAll[p.key])}" alt="">` : `<div class="av oc-ph" style="background:hsl(${hue(p.name)} 45% 62%)">${esc(initials(p.name))}</div>`;
+  const card = p => `<div class="org-card${p.plan ? ' plan' : ''}${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${pic(p)}<b>${esc(p.name)}</b><span>${esc(p.designation || p.role || '')}</span>${p.plan ? '<small class="oc-soon">Joining soon</small>' : ''}${bossSel(p)}${isAdmin && p.plan ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div>`;
   const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
     return `<li>${card(p)}${c.length ? `<ul>${c.map(branch).join('')}</ul>` : ''}</li>`; };
   const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
@@ -3969,14 +3974,14 @@ function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = org
   if ($('opBoss')) { const keep = $('opBoss').value; $('opBoss').innerHTML = people().map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); if (keep) $('opBoss').value = keep; }
   $('orgLegend').innerHTML = Object.keys(ROLE_RANK).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 3) === ROLE_RANK[r]).length}</b></span>`).join('');
   const projs = {}; ps.filter(p => !p.plan).forEach(p => (projs[p.project || 'Seekout'] = projs[p.project || 'Seekout'] || []).push(p));
-  $('orgProj').innerHTML = Object.entries(projs).map(([n, l]) => `<div class="panel org-pc"><h3>${esc(n)} <span class="pill info">${l.length}</span></h3><div class="org-members">${l.sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name))).map(p => `<div class="person">${av(p.name)}<div>${esc(p.name)}<div style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || '')}</div></div></div>`).join('')}</div></div>`).join(''); }
+  $('orgProj').innerHTML = Object.entries(projs).map(([n, l]) => `<div class="panel org-pc"><h3>${esc(n)} <span class="pill info">${l.length}</span></h3><div class="org-members">${l.sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name))).map(p => `<div class="person">${photosAll[p.key] ? `<img class="av" src="${esc(photosAll[p.key])}" alt="" style="object-fit:cover">` : av(p.name)}<div>${esc(p.name)}<div style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || '')}</div></div></div>`).join('')}</div></div>`).join(''); }
 
 // shrink the chart to fit the page width so it never needs a scroll bar
 function fitOrg(){ const fit = $('orgFit'), tree = $('orgTree'); if (!fit || !tree || !fit.offsetParent) return; tree.style.transform = 'none';
   const w = tree.scrollWidth, h = tree.scrollHeight, avail = fit.clientWidth, k = Math.min(1, avail / Math.max(1, w));
   tree.style.transform = k < 1 ? `scale(${k})` : 'none'; fit.style.height = Math.ceil(h * k) + 'px'; }
 window.addEventListener('resize', () => { clearTimeout(fitOrg.t); fitOrg.t = setTimeout(fitOrg, 120); });
-document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="org"]')) setTimeout(fitOrg, 60); });
+document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="org"]')) { setTimeout(fitOrg, 60); syncPhotos(); } });
 $('orgTree').addEventListener('change', async e => { const sel = e.target.closest('[data-boss]'); if (!sel || !isAdmin) return; const k = sel.dataset.boss, v = sel.value || null;
   try { if (k.startsWith('plan:')) await db.doc('orgPlan/' + k.slice(5)).update({reportsTo: v}); else await db.doc('accounts/' + k).update({reportsTo: v}); toast('Org Chart updated'); }
   catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published.'); } });
