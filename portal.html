@@ -478,6 +478,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .fq{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.fq i{width:8px;height:8px;border-radius:2px;background:var(--c)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.ws-det{display:flex;flex-wrap:wrap;gap:4px 12px;margin:4px 0 2px;font-size:12.5px;max-width:220px}.ws-det span{white-space:nowrap}.ws-det span{display:grid;line-height:1.2}.ws-det small{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}.ws-det b{font-weight:700;color:var(--ink)}
 .pill.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
 .pill.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
 .pill.off{color:var(--off);background:color-mix(in srgb,var(--off) 12%,transparent)}
@@ -1934,12 +1935,17 @@ function renderHome(){
 /* ---------- who has started today: a small presence record per employee (no times beyond the first login) ---------- */
 let presence = {}, presLast = '';
 // admins see the first login time; employees only see whether a colleague has started, is working or is on a break
-function workState(p){ const today = todayStr(), fromList = l => { if (!l.length) return {s: 'none'}; const last = l[l.length - 1]; return {s: !last.out ? 'on' : last.brk ? 'out' : 'done', first: l[0].in}; };
+function workState(p){ const today = todayStr(), fromList = l => { if (!l.length) return {s: 'none'}; const last = l[l.length - 1]; return {s: !last.out ? 'on' : last.brk ? 'out' : 'done', first: l[0].in, end: last.out || null, list: l}; };
   if (isAdmin) { const r = teamAtt.find(a => a.email === p.email); return fromList((r && r.days && r.days[today]) || []); }
   if (me && p.key === me.key) return fromList(((myAtt && myAtt.days) || {})[today] || []);
   const pr = presence[String(p.email).toLowerCase()]; if (!pr || pr.day !== today || !pr.started) return {s: 'none'}; return {s: pr.working ? 'on' : pr.onBreak ? 'out' : 'done'}; }
-function workPill(p){ if (p.clock === false) return '<span class="pill off">No time clock</span>'; const w = workState(p), t = isAdmin && w.first ? ' · since ' + fmtT(w.first) : '';
-  return w.s === 'on' ? `<span class="pill ok live-pill">Working${t}</span>` : w.s === 'out' ? `<span class="pill warn">On break${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : w.s === 'done' ? `<span class="pill info">Finished for today${isAdmin && w.first ? ' · started ' + fmtT(w.first) : ''}</span>` : '<span class="pill off">Not logged in yet</span>'; }
+function workPill(p){ if (p.clock === false) return '<span class="pill off">No time clock</span>'; const w = workState(p);
+  if (isAdmin && w.first) { const ms = (() => { try { return rawMs(w.list); } catch (e) { return 0; } })(), hrs = fmtH(ms);
+    const det = (a, b) => `<span class="ws-det"><span><small>Start</small><b>${a}</b></span><span><small>${w.s === 'out' ? 'Break from' : 'End'}</small><b>${b}</b></span><span><small>Hours</small><b>${hrs}</b></span></span>`;
+    if (w.s === 'on') return `<span class="pill ok live-pill">Working now</span>${det(fmtT(w.first), '–')}`;
+    if (w.s === 'out') return `<span class="pill warn">On break</span>${det(fmtT(w.first), fmtT(w.end))}`;
+    return `<span class="pill info">Finished for today</span>${det(fmtT(w.first), fmtT(w.end))}`; }
+  return w.s === 'on' ? '<span class="pill ok live-pill">Working</span>' : w.s === 'out' ? '<span class="pill warn">On break</span>' : w.s === 'done' ? '<span class="pill info">Finished for today</span>' : '<span class="pill off">Not logged in yet</span>'; }
 // the shared record holds no times: only today's date, started yes/no and working yes/no
 function syncPresence(){ if (!me || !db || !selfClock()) return; const today = todayStr(), l = ((myAtt && myAtt.days) || {})[today] || [], last = l[l.length - 1], rec = {email: me.email, name: me.name, day: today, started: l.length > 0, working: !!(last && !last.out), onBreak: !!(last && last.out && last.brk)};
   const sig = JSON.stringify(rec); if (sig === presLast) return; presLast = sig; db.doc('presence/' + me.key).set(rec).catch(() => { presLast = ''; }); }
