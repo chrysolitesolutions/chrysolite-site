@@ -517,6 +517,27 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 @media(max-width:700px){.tc-d{min-height:64px;font-size:10.5px;padding:4px}.tc-h{font-size:9.5px}}
 .hl-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--line)}.hl-row:first-child{border-top:0}.hl-row .dt{width:58px;text-align:center;border-radius:10px;background:#fff4e0;padding:6px 0;line-height:1.1}.hl-row .dt b{display:block;font-size:20px}.hl-row .dt small{font:600 10px var(--mono);text-transform:uppercase}
 .hl-row .nm{flex:1}.hl-row .nm small{display:block;color:var(--ink-soft)}.hl-row.past{opacity:.55}
+
+.org-legend{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}.org-legend span{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.org-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--rc)}
+[data-r="0"]{--rc:#5b2a86}[data-r="1"]{--rc:#0a66c2}[data-r="2"]{--rc:#2f8f6b}[data-r="3"]{--rc:#5f6f69}
+.org-panel{padding:18px 8px}.org-scroll{overflow-x:auto;padding-bottom:6px}
+.org-tree{display:flex;justify-content:center;min-width:max-content;padding:0 12px}
+.org-tree ul{display:flex;justify-content:center;padding:22px 0 0;margin:0;position:relative;list-style:none}
+.org-tree > ul{padding-top:0}
+.org-tree li{display:flex;flex-direction:column;align-items:center;position:relative;padding:22px 8px 0}
+.org-tree > ul > li{padding-top:0}
+.org-tree li::before,.org-tree li::after{content:"";position:absolute;top:0;width:50%;height:22px;border-top:2px solid var(--line)}
+.org-tree li::before{right:50%}.org-tree li::after{left:50%;border-left:2px solid var(--line)}
+.org-tree li:only-child::before,.org-tree li:only-child::after{display:none}.org-tree li:only-child{padding-top:22px}.org-tree > ul > li:only-child{padding-top:0}
+.org-tree li:first-child::before,.org-tree li:last-child::after{border:0}
+.org-tree li:last-child::before{border-right:2px solid var(--line);border-radius:0 10px 0 0}.org-tree li:first-child::after{border-radius:10px 0 0 0}
+.org-tree ul ul::before{content:"";position:absolute;top:0;left:50%;height:22px;border-left:2px solid var(--line)}
+.org-tree li:only-child > .org-card{position:relative}.org-tree ul ul > li:only-child::after{display:block;left:50%;width:0;border-top:0;border-left:2px solid var(--line)}
+.org-card{display:flex;gap:10px;align-items:flex-start;text-align:left;width:220px;padding:12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--rc);box-shadow:0 8px 20px -16px rgba(0,0,0,.35)}
+.org-card.me{box-shadow:0 0 0 2px var(--gem),0 8px 20px -14px rgba(0,0,0,.35)}
+.oc-txt{display:grid;gap:2px;min-width:0}.oc-txt b{font-size:14.5px}.oc-txt > span{font-size:12.5px;color:var(--rc);font-weight:700}.oc-txt small{font-size:11.5px;color:var(--ink-soft)}
+.oc-proj{margin-top:4px}.oc-tasks{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;font-size:12px}
+.org-proj{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.org-pc h3{display:flex;align-items:center;gap:8px}.org-members{display:grid;gap:10px}
 .ep{display:grid;gap:14px;margin-bottom:16px}
 .ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
 .ep-lock.locked{background:color-mix(in srgb,#eda100 10%,var(--surface));border-color:color-mix(in srgb,#eda100 40%,var(--line))}.ep-lock.open{background:color-mix(in srgb,var(--ok) 9%,var(--surface));border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
@@ -830,6 +851,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
       <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>My Workday<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Projects</button>
+      <button class="tab" role="tab" data-v="org"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7.5" y="2.5" width="5" height="4" rx="1"/><rect x="2.5" y="13.5" width="5" height="4" rx="1"/><rect x="12.5" y="13.5" width="5" height="4" rx="1"/><path d="M10 6.5v3.5M5 13.5V10h10v3.5"/></svg>Org Chart</button>
       <button class="tab" role="tab" data-v="timeoff"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4" width="15" height="13.5" rx="2"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3M7.5 12.5l2 2 3.5-3.5"/></svg>Time Off Management<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
       <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
@@ -1017,6 +1039,15 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
 
 
+
+    <!-- ORG CHART -->
+    <section class="view" data-view="org" hidden>
+      <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team, who they report to, and what everyone is working on today.</p></div><span class="pill ok" id="orgCount"></span></div>
+      <div class="org-legend" id="orgLegend"></div>
+      <div class="panel org-panel"><div class="org-scroll"><div class="org-tree" id="orgTree"></div></div></div>
+      <h2 class="gd-group" style="margin-top:22px"><span class="dot on"></span>Teams by project</h2>
+      <div class="org-proj" id="orgProj"></div>
+    </section>
     <!-- TIME OFF MANAGEMENT -->
     <section class="view" data-view="timeoff" hidden>
       <div class="vhead"><div><h1>Time Off Management</h1><p>Apply for leave, check your balance and history, see who is off and the company holidays.</p></div></div>
@@ -1341,6 +1372,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <div class="f"><label for="aClock">Time clock</label><select id="aClock"><option value="1">Uses the time clock: clocks in and out, hours tracked</option><option value="0">No time clock: hours not tracked</option></select></div>
             <div class="f"><label for="aProject">Project</label><select id="aProject"><option selected>Seekout</option></select></div>
             <div class="g2">
+              <div class="f"><label for="aBoss">Reports to (Org Chart)</label><select id="aBoss"><option value="">Automatic (by role)</option></select></div>
               <div class="f"><label for="aSkills">Skills</label><input id="aSkills" autocomplete="off" placeholder="e.g. bbox, QA"></div>
               <div class="f"><label for="aLoc">Location</label><input id="aLoc" autocomplete="off" placeholder="e.g. Kochi, Kerala"></div>
             </div>
@@ -1746,7 +1778,7 @@ function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
-  if (!['home','roster','schedule','leave','timeoff','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
@@ -1987,18 +2019,18 @@ function epLockBar(ctx){ const lk = ctx.admin ? ctx.acct.profileLock === true : 
     const pend = st === 'pending' ? `<div class="ep-lt" style="flex-basis:100%"><b>📝 ${esc(ctx.acct.name)} asked to change their details</b>${esc(rq.reason || 'No reason given')} <small class="hint">· ${fmtDT(rq.at)}</small></div>` : st === 'done' ? `<div class="ep-lt" style="flex-basis:100%"><b>✓ ${esc(ctx.acct.name)} has finished their changes</b><small class="hint">${fmtDT(rq.doneAt)}. Check the details, then lock them again.</small></div>` : '';
     return `<div class="ep-lock ${lk ? 'locked' : 'open'}">${pend}<div class="ep-lt"><b>${lk ? '🔒 Locked: the employee can\'t change these details' : '🔓 Open: the employee can change these details'}</b>${lk ? 'Unlock to let them update something.' : 'Lock them once the details are complete and checked.'}</div>
       <div class="acts">${st === 'pending' ? `<button class="btn btn-gem" type="button" data-ep-lock="approve">Approve and unlock</button><button class="btn btn-ghost" type="button" data-ep-lock="decline">Decline</button>` : lk ? '<button class="btn btn-gem" type="button" data-ep-lock="unlock">Unlock for the employee</button>' : '<button class="btn btn-gem" type="button" data-ep-lock="lock">🔒 Lock changes</button>'}</div></div>`; }
-  if (lk) { if (st === 'pending') return `<div class="ep-lock locked"><div class="ep-lt"><b>⏳ Request sent, waiting for admin approval</b>You asked on ${fmtDT(rq.at)}: “${esc(rq.reason || '')}”</div><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="cancel">Cancel request</button></div></div>`;
-    return `<div class="ep-lock locked"><div class="ep-lt"><b>🔒 Your details are locked</b>${st === 'declined' ? `Your last request was declined${rq.note ? ': “' + esc(rq.note) + '”' : ''}. ` : ''}Need to change something, like new bank details? Ask your admin for access.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="ask">Request access to update</button></div>
+  if (lk) { if (st === 'pending') return `<div class="ep-lock locked"><div class="ep-lt"><b>⏳ Request sent, waiting for Project Manager approval</b>You asked on ${fmtDT(rq.at)}: “${esc(rq.reason || '')}”</div><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="cancel">Cancel request</button></div></div>`;
+    return `<div class="ep-lock locked"><div class="ep-lt"><b>🔒 Your details are locked</b>${st === 'declined' ? `Your last request was declined${rq.note ? ': “' + esc(rq.note) + '”' : ''}. ` : ''}Need to change something, like new bank details? Ask your Project Manager for access.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="ask">Request access to update</button></div>
       <form data-ep-ask hidden><label for="epAskWhy" style="font-weight:600">What do you need to change, and why?</label><textarea id="epAskWhy" rows="2" maxlength="300" placeholder="e.g. I changed my bank account, I need to update the bank details and passbook copy"></textarea><p class="msg err" data-ep-askerr hidden></p><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="askno">Cancel</button><button class="btn btn-gem" type="submit">Send request</button></div></form></div>`; }
-  if (st === 'approved') return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Editing is open</b>Your admin approved your request${rq.by ? ' (' + esc(rq.by) + ')' : ''}. Make your changes, then click “I've finished” so they can check and lock them again.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="done">I've finished my changes</button></div></div>`;
-  if (st === 'done') return `<div class="ep-lock open"><div class="ep-lt"><b>✓ You told your admin you've finished</b>They'll check your details and lock them. You can still make changes until then.</div></div>`;
-  return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Fill in your details</b>Complete every section, including bank details and documents. Once your admin checks them, they will be locked; after that you can ask for access to change them.</div></div>`; }
+  if (st === 'approved') return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Editing is open</b>Your Project Manager approved your request${rq.by ? ' (' + esc(rq.by) + ')' : ''}. Make your changes, then click “I've finished” so they can check and lock them again.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="done">I've finished my changes</button></div></div>`;
+  if (st === 'done') return `<div class="ep-lock open"><div class="ep-lt"><b>✓ You told your Project Manager you've finished</b>They'll check your details and lock them. You can still make changes until then.</div></div>`;
+  return `<div class="ep-lock open"><div class="ep-lt"><b>🔓 Fill in your details</b>Complete every section, including bank details and documents. Once your Project Manager checks them, they will be locked; after that you can ask for access to change them.</div></div>`; }
 async function epLockAct(el, act){ const ctx = el._ctx; if (!ctx) return; const ref = db.doc('profileReq/' + ctx.key), now = new Date().toISOString(), rq = ctx.req || {};
   try {
     if (act === 'ask') { const f = el.querySelector('[data-ep-ask]'); f.hidden = false; f.querySelector('textarea').focus(); return; }
     if (act === 'askno') { el.querySelector('[data-ep-ask]').hidden = true; return; }
     if (act === 'cancel') { await ref.set({...rq, status: 'cancelled', cancelledAt: now}); toast('Request cancelled'); }
-    if (act === 'done') { await ref.set({...rq, status: 'done', doneAt: now}); toast('Your admin has been told you\'ve finished'); }
+    if (act === 'done') { await ref.set({...rq, status: 'done', doneAt: now}); toast('Your Project Manager has been told you\'ve finished'); }
     if (act === 'approve' || act === 'unlock') { await db.doc('accounts/' + ctx.key).update({profileLock: false}); await ref.set({...rq, email: ctx.key, name: ctx.acct.name, status: 'approved', decidedAt: now, by: epWho(), at: rq.at || now}); ctx.acct.profileLock = false; toast('Unlocked: ' + ctx.acct.name + ' can update their details'); }
     if (act === 'decline') { const note = prompt('Reason for declining (optional, the employee will see it):', '') ; if (note === null) return; await ref.set({...rq, status: 'declined', note: note.slice(0, 200), decidedAt: now, by: epWho()}); toast('Request declined'); }
     if (act === 'lock') { await db.doc('accounts/' + ctx.key).update({profileLock: true, lockedAt: now, lockedBy: epWho()}); if (rq.status) await ref.set({...rq, status: 'closed', closedAt: now}); ctx.acct.profileLock = true; epEditing[el.id] = null; toast('Locked: ' + ctx.acct.name + '\'s details can\'t be changed now'); }
@@ -2061,7 +2093,7 @@ function epBind(el){
     catch (x) { toast('The file couldn\'t be uploaded. Try a different photo or PDF.'); } finally { inp.value = ''; } });
   el.addEventListener('submit', async e => { const af = e.target.closest('[data-ep-ask]'); if (af) { e.preventDefault(); const ctx = el._ctx, why = af.querySelector('textarea').value.trim(), er = af.querySelector('[data-ep-askerr]');
       if (why.length < 5) { er.textContent = 'Say briefly what you need to change.'; er.hidden = false; return; }
-      try { const now = new Date().toISOString(); await db.doc('profileReq/' + ctx.key).set({email: ctx.key, name: ctx.acct.name, status: 'pending', reason: why.slice(0, 300), at: now}); ctx.req = {email: ctx.key, status: 'pending', reason: why, at: now}; renderEP(el, ctx); toast('Request sent to your admin'); }
+      try { const now = new Date().toISOString(); await db.doc('profileReq/' + ctx.key).set({email: ctx.key, name: ctx.acct.name, status: 'pending', reason: why.slice(0, 300), at: now}); ctx.req = {email: ctx.key, status: 'pending', reason: why, at: now}; renderEP(el, ctx); toast('Request sent to your Project Manager'); }
       catch (x) { er.textContent = 'The request couldn\'t be sent. Try again.'; er.hidden = false; } return; }
     const fm = e.target.closest('[data-ep-form]'); const ctx = el._ctx; if (!fm || !ctx) return; e.preventDefault();
     const S = EP_SECS.find(x => x.k === fm.dataset.epForm), err = fm.querySelector('[data-ep-err]'), info = {}, acct = {};
@@ -2514,16 +2546,17 @@ function showCred(name, email, pw, verb){
   $('hideCred').onclick = () => { box.hidden = true; box.innerHTML = ''; };
 }
 $('genPw').onclick = () => { $('aPw').value = genPassword(); };
-function profileFromForm(){ return {name: $('aName').value.trim(), role: $('aRole').value, access: $('aAccess').value === 'admin' ? 'admin' : 'contributor', status: $('aStatus').value, project: 'Seekout', clock: $('aClock').value !== '0', skills: $('aSkills').value.trim(), location: $('aLoc').value.trim(),
+function profileFromForm(){ return {name: $('aName').value.trim(), role: $('aRole').value, access: $('aAccess').value === 'admin' ? 'admin' : 'contributor', status: $('aStatus').value, project: 'Seekout', clock: $('aClock').value !== '0', skills: $('aSkills').value.trim(), location: $('aLoc').value.trim(), reportsTo: $('aBoss').value || null,
   allow: {Annual: Math.max(0, +$('alA').value || 0), Sick: Math.max(0, +$('alS').value || 0), Personal: Math.max(0, +$('alP').value || 0)}}; }
 function setEdit(a){
   editKey = a ? a.key : null;
   $('admFormTitle').textContent = a ? 'Edit ' + a.name : 'Add an employee';
   $('accSave').textContent = a ? 'Save changes' : 'Create account'; $('accCancel').hidden = !a;
   $('aEmail').readOnly = !!a; $('aPwLabel').textContent = a ? 'Password (use Reset password in the list to change it)' : 'Password'; $('aPw').disabled = !!a; $('genPw').disabled = !!a;
-  if (!a) { $('accForm').reset(); accessHint(); payAmtLabel(); return; }
+  if (!a) { $('accForm').reset(); fillBoss(null); accessHint(); payAmtLabel(); return; }
   const al = allowOf(a);
   $('aName').value = a.name || ''; $('aEmail').value = a.email; $('aRole').value = ROLES.includes(a.role) ? a.role : 'Data Executive'; $('aStatus').value = a.status || 'Active'; $('aAccess').value = a.access === 'admin' ? 'admin' : 'contributor'; accessHint();
+  fillBoss(a); $('aBoss').value = a.reportsTo || '';
   $('aProject').value = 'Seekout'; $('aClock').value = a.clock === false ? '0' : '1'; $('aSkills').value = a.skills || ''; $('aLoc').value = a.location || ''; $('aPw').value = '';
   $('alA').value = al.Annual; $('alS').value = al.Sick; $('alP').value = al.Personal; $('alC').value = compGiven(a); $('alCHint').textContent = compUsed(a) + ' used so far';
   { const py = payAll[a.key] || {}; $('aPayType').value = py.type || ''; $('aPayCur').value = py.currency || 'INR'; $('aPayAmt').value = py.amount ?? ''; $('aPayOt').value = py.otRate ?? ''; payAmtLabel(); }
@@ -3897,7 +3930,31 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
   });
 })();
 
-function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = accounts.find(a => a.key === me.key); if (!fresh || !fresh.active) { $('signOut').click(); return; } } if (me) { const fresh = accounts.find(a => a.key === me.key); if (fresh) { const changed = fresh.access !== me.access || fresh.clock !== me.clock; me = fresh; if (changed) applyRole(); } } renderRoster(); renderSchedule(); renderLeave(); renderHome(); renderAccounts(); renderLinks(); renderClock(); renderTeamAtt(); renderProfile(); }
+
+/* ---------- Org Chart: everyone can see the team, reporting lines, projects and today's tasks ---------- */
+const ROLE_RANK = {'Project Manager': 0, 'Team Lead': 1, 'Senior Data Executive': 2, 'Data Executive': 3};
+function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
+function orgParents(){ const ps = people(), byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
+  ps.forEach(p => { if (p.reportsTo && p.reportsTo !== p.key && ps.some(x => x.key === p.reportsTo)) { parent[p.key] = p.reportsTo; return; }
+    const r = ROLE_RANK[p.role] ?? 3; for (let up = Math.min(r - 1, 1); up >= 0; up--) {   /* executives report to a Team Lead, Team Leads to a Project Manager */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
+  // break any loop an admin may have set by mistake
+  ps.forEach(p => { const seen = new Set([p.key]); let q = parent[p.key]; while (q) { if (seen.has(q)) { parent[p.key] = null; break; } seen.add(q); q = parent[q]; } });
+  return parent; }
+function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = people(), parent = orgParents(), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
+  $('orgCount').textContent = ps.length + (ps.length === 1 ? ' person' : ' people');
+  if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; $('orgProj').innerHTML = ''; return; }
+  const kids = k => ps.filter(p => parent[p.key] === k);
+  const card = p => { const k = live ? cellOf(p.email, di) : '', off = onLeave(p.email, today) || k === 'lv';
+    const tasks = off ? '<span class="pill off">On leave today</span>' : k === 'off' ? '<span class="pill">Day off</span>' : isWorkCell(k) ? cellPills(k) : '<span class="hint">No task today</span>';
+    return `<div class="org-card${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}${me && p.key === me.key ? ' <span class="pill info" style="padding:1px 7px">You</span>' : ''}</b><span>${esc(p.designation || p.role || '')}</span>${p.department ? `<small>${esc(p.department)}</small>` : ''}<div class="oc-proj"><span class="pill ok">${esc(p.project || 'Seekout')}</span></div><div class="oc-tasks">${tasks}</div></div></div>`; };
+  const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
+    return `<li>${card(p)}${c.length ? `<ul>${c.map(branch).join('')}</ul>` : ''}</li>`; };
+  const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
+  box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`;
+  $('orgLegend').innerHTML = Object.keys(ROLE_RANK).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 3) === ROLE_RANK[r]).length}</b></span>`).join('');
+  const projs = {}; ps.forEach(p => (projs[p.project || 'Seekout'] = projs[p.project || 'Seekout'] || []).push(p));
+  $('orgProj').innerHTML = Object.entries(projs).map(([n, l]) => `<div class="panel org-pc"><h3>${esc(n)} <span class="pill info">${l.length}</span></h3><div class="org-members">${l.sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name))).map(p => `<div class="person">${av(p.name)}<div>${esc(p.name)}<div style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || '')}</div></div></div>`).join('')}</div></div>`).join(''); }
+function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = accounts.find(a => a.key === me.key); if (!fresh || !fresh.active) { $('signOut').click(); return; } } if (me) { const fresh = accounts.find(a => a.key === me.key); if (fresh) { const changed = fresh.access !== me.access || fresh.clock !== me.clock; me = fresh; if (changed) applyRole(); } } renderRoster(); renderSchedule(); renderLeave(); renderHome(); renderAccounts(); renderLinks(); renderClock(); renderTeamAtt(); renderProfile(); try { renderOrg(); } catch (e) { console.error(e); } try { fillBoss(editKey ? accounts.find(a => a.key === editKey) : null); if (editKey) { const a = accounts.find(x => x.key === editKey); if (a) $('aBoss').value = a.reportsTo || ''; } } catch (e) {} }
 
 /* ---------- sign-in scene: a data team at work (faceless, product-style illustration) ---------- */
 (function buildScene(){
