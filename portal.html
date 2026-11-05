@@ -537,6 +537,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .org-card.me{box-shadow:0 0 0 2px var(--gem),0 8px 20px -14px rgba(0,0,0,.35)}
 .oc-txt{display:grid;gap:2px;min-width:0}.oc-txt b{font-size:14.5px}.oc-txt > span{font-size:12.5px;color:var(--rc);font-weight:700}.oc-txt small{font-size:11.5px;color:var(--ink-soft)}
 .oc-proj{margin-top:4px}.oc-tasks{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;font-size:12px}
+.org-fit{position:relative;overflow:hidden}.org-fit .org-tree{transform-origin:top left;width:max-content;min-width:100%}
+.org-card{width:190px!important;padding:10px!important}.org-card.plan{border-style:dashed;border-top-style:solid;background:color-mix(in srgb,#eda100 6%,var(--surface))}
+.oc-boss{display:grid;gap:2px;margin-top:6px;font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}.oc-boss select{font:500 12px var(--body);padding:3px 6px;border-radius:8px;text-transform:none;letter-spacing:0;width:100%}
+.org-card .mini.danger{margin-top:6px;justify-self:start}
 .org-proj{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.org-pc h3{display:flex;align-items:center;gap:8px}.org-members{display:grid;gap:10px}
 .ep{display:grid;gap:14px;margin-bottom:16px}
 .ep-lock{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-size:14px}
@@ -1042,9 +1046,13 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
     <!-- ORG CHART -->
     <section class="view" data-view="org" hidden>
-      <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team, who they report to, and what everyone is working on today.</p></div><span class="pill ok" id="orgCount"></span></div>
+      <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team, who they report to, and what everyone is working on today.</p><p class="hint admin-only" hidden style="margin-top:4px">Admins: change who someone reports to with the “Reports to” menu on their card.</p></div><span class="pill ok" id="orgCount"></span></div>
       <div class="org-legend" id="orgLegend"></div>
-      <div class="panel org-panel"><div class="org-scroll"><div class="org-tree" id="orgTree"></div></div></div>
+      <div class="panel org-panel"><div class="org-fit" id="orgFit"><div class="org-tree" id="orgTree"></div></div></div>
+      <div class="panel admin-only" hidden style="margin-top:16px"><h3>Add a planned team member</h3><p class="hint" style="margin:-4px 0 12px">For people joining soon. They show on the chart as “Joining soon” until you create their login with the same name, then the card switches to the real person automatically.</p>
+        <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option></select></div></div>
+          <div class="g2"><div class="f"><label for="opBoss">Reports to</label><select id="opBoss"></select></div><div class="f"><label for="opDate">Expected joining date</label><input id="opDate" type="date"></div></div>
+          <div class="msg err" id="opErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Add to the Org Chart</button></form></div>
       <h2 class="gd-group" style="margin-top:22px"><span class="dot on"></span>Teams by project</h2>
       <div class="org-proj" id="orgProj"></div>
     </section>
@@ -1648,6 +1656,7 @@ function startData() {
   if (!db || unsub.accounts) return;
   watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
+  watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => ({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
@@ -3934,26 +3943,50 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 /* ---------- Org Chart: everyone can see the team, reporting lines, projects and today's tasks ---------- */
 const ROLE_RANK = {'Project Manager': 0, 'Team Lead': 1, 'Senior Data Executive': 2, 'Data Executive': 3};
 function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
-function orgParents(){ const ps = people(), byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
+function orgParents(ps = people()){ const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
   ps.forEach(p => { if (p.reportsTo && p.reportsTo !== p.key && ps.some(x => x.key === p.reportsTo)) { parent[p.key] = p.reportsTo; return; }
     const r = ROLE_RANK[p.role] ?? 3; for (let up = Math.min(r - 1, 1); up >= 0; up--) {   /* executives report to a Team Lead, Team Leads to a Project Manager */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
   // break any loop an admin may have set by mistake
   ps.forEach(p => { const seen = new Set([p.key]); let q = parent[p.key]; while (q) { if (seen.has(q)) { parent[p.key] = null; break; } seen.add(q); q = parent[q]; } });
   return parent; }
-function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = people(), parent = orgParents(), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
+let orgPlan = [];
+function orgPeople(){ const real = people(), names = new Set(real.map(p => String(p.name).trim().toLowerCase()));
+  return real.concat(orgPlan.filter(x => x.name && !names.has(String(x.name).trim().toLowerCase())).map(x => ({key: 'plan:' + x.id, name: x.name, role: x.role, reportsTo: x.reportsTo, project: x.project || 'Seekout', plan: x}))); }
+function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = orgPeople(), parent = orgParents(ps), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
   $('orgCount').textContent = ps.length + (ps.length === 1 ? ' person' : ' people');
   if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; $('orgProj').innerHTML = ''; return; }
   const kids = k => ps.filter(p => parent[p.key] === k);
-  const card = p => { const k = live ? cellOf(p.email, di) : '', off = onLeave(p.email, today) || k === 'lv';
+  const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
+  const card = p => { if (p.plan) { const d = p.plan.joinDate ? new Date(p.plan.joinDate + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'}) : '';
+      return `<div class="org-card plan" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}</b><span>${esc(p.role || '')}</span><div class="oc-tasks"><span class="pill warn">Joining soon${d ? ' · ' + d : ''}</span></div>${bossSel(p)}${isAdmin ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div></div>`; }
+    const k = live ? cellOf(p.email, di) : '', off = onLeave(p.email, today) || k === 'lv';
     const tasks = off ? '<span class="pill off">On leave today</span>' : k === 'off' ? '<span class="pill">Day off</span>' : isWorkCell(k) ? cellPills(k) : '<span class="hint">No task today</span>';
-    return `<div class="org-card${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}${me && p.key === me.key ? ' <span class="pill info" style="padding:1px 7px">You</span>' : ''}</b><span>${esc(p.designation || p.role || '')}</span>${p.department ? `<small>${esc(p.department)}</small>` : ''}<div class="oc-proj"><span class="pill ok">${esc(p.project || 'Seekout')}</span></div><div class="oc-tasks">${tasks}</div></div></div>`; };
+    return `<div class="org-card${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${av(p.name)}<div class="oc-txt"><b>${esc(p.name)}${me && p.key === me.key ? ' <span class="pill info" style="padding:1px 7px">You</span>' : ''}</b><span>${esc(p.designation || p.role || '')}</span>${p.department ? `<small>${esc(p.department)}</small>` : ''}<div class="oc-proj"><span class="pill ok">${esc(p.project || 'Seekout')}</span></div><div class="oc-tasks">${tasks}</div>${bossSel(p)}</div></div>`; };
   const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
     return `<li>${card(p)}${c.length ? `<ul>${c.map(branch).join('')}</ul>` : ''}</li>`; };
   const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
-  box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`;
+  box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`; fitOrg();
+  if ($('opBoss')) { const keep = $('opBoss').value; $('opBoss').innerHTML = people().map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); if (keep) $('opBoss').value = keep; }
   $('orgLegend').innerHTML = Object.keys(ROLE_RANK).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 3) === ROLE_RANK[r]).length}</b></span>`).join('');
-  const projs = {}; ps.forEach(p => (projs[p.project || 'Seekout'] = projs[p.project || 'Seekout'] || []).push(p));
+  const projs = {}; ps.filter(p => !p.plan).forEach(p => (projs[p.project || 'Seekout'] = projs[p.project || 'Seekout'] || []).push(p));
   $('orgProj').innerHTML = Object.entries(projs).map(([n, l]) => `<div class="panel org-pc"><h3>${esc(n)} <span class="pill info">${l.length}</span></h3><div class="org-members">${l.sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name))).map(p => `<div class="person">${av(p.name)}<div>${esc(p.name)}<div style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || '')}</div></div></div>`).join('')}</div></div>`).join(''); }
+
+// shrink the chart to fit the page width so it never needs a scroll bar
+function fitOrg(){ const fit = $('orgFit'), tree = $('orgTree'); if (!fit || !tree || !fit.offsetParent) return; tree.style.transform = 'none';
+  const w = tree.scrollWidth, h = tree.scrollHeight, avail = fit.clientWidth, k = Math.min(1, avail / Math.max(1, w));
+  tree.style.transform = k < 1 ? `scale(${k})` : 'none'; fit.style.height = Math.ceil(h * k) + 'px'; }
+window.addEventListener('resize', () => { clearTimeout(fitOrg.t); fitOrg.t = setTimeout(fitOrg, 120); });
+document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="org"]')) setTimeout(fitOrg, 60); });
+$('orgTree').addEventListener('change', async e => { const sel = e.target.closest('[data-boss]'); if (!sel || !isAdmin) return; const k = sel.dataset.boss, v = sel.value || null;
+  try { if (k.startsWith('plan:')) await db.doc('orgPlan/' + k.slice(5)).update({reportsTo: v}); else await db.doc('accounts/' + k).update({reportsTo: v}); toast('Org Chart updated'); }
+  catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published.'); } });
+$('orgTree').addEventListener('click', async e => { const b = e.target.closest('[data-opdel]'); if (!b || !isAdmin) return; if (!confirm('Remove this planned team member?')) return;
+  try { await db.doc('orgPlan/' + b.dataset.opdel).delete(); toast('Removed'); } catch (x) { toast('Couldn\'t remove it. Try again.'); } });
+$('opForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const name = $('opName').value.trim(), err = $('opErr');
+  if (!name) { err.textContent = 'Type the person\'s name.'; err.hidden = false; return; } err.hidden = true;
+  const id = 'p' + Date.now().toString(36);
+  try { await db.doc('orgPlan/' + id).set({id, name: name.slice(0, 80), role: $('opRole').value, reportsTo: $('opBoss').value || null, joinDate: $('opDate').value || null, project: 'Seekout', createdAt: new Date().toISOString()}); $('opName').value = ''; toast(name + ' added to the Org Chart'); }
+  catch (x) { err.textContent = 'It couldn\'t be saved. Check the Firestore rules are published.'; err.hidden = false; } });
 function renderAll(){ if (me && isAdmin && accounts.length) { const fresh = accounts.find(a => a.key === me.key); if (!fresh || !fresh.active) { $('signOut').click(); return; } } if (me) { const fresh = accounts.find(a => a.key === me.key); if (fresh) { const changed = fresh.access !== me.access || fresh.clock !== me.clock; me = fresh; if (changed) applyRole(); } } renderRoster(); renderSchedule(); renderLeave(); renderHome(); renderAccounts(); renderLinks(); renderClock(); renderTeamAtt(); renderProfile(); try { renderOrg(); } catch (e) { console.error(e); } try { fillBoss(editKey ? accounts.find(a => a.key === editKey) : null); if (editKey) { const a = accounts.find(x => x.key === editKey); if (a) $('aBoss').value = a.reportsTo || ''; } } catch (e) {} }
 
 /* ---------- sign-in scene: a data team at work (faceless, product-style illustration) ---------- */
