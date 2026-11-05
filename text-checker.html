@@ -101,12 +101,13 @@ html,body{overflow-x:hidden}
 .sc-side .sc-wm textarea::placeholder{color:color-mix(in srgb,var(--sc) 55%,var(--ink-soft));font-weight:600}
 .sc-cols > .so small,.sc-cols > .li small{font-weight:800;font-size:12px}.sc-cols > .so small{color:#5b2a86}.sc-cols > .li small{color:#0a66c2}
 .sc-cols > .so .sc-text{border-top:3px solid #5b2a86}.sc-cols > .li .sc-text{border-top:3px solid #0a66c2}
+.sc-for{font-size:13px;font-weight:600;color:var(--ink-soft);padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
 </style></head><body>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Text checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
   <div><h1>Text checker</h1><p class="lead">Compare any field (Summary / About, Headline or Job title) in THE FILE SAYS with PUBLIC PROFILE SAYS. See every difference highlighted, the % match, 20 automatic checks and a suggested answer.</p></div>
 
-        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Text checker</h3><div class="sc-seg sc-field" id="scField"><span>Field</span><button type="button" data-f="sum" class="on">Summary / About</button><button type="button" data-f="hl">Headline</button><button type="button" data-f="jt">Job title</button></div>
+        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Text checker</h3><span class="sc-for">For Summary / About, Headline, Job title and any other text field</span>
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
           <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
           <div class="sc-grid"><div class="f sc-side so"><label for="scA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><textarea id="scA" rows="7" placeholder="Paste the SeekOut text here (THE FILE SAYS)"></textarea></div></div><div class="f sc-side li"><label for="scB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><textarea id="scB" rows="7" placeholder="Paste the public profile text here (ZIPLabs or LinkedIn)"></textarea></div></div></div>
@@ -119,7 +120,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
   (function summaryChecker(){
-    let mode = 'word', cs = false, field = 'sum';
+    let mode = 'word', cs = false, field = 'sum';   // one rule for every text field
     const FIELD = {sum: 'Summary / About', hl: 'Headline', jt: 'Job title'};
     const ELL = /(\.\.\.|…)\s*$/;
     // words keep inner dots like VB.NET, but a sentence glued to the next one ("change.Experienced") and words glued together ("environmentsInfrastructure") are split
@@ -230,23 +231,17 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       // suggested answer using the rule of the chosen field
       let ans, why;
       const wl = t => (t.toLowerCase().match(/[\p{L}\p{N}#+]+/gu) || []);
+      // short forms (Snr / Sr = Senior, Dev = Developer, Mgr = Manager) and a company name in full or short form (AWS = Amazon Web Services) count as the same
+      const SF = {snr: 'senior', sr: 'senior', dev: 'developer', mgr: 'manager'};
+      // a company name written in full counts the same as its short form: drop "(AWS)" after "Amazon Web Services", and expand a lone "AWS" to the full name when the other side has it
+      const fold = (w, other) => { const o = [];
+        for (let i = 0; i < w.length; i++) { const x = SF[w[i]] || w[i], prev = o.slice(-6); let ac = false;
+          for (let n = 2; n <= prev.length && !ac; n++) if (prev.slice(-n).map(y => y[0]).join('') === x) ac = true;
+          if (!ac) o.push(x); }
+        const r = []; o.forEach(x => { let done = false; for (let n = 2; n <= 6 && !done; n++) for (let k = 0; k + n <= other.length && !done; k++) { const seg = other.slice(k, k + n); if (seg.map(y => y[0]).join('') === x && seg.length > 1 && x.length === n) { r.push(...seg); done = true; } } if (!done) r.push(x); }); return r; };
+      const a0 = wl(tA).map(x => SF[x] || x), b0 = wl(tB).map(x => SF[x] || x), fa = fold(a0, b0), fb = fold(b0, a0);
       if (!tA.trim() !== !tB.trim()) { ans = 'n'; why = 'One side is empty and the other is not.'; }
-      else if (field === 'jt') {
-        const SF = {snr: 'senior', sr: 'senior', dev: 'developer', mgr: 'manager'};
-        // a company name written in full counts the same as its short form: drop "(AWS)" after "Amazon Web Services", and expand a lone "AWS" to the full name when the other side has it
-        const fold = (w, other) => { const o = [];
-          for (let i = 0; i < w.length; i++) { const x = SF[w[i]] || w[i], prev = o.slice(-6); let ac = false;
-            for (let n = 2; n <= prev.length && !ac; n++) if (prev.slice(-n).map(y => y[0]).join('') === x) ac = true;
-            if (!ac) o.push(x); }
-          const r = []; o.forEach(x => { let done = false; for (let n = 2; n <= 6 && !done; n++) for (let k = 0; k + n <= other.length && !done; k++) { const seg = other.slice(k, k + n); if (seg.map(y => y[0]).join('') === x && seg.length > 1 && x.length === n) { r.push(...seg); done = true; } } if (!done) r.push(x); }); return r; };
-        const a0 = wl(tA).map(x => SF[x] || x), b0 = wl(tB).map(x => SF[x] || x), fa = fold(a0, b0), fb = fold(b0, a0);
-        if (fa.join(' ') === fb.join(' ')) { ans = 'm'; why = 'The same words in the same order (only capitals, short forms or a company short form differ).'; }
-        else { const ex = fb.filter(x => !fa.includes(x)), mi = fa.filter(x => !fb.includes(x)); ans = 'n';
-          why = 'Job title must be exactly the same. ' + (ex.length ? 'Extra on the public profile: ' + esc(ex.join(', ')) + '. ' : '') + (mi.length ? 'Missing from the public profile: ' + esc(mi.join(', ')) + '. ' : '') + (!ex.length && !mi.length ? 'The words are in a different order.' : ''); } }
-      else if (field === 'hl') { const sa = wl(tA).sort().join(' '), sb = wl(tB).sort().join(' ');
-        if (sa === sb) { ans = 'm'; why = 'The same words; only punctuation, symbols or order differ.'; }
-        else if (pct >= 90) { ans = 'x'; why = 'Almost the same. Check whether the changed word changes the role or focus (Not a match) or is only a small edit (Match).'; }
-        else { ans = 'n'; why = 'Different words: the headline describes a different role or focus.'; } }
+      else if (fa.join(' ') === fb.join(' ') && wl(tA).join(' ') !== wl(tB).join(' ')) { ans = 'm'; why = 'The same words in the same order: only short forms (e.g. Snr = Senior, Mgr = Manager) or a company short form (AWS = Amazon Web Services) differ.'; }
       else if (wl(tA).join(' ') === wl(tB).join(' ')) { ans = 'm'; why = 'The same words in the same order: only punctuation, spacing, line breaks or capitals differ.'; }
       else if (pct >= 97) { ans = 'm'; why = 'Same text with only small edits (spacing, punctuation or a word or two).'; }
       else if (pct >= 85) { ans = 'm'; why = 'Mostly the same text with small edits. Check the highlighted changes: a small fix like a spelling or C# correction is still the same text.'; }
@@ -256,7 +251,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       const sug = ans === 'x' ? '<span class="bf-a o">Read carefully, then decide</span>' : A[ans];
       window.__scInfo = {WHAT, HI, DECIDE};
       $('scOut').innerHTML = `<div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
-        <div class="sc-verdict"><span class="bf-l">Suggested answer for ${FIELD[field]}</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
+        <div class="sc-verdict"><span class="bf-l">Suggested answer</span>${sug}<p>${why}</p>${note ? `<p class="hint">${note}</p>` : ''}<p class="hint">Compared by ${modeUsed}, case ${cs ? 'sensitive' : 'ignored'}. This is a helper: you make the final decision using the field rules.</p></div></div>
         <div class="sc-legend"><span class="del">Removed</span><span class="add">Added</span><span class="mod">Changed</span><span class="spk">· = space · ↵ = line break</span></div>
         <div class="sc-cols"><div class="so"><small>THE FILE SAYS (SeekOut)</small><div class="sc-text">${L2 || '<i>(empty)</i>'}</div></div><div class="li"><small>PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)</small><div class="sc-text">${R2 || '<i>(empty)</i>'}</div></div></div>
         <h3 class="bf-h">20-point check</h3><p class="hint" style="margin:-4px 0 10px">Click any check to see what it means. Checks with differences also highlight them in the text above.</p><div class="sc-checks">${C.map(([t, st, d], i) => `<button type="button" class="sc-ck ${st}" data-ck="${i}" aria-expanded="false"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small><em class="sc-what"><span>What it checks:</span> ${WHAT[i]}${st === 'warn' && HI[i] ? ' <span class="sc-see">The differences are highlighted in the text above.</span>' : ''}</em></span><i>${st === 'ok' ? '✓' : st === 'warn' ? '!' : 'i'}</i></button>`).join('')}</div>`; }
@@ -283,7 +278,6 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
           $('scSeeRes').onclick = () => out.scrollIntoView({behavior: 'smooth', block: 'start'}); }, left + 60); }, 40); }
     $('scGo').onclick = go; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(go.t); stat('wait', 'Text changed: click Compare (updates automatically)'); go.t = setTimeout(go, 600); }));
     $('scCase').onchange = e => { cs = e.target.checked; go(); };
-    $('scField').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; field = b.dataset.f; $('scField').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); if ($('scA').value.trim() || $('scB').value.trim()) go(); });
     $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); go(); });
     $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; go(); };
     $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; go(); };
