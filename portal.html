@@ -3307,7 +3307,7 @@ function safeUrl(u){ try { const x = new URL(/^https?:\/\//i.test(u) ? u : 'http
 function renderLinks(){
   const all = [...BUILTIN_LINKS, ...[...links].sort((a,b) => String(a.name).localeCompare(String(b.name)))];
   $('linkGrid').innerHTML = all.map(l => { const url = safeUrl(l.url); if (!url) return ''; const host = new URL(url).host.replace(/^www\./,'');
-    return `<div class="link-wrap"><a class="link-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><span class="fav" style="background:hsl(${hue(host)} 55% 45%)">${esc(String(l.name).trim()[0] || '?').toUpperCase()}</span><div><b>${esc(l.name)}</b><span>${esc(l.desc || host)}</span><span class="mono" style="display:block">${esc(host)}</span></div><span class="open">Open ↗</span></a>${isAdmin && !l.builtin ? `<button class="mini danger" data-link="${esc(l.key)}">Remove</button>` : ''}</div>`; }).join('');
+    return `<div class="link-wrap"><a class="link-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><span class="fav" style="background:hsl(${hue(host)} 55% 45%)">${esc(String(l.name).trim()[0] || '?').toUpperCase()}</span><div><b>${esc(l.name)}</b>${l.desc ? `<span>${esc(l.desc)}</span>` : ''}</div><span class="open">Open ↗</span></a>${isAdmin && !l.builtin ? `<button class="mini danger" data-link="${esc(l.key)}">Remove</button>` : ''}</div>`; }).join('');
 }
 $('linkForm').addEventListener('submit', async e => {
   e.preventDefault(); const err = $('lkErr'), name = $('lkName').value.trim(), url = safeUrl($('lkUrl').value.trim());
