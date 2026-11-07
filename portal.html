@@ -1150,7 +1150,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="toolbar" style="flex:0 1 auto"><input type="month" id="payMonth" aria-label="Month"><button class="mini" id="payCopy" type="button">Copy as table</button></div></div>
       <div class="panel admin-only" hidden style="padding:0">
         <div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0" id="pyTeamT">Team payroll</h3><span class="hint">Click an employee to see their hours per week and salary. Set salaries in Admin → Edit employee.</span></div>
-        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Days worked</th><th>Hours</th><th>Overtime</th><th>Pay type</th><th>Estimated salary</th><th></th></tr></thead><tbody id="pyTeam"></tbody></table></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Days worked</th><th>Hours</th><th>Overtime</th><th>Payslip</th><th>Gross pay</th><th></th></tr></thead><tbody id="pyTeam"></tbody></table></div>
       </div>
       <div class="pay-self">
       <div class="tiles">
@@ -2415,7 +2415,7 @@ function payMonthStats(days, m){ const keys = monthDays(days, m); let ms = 0, ot
 // paid (approved, not unpaid) leave days that fall on working days between two dates
 const paidLeaveDays = (p, a, b) => approved().filter(d => d.email === p.email && d.type !== 'Unpaid' && d.to >= a && d.from <= b).reduce((n, d) => n + workdays(d.from > a ? d.from : a, d.to < b ? d.to : b), 0);
 function payCalc(p, m, st, cfg){
-  const c = cfg || payCfg(p); if (!c || !c.type || !(c.amount > 0)) return null;
+  let c = cfg || payCfg(p); if (!c || !c.type || !(c.amount > 0)) return null; if (c.type === 'monthly') c = {...c, type: 'workday'};   /* agreed monthly salary is paid per working day */
   const [y, mo] = m.split('-').map(Number), first = m + '-01', last = m + '-' + pad(new Date(y, mo, 0).getDate()), wd = workdays(first, last);
   const unpaid = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= last).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < last ? d.to : last), 0);
   const otH = st.ot / 3600000, regH = (st.ms - st.ot) / 3600000, lines = [], cur = c.currency, pl = paidLeaveDays(p, first, last);
@@ -2468,7 +2468,7 @@ function renderPay(){ try { renderSlipPicker(); } catch (e) {}
     $('pyCalc').innerHTML = `<div class="pay-lines">${pc.lines.map(([a, b, v]) => `<div><span><b>${a}</b><small>${esc(b)}</small></span><span class="mono${v < 0 ? ' neg' : ''}">${v < 0 ? '− ' : ''}${money(Math.abs(v), pc.c.currency)}</span></div>`).join('')}<div class="tot"><span><b>Estimated total</b></span><span class="mono">${money(pc.total, pc.c.currency)}</span></div></div>
       <p class="hint" style="margin:10px 0 0">An estimate from the time clock and approved leave. Your final payslip may differ (taxes, deductions, bonuses).</p>`; }
   if (isAdmin) { $('pyTeamT').textContent = 'Team payroll · ' + mName;
-    $('pyTeam').innerHTML = people().map(x => { const s2 = payMonthStats(payDays(x), m), c2 = payCalc(x, m, s2); const openR = payOpen === x.key; return `<tr data-k="${esc(x.key)}" class="pay-row${openR ? ' open' : ''}" aria-expanded="${openR}"><td><div class="person">${av(x.name)}${esc(x.name)}</div></td><td class="mono">${x.clock === false ? '—' : s2.worked}</td><td class="mono">${x.clock === false ? 'Not tracked' : fmtH(s2.ms)}</td><td class="mono">${s2.ot ? fmtH(s2.ot) : '—'}</td><td>${c2 ? (PAY_T[c2.c.type] || 'Monthly') : '<span class="pill off">Not set</span>'}</td><td class="mono"><b>${c2 ? money(c2.total, c2.c.currency) : '—'}</b></td><td class="chev">${openR ? '▲' : '▼'}</td></tr>${openR ? `<tr class="pay-det"><td colspan="7">${payDetail(x, m, s2, c2)}</td></tr>` : ''}`; }).join('') || '<tr><td colspan="7" class="empty">No employees yet.</td></tr>'; }
+    $('pyTeam').innerHTML = people().map(x => { const s2 = payMonthStats(payDays(x), m), ed = slipCfg(x, m), T = +ed.amount > 0 ? slipTotals(x, m, ed) : null, c2 = T && T.pc, sv = slipsAll[slipId(x.key, m)]; const openR = payOpen === x.key; return `<tr data-k="${esc(x.key)}" class="pay-row${openR ? ' open' : ''}" aria-expanded="${openR}"><td><div class="person">${av(x.name)}${esc(x.name)}</div></td><td class="mono">${x.clock === false ? '—' : s2.worked}</td><td class="mono">${x.clock === false ? 'Not tracked' : fmtH(s2.ms)}</td><td class="mono">${s2.ot ? fmtH(s2.ot) : '—'}</td><td>${c2 ? (sv ? (sv.status === 'published' ? '<span class="pill ok">Published</span>' : '<span class="pill warn">Draft</span>') : '<span class="pill">Not started</span>') : '<span class="pill off">Salary not set</span>'}</td><td class="mono"><b>${T ? money(T.gross, ed.currency) : '—'}</b>${T && c2 ? `<div style="font-size:11.5px;color:var(--ink-soft)">${c2.payable} paid days</div>` : ''}</td><td class="chev">${openR ? '▲' : '▼'}</td></tr>${openR ? `<tr class="pay-det"><td colspan="7">${payDetail(x, m, s2, c2)}</td></tr>` : ''}`; }).join('') || '<tr><td colspan="7" class="empty">No employees yet.</td></tr>'; }
   document.querySelector('.pay-self').hidden = isAdmin;
   if (document.querySelector('.view[data-view="pay"]:not([hidden])')) { const c = $('cPay'); delete c.dataset.drawn; queueCharts(); }
 }
@@ -2598,7 +2598,7 @@ const slipRefresh = (el, p, m) => { const box = el.closest('.slip-ed'); if (box)
 $('pyTeam').addEventListener('input', e => { const t = e.target, p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m);
   if (t.dataset.se) { ed[t.dataset.se] = t.value; if (t.dataset.se === 'type') { const c = payAll[p.key] || {}; ed.amount = c.type === t.value ? c.amount : ''; slipRefresh(t, p, m); return; } }
   else if (t.dataset.sx) { ed.extras[+t.dataset.sx][t.dataset.f] = t.value; if (t.tagName === 'SELECT') { slipRefresh(t, p, m); return; } }
-  const T = slipTotals(p, m, ed), sum = t.closest('.slip-ed').querySelector('.slip-sum'), cur = ed.currency || 'INR'; if (sum) sum.innerHTML = `<span>Gross <b>${money(T.gross, cur)}</b></span><span>Deductions <b>${money(T.dsum, cur)}</b></span><span class="nt">Net pay <b>${money(T.net, cur)}</b></span>`; });
+  const T = slipTotals(p, m, ed), sum = t.closest('.slip-ed').querySelector('.slip-sum'), cur = ed.currency || 'INR'; { const g = document.querySelector(`#pyTeam tr[data-k="${CSS.escape(p.key)}"] td:nth-child(6) b`); if (g) g.textContent = money(T.gross, cur); } if (sum) sum.innerHTML = `<span>Gross <b>${money(T.gross, cur)}</b></span><span>Deductions <b>${money(T.dsum, cur)}</b></span><span class="nt">Net pay <b>${money(T.net, cur)}</b></span>`; });
 $('pyTeam').addEventListener('change', e => { if (e.target.matches('select[data-se], select[data-sx]')) e.target.dispatchEvent(new Event('input', {bubbles: true})); });
 $('pyTeam').addEventListener('click', async e => { const t = e.target; if (!t.closest('.slip-ed')) return; e.stopPropagation(); const p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m);
   if (t.closest('[data-sxadd]')) { ed.extras.push({label: '', amount: '', kind: t.closest('[data-sxadd]').dataset.sxadd}); slipRefresh(t, p, m); return; }
@@ -2608,7 +2608,7 @@ $('pyTeam').addEventListener('click', async e => { const t = e.target; if (!t.cl
   if (!(+ed.amount > 0)) return toast('Enter the agreed monthly salary first.');
   if (act === 'publish' && !confirm('Publish this payslip to ' + p.name + '? They will be able to see and download it.')) return;
   if (act === 'unpublish' && !confirm('Unpublish this payslip? ' + p.name + ' will no longer see it.')) return;
-  a.disabled = true; try { await saveSlip(p, m, act === 'publish' ? 'published' : 'draft'); toast(act === 'publish' ? 'Payslip published to ' + p.name : act === 'unpublish' ? 'Payslip unpublished' : 'Draft saved'); slipRefresh(a, p, m); }
+  a.disabled = true; try { await saveSlip(p, m, act === 'publish' ? 'published' : 'draft'); toast(act === 'publish' ? 'Payslip published to ' + p.name : act === 'unpublish' ? 'Payslip unpublished' : 'Draft saved'); renderPay(); }
   catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published.'); a.disabled = false; } }, true);
 // employee: list of published payslips
 async function loadMySlips(){ const box = $('slipList'); if (!box || !me || !db) return; const now = new Date(), ms = [];
