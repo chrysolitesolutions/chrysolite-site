@@ -2530,31 +2530,31 @@ function slipHtml(D, draft){
   *{box-sizing:border-box}body{font:12.5px/1.45 "Segoe UI",-apple-system,Roboto,Arial,sans-serif;color:#1c2a25;margin:0;background:#e9eeeb}
   .pg{position:relative;max-width:800px;margin:22px auto;background:#fff;border-radius:6px;box-shadow:0 18px 50px rgba(15,42,34,.12);overflow:hidden}
   .wm{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font:900 120px sans-serif;color:rgba(200,60,40,.07);transform:rotate(-24deg);z-index:2}
-  .top{background:linear-gradient(120deg,#0f2a22 0%,#17402f 60%,#1f5139 100%);color:#fff;padding:24px 32px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;position:relative}
-  .top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#b8952e,#e6c96a,#b8952e)}
-  .co{display:flex;align-items:center;gap:14px}.co img{width:52px;height:52px;border-radius:12px;background:#fff;padding:4px}.co b{display:block;font:700 21px Georgia,"Times New Roman",serif;letter-spacing:.02em}.co span{font-size:11.5px;color:#c9d8d1;letter-spacing:.04em}
-  .tt{text-align:right}.tt h1{margin:0;font:700 13px "Segoe UI",sans-serif;letter-spacing:.42em;color:#e6c96a}.tt .mo{display:block;font:600 20px Georgia,serif;margin-top:2px}.tt small{display:block;color:#c9d8d1;font-size:11px;margin-top:2px;letter-spacing:.05em}
+  .top{background:linear-gradient(120deg,#f3f8f4 0%,#e8f1eb 60%,#dfece3 100%);color:#17402f;border-bottom:1px solid #d5e3d9;padding:24px 32px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;position:relative}
+  .top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#c9ab52,#e8d18a,#c9ab52)}
+  .co{display:flex;align-items:center;gap:14px}.co img{width:52px;height:52px;border-radius:12px;background:#fff;padding:4px;box-shadow:0 2px 8px rgba(23,64,47,.12)}.co b{display:block;font:700 21px Georgia,"Times New Roman",serif;letter-spacing:.02em}.co span{font-size:11.5px;color:#5f7068;letter-spacing:.04em}
+  .tt{text-align:right}.tt h1{margin:0;font:700 13px "Segoe UI",sans-serif;letter-spacing:.42em;color:#a8862a}.tt .mo{display:block;font:600 20px Georgia,serif;margin-top:2px}.tt small{display:block;color:#5f7068;font-size:11px;margin-top:2px;letter-spacing:.05em}
   .dr{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:999px;background:#c83c28;color:#fff;font-weight:700;font-size:10.5px;letter-spacing:.06em}
   .body{padding:22px 32px 26px}
   .boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .box{border:1px solid #e1e8e4;border-radius:10px;padding:12px 14px;background:linear-gradient(#fbfcfb,#fff)}
   .box h3{margin:0 0 8px;font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#17402f;display:flex;align-items:center;gap:7px;padding-bottom:7px;border-bottom:1px solid #e1e8e4}
-  .box h3 span{display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:#17402f;color:#e6c96a;font-size:11px}
+  .box h3 span{display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:#e6f0e9;color:#17402f;font-size:11px}
   .r{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.r span{color:#6a7a74}.r b{font-weight:600;text-align:right}.r i{color:#a3b0aa;font-style:normal}
   .days{display:grid;grid-template-columns:repeat(5,1fr);margin:16px 0;border:1px solid #e1e8e4;border-radius:10px;overflow:hidden}
   .days div{padding:9px 6px;text-align:center;border-left:1px solid #e1e8e4}.days div:first-child{border-left:0}.days b{display:block;font:700 18px Georgia,serif;color:#17402f}.days span{font-size:10px;color:#6a7a74;text-transform:uppercase;letter-spacing:.08em}
-  .days .hl{background:#17402f}.days .hl b{color:#e6c96a}.days .hl span{color:#c9d8d1}
+  .days .hl{background:#e6f0e9}.days .hl b{color:#17402f}.days .hl span{color:#4f6158}
   h2{margin:18px 0 8px;font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#17402f;display:flex;align-items:center;gap:10px}h2::after{content:"";flex:1;height:1px;background:#e1e8e4}
   table{width:100%;border-collapse:collapse}th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid #edf1ef}
   thead th{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6a7a74;font-weight:700;border-bottom:1.5px solid #17402f}
   .n{text-align:right!important;font-variant-numeric:tabular-nums;white-space:nowrap}td small{display:block;color:#7c8b85;font-size:11px}
   tr.tot td{font-weight:700;border-top:1.5px solid #17402f;border-bottom:0;background:#f6f8f7}.sep{border-left:1px solid #e1e8e4}
-  .net{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;padding:14px 20px;border-radius:10px;background:linear-gradient(120deg,#0f2a22,#1f5139);color:#fff}
-  .net span{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#e6c96a;font-weight:700}.net small{display:block;color:#c9d8d1;font-size:11.5px;margin-top:3px}.net b{font:700 28px Georgia,serif;color:#fff}
+  .net{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;padding:14px 20px;border-radius:10px;background:linear-gradient(120deg,#f1f7f2,#e3efe6);border:1px solid #cfe0d4;color:#17402f}
+  .net span{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#a8862a;font-weight:700}.net small{display:block;color:#4f6158;font-size:11.5px;margin-top:3px}.net b{font:700 28px Georgia,serif;color:#17402f}
   .lv{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .note{margin-top:14px;padding:10px 14px;border-left:3px solid #b8952e;background:#fbf8ef;border-radius:6px}
   .sign{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px}.sign .s{text-align:center;min-width:200px;border-top:1px solid #1c2a25;padding-top:5px;font-size:11px;color:#4b5b56}
-  .ft{margin-top:14px;color:#8b9893;font-size:10.5px;text-align:center}.bar{max-width:800px;margin:14px auto 0;text-align:right}.bar button{font:600 14px sans-serif;padding:9px 16px;border-radius:8px;border:0;background:#17402f;color:#fff;cursor:pointer}
+  .ft{margin-top:14px;color:#8b9893;font-size:10.5px;text-align:center}.bar{max-width:800px;margin:14px auto 0;text-align:right}.bar button{font:600 14px sans-serif;padding:9px 16px;border-radius:8px;border:0;background:#2f6b4c;color:#fff;cursor:pointer}
   @media print{body{background:#fff}.pg{box-shadow:none;margin:0;border-radius:0}.bar{display:none}.top,.net,.days .hl,.box h3 span{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head><body><div class="bar"><button onclick="print()">Print / Save as PDF</button></div><div class="pg">${draft ? '<div class="wm">DRAFT</div>' : ''}
 <div class="top"><div class="co"><img src="${logo}" alt=""><div><b>Chrysolite Solutions</b><span>KOCHI, KERALA, INDIA · WWW.CHRYSOLITE.IN</span></div></div>
