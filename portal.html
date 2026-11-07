@@ -2617,7 +2617,7 @@ $('pyTeam').addEventListener('click', async e => { const t = e.target; if (!t.cl
   catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published.'); a.disabled = false; } }, true);
 // employee: list of published payslips
 async function loadMySlips(){ const box = $('slipList'); if (!box || !me || !db) return; const now = new Date(), ms = [];
-  for (let i = 1; i <= 12; i++) ms.push(monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)));
+  for (let i = 0; i <= 12; i++) ms.push(monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)));
   await Promise.all(ms.map(async m => { try { const d = await db.doc('payslips/' + slipId(me.key, m)).get(); mySlips[m] = d.exists && d.data().status === 'published' ? d.data() : null; } catch (x) { mySlips[m] = null; } }));
   const pub = ms.filter(m => mySlips[m]);
   box.innerHTML = pub.length ? pub.map(m => `<div class="slip-li"><span>🧾 <b>${new Date(m + '-01T00:00').toLocaleDateString(undefined, {month: 'long', year: 'numeric'})}</b><small>Net pay ${money(mySlips[m].net || 0, (mySlips[m].basis || {}).currency)} · published ${mySlips[m].publishedAt ? fmtDay(mySlips[m].publishedAt.slice(0, 10)) : ''}</small></span><button class="btn btn-gem" type="button" data-myslip="${m}">View payslip</button></div>`).join('')
