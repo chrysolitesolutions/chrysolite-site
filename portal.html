@@ -1163,7 +1163,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="panel"><h3 id="pyWeekT">Hours per week</h3><div class="tbl"><table class="att"><thead><tr><th>Week</th><th>Days worked</th><th>Hours</th><th>Overtime</th></tr></thead><tbody id="pyWeeks"></tbody></table></div></div>
         <div class="panel"><h3 id="pySalT">Salary</h3><div id="pyCalc"></div></div>
       </div>
-      <div class="panel slip-panel"><h3>My payslips</h3><p class="hint" style="margin:-4px 0 12px">Your Project Manager checks and publishes each payslip, usually by the 10th of the following month. Published payslips appear here.</p>
+      <div class="panel slip-panel"><h3>My payslips</h3><p class="hint" style="margin:-4px 0 12px">The payslip for the month chosen at the top. Your Project Manager checks and publishes each payslip, usually by the 10th of the following month.</p>
         <div class="slip-list" id="slipList"><p class="hint">Loading…</p></div><select id="slipMonth" hidden aria-hidden="true"></select><button id="slipGo" hidden type="button"></button><p class="hint" id="slipMsg" hidden></p></div>
       <div class="panel"><h3>Hours per month</h3><div class="chart" id="cPay"></div></div>
       </div>
@@ -2628,7 +2628,8 @@ function drawMySlips(){ const box = $('slipList'); if (!box || !me) return; cons
   const row = m => `<div class="slip-li"><span>🧾 <b>${mN(m)}</b><small>Net pay ${money(mySlips[m].net || 0, (mySlips[m].basis || {}).currency)} · published ${mySlips[m].publishedAt ? fmtDay(mySlips[m].publishedAt.slice(0, 10)) : ''}</small></span><button class="btn btn-gem" type="button" data-myslip="${m}">View payslip</button></div>`;
   const all = Object.keys(mySlips).filter(m => /^\d{4}-\d{2}$/.test(m) && mySlips[m]).sort().reverse();
   box.innerHTML = `<div class="slip-sel">${mySlips[sel] ? row(sel) : `<p class="empty" style="margin:0">The payslip for <b>${mN(sel)}</b> hasn't been published yet.${sel >= monthKey(new Date()) ? ' This month is still in progress.' : ''}</p>`}</div>`
-    + (all.filter(m => m !== sel).length ? `<h4 class="slip-allh">All published payslips</h4>${all.filter(m => m !== sel).map(row).join('')}` : ''); }
+    + (!mySlips[sel] && all.length ? `<p class="hint" style="margin:8px 0 0">Published payslips: ${all.map(m => `<button type="button" class="linkbtn" data-slipmonth="${m}">${mN(m)}</button>`).join(', ')}. Choose the month at the top to see it with that month's hours.</p>` : ''); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-slipmonth]'); if (!b) return; $('payMonth').value = b.dataset.slipmonth; $('payMonth').dispatchEvent(new Event('change')); window.scrollTo({top: 0, behavior: 'smooth'}); });
 document.addEventListener('click', async e => { const b = e.target.closest('[data-myslip]'); if (!b || !me) return; const m = b.dataset.myslip, w = window.open('', '_blank'); if (!w) return toast('Allow pop-ups for this site to open the payslip.');
   let d = mySlips[m]; try { const x = await db.doc('payslips/' + slipId(me.key, m)).get(); if (x.exists && x.data().status === 'published') d = mySlips[m] = x.data(); } catch (er) {}   /* always open the newest published copy */
   if (!d) { w.close(); return toast('This payslip is no longer available.'); } w.document.open(); w.document.write(d.html); w.document.close(); });
