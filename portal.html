@@ -331,6 +331,16 @@ tbody tr:hover{background:var(--surface-2)}
 .mc-c.has{cursor:pointer;background:color-mix(in srgb,var(--gem) 10%,var(--surface));border-color:color-mix(in srgb,var(--gem) 40%,var(--line));transition:transform .15s,box-shadow .15s}.mc-c.has:hover{transform:translateY(-2px);box-shadow:0 10px 20px -12px rgba(0,0,0,.3)}
 .mc-c.full{background:color-mix(in srgb,var(--gem) 22%,var(--surface))}.mc-c.today{outline:2px solid var(--gem);outline-offset:-2px}.mc-c.today .d{color:var(--gem-ink)}
 .mc-c .bar{position:absolute;left:0;bottom:0;height:4px;width:var(--p);background:var(--gem)}
+.pw-dlg.ecal-dlg{width:min(980px,calc(100vw - 24px));max-height:92vh;overflow:auto}.pw-dlg.ecal-dlg[open]{display:grid;gap:14px}
+.ecal-hd{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ecal-leg{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft)}.ecal-leg i{width:160px;height:10px;border-radius:999px;background:linear-gradient(90deg,var(--surface),color-mix(in srgb,var(--gem) 25%,var(--surface)),#3f7a22)}.ecal-leg em{font-style:normal;margin-left:8px}
+.mc-c.ec.has{background:color-mix(in srgb,#3f7a22 calc(var(--p) * .75),var(--surface))!important;border-color:color-mix(in srgb,#3f7a22 calc(var(--p) * .6 + 15%),var(--line))!important}
+.mc-c.ec[data-dark] .d,.mc-c.ec[data-dark] b,.mc-c.ec[data-dark] small{color:#fff!important}
+.mc-c.ec .bar{height:6px;background:linear-gradient(90deg,#b6d441,#2f7d32);border-radius:0 3px 3px 0}.mc-c.ec[data-dark] .bar{background:#e6f5c9}
+.mc-c small.ab{color:#b4513a;font-weight:600}.mc-c.ec.sel{outline:3px solid var(--info);outline-offset:-3px}
+.ecal-day{min-height:24px;font-size:14px}.ecal-ss{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font:500 13px var(--mono)}
+tr.ecal-row{cursor:pointer}tr.ecal-row:hover td{background:color-mix(in srgb,var(--gem) 7%,transparent)}
+
 @media(max-width:640px){.mc-c{min-height:60px;padding:5px}.mc-c b{font-size:12.5px}.mc-c small{display:none}}
 #dayDlg{width:min(480px,calc(100vw - 24px))}#dayDlgList .sess{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center}
 .ot-big{display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-radius:12px;background:color-mix(in srgb,var(--warn) 16%,var(--surface))}.ot-big b{font:800 30px var(--display);color:#8a5a00}.ot-big span{color:var(--ink-soft)}
@@ -1489,6 +1499,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <div id="teHist" class="te-hist" hidden></div>
     <p class="hint" style="margin:0">The employee sees "(edited)" next to changed sessions. Each change is logged with your name, the time and the reason.</p>
   </form>
+</dialog>
+<dialog class="pw-dlg ecal-dlg" id="ecalDlg" aria-labelledby="ecalT">
+  <div class="ecal-hd"><div class="person" id="ecalWho"></div><h3 id="ecalT" style="margin:0">Monthly attendance</h3><div class="toolbar" style="margin-left:auto;flex:0 1 auto"><input type="month" id="ecalMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="ecalX">Close</button></div></div>
+  <div class="tiles mini-tiles"><div class="tile"><span>Hours worked</span><b id="ecH">0h 00m</b></div><div class="tile"><span>Days worked</span><b id="ecD">0</b></div><div class="tile"><span>Sessions</span><b id="ecS">0</b></div><div class="tile"><span>Average per day worked</span><b id="ecA">0h 00m</b></div></div>
+  <div class="ecal-leg"><span>0h</span><i></i><span>8h+</span><em>Darker = more hours · bar shows progress to 8h</em></div>
+  <div class="mcal ecal" id="ecalGrid"></div><div id="ecalDay" class="ecal-day"></div>
 </dialog>
 <dialog class="pw-dlg" id="dayDlg" aria-labelledby="dayDlgT">
   <div style="display:grid;gap:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3 id="dayDlgT" style="margin:0"></h3><p class="hint" id="dayDlgSub" style="margin:4px 0 0"></p></div><button class="btn btn-ghost" type="button" id="dayDlgX" aria-label="Close">✕</button></div>
@@ -3779,6 +3795,25 @@ function monthRows(){
   const m = $('attMonth').value || monthKey(new Date());
   return clockPeople().map(p => { const rec = teamAtt.find(a => a.email === p.email), days = (rec && rec.days) || {}; return {p, ...stats(days, monthDays(days, m))}; });
 }
+
+/* ---------- admin: one employee's month as a calendar (shade and bar show hours against 8h) ---------- */
+let ecalKey = null;
+function renderEcal(){ const p = people().find(x => x.key === ecalKey); if (!p) return; const m = $('ecalMonth').value || monthKey(new Date()), rec = teamAtt.find(a => a.email === p.email), days = (rec && rec.days) || {}, st = stats(days, monthDays(days, m));
+  $('ecalWho').innerHTML = av(p.name) + `<div><b>${esc(p.name)}</b><div class="mono" style="font-size:12px;color:var(--ink-soft)">${esc(p.designation || p.role || p.email)}</div></div>`;
+  $('ecalT').textContent = new Date(m + '-01T00:00').toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
+  $('ecH').textContent = fmtH(st.ms); $('ecD').textContent = st.worked; $('ecS').textContent = st.sessions; $('ecA').textContent = fmtH(st.worked ? st.ms / st.worked : 0);
+  const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), lead = (new Date(Y, M - 1, 1).getDay() + 6) % 7, today = todayStr();
+  let html = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="mc-h">${d}</div>`).join('') + '<div class="mc-c blank"></div>'.repeat(lead);
+  for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), lv = decisions.find(d => d.email === p.email && d.status === 'Approved' && d.from <= k && d.to >= k), h = holOn(k);
+    const pc = Math.min(100, ms / DAY_MAX * 100), cls = ['mc-c', 'ec', l.length ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
+    html += `<button type="button" class="${cls}" data-eday="${k}" style="--p:${pc}%"${pc >= 55 ? ' data-dark="1"' : ''}><span class="d">${i}</span>${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small>` : lv ? `<small class="lv">${esc(lv.type)} leave</small>` : h ? `<small class="lv">${esc(h.name)}</small>` : !wkend && !fut ? '<small class="ab">No login</small>' : ''}<span class="bar"></span></button>`; }
+  $('ecalGrid').innerHTML = html; $('ecalDay').innerHTML = ''; }
+function openEcal(key){ ecalKey = key; $('ecalMonth').value = attMode === 'month' ? ($('attMonth').value || monthKey(new Date())) : ($('attDate').value || todayStr()).slice(0, 7); renderEcal(); const d = $('ecalDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
+['teamAtt', 'teamMonth'].forEach(id => $(id).addEventListener('click', e => { if (e.target.closest('button, a, input, select')) return; const r = e.target.closest('tr[data-ecal]'); if (r) openEcal(r.dataset.ecal); }));
+$('ecalMonth').addEventListener('change', renderEcal); $('ecalX').onclick = () => $('ecalDlg').close();
+$('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data-eday]'); if (!b) return; const p = people().find(x => x.key === ecalKey), rec = p && teamAtt.find(a => a.email === p.email), l = ((rec && rec.days) || {})[b.dataset.eday] || [];
+  $('ecalGrid').querySelectorAll('.sel').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
+  $('ecalDay').innerHTML = `<b>${new Date(b.dataset.eday + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'})}</b>` + (l.length ? ` · ${fmtH(sessMs(l))}<div class="ecal-ss">${l.map((x, i) => `<span>${i + 1}. ${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? ' (break)' : ''}</span>`).join('')}</div>` : ' · no sessions'); });
 function renderTeamAtt(){
   if (!isAdmin) return;
   $('attDayWrap').hidden = attMode !== 'day'; $('attMonthWrap').hidden = attMode !== 'month';
@@ -3789,12 +3824,12 @@ function renderTeamAtt(){
   if (!clockPeople().length) { $('teamAtt').innerHTML = $('teamMonth').innerHTML = '<tr><td colspan="6" class="empty">No employees use the time clock yet. Turn it on for them in Admin.</td></tr>'; $('attSum').textContent = ''; return; }
   if (attMode === 'day') {
     const rows = attRows(), pill = s => `<span class="pill ${s==='Working'?'ok':s==='Done'?'info':s==='On leave'?'warn':'off'}">${s}</span>`;
-    $('teamAtt').innerHTML = rows.map(r => `<tr><td>${person(r.p)}</td><td>${pill(r.status)}</td><td class="mono">${r.l.length || '—'}</td><td class="times">${r.l.length ? esc(timesOf(r.l)) : '—'}</td><td class="mono">${r.l.length ? fmtH(r.ms) : '—'}</td><td><button class="mini" type="button" data-tedit="${esc(r.p.key)}">${r.l.length ? 'Edit times' : 'Add times'}</button></td></tr>`).join('');
+    $('teamAtt').innerHTML = rows.map(r => `<tr data-ecal="${esc(r.p.key)}" class="ecal-row" title="Open ${esc(r.p.name)}'s month"><td>${person(r.p)}</td><td>${pill(r.status)}</td><td class="mono">${r.l.length || '—'}</td><td class="times">${r.l.length ? esc(timesOf(r.l)) : '—'}</td><td class="mono">${r.l.length ? fmtH(r.ms) : '—'}</td><td><button class="mini" type="button" data-tedit="${esc(r.p.key)}">${r.l.length ? 'Edit times' : 'Add times'}</button></td></tr>`).join('');
     const working = rows.filter(r => r.status === 'Working').length, logged = rows.filter(r => r.l.length).length;
     $('attSum').textContent = `${logged} of ${rows.length} logged in on this day · ${working} working now · ${fmtH(rows.reduce((a, r) => a + r.ms, 0))} total`;
   } else {
     const rows = monthRows().sort((a, b) => b.ms - a.ms);
-    $('teamMonth').innerHTML = rows.map(r => `<tr><td>${person(r.p)}</td><td class="mono">${r.worked}</td><td class="mono">${r.sessions}</td><td class="mono">${fmtH(r.worked ? r.ms / r.worked : 0)}</td><td class="mono"><b>${fmtH(r.ms)}</b></td></tr>`).join('');
+    $('teamMonth').innerHTML = rows.map(r => `<tr data-ecal="${esc(r.p.key)}" class="ecal-row" title="Open ${esc(r.p.name)}'s month"><td>${person(r.p)}</td><td class="mono">${r.worked}</td><td class="mono">${r.sessions}</td><td class="mono">${fmtH(r.worked ? r.ms / r.worked : 0)}</td><td class="mono"><b>${fmtH(r.ms)}</b></td></tr>`).join('');
     const label = new Date(($('attMonth').value || monthKey(new Date())) + '-01T00:00').toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
     $('attSum').textContent = `${label}: ${fmtH(rows.reduce((a, r) => a + r.ms, 0))} across the team · ${rows.filter(r => r.worked).length} of ${rows.length} people worked this month`;
   }
