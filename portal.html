@@ -2420,15 +2420,16 @@ function payCalc(p, m, st, cfg){
   const unpaid = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= last).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < last ? d.to : last), 0);
   const otH = st.ot / 3600000, regH = (st.ms - st.ot) / 3600000, lines = [], cur = c.currency, pl = paidLeaveDays(p, first, last);
   let total;
-  if (c.type === 'workday') { const wk = weekdaysIn(first, last), days = payDays(p), tracked = p.clock !== false, n = new Date(y, mo, 0).getDate();
+  if (c.type === 'workday') { const today = todayStr(), upto = last > today ? today : last, partial = upto < last, wk = upto >= first ? weekdaysIn(first, upto) : 0, days = payDays(p), tracked = p.clock !== false, n = new Date(y, mo, 0).getDate();
     // paid days = days worked (My Workday) + company holidays + approved paid leave on weekdays not worked; absent days are not paid
     let worked = 0, hol = 0, pl2 = 0, payable = 0;
-    for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), w = new Date(y, mo - 1, i).getDay(), wd2 = w > 0 && w < 6;
+    for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), w = new Date(y, mo - 1, i).getDay(), wd2 = w > 0 && w < 6; if (k > upto) break;
       if (tracked && sessMs(days[k]) > 0) { worked++; payable++; continue; } if (!wd2) continue;
       if (holOn(k)) { hol++; payable++; } else if (approved().some(d => d.email === p.email && d.type !== 'Unpaid' && d.from <= k && d.to >= k)) { pl2++; payable++; } }
-    if (!tracked) { payable = Math.max(0, wk - unpaid); worked = Math.max(0, wk - hol - pl2 - unpaid); }
-    const absent = Math.max(0, wk - hol - pl2 - unpaid - Math.min(worked, wk)), rate = c.amount / 20; total = payable * rate; lines.push(['Salary for working days', payable + ' day' + (payable === 1 ? '' : 's') + ' × ' + money(rate, cur) + ' (' + money(c.amount, cur) + ' ÷ 20)', total]);
-    return {c, total, lines, unpaid, wd, pl: pl2, wk, hol, payable, rate, worked, absent, tracked}; }
+    const unpaidSoFar = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= upto).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < upto ? d.to : upto), 0);
+    if (!tracked) { payable = Math.max(0, wk - unpaidSoFar); worked = Math.max(0, wk - hol - pl2 - unpaid); }
+    const absent = Math.max(0, wk - hol - pl2 - unpaidSoFar - Math.min(worked, wk)), rate = c.amount / 20; total = payable * rate; lines.push(['Salary for working days', payable + ' day' + (payable === 1 ? '' : 's') + ' × ' + money(rate, cur) + ' (' + money(c.amount, cur) + ' ÷ 20)', total]);
+    return {c, total, lines, unpaid: unpaidSoFar, wd, pl: pl2, wk, hol, payable, rate, worked, absent, tracked, partial, upto}; }
   if (c.type === 'hourly') { const reg = regH * c.amount, otp = otH * (c.otRate || c.amount); total = reg + otp;
     lines.push(['Regular hours', fmtH(st.ms - st.ot) + ' × ' + money(c.amount, cur), reg]); if (otH) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate || c.amount, cur), otp]); }
   else if (c.type === 'daily') { const reg = st.worked * c.amount, lvp = pl * c.amount, otp = c.otRate ? otH * c.otRate : 0; total = reg + lvp + otp;
@@ -2493,7 +2494,7 @@ function inWords(n){ n = Math.round(Math.abs(n)); if (!n) return 'Zero';
   if (cr) parts.push(three(cr) + ' Crore'); if (lk) parts.push(two(lk) + ' Lakh'); if (th) parts.push(two(th) + ' Thousand'); if (n) parts.push(three(n)); return parts.join(' '); }
 // the slip settings being edited: saved draft, else the employee's pay settings
 function slipCfg(p, m){ const id = slipId(p.key, m), sv = slipsAll[id] || {}, base = payAll[p.key] || {};
-  if (!slipEdit[id]) slipEdit[id] = {type: 'workday', amount: sv.basis ? sv.basis.amount : (base.type === 'workday' || base.type === 'monthly' ? (base.amount ?? '') : ''), otRate: 0, currency: (sv.basis && sv.basis.currency) || base.currency || 'INR', extras: JSON.parse(JSON.stringify(sv.extras || [])), note: sv.note || ''};
+  if (!slipEdit[id] || !slipEdit[id].touched) slipEdit[id] = {type: 'workday', amount: sv.basis ? sv.basis.amount : (base.type === 'workday' || base.type === 'monthly' ? (base.amount ?? '') : ''), otRate: 0, currency: (sv.basis && sv.basis.currency) || base.currency || 'INR', extras: JSON.parse(JSON.stringify(sv.extras || [])), note: sv.note || ''};
   return slipEdit[id]; }
 function slipTotals(p, m, e){ const st = payMonthStats(payDays(p), m), pc = payCalc(p, m, st, {type: e.type, amount: +e.amount || 0, otRate: +e.otRate || 0, currency: e.currency});
   const earn = (e.extras || []).filter(x => x.kind !== 'ded' && +x.amount), ded = (e.extras || []).filter(x => x.kind === 'ded' && +x.amount);
@@ -2511,8 +2512,9 @@ async function slipData(p, m, e){
       const hrsDay = sessMs(days[k]) / ks.length; ks.forEach(q => { const t = task[q] || (task[q] = {days: 0, ms: 0}); t.days++; t.ms += hrsDay; }); }); }
   let info = {}; try { const d = await db.doc('empInfo/' + p.key).get(); info = d.exists ? d.data() : {}; } catch (x) {}
   const lv = decisions.filter(d => d.email === p.email && d.status === 'Approved' && d.from <= last && d.to >= first).map(d => ({...d, inMonth: workdays(d.from > first ? d.from : first, d.to < last ? d.to : last)}));
-  const allow = allowOf(p), yr = String(Y), usedY = t => decisions.filter(d => d.email === p.email && d.status === 'Approved' && d.type === t && d.from.slice(0, 4) === yr).reduce((a, d) => a + (d.days || 0), 0);
-  const bal = Object.keys(DEF_ALLOW).map(t => [t, +allow[t] || 0, usedY(t)]); bal.push(['Compensation', compGiven(p), compUsed(p)]);
+  const allow = allowOf(p), yr = String(Y), y0 = yr + '-01-01';   /* only leave already taken by the end of this month counts as used */
+  const usedY = t => decisions.filter(d => d.email === p.email && d.status === 'Approved' && d.type === t && d.from <= last && d.to >= y0).reduce((a, d) => a + workdays(d.from > y0 ? d.from : y0, d.to < last ? d.to : last), 0);
+  const bal = Object.keys(DEF_ALLOW).map(t => [t, +allow[t] || 0, usedY(t)]); bal.push(['Compensation', compGiven(p), usedY('Compensation')]);
   return {p, m, e, T, info, lv, bal, task, assigned, weeks: payWeeks(days, m), first, last, Y, M, n, hol: holidays.filter(h => h.date >= first && h.date <= last)};
 }
 function slipHtml(D, draft){
@@ -2588,7 +2590,7 @@ function slipEditor(x, m){ const e = slipCfg(x, m), sv = slipsAll[slipId(x.key, 
   const st = sv ? (sv.status === 'published' ? `<span class="pill ok">Published ${sv.publishedAt ? fmtDay(sv.publishedAt.slice(0, 10)) : ''}</span>` : '<span class="pill warn">Draft · not visible to employee</span>') : '<span class="pill">Not started</span>';
   return `<div class="slip-ed" data-sk="${esc(x.key)}"><div class="slip-hd"><h4>🧾 Payslip · ${esc(mName)}</h4>${st}</div>
     <div class="slip-g"><div class="f"><label>Agreed monthly salary (${esc(cur)})</label><input type="number" min="0" step="1" data-se="amount" value="${esc(e.amount)}" placeholder="e.g. 10000"></div>
-      <div class="slip-calc">${T.pc ? `<b>${T.pc.payable} paid days</b> = ${T.pc.worked} worked${T.pc.hol ? ' + ' + T.pc.hol + ' holiday' + (T.pc.hol > 1 ? 's' : '') : ''}${T.pc.pl ? ' + ' + T.pc.pl + ' paid leave' : ''} · day rate ${money(T.pc.rate, cur)} (salary ÷ 20)<small>${T.pc.tracked ? 'Days worked come from My Workday. ' + (T.pc.absent ? T.pc.absent + ' weekday' + (T.pc.absent > 1 ? 's' : '') + ' not worked and not on leave: not paid. ' : '') : 'This employee does not use the time clock: every weekday is paid except unpaid leave. '}${T.pc.wk} weekdays this month.</small>` : 'Enter the agreed monthly salary.'}</div></div>
+      <div class="slip-calc">${T.pc ? `<b>${T.pc.payable} paid days</b> = ${T.pc.worked} worked${T.pc.hol ? ' + ' + T.pc.hol + ' holiday' + (T.pc.hol > 1 ? 's' : '') : ''}${T.pc.pl ? ' + ' + T.pc.pl + ' paid leave' : ''} · day rate ${money(T.pc.rate, cur)} (salary ÷ 20)<small>${T.pc.tracked ? 'Days worked come from My Workday. ' + (T.pc.absent ? T.pc.absent + ' weekday' + (T.pc.absent > 1 ? 's' : '') + ' not worked and not on leave: not paid. ' : '') : 'This employee does not use the time clock: every weekday is paid except unpaid leave. '}${T.pc.partial ? 'Month in progress: counted up to today (' + fmtDay(T.pc.upto) + '), ' + T.pc.wk + ' weekdays so far.' : T.pc.wk + ' weekdays this month.'}</small>` : 'Enter the agreed monthly salary.'}</div></div>
     <div class="slip-x"><b>Additional payments and deductions</b>${(e.extras || []).map((r, i) => `<div class="slip-xr"><input data-sx="${i}" data-f="label" placeholder="${r.kind === 'ded' ? 'e.g. Advance recovery' : 'e.g. Internet allowance'}" value="${esc(r.label || '')}"><input type="number" min="0" step="0.01" data-sx="${i}" data-f="amount" value="${esc(r.amount ?? '')}" placeholder="Amount"><select data-sx="${i}" data-f="kind"><option value="earn"${r.kind !== 'ded' ? ' selected' : ''}>+ Payment / allowance</option><option value="ded"${r.kind === 'ded' ? ' selected' : ''}>− Deduction</option></select><button class="mini danger" type="button" data-sxdel="${i}">✕</button></div>`).join('') || '<p class="hint" style="margin:4px 0">None added.</p>'}
       <div class="row" style="gap:6px"><button class="mini" type="button" data-sxadd="earn">+ Add allowance / payment</button><button class="mini" type="button" data-sxadd="ded">+ Add deduction</button></div></div>
     <div class="f"><label>Note to the employee (optional, shown on the payslip)</label><input data-se="note" maxlength="400" value="${esc(e.note)}" placeholder="e.g. Includes Diwali bonus"></div>
@@ -2596,13 +2598,13 @@ function slipEditor(x, m){ const e = slipCfg(x, m), sv = slipsAll[slipId(x.key, 
     <div class="row slip-acts"><button class="btn btn-ghost" type="button" data-sa="preview">👁 Preview payslip</button><button class="btn btn-ghost" type="button" data-sa="draft">Save draft</button>${sv && sv.status === 'published' ? '<button class="btn btn-ghost" type="button" data-sa="unpublish">Unpublish</button><button class="btn btn-gem" type="button" data-sa="publish">Update published payslip</button>' : '<button class="btn btn-gem" type="button" data-sa="publish">✓ Publish to employee</button>'}</div></div>`; }
 const slipPerson = el => { const k = el.closest('[data-sk]') && el.closest('[data-sk]').dataset.sk; return people().find(p => p.key === k); };
 const slipRefresh = (el, p, m) => { const box = el.closest('.slip-ed'); if (box) box.outerHTML = slipEditor(p, m); };
-$('pyTeam').addEventListener('input', e => { const t = e.target, p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m);
+$('pyTeam').addEventListener('input', e => { const t = e.target, p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m); ed.touched = true;
   if (t.dataset.se) { ed[t.dataset.se] = t.value; if (t.dataset.se === 'type') { const c = payAll[p.key] || {}; ed.amount = c.type === t.value ? c.amount : ''; slipRefresh(t, p, m); return; } }
   else if (t.dataset.sx) { ed.extras[+t.dataset.sx][t.dataset.f] = t.value; if (t.tagName === 'SELECT') { slipRefresh(t, p, m); return; } }
   const T = slipTotals(p, m, ed), sum = t.closest('.slip-ed').querySelector('.slip-sum'), cur = ed.currency || 'INR'; { const g = document.querySelector(`#pyTeam tr[data-k="${CSS.escape(p.key)}"] td:nth-child(6) b`); if (g) g.textContent = money(T.gross, cur); } if (sum) sum.innerHTML = `<span>Gross <b>${money(T.gross, cur)}</b></span><span>Deductions <b>${money(T.dsum, cur)}</b></span><span class="nt">Net pay <b>${money(T.net, cur)}</b></span>`; });
 $('pyTeam').addEventListener('change', e => { if (e.target.matches('select[data-se], select[data-sx]')) e.target.dispatchEvent(new Event('input', {bubbles: true})); });
 $('pyTeam').addEventListener('click', async e => { const t = e.target; if (!t.closest('.slip-ed')) return; e.stopPropagation(); const p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m);
-  if (t.closest('[data-sxadd]')) { ed.extras.push({label: '', amount: '', kind: t.closest('[data-sxadd]').dataset.sxadd}); slipRefresh(t, p, m); return; }
+  ed.touched = true; if (t.closest('[data-sxadd]')) { ed.extras.push({label: '', amount: '', kind: t.closest('[data-sxadd]').dataset.sxadd}); slipRefresh(t, p, m); return; }
   if (t.closest('[data-sxdel]')) { ed.extras.splice(+t.closest('[data-sxdel]').dataset.sxdel, 1); slipRefresh(t, p, m); return; }
   const a = t.closest('[data-sa]'); if (!a) return; const act = a.dataset.sa;
   if (act === 'preview') return previewSlip(p, m);
