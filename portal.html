@@ -465,13 +465,13 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .cku{font-size:11.5px;color:var(--ink-soft);display:block;margin-top:3px}
 .slip-ed{display:grid;gap:12px;padding:16px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--gem) 45%,var(--line));background:color-mix(in srgb,var(--gem) 5%,var(--surface));text-align:left}
 .slip-hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.slip-hd h4{margin:0;font-size:16px}
-.slip-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.slip-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;align-items:start}
 .slip-calc{align-self:end;min-width:0;overflow-wrap:anywhere;padding:10px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-size:14px}.slip-calc small{display:block;color:var(--ink-soft);font-size:12px}
 .slip-x{display:grid;gap:8px}.slip-xr{display:grid;grid-template-columns:2fr 1fr 1.3fr auto;gap:6px;align-items:center}@media(max-width:700px){.slip-xr{grid-template-columns:1fr 1fr}}
 .slip-sum{display:flex;flex-wrap:wrap;gap:8px 22px;padding:10px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-size:14px}.slip-sum .nt{margin-left:auto;font-size:16px;color:var(--ok)}
 .slip-acts{justify-content:flex-end;flex-wrap:wrap;gap:8px}
 .slip-list{display:grid;gap:10px}.slip-li{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}.slip-li small{display:block;color:var(--ink-soft)}
-.slip-row{display:flex;gap:10px;flex-wrap:wrap}.slip-row select{min-width:220px}.slip-adm{grid-column:1/-1;display:flex;justify-content:flex-end}
+.slip-row{display:flex;gap:10px;flex-wrap:wrap}.slip-row select{min-width:220px}.slip-adm{grid-column:1/-1;display:flex;justify-content:center}.slip-adm .slip-ed{width:100%;max-width:880px}.slip-ed,.slip-ed *{white-space:normal}.slip-ed .f,.slip-calc,.slip-g > *{min-width:0}.slip-calc{overflow-wrap:anywhere}
 .pay-row{cursor:pointer}.pay-row:hover td,.pay-row.open td{background:color-mix(in srgb,var(--gem) 8%,transparent)}.pay-row .chev{color:var(--ink-soft);font-size:11px;text-align:right}
 .pay-det > td{padding:0!important;background:var(--surface-2)}.pay-det-in{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;padding:18px 20px;animation:up .35s both}@media(max-width:820px){.pay-det-in{grid-template-columns:1fr}}
 .pay-det-in h4{margin:0 0 8px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}.pay-det-in table{background:var(--surface);border-radius:10px}.tot-row td{border-top:2px solid var(--line)}
@@ -1140,7 +1140,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
         <div class="toolbar" style="flex:0 1 auto"><input type="month" id="payMonth" aria-label="Month"><button class="mini" id="payCopy" type="button">Copy as table</button></div></div>
       <div class="panel admin-only" hidden style="padding:0">
         <div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0" id="pyTeamT">Team payroll</h3><span class="hint">Click an employee to see their hours per week and salary. Set salaries in Admin → Edit employee.</span></div>
-        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Hours</th><th>Overtime</th><th>Pay type</th><th>Estimated salary</th><th></th></tr></thead><tbody id="pyTeam"></tbody></table></div>
+        <div class="tbl"><table class="att"><thead><tr><th>Employee</th><th>Days worked</th><th>Hours</th><th>Overtime</th><th>Pay type</th><th>Estimated salary</th><th></th></tr></thead><tbody id="pyTeam"></tbody></table></div>
       </div>
       <div class="pay-self">
       <div class="tiles">
@@ -2404,9 +2404,15 @@ function payCalc(p, m, st, cfg){
   const unpaid = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= last).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < last ? d.to : last), 0);
   const otH = st.ot / 3600000, regH = (st.ms - st.ot) / 3600000, lines = [], cur = c.currency, pl = paidLeaveDays(p, first, last);
   let total;
-  if (c.type === 'workday') { const wk = weekdaysIn(first, last), hol = holidays.filter(h => h.date >= first && h.date <= last && ![0, 6].includes(new Date(h.date + 'T00:00').getDay())).length, payable = Math.max(0, wk - unpaid);
-    const rate = c.amount / 20; total = payable * rate; lines.push(['Salary for working days', payable + ' day' + (payable === 1 ? '' : 's') + ' × ' + money(rate, cur) + ' (' + money(c.amount, cur) + ' ÷ 20)', total]);
-    return {c, total, lines, unpaid, wd, pl, wk, hol, payable, rate}; }
+  if (c.type === 'workday') { const wk = weekdaysIn(first, last), days = payDays(p), tracked = p.clock !== false, n = new Date(y, mo, 0).getDate();
+    // paid days = days worked (My Workday) + company holidays + approved paid leave on weekdays not worked; absent days are not paid
+    let worked = 0, hol = 0, pl2 = 0, payable = 0;
+    for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), w = new Date(y, mo - 1, i).getDay(), wd2 = w > 0 && w < 6;
+      if (tracked && sessMs(days[k]) > 0) { worked++; payable++; continue; } if (!wd2) continue;
+      if (holOn(k)) { hol++; payable++; } else if (approved().some(d => d.email === p.email && d.type !== 'Unpaid' && d.from <= k && d.to >= k)) { pl2++; payable++; } }
+    if (!tracked) { payable = Math.max(0, wk - unpaid); worked = Math.max(0, wk - hol - pl2 - unpaid); }
+    const absent = Math.max(0, wk - hol - pl2 - unpaid - Math.min(worked, wk)), rate = c.amount / 20; total = payable * rate; lines.push(['Salary for working days', payable + ' day' + (payable === 1 ? '' : 's') + ' × ' + money(rate, cur) + ' (' + money(c.amount, cur) + ' ÷ 20)', total]);
+    return {c, total, lines, unpaid, wd, pl: pl2, wk, hol, payable, rate, worked, absent, tracked}; }
   if (c.type === 'hourly') { const reg = regH * c.amount, otp = otH * (c.otRate || c.amount); total = reg + otp;
     lines.push(['Regular hours', fmtH(st.ms - st.ot) + ' × ' + money(c.amount, cur), reg]); if (otH) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate || c.amount, cur), otp]); }
   else if (c.type === 'daily') { const reg = st.worked * c.amount, lvp = pl * c.amount, otp = c.otRate ? otH * c.otRate : 0; total = reg + lvp + otp;
@@ -2446,7 +2452,7 @@ function renderPay(){ try { renderSlipPicker(); } catch (e) {}
     $('pyCalc').innerHTML = `<div class="pay-lines">${pc.lines.map(([a, b, v]) => `<div><span><b>${a}</b><small>${esc(b)}</small></span><span class="mono${v < 0 ? ' neg' : ''}">${v < 0 ? '− ' : ''}${money(Math.abs(v), pc.c.currency)}</span></div>`).join('')}<div class="tot"><span><b>Estimated total</b></span><span class="mono">${money(pc.total, pc.c.currency)}</span></div></div>
       <p class="hint" style="margin:10px 0 0">An estimate from the time clock and approved leave. Your final payslip may differ (taxes, deductions, bonuses).</p>`; }
   if (isAdmin) { $('pyTeamT').textContent = 'Team payroll · ' + mName;
-    $('pyTeam').innerHTML = people().map(x => { const s2 = payMonthStats(payDays(x), m), c2 = payCalc(x, m, s2); const openR = payOpen === x.key; return `<tr data-k="${esc(x.key)}" class="pay-row${openR ? ' open' : ''}" aria-expanded="${openR}"><td><div class="person">${av(x.name)}${esc(x.name)}</div></td><td class="mono">${x.clock === false ? 'Not tracked' : fmtH(s2.ms)}</td><td class="mono">${s2.ot ? fmtH(s2.ot) : '—'}</td><td>${c2 ? (PAY_T[c2.c.type] || 'Monthly') : '<span class="pill off">Not set</span>'}</td><td class="mono"><b>${c2 ? money(c2.total, c2.c.currency) : '—'}</b></td><td class="chev">${openR ? '▲' : '▼'}</td></tr>${openR ? `<tr class="pay-det"><td colspan="6">${payDetail(x, m, s2, c2)}</td></tr>` : ''}`; }).join('') || '<tr><td colspan="6" class="empty">No employees yet.</td></tr>'; }
+    $('pyTeam').innerHTML = people().map(x => { const s2 = payMonthStats(payDays(x), m), c2 = payCalc(x, m, s2); const openR = payOpen === x.key; return `<tr data-k="${esc(x.key)}" class="pay-row${openR ? ' open' : ''}" aria-expanded="${openR}"><td><div class="person">${av(x.name)}${esc(x.name)}</div></td><td class="mono">${x.clock === false ? '—' : s2.worked}</td><td class="mono">${x.clock === false ? 'Not tracked' : fmtH(s2.ms)}</td><td class="mono">${s2.ot ? fmtH(s2.ot) : '—'}</td><td>${c2 ? (PAY_T[c2.c.type] || 'Monthly') : '<span class="pill off">Not set</span>'}</td><td class="mono"><b>${c2 ? money(c2.total, c2.c.currency) : '—'}</b></td><td class="chev">${openR ? '▲' : '▼'}</td></tr>${openR ? `<tr class="pay-det"><td colspan="7">${payDetail(x, m, s2, c2)}</td></tr>` : ''}`; }).join('') || '<tr><td colspan="7" class="empty">No employees yet.</td></tr>'; }
   document.querySelector('.pay-self').hidden = isAdmin;
   if (document.querySelector('.view[data-view="pay"]:not([hidden])')) { const c = $('cPay'); delete c.dataset.drawn; queueCharts(); }
 }
@@ -2541,7 +2547,7 @@ function slipHtml(D, draft){
 <div class="boxes">${box('Personal', '👤', [['Name', v(p.name)], ['Employee code', v(p.empCode)], ['Email', v(p.email)], ['Mobile', v(info.phone)]])}
   ${box('Role', '💼', [['Designation', v(p.designation || p.role)], ['Department', v(p.department)], ['Employment type', v(p.empType)], ['Date of joining', v(dt(p.joinDate))]])}
   ${box('Bank', '🏦', [['Bank', v(info.bankName)], ['Account no.', v(acct)], ['IFSC', v(info.ifsc)], ['Branch', v(info.branch)]])}</div>
-<div class="days"><div><b>${pc ? pc.wk : '—'}</b><span>Working days</span></div><div><b>${pc ? pc.hol : 0}</b><span>Holidays</span></div><div><b>${pc ? pc.pl : 0}</b><span>Paid leave</span></div><div><b>${pc ? pc.unpaid : 0}</b><span>Unpaid leave</span></div><div class="hl"><b>${pc ? pc.payable : '—'}</b><span>Paid days</span></div></div>
+<div class="days"><div><b>${pc ? pc.wk : '—'}</b><span>Working days</span></div><div><b>${pc ? pc.worked : 0}</b><span>Days worked</span></div><div><b>${pc ? pc.hol : 0}</b><span>Holidays</span></div><div><b>${pc ? pc.pl : 0}</b><span>Paid leave</span></div><div class="hl"><b>${pc ? pc.payable : '—'}</b><span>Paid days</span></div></div>
 <h2>Earnings &amp; deductions</h2>
 <table><thead><tr><th>Earnings</th><th class="n">Amount</th><th class="sep">Deductions</th><th class="n">Amount</th></tr></thead><tbody>
 ${[...Array(rows)].map((_, i) => `<tr>${cell(earnRows[i])}${cell(dedRows[i]).replace('<td', '<td class="sep"')}</tr>`).join('')}
@@ -2565,7 +2571,7 @@ function slipEditor(x, m){ const e = slipCfg(x, m), sv = slipsAll[slipId(x.key, 
   const st = sv ? (sv.status === 'published' ? `<span class="pill ok">Published ${sv.publishedAt ? fmtDay(sv.publishedAt.slice(0, 10)) : ''}</span>` : '<span class="pill warn">Draft · not visible to employee</span>') : '<span class="pill">Not started</span>';
   return `<div class="slip-ed" data-sk="${esc(x.key)}"><div class="slip-hd"><h4>🧾 Payslip · ${esc(mName)}</h4>${st}</div>
     <div class="slip-g"><div class="f"><label>Agreed monthly salary (${esc(cur)})</label><input type="number" min="0" step="1" data-se="amount" value="${esc(e.amount)}" placeholder="e.g. 10000"></div>
-      <div class="slip-calc">${T.pc ? `Day rate ${money(T.pc.rate, cur)} (salary ÷ 20) · ${T.pc.wk} weekdays${T.pc.unpaid ? ' − ' + T.pc.unpaid + ' unpaid leave' : ''} = <b>${T.pc.payable} paid days</b><small>Holidays and approved leave are paid. Months with more than 20 weekdays pay a little more.</small>` : 'Enter the agreed monthly salary.'}</div></div>
+      <div class="slip-calc">${T.pc ? `<b>${T.pc.payable} paid days</b> = ${T.pc.worked} worked${T.pc.hol ? ' + ' + T.pc.hol + ' holiday' + (T.pc.hol > 1 ? 's' : '') : ''}${T.pc.pl ? ' + ' + T.pc.pl + ' paid leave' : ''} · day rate ${money(T.pc.rate, cur)} (salary ÷ 20)<small>${T.pc.tracked ? 'Days worked come from My Workday. ' + (T.pc.absent ? T.pc.absent + ' weekday' + (T.pc.absent > 1 ? 's' : '') + ' not worked and not on leave: not paid. ' : '') : 'This employee does not use the time clock: every weekday is paid except unpaid leave. '}${T.pc.wk} weekdays this month.</small>` : 'Enter the agreed monthly salary.'}</div></div>
     <div class="slip-x"><b>Additional payments and deductions</b>${(e.extras || []).map((r, i) => `<div class="slip-xr"><input data-sx="${i}" data-f="label" placeholder="${r.kind === 'ded' ? 'e.g. Advance recovery' : 'e.g. Internet allowance'}" value="${esc(r.label || '')}"><input type="number" min="0" step="0.01" data-sx="${i}" data-f="amount" value="${esc(r.amount ?? '')}" placeholder="Amount"><select data-sx="${i}" data-f="kind"><option value="earn"${r.kind !== 'ded' ? ' selected' : ''}>+ Payment / allowance</option><option value="ded"${r.kind === 'ded' ? ' selected' : ''}>− Deduction</option></select><button class="mini danger" type="button" data-sxdel="${i}">✕</button></div>`).join('') || '<p class="hint" style="margin:4px 0">None added.</p>'}
       <div class="row" style="gap:6px"><button class="mini" type="button" data-sxadd="earn">+ Add allowance / payment</button><button class="mini" type="button" data-sxadd="ded">+ Add deduction</button></div></div>
     <div class="f"><label>Note to the employee (optional, shown on the payslip)</label><input data-se="note" maxlength="400" value="${esc(e.note)}" placeholder="e.g. Includes Diwali bonus"></div>
