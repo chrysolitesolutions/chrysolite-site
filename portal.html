@@ -20,10 +20,30 @@
 <script>try { if (localStorage.getItem('cs_was_in')) document.documentElement.classList.add('resuming'); } catch (e) {}</script>
 <style>
 html.resuming #loginView{display:none!important}
-.resume-splash{display:none}html.resuming .resume-splash{display:grid;position:fixed;inset:0;z-index:200;place-items:center;background:var(--bg,#f3f6f2)}
-.resume-splash div{display:grid;justify-items:center;gap:14px;font:600 15px var(--body,sans-serif);color:var(--ink-soft,#5f7068)}
-.resume-splash img{width:72px;height:72px;border-radius:18px;background:#fff;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.3);animation:rsPulse 1.4s ease-in-out infinite}
-@keyframes rsPulse{50%{transform:scale(1.06)}}
+.resume-splash{display:none}
+html.resuming .resume-splash{display:block;position:fixed;inset:0;z-index:200;overflow:hidden;background:radial-gradient(120% 90% at 50% 50%,#ffffff 0%,#eef4fb 45%,#dce8f5 100%)}
+.rs-tun{position:absolute;inset:0;perspective:520px;perspective-origin:50% 50%;overflow:hidden}
+.rs-tun::before{content:"";position:absolute;left:-50%;right:-50%;bottom:-10%;height:70%;transform:rotateX(78deg);transform-origin:50% 100%;background:repeating-linear-gradient(90deg,rgba(40,120,210,.16) 0 1px,transparent 1px 70px),repeating-linear-gradient(0deg,rgba(40,120,210,.16) 0 1px,transparent 1px 70px);animation:rsGrid 3s linear infinite;mask-image:linear-gradient(transparent,#000 60%)}
+@keyframes rsGrid{to{background-position:0 0,0 70px}}
+.rs-p{position:absolute;left:50%;top:50%;width:var(--w);height:var(--h);margin:calc(var(--h)/-2) 0 0 calc(var(--w)/-2);border:1px solid rgba(40,120,210,.38);border-radius:6px;background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(225,238,252,.45)),repeating-linear-gradient(0deg,rgba(40,120,210,.14) 0 2px,transparent 2px 9px);background-size:auto,60% 100%;background-repeat:no-repeat;box-shadow:0 0 18px rgba(80,160,240,.18),inset 0 0 0 1px rgba(255,255,255,.5);opacity:0;animation:rsFly var(--t) linear infinite;animation-delay:var(--d)}
+.rs-p.o{border-color:rgba(240,140,60,.5);box-shadow:0 0 18px rgba(250,150,70,.22)}
+.rs-p::after{content:"";position:absolute;left:8%;right:30%;top:14%;height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(40,120,210,.55),transparent)}.rs-p.o::after{background:linear-gradient(90deg,rgba(240,140,60,.7),transparent)}
+@keyframes rsFly{0%{transform:translate3d(var(--x),var(--y),-1400px);opacity:0}12%{opacity:.85}85%{opacity:.75}100%{transform:translate3d(calc(var(--x)*1.8),calc(var(--y)*1.8),420px);opacity:0}}
+.rs-s{position:absolute;left:50%;top:50%;width:2px;height:var(--l);background:linear-gradient(transparent,var(--c),transparent);border-radius:2px;opacity:0;transform-origin:50% 0;animation:rsStreak var(--t) linear infinite;animation-delay:var(--d)}
+@keyframes rsStreak{0%{transform:rotate(var(--a)) translateY(40px) scaleY(.2);opacity:0}20%{opacity:.9}100%{transform:rotate(var(--a)) translateY(70vmax) scaleY(1.4);opacity:0}}
+.rs-c{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.rs-core{display:grid;justify-items:center;gap:16px;padding:34px 46px;border-radius:28px;background:radial-gradient(closest-side,rgba(255,255,255,.92),rgba(255,255,255,.6) 70%,transparent);backdrop-filter:blur(3px)}
+.rs-logo{position:relative;width:118px;height:118px;display:grid;place-items:center}
+.rs-logo img{width:74px;height:74px;border-radius:20px;background:#fff;padding:7px;box-shadow:0 14px 36px -12px rgba(30,90,170,.45);animation:rsPulse 1.6s ease-in-out infinite;position:relative;z-index:1}
+.rs-logo::before,.rs-logo::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:#2a7fd4;border-right-color:rgba(42,127,212,.25);animation:rsSpin 1.2s linear infinite}
+.rs-logo::after{inset:10px;border-top-color:#f08c3c;border-left-color:rgba(240,140,60,.25);border-right-color:transparent;animation-duration:1.8s;animation-direction:reverse}
+@keyframes rsSpin{to{transform:rotate(360deg)}}@keyframes rsPulse{50%{transform:scale(1.05)}}
+.rs-txt{font:700 15px var(--body,sans-serif);letter-spacing:.04em;color:#1f4a78}.rs-txt i{display:inline-block;width:1.2em;text-align:left;font-style:normal;animation:rsDots 1.2s steps(4) infinite;overflow:hidden;vertical-align:bottom;white-space:nowrap}
+@keyframes rsDots{0%{width:0}100%{width:1.2em}}
+.rs-bar{width:200px;height:4px;border-radius:999px;background:rgba(40,120,210,.15);overflow:hidden}.rs-bar b{display:block;height:100%;width:40%;border-radius:inherit;background:linear-gradient(90deg,#2a7fd4,#7cc3ff,#f08c3c);animation:rsBar 1.3s ease-in-out infinite}
+@keyframes rsBar{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+.rs-sub{font:500 11px var(--mono,monospace);letter-spacing:.18em;text-transform:uppercase;color:#6b88a8}
+@media (prefers-reduced-motion: reduce){.rs-p,.rs-s,.rs-tun::before{animation:none!important;opacity:.3}}
 
 /* Layout: sign-in split screen, then an app shell with a side rail (top tabs on phones) over Roster, Schedule and Leave plans. */
 :root{
@@ -881,7 +901,11 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 <body>
 
 <!-- SIGN-IN -->
-<div class="resume-splash" aria-live="polite"><div><img src="logo.png" alt=""><span>Loading your portal…</span></div></div>
+<div class="resume-splash" aria-live="polite"><div class="rs-tun" id="rsTun"></div><div class="rs-c"><div class="rs-core"><div class="rs-logo"><img src="logo.png" alt=""></div><div class="rs-txt">Loading your portal<i>...</i></div><div class="rs-bar"><b></b></div><div class="rs-sub">Chrysolite · secure employee portal</div></div></div></div>
+<script>(function(){ if (!document.documentElement.classList.contains('resuming')) return; const t = document.getElementById('rsTun'), r = (a, b) => a + Math.random() * (b - a); let h = '';
+  for (let i = 0; i < 34; i++) { const ang = r(0, 6.283), rad = r(140, 520); h += '<div class="rs-p' + (Math.random() < .2 ? ' o' : '') + '" style="--w:' + r(70, 220) + 'px;--h:' + r(40, 140) + 'px;--x:' + Math.cos(ang) * rad + 'px;--y:' + Math.sin(ang) * rad * .7 + 'px;--t:' + r(3.2, 6) + 's;--d:-' + r(0, 6) + 's"></div>'; }
+  for (let i = 0; i < 40; i++) h += '<span class="rs-s" style="--a:' + r(0, 360) + 'deg;--l:' + r(40, 140) + 'px;--c:' + (Math.random() < .25 ? 'rgba(240,140,60,.85)' : 'rgba(42,127,212,.8)') + ';--t:' + r(1.4, 3) + 's;--d:-' + r(0, 3) + 's"></span>';
+  t.innerHTML = h; })();</script>
 <section class="login" id="loginView">
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="login-art">
