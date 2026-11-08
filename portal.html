@@ -3162,9 +3162,9 @@ function setGTab(t){ document.querySelectorAll('[data-gtab]').forEach(b => b.cla
 document.addEventListener('click', e => { const b = e.target.closest('[data-gtab]'); if (b) setGTab(b.dataset.gtab); });
 try { const t = localStorage.getItem('cs_gtab'); if (t) setGTab(t); } catch (e) {}
 
-/* floating "back to top" button on Projects and every page opened from it */
+/* floating "back to top" button on every page */
 (function(){ const b = $('toTop'), PROJ = ['guides', 'gdoc', 'brief', 'pf', 'pfsrc', 'benchhub'];
-  const upd = () => { const v = document.querySelector('.view:not([hidden])'), on = !!v && PROJ.includes(v.dataset.view) && window.scrollY > 300;
+  const upd = () => { const v = document.querySelector('.view:not([hidden])'), on = !!v && !$('appView').hidden && window.scrollY > 300;   /* every page of the portal */
     if (on) { b.hidden = false; requestAnimationFrame(() => b.classList.add('show')); } else { b.classList.remove('show'); if (!b.hidden) setTimeout(() => { if (!b.classList.contains('show')) b.hidden = true; }, 260); } };
   window.addEventListener('scroll', upd, {passive: true}); document.addEventListener('click', () => setTimeout(upd, 80));
   b.onclick = () => window.scrollTo({top: 0, behavior: reduce ? 'auto' : 'smooth'}); })();
