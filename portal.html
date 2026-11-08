@@ -408,6 +408,14 @@ tbody tr:hover{background:var(--surface-2)}
 .mc-c.ec[data-dark] .d,.mc-c.ec[data-dark] b,.mc-c.ec[data-dark] small{color:#fff!important}
 .mc-c.ec .bar{height:6px;background:linear-gradient(90deg,#b6d441,#2f7d32);border-radius:0 3px 3px 0}.mc-c.ec[data-dark] .bar{background:#e6f5c9}
 .mc-c small.ab{color:#b4513a;font-weight:600}.mc-c.ec.sel{outline:3px solid var(--info);outline-offset:-3px}
+.pw-dlg.eday-dlg{width:min(720px,calc(100vw - 24px));max-height:90vh;overflow:auto}.pw-dlg.eday-dlg[open]{display:grid;gap:12px}
+.eday-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.eday-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}@media(max-width:560px){.eday-tiles{grid-template-columns:repeat(2,1fr)}}
+.eday-tiles div{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.eday-tiles span{display:block;font-size:12px;color:var(--ink-soft)}.eday-tiles b{font:800 18px var(--display)}
+.eday-tiles .warn{background:#fff4dc;border-color:#f0c97a}.eday-tiles .warn b{color:#8a5a00}
+.eday-h{margin:6px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.eday-x{display:grid;gap:8px}.eday-x > div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px}.eday-x small{display:block;color:var(--ink-soft);margin-top:3px}.eday-x .pill{margin-left:6px}
+.eday-x .ign{background:#fdecea;border-color:#f3b8ae;color:#8a2416}
 .ecal-day{min-height:24px;font-size:14px}.ecal-ss{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font:500 13px var(--mono)}
 tr.ecal-row{cursor:pointer}tr.ecal-row:hover td{background:color-mix(in srgb,var(--gem) 7%,transparent)}
 
@@ -1567,6 +1575,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
   </form>
 </dialog>
 <button type="button" class="to-top" id="toTop" aria-label="Back to the top of the page" title="Back to top" hidden><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V4M4.5 9.5 10 4l5.5 5.5"/></svg><span>Top</span></button>
+<dialog class="pw-dlg eday-dlg" id="edayDlg" aria-labelledby="edayT"><div class="eday-hd"><div><h3 id="edayT" style="margin:0"></h3><div class="hint" id="edaySub"></div></div><button class="btn btn-ghost" type="button" id="edayX">Close</button></div><div id="edayBody"></div></dialog>
 <dialog class="pw-dlg ecal-dlg" id="ecalDlg" aria-labelledby="ecalT">
   <div class="ecal-hd"><div class="person" id="ecalWho"></div><h3 id="ecalT" style="margin:0">Monthly attendance</h3><div class="toolbar" style="margin-left:auto;flex:0 1 auto"><input type="month" id="ecalMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="ecalX">Close</button></div></div>
   <div class="tiles mini-tiles"><div class="tile"><span>Hours worked</span><b id="ecH">0h 00m</b></div><div class="tile"><span>Days worked</span><b id="ecD">0</b></div><div class="tile"><span>Sessions</span><b id="ecS">0</b></div><div class="tile"><span>Average per day worked</span><b id="ecA">0h 00m</b></div></div>
@@ -3963,9 +3972,31 @@ function renderEcal(){ const p = people().find(x => x.key === ecalKey); if (!p) 
 function openEcal(key){ ecalKey = key; $('ecalMonth').value = attMode === 'month' ? ($('attMonth').value || monthKey(new Date())) : ($('attDate').value || todayStr()).slice(0, 7); renderEcal(); const d = $('ecalDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
 ['teamAtt', 'teamMonth'].forEach(id => $(id).addEventListener('click', e => { if (e.target.closest('button, a, input, select')) return; const r = e.target.closest('tr[data-ecal]'); if (r) openEcal(r.dataset.ecal); }));
 $('ecalMonth').addEventListener('change', renderEcal); $('ecalX').onclick = () => $('ecalDlg').close();
-$('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data-eday]'); if (!b) return; const p = people().find(x => x.key === ecalKey), rec = p && teamAtt.find(a => a.email === p.email), l = ((rec && rec.days) || {})[b.dataset.eday] || [];
+// one day in detail: every session with its length, and what happened to time over 8 hours
+$('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data-eday]'); if (!b) return; const p = people().find(x => x.key === ecalKey); if (!p) return;
+  const k = b.dataset.eday, rec = teamAtt.find(a => a.email === p.email), l = ((rec && rec.days) || {})[k] || [], now = Date.now();
   $('ecalGrid').querySelectorAll('.sel').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
-  $('ecalDay').innerHTML = `<b>${new Date(b.dataset.eday + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'})}</b>` + (l.length ? ` · ${fmtH(sessMs(l))}<div class="ecal-ss">${l.map((x, i) => `<span>${i + 1}. ${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? ' (break)' : ''}</span>`).join('')}</div>` : ' · no sessions'); });
+  const dur = x => Math.max(0, (x.out ? new Date(x.out) : now) - new Date(x.in)), raw = rawMs(l), counted = sessMs(l), extra = Math.max(0, raw - DAY_MAX);
+  const otQ = (otReqAll.find(r => r.key === p.key) || {}).days, ot = otQ && otQ[k], otA = otApprAll[p.key] && otApprAll[p.key].days && otApprAll[p.key].days[k];
+  const cItems = carryItems(carryReqAll[p.key], carryApprAll[p.key]), cOut = cItems.filter(x => x.from === k), cIn = cItems.filter(x => x.to === k && x.status === 'approved');
+  const fdd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), stP = st => st === 'approved' ? '<span class="pill ok">Approved</span>' : st === 'rejected' ? '<span class="pill off">Not approved</span>' : '<span class="pill warn">Waiting for approval</span>';
+  const lv = decisions.find(d => d.email === p.email && d.status === 'Approved' && d.from <= k && d.to >= k), h = holOn(k);
+  $('edayT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+  $('edaySub').textContent = p.name + (lv ? ' · ' + lv.type + ' leave' : '') + (h ? ' · ' + h.name : '');
+  const sess = l.length ? `<table class="att eday-tab"><thead><tr><th>#</th><th>Clock in</th><th>Clock out</th><th>Duration</th><th>Note</th></tr></thead><tbody>${l.map((x, i) => `<tr><td>${i + 1}</td><td class="mono">${fmtT(x.in)}</td><td class="mono">${x.out ? fmtT(x.out) : '<span class="pill ok">Working now</span>'}</td><td class="mono"><b>${fmtH(dur(x))}</b></td><td>${[x.brk ? 'Ended for a break' : '', x.auto ? autoTag(x).replace(/[()]/g, '').trim() : '', x.ot ? 'Overtime session' : '', x.edit ? 'Added or corrected by admin' : ''].filter(Boolean).join(' · ') || '—'}</td></tr>`).join('')}</tbody></table>` : '<p class="empty">No sessions on this day.</p>';
+  const tiles = `<div class="eday-tiles"><div><span>Total clocked</span><b>${fmtH(raw)}</b></div><div><span>Counted for pay</span><b>${fmtH(counted)}</b></div><div class="${extra > 60000 ? 'warn' : ''}"><span>Over 8 hours</span><b>${extra > 60000 ? fmtH(extra) : 'No'}</b></div><div><span>Sessions</span><b>${l.length}</b></div></div>`;
+  let ex = '';
+  if (extra > 60000 || ot || cOut.length) { const otMs = ot ? (+ot.hours || 0) * 3600000 : 0, cMs = cOut.filter(x => x.status !== 'rejected').reduce((a, x) => a + x.ms, 0), otOk = otA && otA.status === 'approved' ? (+otA.hours || 0) * 3600000 : 0;
+    const left = Math.max(0, extra - (otA && otA.status === 'rejected' ? 0 : otMs) - cMs);
+    ex = `<h4 class="eday-h">What happened to the extra time</h4><div class="eday-x">
+      ${ot ? `<div><b>⏱ Sent as overtime:</b> ${(+ot.hours || 0)} h ${stP(otA ? otA.status : 'pending')}${ot.reason ? `<small>Reason: ${esc(ot.reason)}</small>` : ''}${otA && otA.by ? `<small>Decided by ${esc(otA.by)}${otA.at ? ', ' + fmtDT2(otA.at) : ''}</small>` : ''}</div>` : ''}
+      ${cOut.map(x => `<div><b>↪ Carried to ${fdd(x.to)}:</b> ${fmtH(x.ms)} ${stP(x.status)}${x.reason ? `<small>Reason: ${esc(x.reason)}</small>` : ''}</div>`).join('')}
+      ${left > 60000 ? `<div class="ign"><b>✗ Not used:</b> ${fmtH(left)} over 8 hours was neither sent as overtime nor carried to another day, so it is <b>not counted</b> for pay.</div>` : ''}
+      ${!ot && !cOut.length && left <= 60000 ? '<div>All time is within 8 hours.</div>' : ''}</div>`; }
+  const cin = cIn.length ? `<h4 class="eday-h">Time added from other days</h4><div class="eday-x">${cIn.map(x => `<div><b>↩ From ${fdd(x.from)}:</b> +${fmtH(x.ms)} ${stP(x.status)}${x.reason ? `<small>Reason: ${esc(x.reason)}</small>` : ''}</div>`).join('')}</div>` : '';
+  $('edayBody').innerHTML = tiles + '<h4 class="eday-h">Sessions</h4>' + sess + ex + cin;
+  const d = $('edayDlg'); try { d.showModal(); } catch (er) { d.setAttribute('open', ''); } });
+$('edayX').onclick = () => $('edayDlg').close();
 function renderTeamAtt(){
   if (!isAdmin) return;
   $('attDayWrap').hidden = attMode !== 'day'; $('attMonthWrap').hidden = attMode !== 'month';
