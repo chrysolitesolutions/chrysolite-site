@@ -1834,7 +1834,7 @@ $('loginForm').addEventListener('submit', async e => {
     const a = await loadAccount(key);
     if (!a) { await fbAuth.signOut(); return loginErr('Your login works, but there is no portal profile for this email yet. Ask your admin to add you in Admin.'); }
     if (!a.active) { await fbAuth.signOut(); return loginErr('Your account is turned off. Ask your admin to turn it back on.'); }
-    $('pw').value = ''; showApp(a);
+    $('pw').value = ''; showApp(a); try { localStorage.setItem('cs_was_in', '1'); } catch (e) {}
   } catch (err) {
     const c = err && err.code || '';
     if (/invalid-credential|wrong-password|user-not-found|invalid-email|invalid-login/.test(c)) { await new Promise(r => setTimeout(r, 500)); loginErr('That email and password don\'t match an account. Check both, or use "Forgot password?".'); }
@@ -1849,7 +1849,7 @@ $('adminEntry').onclick = async () => {
   if (exists) { $('adminEntry').hidden = true; return loginErr('The admin area is locked. Sign in with an account that has Admin rights.'); }
   setupMode = true; showApp(null); go('admin'); $('setupMsg').hidden = false; $('aAccess').value = 'admin'; $('aAccess').dispatchEvent(new Event('change')); $('aName').focus();
 };
-$('signOut').onclick = () => { Object.keys(unsub).forEach(k => { try { unsub[k](); } catch (e) {} delete unsub[k]; }); if (fbAuth) fbAuth.signOut().catch(() => {}); me = null; myAtt = null; isAdmin = false; setupMode = false; $('setupMsg').hidden = true;  $('appView').hidden=true; $('loginView').hidden=false; history.replaceState(null,'',location.pathname); toast('Signed out'); };
+$('signOut').onclick = () => { try { localStorage.removeItem('cs_was_in'); } catch (e) {} Object.keys(unsub).forEach(k => { try { unsub[k](); } catch (e) {} delete unsub[k]; }); if (fbAuth) fbAuth.signOut().catch(() => {}); me = null; myAtt = null; isAdmin = false; setupMode = false; $('setupMsg').hidden = true;  $('appView').hidden=true; $('loginView').hidden=false; history.replaceState(null,'',location.pathname); toast('Signed out'); };
 
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
@@ -4609,10 +4609,20 @@ renderAll();
 
 /* resume a session started on this device */
 (async () => {
+  // while the saved sign-in is being restored, say so instead of showing an empty sign-in form
+  let wasIn = false; try { wasIn = !!localStorage.getItem('cs_was_in'); } catch (e) {}
+  const rm = $('remember'); try { const k = localStorage.getItem('cs_keep'); rm.checked = k === null ? true : k === '1'; } catch (e) { rm.checked = true; } rm.addEventListener('change', () => { try { localStorage.setItem('cs_keep', rm.checked ? '1' : '0'); } catch (e) {} });
+  const say = t => { const m = $('loginMsg') || null; if (m) { m.className = 'msg'; m.textContent = t; m.hidden = !t; } };
+  if (wasIn) say('Signing you back in…');
   const d = await ready; if (!d) { if (!window.firebase) loginErr(NO_DB); return; }
   fbAuth.onAuthStateChanged(async u => {
-    if (!u || me || signingIn) return;
-    try { const a = await loadAccount(String(u.email).toLowerCase()); if (a && a.active) showApp(a); else await fbAuth.signOut(); } catch (e) {}
+    if (!u) { if (!me) say(''); try { localStorage.removeItem('cs_was_in'); } catch (e) {} return; }
+    if (me || signingIn) return;
+    let a = null, err = null;
+    for (let i = 0; i < 3 && !a; i++) { try { a = await loadAccount(String(u.email).toLowerCase()); err = null; if (a) break; } catch (e) { err = e; await new Promise(r => setTimeout(r, 800 * (i + 1))); } }
+    if (a && a.active) { say(''); showApp(a); try { localStorage.setItem('cs_was_in', '1'); } catch (e) {} }
+    else if (err) loginErr('You are still signed in, but your account could not be loaded. Check your internet connection and refresh the page.');
+    else { say(''); await fbAuth.signOut(); }
   });
 })();
 })();
