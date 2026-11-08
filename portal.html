@@ -255,6 +255,10 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-tabs{display:inline-flex;width:max-content;max-width:100%;gap:4px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--surface);margin:0 0 18px}.gd-tabs button{border:0;background:none;border-radius:999px;padding:9px 18px;font:600 14px var(--body);cursor:pointer;color:var(--ink)}.gd-tabs button.on{background:var(--gem);color:#13240a}
 .gd-group{display:flex;align-items:center;gap:10px;font-size:19px;margin:22px 0 12px}.gd-group .dot{width:10px;height:10px;border-radius:50%}.gd-group .dot.on{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}.gd-group .dot.up{background:var(--info);box-shadow:0 0 0 4px color-mix(in srgb,var(--info) 20%,transparent)}
 #guideGridUp{margin-bottom:8px}#guideGridUp .lk{opacity:.92}
+.gd-doc .intro-img{display:block;width:100%;max-width:760px;margin:6px auto 4px;border-radius:14px;border:1px solid var(--line);box-shadow:0 10px 30px -18px rgba(0,0,0,.35);cursor:zoom-in}
+.gd-doc .intro-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 12px}.gd-doc .intro-3 div{padding:12px 14px;border-radius:12px;font-size:14px}.gd-doc .intro-3 b{display:block;font-size:16px;margin-bottom:2px}
+.gd-doc .intro-3 .m{background:#e3f4dc;color:#1f6a2a}.gd-doc .intro-3 .n{background:#fbe3df;color:#a5281c}.gd-doc .intro-3 .c{background:#fff4dc;color:#7a5200}@media(max-width:640px){.gd-doc .intro-3{grid-template-columns:1fr}}
+.gd-doc .intro-tip{padding:10px 14px;border-left:4px solid var(--info);background:color-mix(in srgb,var(--info) 8%,var(--surface));border-radius:8px;margin:8px 0 14px}
 .gd-toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.gd-toc a{font:500 12.5px var(--body);text-decoration:none;color:var(--ink);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.gd-toc a:hover{border-color:var(--gem)}
 .gd-doc{max-width:980px;line-height:1.65}.gd-doc h2{font-size:21px;margin:26px 0 10px;padding-top:14px;border-top:1px solid var(--line);scroll-margin-top:20px}.gd-doc h2:first-child{margin-top:0;border-top:0;padding-top:0}
 .gd-doc h3{font-size:16px;margin:18px 0 6px;color:var(--gem-ink)}.gd-doc p{margin:0 0 10px}.gd-doc ul,.gd-doc ol{margin:0 0 12px;padding-left:22px;display:grid;gap:4px}
@@ -2962,7 +2966,33 @@ $('pfFile').addEventListener('change', async e => {
 const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bprof: 'doc_bench_profile', bemail: 'doc_bench_email', bphone: 'doc_bench_phone', bintro: 'doc_bench_intro', bemailbrief: 'doc_bench_email_brief', bphonebrief: 'doc_bench_phone_brief'};
 const BENCH_SUB = ['bprof', 'bemail', 'bphone'];
 // built-in content shown until an admin uploads a Word document for the page
-const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the profile review screen', html: `
+const GDEFAULT = {bintro: {title: '1.1 Introduction to LinkedIn Profile Benchmarking', subtitle: 'What the project is, how to read a LinkedIn profile, and how to decide', html: `
+<h2>1. What is profile benchmarking?</h2>
+<p>For each person, you compare what <strong>our file says (SeekOut)</strong> with what their <strong>public LinkedIn profile says</strong>, one field at a time. For every field you give one answer:</p>
+<div class="intro-3"><div class="m"><b>✓ Match</b>The same information</div><div class="n"><b>✗ Not a match</b>Different information</div><div class="c"><b>? Can't decide</b>Truly unclear, or can't be checked</div></div>
+<p>That's it. The pictures below show where to find each field on LinkedIn and how to decide.</p>
+<h2>2. How to read a LinkedIn profile</h2>
+<p>Start here. Learn where each part of the profile is. The most important parts are the <strong>name, headline, location, About</strong> and the <strong>Experience</strong> section (current job title, company and dates).</p>
+<p><img class="intro-img" src="intro-read-profile.webp" alt="How to read a LinkedIn profile"></p>
+<div class="intro-tip"><b>Tip:</b> the <strong>headline</strong> under the name is written by the person. It is <strong>not</strong> their job title. Always take the job title and company from the <strong>Experience</strong> section.</div>
+<h2>3. The 9 fields and how to decide</h2>
+<p>These are the fields you check. The table shows when each one is a Match, Not a match or Can't decide.</p>
+<p><img class="intro-img" src="intro-matching-guide.webp" alt="LinkedIn profile matching guide"></p>
+<h2>4. Examples, field by field</h2>
+<p>Real-looking examples for Name, Job title, Company, Location and Headline.</p>
+<p><img class="intro-img" src="intro-review-examples.webp" alt="LinkedIn profile review examples"></p>
+<h2>5. Remember these 5 rules</h2>
+<ol><li><strong>Current role only:</strong> the job must show <strong>“Present”</strong> with no end date. An old job = Not a match.</li>
+<li><strong>Job title must be exactly the same.</strong> Only approved short forms are allowed (Snr = Senior, Mgr = Manager).</li>
+<li><strong>Location:</strong> same county or district = Match. A different county, even in the same state = Not a match.</li>
+<li><strong>Parent vs subsidiary company</strong> (e.g. Amazon vs AWS): L1 = Can't decide and add a comment. L2 decides.</li>
+<li><strong>Can't decide</strong> is for truly unclear cases only, not a shortcut.</li></ol>
+<p><strong>L1</strong> = initial review · <strong>L2</strong> = detailed review.</p>
+<h2>6. What to do next</h2>
+<ol><li>Open <strong>1.2 Profile Benchmarking – Briefing and Practice</strong> and complete the practice cases.</li>
+<li>Read <strong>1.3 Profile Benchmarking – Steps and Instructions</strong> and accept it.</li>
+<li>Use the <strong>Text checker</strong>, <strong>Job title checker</strong> and <strong>Location checker</strong> in Links whenever you are unsure.</li></ol>`},
+bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the profile review screen', html: `
 <h2>1. Before you start</h2>
 <ul><li>Every profile is <strong>reserved for you for a limited time</strong>, shown top right (e.g. “Reserved for you until 11:05 PM”). Finish it before then, or it goes back to the queue.</li>
 <li>The top bar shows your progress: <strong>Today</strong> (profiles done today), <strong>Checkpoint streak</strong> and <strong>Accuracy (30 days)</strong>. Some answers are peer-checked, so accuracy matters more than speed.</li>
@@ -3070,9 +3100,9 @@ const GDEFAULT = {bprof: {title: 'Profile Review', subtitle: 'Step-by-step instr
 <li>Watch the reservation time if a profile has many emails.</li></ul>`}};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
-  const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE)$/;
+  const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE|IMG)$/;
   const walk = el => [...el.children].forEach(c => { if (!OK.test(c.tagName)) { c.replaceWith(...c.childNodes); return walk(el); }
-    [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')); if (!keep) c.removeAttribute(a.name); });
+    [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')) || (c.tagName === 'IMG' && ((a.name === 'src' && /^[\w-]+\.(webp|png|jpe?g)$/i.test(a.value)) || a.name === 'alt')); if (!keep) c.removeAttribute(a.name); });
     if (c.tagName === 'A') { c.target = '_blank'; c.rel = 'noopener'; } walk(c); });
   const root = doc.body.firstChild; walk(root); return root.innerHTML;
 }
@@ -3133,6 +3163,7 @@ function renderGdoc(){
   $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
   $('gdUpd').textContent = g.updatedAt ? 'Last updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (g.fileName ? ' from ' + g.fileName : '') : '';
 }
+$('gdDoc').addEventListener('click', e => { const im = e.target.closest('img.intro-img'); if (im) window.open(im.src, '_blank', 'noopener'); });
 $('gdToc').addEventListener('click', e => { const a = e.target.closest('[data-to]'); if (!a) return; e.preventDefault(); const h = $(a.dataset.to); if (h) h.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'}); });
 const loadScript = src => new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
 $('gdFile').addEventListener('change', async e => {
