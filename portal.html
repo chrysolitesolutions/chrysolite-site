@@ -621,7 +621,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .bal{display:grid;gap:8px}
 
 .to-nav{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 16px}.to-nav button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.to-nav button:hover{border-color:var(--gem)}
-.to-top{align-items:stretch}.to-top > div > .panel{margin:0}
+.to-row{align-items:stretch}.to-row > div > .panel{margin:0}
 .tc-nav{display:flex;align-items:center;gap:8px}.tc-nav b{min-width:130px;text-align:center}
 .tc-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12.5px;color:var(--ink-soft)}.tc-legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-2px}
 .tc-legend .lv::before{background:color-mix(in srgb,var(--s2) 55%,var(--surface))}.tc-legend .pd::before{border:1.5px dashed #c98a00}.tc-legend .hol::before{background:#fde8c4}.tc-legend .we::before{background:var(--surface-2)}
@@ -1220,7 +1220,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
       <div class="msg warn" id="lvSuggMsg" hidden style="margin-bottom:12px"></div>
       <nav class="to-nav" id="toNav"><button type="button" data-to="toApply">Apply for leave</button><button type="button" data-to="toBal">My leave balance</button><button type="button" data-to="toHist">Leave history</button><button type="button" data-to="toTeam">Team calendar</button><button type="button" data-to="toHol">Holiday calendar</button><button type="button" data-to="reviewPanel" class="admin-only" hidden>Pending approvals</button></nav>
       <div class="panel admin-only" id="reviewPanel" hidden style="margin-bottom:16px"><h3>Pending approvals <span class="pill warn" id="pendCount" style="font-size:12px"></span></h3><p class="hint" style="margin:-4px 0 12px">Leave requests waiting for a manager or admin to approve or reject.</p><div class="timeline" id="reviewList"></div></div>
-      <div class="two to-top"><div id="toApply">
+      <div class="two to-row"><div id="toApply">
       <div class="panel" id="rqPanel" style="height:100%">
           <h3>Apply for leave</h3>
           <form class="lv-form" id="rqForm" novalidate>
