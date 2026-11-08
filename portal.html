@@ -240,6 +240,18 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-box .gd-card b{font-size:14px;line-height:1.3;margin-bottom:3px}.gd-box .gd-card span{font-size:12.5px;line-height:1.45}
 .gd-box .gd-card .ack-tag .pill{font-size:11.5px;padding:2px 8px}
 .gd-col .gd-group{font-size:14.5px!important;white-space:nowrap}
+/* transposed: one row per project (Profile, Email, Phone), its pages side by side */
+.gd-bench .gd-cols{grid-template-columns:minmax(0,1fr)!important;gap:14px}
+.gd-bench .gd-col{grid-template-columns:150px repeat(3,minmax(0,1fr));align-items:stretch;gap:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.gd-bench .gd-col:first-child{border-top:0;padding-top:0}
+.gd-bench .gd-col .gd-group{margin:0!important;white-space:normal;align-self:center;font-size:15px!important;line-height:1.3}
+@media(max-width:860px){.gd-bench .gd-col{grid-template-columns:minmax(0,1fr)}}
+.gd-bench .gd-col{grid-template-columns:118px repeat(3,minmax(0,1fr))}
+.gd-bench .gd-card{height:auto!important;min-height:150px;grid-template-columns:30px 1fr!important;gap:9px!important;padding:12px!important}
+.gd-bench .gd-card .ic{width:30px!important;height:30px!important}.gd-bench .gd-card .ic svg{width:15px;height:15px}
+.gd-bench .gd-card b{-webkit-line-clamp:unset!important;display:block!important;font-size:13.5px!important}
+.gd-bench .gd-col .gd-group .dot{flex:none}
+
 /* every card on the board has the same size: titles up to 3 lines, descriptions 2 lines */
 .gd-box .gd-card{height:162px;overflow:hidden;align-content:start}
 .gd-box .gd-card > div:last-child{display:flex;flex-direction:column;min-width:0;height:100%}
