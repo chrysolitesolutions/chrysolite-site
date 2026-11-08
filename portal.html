@@ -924,6 +924,27 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .mini.ok-btn:hover{background:var(--ok);color:#fff}
 .lk{text-align:left}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* act as an employee */
+.act-bar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px 16px;background:#7A3E6E;color:#fff;font-size:14px;box-shadow:0 4px 18px -6px rgba(0,0,0,.4)}
+.act-bar b{font-weight:700}.act-bar .hint{color:#F3DDEB;font-size:12.5px}
+.act-bar button{border:0;border-radius:999px;background:#fff;color:#7A3E6E;font-weight:700;padding:6px 16px;cursor:pointer}
+html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{padding-top:76px}}
+.cf-dlg{width:min(460px,calc(100vw - 24px));border:0;border-radius:18px;padding:22px 24px}.cf-dlg[open]{display:grid;gap:12px}
+.cf-dlg h3{margin:0;font-size:19px}.cf-dlg p{margin:0;line-height:1.5;color:var(--ink-soft)}
+.cf-dlg .cf-acts{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.cf-dlg .cf-ok,.cf-dlg .cf-no{border-radius:999px;padding:9px 24px;font-weight:700;cursor:pointer;font-size:14.5px}
+.cf-dlg .cf-ok{background:#7A3E6E;color:#fff;border:3px solid #fff;box-shadow:0 0 0 2px #7A3E6E}.cf-dlg .cf-no{background:#F9D5EC;color:#5B2350;border:0}
+.act-log{display:grid;gap:6px;margin-top:12px;font-size:13px}.act-log div{display:flex;gap:8px;flex-wrap:wrap;padding:7px 10px;border-radius:10px;background:var(--paper-2,rgba(0,0,0,.03))}
+.act-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.act-row select{min-width:240px;flex:1}
+/* admin: change or suggest leave dates */
+.ladj-dlg{width:min(560px,calc(100vw - 24px))}.ladj-dlg form{display:grid;gap:12px}
+.ladj-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ladj-mode label{display:grid;gap:2px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px}
+.ladj-mode label b{font-size:14px}.ladj-mode label:has(input:checked){border-color:var(--gem);background:rgba(155,181,42,.1)}.ladj-mode input{position:absolute;opacity:0}
+.ladj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ladj-grid .full{grid-column:1/-1}
+.lv-sugg{grid-column:1/-1;margin-top:6px;padding:10px 12px;border-radius:12px;background:#FFF6DB;border:1px solid #F0D68A;color:#5A4500;font-size:13.5px;display:grid;gap:8px}
+.ev .lv-sugg .acts{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:0}.ev .lv-sugg span{display:inline;margin:0}.ev .lv-sugg .btn{padding:7px 16px;font-size:13.5px}.lv-chg{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.ev.has-sugg{flex-wrap:wrap}.ev.has-sugg .lv-sugg{flex-basis:100%}
+
 </style>
 </head>
 <body>
@@ -1188,6 +1209,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <!-- TIME OFF MANAGEMENT -->
     <section class="view" data-view="timeoff" hidden>
       <div class="vhead"><div><h1>Time Off Management</h1><p>Apply for leave, check your balance and history, see who is off and the company holidays.</p></div></div>
+      <div class="msg warn" id="lvSuggMsg" hidden style="margin-bottom:12px"></div>
       <nav class="to-nav" id="toNav"><button type="button" data-to="toApply">Apply for leave</button><button type="button" data-to="toBal">My leave balance</button><button type="button" data-to="toHist">Leave history</button><button type="button" data-to="toTeam">Team calendar</button><button type="button" data-to="toHol">Holiday calendar</button><button type="button" data-to="reviewPanel" class="admin-only" hidden>Pending approvals</button></nav>
       <div class="panel admin-only" id="reviewPanel" hidden style="margin-bottom:16px"><h3>Pending approvals <span class="pill warn" id="pendCount" style="font-size:12px"></span></h3><p class="hint" style="margin:-4px 0 12px">Leave requests waiting for a manager or admin to approve or reject.</p><div class="timeline" id="reviewList"></div></div>
       <div class="two to-top"><div id="toApply">
@@ -1477,6 +1499,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <div class="msg" id="setupMsg" hidden style="margin-bottom:16px"><b>First-time setup.</b> Create your own account with Admin rights now. After that, the admin area is locked and opens only for people who sign in with an Admin account. When you're done, sign out and sign back in with your new admin email and password.</div>
       <div class="vhead"><div><h1>Admin</h1><p>Manage employee logins and profiles, and post announcements. Edit shifts on the Schedule page and approve leave on Leave plans.</p></div><span class="pill ok" id="accCount">0 accounts</span></div>
       <div class="panel" style="margin-bottom:16px"><h3 id="cTeamT">Team hours this month</h3><div class="chart" id="cTeam"></div></div>
+      <div class="panel" id="actPanel" style="margin-bottom:16px"><h3>Act as an employee</h3><p class="hint" style="margin:-4px 0 10px">See the portal exactly as an employee sees it, to fix a technical problem or make an override for them. Every session is logged below.</p><div class="act-row"><select id="actWho" aria-label="Employee to act as"></select><button class="btn btn-gem" type="button" id="actGo">Act as…</button></div><div class="act-log" id="actLog"></div></div>
       <div class="panel" id="prqPanel" style="margin-bottom:16px" hidden><h3>Profile change requests</h3><p class="hint" style="margin:-4px 0 6px">Employees asking to update locked details, and those who have finished and need locking again.</p><div id="prqList"></div></div>
       <div class="panel acc-panel" style="padding:0">
         <div class="toolbar" style="padding:16px"><input id="accQ" type="search" placeholder="Search name or email" aria-label="Search accounts"></div>
@@ -1639,6 +1662,18 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Send for approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
   </form>
 </dialog>
+<div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Anything you save counts as their answer.</span><button type="button" id="actStop">Stop acting</button></div>
+<dialog class="pw-dlg cf-dlg" id="cfDlg" aria-labelledby="cfT"><h3 id="cfT"></h3><p id="cfMsg"></p><div class="cf-acts"><button type="button" class="cf-ok" id="cfOk">OK</button><button type="button" class="cf-no" id="cfNo">Cancel</button></div></dialog>
+<dialog class="pw-dlg ladj-dlg" id="ladjDlg" aria-labelledby="ladjT"><form id="ladjForm" novalidate>
+  <h3 id="ladjT" style="margin:0">Change leave</h3><p class="hint" id="ladjWho" style="margin:0"></p>
+  <div class="ladj-mode"><label><input type="radio" name="ladjM" value="change" checked><b>Change the dates</b><span class="hint">Takes effect now. The employee sees the change and your reason.</span></label><label><input type="radio" name="ladjM" value="suggest"><b>Suggest other dates</b><span class="hint">The employee accepts or keeps their dates.</span></label></div>
+  <div class="ladj-grid"><div class="f"><label for="ladjType">Type</label><select id="ladjType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
+    <div class="f"><label for="ladjDays">Working days</label><input id="ladjDays" type="number" readonly></div>
+    <div class="f"><label for="ladjFrom">From</label><input id="ladjFrom" type="date"></div><div class="f"><label for="ladjTo">To</label><input id="ladjTo" type="date"></div>
+    <div class="f full"><label for="ladjWhy">Short explanation for the employee</label><input id="ladjWhy" maxlength="200" placeholder="e.g. Project deadline that week. Could you take the following week?"></div></div>
+  <div class="msg err" id="ladjErr" hidden></div>
+  <div class="row" style="justify-content:flex-end;gap:10px"><button class="btn btn-ghost" type="button" id="ladjX">Cancel</button><button class="btn btn-gem" type="submit" id="ladjSave">Save change</button></div>
+</form></dialog>
 <dialog class="pw-dlg" id="pwDlg" aria-labelledby="pwDlgT">
   <form method="dialog" id="pwDlgForm" novalidate>
     <h3 id="pwDlgT">Reset password</h3>
@@ -1721,7 +1756,7 @@ const unsub = {};
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1823,7 +1858,7 @@ function watchMine(){
   watch('myOtReq', db.doc('otRequests/' + me.key), s => { otReqMine = s.exists ? s.data() : null; renderClock(); });
   watch('myOtAppr', db.doc('otApprovals/' + me.key), s => { otApprMine = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); });
 }
-const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id)).map(q => ({...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name})));
+const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id && d.status !== 'Pending')).map(q => { const d = decisions.find(x => x.key === r.uid + '~' + q.id); return {...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name, _reply: d && d.reply}; }));
 
 function startAdminData() {
   watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
@@ -1843,6 +1878,7 @@ function startAdminData() {
   watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('otReqAll', db.collection('otRequests'), s => { otReqAll = s.docs.map(d => ({key: d.id, ...d.data()})); renderOt(); });
   watch('otApprAll', db.collection('otApprovals'), s => { otApprAll = {}; s.docs.forEach(d => otApprAll[d.id] = d.data()); setAtt(); renderOt(); enforceTeam(); });
+  watch('actLog', db.collection('actLog'), s => { actLogAll = s.docs.map(d => ({id: d.id, ...d.data()})); renderActLog(); });
   watch('waCfg', db.doc('adminSettings/report'), s => { waCfg = s.exists ? s.data() : {}; renderWa(); });
 }
 // Admin UI needs both: the portal role on the account (or the owner's admin entry) and Editor access to the database
@@ -2059,12 +2095,13 @@ function renderLeave(){ try { renderComp(); } catch (e) {} try { renderTimeOff()
   if (isAdmin) {
     const pend = pendingAll().sort((a,b) => a.from.localeCompare(b.from));
     $('reviewPanel').hidden = false; $('pendCount').textContent = pend.length ? pend.length + ' waiting' : ''; $('pendCount').hidden = !pend.length;
-    $('reviewList').innerHTML = pend.map((q,i) => evRow(q, `<div class="acts"><button class="mini ok-btn" data-dec="Approved" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Approve</button><button class="mini danger" data-dec="Rejected" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Reject</button></div>`, i)).join('') || '<p class="empty">No leave requests waiting. 🎉</p>';
+    const wait = decisions.filter(d => d.sugg).sort((a, b) => a.from.localeCompare(b.from));
+    $('reviewList').innerHTML = pend.map((q,i) => evRow({...q, note: [q.note, q._reply && q._reply.answer === 'declined' ? '↩ Declined your suggested dates' + (q._reply.note ? ': ' + q._reply.note : '') : ''].filter(Boolean).join(' · ')}, `<div class="acts"><button class="mini" data-adj="req" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Change / suggest</button><button class="mini ok-btn" data-dec="Approved" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Approve</button><button class="mini danger" data-dec="Rejected" data-u="${esc(q.uid)}" data-id="${esc(q.id)}">Reject</button></div>`, i)).join('') + (wait.length ? '<h4 style="margin:14px 0 6px">Waiting for the employee to answer your suggestion</h4>' + wait.map((d, i) => evRow({...d, note: 'Suggested ' + fmtDay(d.sugg.from) + (d.sugg.to !== d.sugg.from ? ' – ' + fmtDay(d.sugg.to) : '') + ' · ' + d.sugg.why}, `<div class="acts"><button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change</button><span class="pill warn">Suggestion sent</span></div>`, i)).join('') : '') || '<p class="empty">No leave requests waiting. 🎉</p>';
     b.hidden = !pend.length; b.textContent = pend.length;
   } else b.hidden = true;
   const up = approved().filter(d => d.to >= todayStr()).sort((a,b) => a.from.localeCompare(b.from));
-  if ($('leaveList2')) $('leaveList2').innerHTML = up.length ? up.map((d, i) => evRow(d, '<div class="acts"><span class="pill ok">Approved</span></div>', i)).join('') : '<p class="empty">No upcoming leave booked for the team.</p>';
-  $('leaveList').innerHTML = up.length ? up.map((d,i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini danger" data-undo="${esc(d.key)}">Remove</button>` : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave.</p>';
+  if ($('leaveList2')) $('leaveList2').innerHTML = up.length ? up.map((d, i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button>` : ''}${d.sugg ? '<span class="pill warn">Suggestion sent</span>' : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave booked for the team.</p>';
+  $('leaveList').innerHTML = up.length ? up.map((d,i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button><button class="mini danger" data-undo="${esc(d.key)}">Remove</button>` : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave.</p>';
 }
 ['lvFrom','lvTo'].forEach(id=>$(id).addEventListener('change',()=>{ const f=$('lvFrom').value,t=$('lvTo').value||f; if(f&&t>=f) $('lvDays').value=workdays(f,t); }));
 $('lvForm').addEventListener('submit', async e => {
@@ -2116,10 +2153,11 @@ function renderProfile(){
   $('profBal').innerHTML = Object.keys(DEF_ALLOW).map(t => { const tot = +allow[t] || 0, u = used(t), left = Math.max(0, tot - u), pc = tot ? left / tot * 100 : 0, pd = pendDays(t);
     return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('') + compBal(me, pendDays);
   const reqs = [...myReqs()].sort((a, b) => String(b.from).localeCompare(String(a.from)));
-  $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? d.status : 'Pending';
-    return evRow({...q, name: 'You'}, `<div class="acts">${!d ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i); }).join('') : '';
+  $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? (d.status === 'Suggested' ? 'New dates suggested' : d.status) : 'Pending', base = d && d.status === 'Approved' ? {...q, type: d.type, from: d.from, to: d.to, days: d.days} : q;
+    return lvSuggRow(evRow({...base, name: 'You'}, `<div class="acts">${!d || d.status === 'Pending' ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i), d); }).join('') : '';
   { const linked = new Set(reqs.map(q => { const d = decisionOf(q); return d && d.key; }).filter(Boolean)), rec = myLeave().filter(d => !linked.has(d.key));
-    $('rqList').innerHTML += rec.map((d, i) => evRow({...d, name: 'You'}, '<div class="acts"><span class="pill info">Recorded by admin</span><span class="pill ok">Approved</span></div>', i)).join('');
+    $('rqList').innerHTML += rec.map((d, i) => lvSuggRow(evRow({...d, name: 'You'}, '<div class="acts"><span class="pill info">Recorded by admin</span><span class="pill ok">Approved</span></div>', i), d)).join('');
+    const ns = decisions.filter(d => d.email === me.email && d.sugg).length; $('lvSuggMsg').hidden = !ns; $('lvSuggMsg').innerHTML = ns ? `<b>Your admin suggested new dates for ${ns} leave ${ns === 1 ? 'request' : 'requests'}.</b> See Leave history below to accept them or keep your dates.` : '';
     if (!$('rqList').innerHTML) $('rqList').innerHTML = '<p class="empty">No leave yet. Apply for leave above.</p>'; }
 }
 
@@ -2773,6 +2811,7 @@ function renderAccounts(){
   queueCharts();
   if (!isAdmin) return;
   renderProfReqs();
+  { const keep = $('actWho').value; $('actWho').innerHTML = people().filter(p => !me || p.key !== me.key).map(p => `<option value="${esc(p.key)}"${p.key === keep ? ' selected' : ''}>${esc(p.name)} · ${esc(p.email)}</option>`).join('') || '<option value="">No employees yet</option>'; }
   const q = $('accQ').value.toLowerCase();
   const rows = accounts.filter(a => !q || (a.name + ' ' + a.email).toLowerCase().includes(q)).sort((a,b) => String(a.name).localeCompare(String(b.name)));
   $('accCount').textContent = accounts.length + (accounts.length === 1 ? ' account' : ' accounts');
@@ -2780,7 +2819,7 @@ function renderAccounts(){
   if (!rows.length) { $('accBody').innerHTML = '<tr><td colspan="4" class="empty">No accounts match that search.</td></tr>'; return; }
   $('accBody').innerHTML = rows.map(a => `<tr data-k="${esc(a.key)}"><td><div class="person">${av(a.name||a.email)}<div>${esc(a.name)}<div class="mono" style="color:var(--ink-soft)">${esc(a.email)}</div></div></div></td>
     <td>${esc(a.role||'')}<div style="font-size:12.5px;color:var(--ink-soft)">${esc(a.project||'No project')}</div></td><td>${a.active ? statusPill(a.status) : '<span class="pill off">Login off</span>'} ${a.access === 'admin' ? '<span class="pill admin">Admin</span>' : '<span class="pill info">Contributor</span>'}${a.clock === false ? ' <span class="pill off">No time clock</span>' : ''}</td>
-    <td><div class="acts"><button class="mini" data-act="details">${a.profileLock ? '🔒 ' : ''}Details${profReqAll[a.key] && profReqAll[a.key].status === 'pending' ? ' <span class="pill warn" style="padding:1px 6px">Request</span>' : ''}</button><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
+    <td><div class="acts"><button class="mini" data-act="details">${a.profileLock ? '🔒 ' : ''}Details${profReqAll[a.key] && profReqAll[a.key].status === 'pending' ? ' <span class="pill warn" style="padding:1px 6px">Request</span>' : ''}</button><button class="mini" data-act="edit">Edit</button>${a.key !== (me && me.key) ? '<button class="mini" data-act="actas">Act as</button>' : ''}<button class="mini" data-act="reset">Reset password</button><button class="mini" data-act="toggle">${a.active ? 'Turn off' : 'Turn on'}</button><button class="mini danger" data-act="del">Delete</button></div></td></tr>`).join('');
 }
 $('accQ').addEventListener('input', renderAccounts);
 /* reset or set an employee's password: admin types one or generates it */
@@ -2872,6 +2911,7 @@ $('accBody').addEventListener('click', async e => {
   const b = e.target.closest('button[data-act]'); if (!b) return;
   const key = b.closest('tr').dataset.k, a = accounts.find(x => x.key === key); if (!a) return;
   if (b.dataset.act === 'details') { openEmpDlg(key); return; }
+  if (b.dataset.act === 'actas') { actAs(key); return; }
   const ref = db.doc('accounts/' + key);
   try {
     if (b.dataset.act === 'edit') return setEdit(a);
@@ -3777,6 +3817,61 @@ document.addEventListener('click', async e => { const b = e.target.closest('[dat
   try { await saveBrief({brief_parts: {v: BRIEF_VER, parts}}); renderBriefAck(); const nx = BRIEF_PAGES.find(([q]) => !parts[q]);
     toast(nx ? 'Page accepted. Next: ' + nx[1] : 'All pages accepted. You can now accept the briefing below.'); if (nx && window.__bfShowTab) { window.__bfShowTab(nx[0]); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); } }
   catch (x) { b.disabled = false; b.textContent = 'Accept this page'; toast('That couldn\'t be saved. Try again.'); } });
+/* ---------- confirm pop-up ---------- */
+function confirmDlg(title, msg, ok){ return new Promise(res => { const d = $('cfDlg'); $('cfT').textContent = title; $('cfMsg').textContent = msg; $('cfOk').textContent = ok || 'OK';
+  const done = v => { d.close(); $('cfOk').onclick = $('cfNo').onclick = null; d.oncancel = null; res(v); };
+  $('cfOk').onclick = () => done(true); $('cfNo').onclick = () => done(false); d.oncancel = e => { e.preventDefault(); done(false); }; d.showModal(); $('cfNo').focus(); }); }
+/* ---------- admin: act as an employee ---------- */
+let actReal = null, actLogId = null, actLogAll = [];
+async function actAs(key){ const a = accounts.find(x => x.key === key); if (!a || !isAdmin || actReal || !me || a.key === me.key) return;
+  if (!await confirmDlg('Act as ' + a.name + '?', 'You will see the app exactly as they do. Anything you save while acting counts as their answer. Click "Stop acting" at the top to come back. This is logged.')) return;
+  actLogId = new Date().toISOString().replace(/[:.]/g, '-') + '_' + Math.random().toString(36).slice(2, 6);
+  try { await db.doc('actLog/' + actLogId).set({admin: me.email, adminName: me.name, as: a.email, asName: a.name, start: new Date().toISOString(), end: null}); } catch (e) { actLogId = null; return toast('Acting could not be logged, so it was not started. Check the Firestore rules are published.'); }
+  actReal = me; document.documentElement.classList.add('acting'); $('actBar').hidden = false; $('actName').textContent = a.name; $('actSince').textContent = '· since ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  showApp({...a}); go('home'); toast('Now acting as ' + a.name); }
+async function stopActing(){ if (!actReal) return; const adm = actReal, id = actLogId, who = me && me.name; actReal = null; actLogId = null;
+  document.documentElement.classList.remove('acting'); $('actBar').hidden = true; showApp(adm); go('admin');
+  if (id) try { await db.doc('actLog/' + id).update({end: new Date().toISOString()}); } catch (e) {} toast('Stopped acting as ' + (who || 'the employee')); }
+$('actStop').onclick = stopActing; $('actGo').onclick = () => $('actWho').value && actAs($('actWho').value);
+$('signOut').addEventListener('click', () => { if (actLogId) try { db.doc('actLog/' + actLogId).update({end: new Date().toISOString()}); } catch (e) {} actReal = null; actLogId = null; document.documentElement.classList.remove('acting'); $('actBar').hidden = true; }, true);
+function renderActLog(){ const el = $('actLog'); if (!el) return; const L = [...actLogAll].sort((a, b) => String(b.start).localeCompare(String(a.start))).slice(0, 15);
+  const t = iso => new Date(iso).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}), mins = (a, b) => Math.max(1, Math.round((new Date(b) - new Date(a)) / 60000));
+  el.innerHTML = L.length ? '<b style="font-size:13px">Recent sessions</b>' + L.map(x => `<div><b>${esc(x.adminName || x.admin)}</b> acted as <b>${esc(x.asName || x.as)}</b><span class="hint">${t(x.start)}${x.end ? ' · ' + mins(x.start, x.end) + ' min' : ' · no stop recorded (page closed)'}</span></div>`).join('') : '<p class="hint" style="margin:0">No sessions yet.</p>'; }
+/* ---------- admin: change or suggest other dates for a leave ---------- */
+let ladjCtx = null;
+document.addEventListener('click', e => { const b = e.target.closest('[data-adj]'); if (!b || !isAdmin) return; let base, key, prev;
+  if (b.dataset.adj === 'req') { const r = requests.find(x => x.uid === b.dataset.u), q = r && (r.requests || []).find(x => x.id === b.dataset.id); if (!q) return; base = {email: q.email || r.email, name: q.name || r.name, type: q.type, from: q.from, to: q.to, days: q.days, note: q.note || ''}; key = r.uid + '~' + q.id; prev = 'Pending'; }
+  else { const d = decisions.find(x => x.key === b.dataset.k); if (!d) return; base = {email: d.email, name: d.name, type: d.type, from: d.from, to: d.to, days: d.days, note: d.note || ''}; key = d.key; prev = d.status === 'Suggested' ? (d.prevStatus || 'Pending') : 'Approved'; }
+  ladjCtx = {base, key, prev}; const rng = fmtDay(base.from) + (base.to !== base.from ? ' – ' + fmtDay(base.to) : '');
+  $('ladjT').textContent = prev === 'Pending' ? 'Change or suggest dates for a leave request' : 'Change approved leave'; $('ladjWho').textContent = base.name + ' · ' + base.type + ' · now ' + rng + ' (' + base.days + ' working day' + (base.days === 1 ? '' : 's') + ')';
+  $('ladjType').value = base.type; $('ladjFrom').value = base.from; $('ladjTo').value = base.to; $('ladjDays').value = base.days; $('ladjWhy').value = ''; $('ladjErr').hidden = true; document.querySelector('[name="ladjM"][value="change"]').checked = true; ladjMode(); $('ladjDlg').showModal(); });
+const ladjMode = () => { const sg = document.querySelector('[name="ladjM"]:checked').value === 'suggest'; $('ladjSave').textContent = sg ? 'Send suggestion' : (ladjCtx && ladjCtx.prev === 'Pending' ? 'Approve with these dates' : 'Save change'); };
+document.querySelectorAll('[name="ladjM"]').forEach(r => r.addEventListener('change', ladjMode));
+['ladjFrom', 'ladjTo'].forEach(id => $(id).addEventListener('change', () => { const f = $('ladjFrom').value, t = $('ladjTo').value || f; if (f && t >= f) $('ladjDays').value = workdays(f, t); }));
+$('ladjX').onclick = () => $('ladjDlg').close();
+$('ladjForm').addEventListener('submit', async e => { e.preventDefault(); if (!ladjCtx || !isAdmin) return; const {base, key, prev} = ladjCtx, err = $('ladjErr'), fail = m => { err.textContent = m; err.hidden = false; };
+  const f = $('ladjFrom').value, t = $('ladjTo').value || f, type = $('ladjType').value, why = $('ladjWhy').value.trim().slice(0, 200), sg = document.querySelector('[name="ladjM"]:checked').value === 'suggest';
+  if (!f) return fail('Pick the first day.'); if (t < f) return fail('The end date is before the start date.'); const days = workdays(f, t); if (!days) return fail('That range has no working days.');
+  if (!why) return fail('Write a short explanation for the employee.'); if (f === base.from && t === base.to && type === base.type) return fail('The dates and type are the same as now. Change something first.');
+  const now = new Date().toISOString(), by = me ? me.name : 'Admin', head = {email: base.email, name: base.name, note: base.note, decidedAt: now};
+  const doc = sg ? {...head, type: base.type, from: base.from, to: base.to, days: base.days, status: prev === 'Pending' ? 'Suggested' : 'Approved', prevStatus: prev, sugg: {type, from: f, to: t, days, why, by, at: now}}
+                 : {...head, type, from: f, to: t, days, status: 'Approved', changed: {type: base.type, from: base.from, to: base.to, days: base.days, why, by, at: now}};
+  $('ladjSave').disabled = true;
+  try { await db.doc('leaveDecision/' + key).set(doc); $('ladjDlg').close(); toast(sg ? 'Suggestion sent to ' + base.name : 'Leave changed for ' + base.name); }
+  catch (x) { fail('That couldn\'t be saved. Try again.'); } finally { $('ladjSave').disabled = false; } });
+// employee: see the change or answer the suggestion
+function lvSuggRow(html, d){ if (!d || (!d.sugg && !d.changed)) return html; const rg = x => fmtDay(x.from) + (x.to !== x.from ? ' – ' + fmtDay(x.to) : '');
+  const add = d.sugg ? `<div class="lv-sugg"><span><b>${esc(d.sugg.by || 'Your admin')} suggests ${rg(d.sugg)}</b> (${esc(d.sugg.type)}, ${d.sugg.days} working day${d.sugg.days === 1 ? '' : 's'}): ${esc(d.sugg.why)}</span>${d.status === 'Approved' ? '<span class="hint">Your current dates stay approved unless you accept.</span>' : ''}<div class="acts"><button type="button" class="btn btn-gem" data-sgans="accept" data-k="${esc(d.key)}">Accept new dates</button><button type="button" class="btn btn-ghost" data-sgans="decline" data-k="${esc(d.key)}">Keep my dates</button></div></div>`
+    : `<span class="lv-chg">✎ Changed by ${esc(d.changed.by || 'admin')} from ${rg(d.changed)}${d.changed.type !== d.type ? ' (' + esc(d.changed.type) + ')' : ''}: ${esc(d.changed.why)}</span>`;
+  if (d.sugg) return html.replace('class="ev"', 'class="ev has-sugg"').replace(/<\/div>$/, () => add + '</div>');
+  return html.replace(/(<div><b>[^]*?<\/span>)(<\/div>)/, (m, x, y) => x + add + y); }
+document.addEventListener('click', async e => { const b = e.target.closest('[data-sgans]'); if (!b || !me) return; const d = decisions.find(x => x.key === b.dataset.k); if (!d || !d.sugg || d.email !== me.email) return;
+  const s = d.sugg, ok = b.dataset.sgans === 'accept'; let note = '';
+  if (!ok) { note = (prompt('Optional: tell your admin why you want to keep your dates.') || '').trim().slice(0, 200); }
+  const {key, ...rest} = d; delete rest.sugg; const now = new Date().toISOString();
+  const doc = ok ? {...rest, type: s.type, from: s.from, to: s.to, days: s.days, status: 'Approved', reply: {answer: 'accepted', at: now, note: '', sugg: s}}
+                 : {...rest, status: d.prevStatus || 'Approved', reply: {answer: 'declined', at: now, note, sugg: s}};
+  b.disabled = true; try { await db.doc('leaveDecision/' + key).set(doc); toast(ok ? 'New dates accepted' : 'You kept your dates. Your admin will see your answer.'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } });
 /* ---------- admin: one-time import from the old portal ---------- */
 $('impFile').addEventListener('change', async e => {
   const f = e.target.files[0], m = $('impMsg'), out = $('impCreds'); if (!f || !isAdmin) return;
