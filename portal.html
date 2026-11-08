@@ -1036,6 +1036,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .panel.hmin > :not(:first-child):not(.hmin-btn){display:none!important}.panel.hmin > .vhead{margin:0!important}.panel.hmin > .vhead > :not(h3){display:none!important}
 .panel.hmin > :first-child{margin:0!important;opacity:.75}
 .panel.hmin-new{animation:hminPulse 1.2s ease 2}@keyframes hminPulse{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--gem) 45%,transparent)}}
+.mc-c.hol{background:linear-gradient(160deg,#FFF3D1,#FFFBEF);border-color:#EFCF7A}.mc-c.hol.fut{opacity:.9}.mc-c small.hol{color:#8A5A00;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mc-c.hol.has{border-color:#E2B84E}
 </style>
 </head>
 <body>
@@ -1912,7 +1913,7 @@ function startData() {
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('photos', db.collection('photos'), s => { photosAll = {}; s.docs.forEach(d => { const x = d.data(); if (x && x.photo) photosAll[d.id] = x.photo; }); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => ({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
-  watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); try { renderHolidayWish(); } catch (e) {} if (isAdmin) seedHolidays(); });
+  watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); try { renderHolidayWish(); } catch (e) {} try { renderMyMonth(); } catch (e) {} if (isAdmin) seedHolidays(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
@@ -4233,10 +4234,10 @@ function renderMyMonth(){
   const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), lead = (new Date(Y, M - 1, 1).getDay() + 6) % 7, today = todayStr();
   const lv = k => decisions.some(d => d.email === me.email && d.status === 'Approved' && d.from <= k && d.to >= k);
   let html = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="mc-h">${d}</div>`).join('') + '<div class="mc-c blank"></div>'.repeat(lead);
-  for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), onLv = lv(k);
-    const cls = ['mc-c', l.length || l.carryIn ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
+  for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), onLv = lv(k), hs = holidays.filter(h => h.date === k), hl = hs.length ? `<small class="hol" title="${esc(hs.map(h => h.name + (h.tba ? ' (date TBA)' : '')).join(', '))}">🎉 ${esc(hs.map(h => h.name + (h.tba ? '*' : '')).join(', '))}</small>` : '';
+    const cls = ['mc-c', l.length || l.carryIn ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', hs.length ? 'hol' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
     const cin = (l && l.carryIn) || 0, cout = (l && l.carryOutOk) || 0;
-    html += `<button type="button" class="${cls}" data-day="${k}" ${l.length || cin ? '' : 'aria-disabled="true"'} style="--p:${Math.min(100, ms / DAY_MAX * 100)}%"><span class="d">${i}</span>${l.length || cin ? `<b>${fmtH(ms)}</b><small>${l.length ? l.length + ' session' + (l.length === 1 ? '' : 's') : 'no sessions'}${open ? ' · now' : ''}</small>${cin ? `<small class="cin">+${fmtH(cin)} carried in</small>` : ''}${cout ? `<small class="cout">${fmtH(cout)} carried out</small>` : ''}<i class="bar"></i>` : onLv ? '<small class="lv">On leave</small>' : fut ? '' : '<small>—</small>'}</button>`; }
+    html += `<button type="button" class="${cls}" data-day="${k}" ${l.length || cin ? '' : 'aria-disabled="true"'} style="--p:${Math.min(100, ms / DAY_MAX * 100)}%"><span class="d">${i}</span>${hl}${l.length || cin ? `<b>${fmtH(ms)}</b><small>${l.length ? l.length + ' session' + (l.length === 1 ? '' : 's') : 'no sessions'}${open ? ' · now' : ''}</small>${cin ? `<small class="cin">+${fmtH(cin)} carried in</small>` : ''}${cout ? `<small class="cout">${fmtH(cout)} carried out</small>` : ''}<i class="bar"></i>` : onLv ? '<small class="lv">On leave</small>' : fut || hs.length ? '' : '<small>—</small>'}</button>`; }
   cal.innerHTML = html;
   const fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), its = myCarry().filter(x => x.from.startsWith(m) || x.to.startsWith(m)).sort((a, b) => String(b.at).localeCompare(String(a.at)));
   $('carryPanel').hidden = !its.length;
@@ -4432,8 +4433,8 @@ function renderEcal(){ const p = people().find(x => x.key === ecalKey); if (!p) 
   const [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), lead = (new Date(Y, M - 1, 1).getDay() + 6) % 7, today = todayStr();
   let html = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="mc-h">${d}</div>`).join('') + '<div class="mc-c blank"></div>'.repeat(lead);
   for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i), l = days[k] || [], ms = sessMs(l), open = l.length && !l[l.length - 1].out, fut = k > today, wkend = [0, 6].includes(new Date(k + 'T00:00').getDay()), lv = decisions.find(d => d.email === p.email && d.status === 'Approved' && d.from <= k && d.to >= k), h = holOn(k);
-    const pc = Math.min(100, ms / DAY_MAX * 100), cls = ['mc-c', 'ec', l.length ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
-    html += `<button type="button" class="${cls}" data-eday="${k}" style="--p:${pc}%"${pc >= 55 ? ' data-dark="1"' : ''}><span class="d">${i}</span>${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small>` : lv ? `<small class="lv">${esc(lv.type)} leave</small>` : h ? `<small class="lv">${esc(h.name)}</small>` : !wkend && !fut ? '<small class="ab">No login</small>' : ''}<span class="bar"></span></button>`; }
+    const pc = Math.min(100, ms / DAY_MAX * 100), cls = ['mc-c', 'ec', l.length ? 'has' : '', k === today ? 'today' : '', fut ? 'fut' : '', wkend ? 'wkend' : '', h ? 'hol' : '', ms >= DAY_MAX ? 'full' : ''].filter(Boolean).join(' ');
+    html += `<button type="button" class="${cls}" data-eday="${k}" style="--p:${pc}%"${pc >= 55 ? ' data-dark="1"' : ''}><span class="d">${i}</span>${h ? `<small class="hol">🎉 ${esc(h.name)}${h.tba ? '*' : ''}</small>` : ''}${l.length ? `<b>${fmtH(ms)}</b><small>${l.length} session${l.length === 1 ? '' : 's'}${open ? ' · now' : ''}</small>` : lv ? `<small class="lv">${esc(lv.type)} leave</small>` : h ? '' : !wkend && !fut ? '<small class="ab">No login</small>' : ''}<span class="bar"></span></button>`; }
   $('ecalGrid').innerHTML = html; $('ecalDay').innerHTML = ''; }
 function openEcal(key){ ecalKey = key; $('ecalMonth').value = attMode === 'month' ? ($('attMonth').value || monthKey(new Date())) : ($('attDate').value || todayStr()).slice(0, 7); renderEcal(); const d = $('ecalDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
 ['teamAtt', 'teamMonth'].forEach(id => $(id).addEventListener('click', e => { if (e.target.closest('button, a, input, select')) return; const r = e.target.closest('tr[data-ecal]'); if (r) openEcal(r.dataset.ecal); }));
