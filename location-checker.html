@@ -1,0 +1,215 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Location Checker · Chrysolite</title><link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=JetBrains+Mono:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
+  --gem:#9BB52A;--gem-ink:#4C5F0C;--band:#0F2620;--band-fg:#E7EFE4;--band-soft:#A9BDB2;
+  --ok:#2F7D5B;--warn:#B07A12;--off:#B4513A;--info:#2D6E9E;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#7b5bd6;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(16px,4vw);background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font:800 18px var(--display)}.brand img{width:34px;height:34px;border-radius:8px}.brand small{display:block;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+main{max-width:1180px;margin:0 auto;padding:24px max(16px,4vw) 60px;display:grid;gap:16px}
+h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:700 17px var(--display)}.lead{margin:6px 0 0;color:var(--ink-soft)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}.hint{color:var(--ink-soft);font-size:13px}.empty{color:var(--ink-soft);text-align:center;padding:20px}
+.vhead{display:flex;justify-content:space-between;gap:12px}.f{display:grid;gap:6px}label{font-size:13px;font-weight:600}
+.btn{border:1px solid transparent;border-radius:999px;padding:10px 20px;font:700 14.5px var(--body);cursor:pointer}.btn-gem{background:var(--gem);color:#13240a}.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.bf-h{margin:18px 0 10px}.bf-l{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gem-ink)}
+.bf-a{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;white-space:nowrap}.bf-a.m{background:#dff3d6;color:#1f6a2a}.bf-a.n{background:#fbe0dc;color:#a5281c}.bf-a.c{background:#fdf0cf;color:#8a5a00}.bf-a.o{background:#e3edf8;color:#1f4f86;white-space:normal}
+.back{font-size:13px;color:var(--gem-ink);font-weight:700;text-decoration:none}
+.sc-in{display:grid;gap:12px}.sc-opts{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sc-tg{display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600}.sc-tg input{all:revert;accent-color:var(--gem)}
+.sc-seg{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px}.sc-seg span{font-size:12.5px;color:var(--ink-soft);padding:0 6px}.sc-seg button{border:0;background:none;border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.sc-seg button.on{background:var(--gem);color:#13240a}
+.sc-exr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-exr > span{font-size:12.5px;color:var(--ink-soft)}#scEx{display:flex;flex-wrap:wrap;gap:6px}#scEx button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:600 12.5px var(--body);cursor:pointer;color:var(--ink)}#scEx button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+.sc-grid,.sc-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:1fr}}.sc-grid textarea{width:100%;font:14px/1.55 var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);resize:vertical}
+.sc-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.sc-ring{position:relative;width:120px;height:120px;flex:none}.sc-ring svg{width:100%;height:100%}.sc-ring circle{transition:stroke-dashoffset .6s}.sc-ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 24px var(--display);margin-top:-8px}.sc-ring span{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:600 11px var(--mono);color:var(--ink-soft);text-transform:uppercase}
+.sc-verdict{flex:1;min-width:240px;display:grid;gap:6px;justify-items:start}.sc-verdict .bf-a{font-size:17px;padding:5px 14px}.sc-verdict p{margin:0}
+.sc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12.5px}.sc-legend span{padding:2px 8px;border-radius:6px}.sc-legend .del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-legend .add{background:#d6f0c6;color:#1f6a2a}.sc-legend .mod{background:#fdeba8;color:#7a5200}.sc-legend .spk{color:var(--ink-soft)}
+.sc-cols > div{display:grid;gap:4px}.sc-cols small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.sc-text{white-space:pre-wrap;font-size:15px;line-height:1.7;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:80px}
+.sc-text mark{border-radius:4px;padding:1px 2px}.sc-text mark.del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-text mark.add{background:#d6f0c6;color:#1f6a2a}.sc-text mark.mod{background:#fdeba8;color:#7a5200;font-weight:600}.sc-text mark.gap{background:none}.sc-text .sc-cut{color:var(--ink-soft);opacity:.55}.sc-text .sp{color:#c06a00;font-weight:800}
+.sc-ck{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}.sc-ck:hover{transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(0,0,0,.3)}
+.sc-what{display:none;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--surface-2);font-style:normal;font-size:13px;line-height:1.5;color:var(--ink)}.sc-what > span:first-child{font-weight:700}.sc-see{display:block;margin-top:4px;color:#7a5200;font-weight:600}
+.sc-ck.open{outline:2px solid var(--gem);outline-offset:-1px}.sc-ck.open .sc-what{display:block}
+.sc-cols.focus mark{opacity:.25}.sc-cols.f-add mark.add,.sc-cols.f-del mark.del,.sc-cols.f-mod mark.mod,.sc-cols.f-all mark{opacity:1;outline:2px solid currentColor;outline-offset:1px}
+.sc-cols.f-sp mark{opacity:.25}.sc-cols.f-sp .sp{background:#ffd36b;border-radius:3px;padding:0 2px}.sc-cols.f-sp mark:has(.sp),.sc-cols.f-sp mark.gap{opacity:1}.sc-cols.f-sp mark.gap{background:#ffd36b}.sc-checks{align-items:start}
+.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > .sc-ck{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.sc-checks > .sc-ck > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.sc-checks .ok i{background:#dff3d6;color:#1f6a2a}.sc-checks .warn{border-color:#f0d9a0;background:#fffaf0}.sc-checks .warn i{background:#fdeba8;color:#7a5200}.sc-checks .info i{background:#e3edf8;color:#1f4f86}
+
+
+/* keep every box a fixed size: long text scrolls inside its box instead of stretching the page */
+.sc-grid > *,.sc-cols > *,.sc-in,.sc-checks > .sc-ck{min-width:0}
+.sc-grid textarea{height:190px;min-height:120px;max-height:480px;overflow:auto;resize:vertical}
+.sc-text{height:320px;min-height:0;overflow:auto;overflow-wrap:anywhere;word-break:break-word;overscroll-behavior:contain;resize:vertical}
+.sc-checks small,.sc-what{overflow-wrap:anywhere;word-break:break-word}
+html,body{overflow-x:hidden}
+.sc-grid,.sc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:minmax(0,1fr)}}
+.sc-verdict{min-width:0}.sc-verdict p{overflow-wrap:anywhere}
+.sc-text > i{color:var(--ink-soft)}
+.sc-checks > .sc-ck small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sc-checks > .sc-ck.open small{display:block;-webkit-line-clamp:unset;max-height:160px;overflow:auto;overscroll-behavior:contain}
+.sc-what{max-height:200px;overflow:auto;overscroll-behavior:contain}
+
+/* clearer difference colours */
+.sc-text mark{padding:1px 3px;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone;word-break:normal;overflow-wrap:anywhere}
+.sc-text mark.del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;text-decoration-thickness:2px;box-shadow:inset 0 -2px 0 #e2513b}
+.sc-text mark.add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}
+.sc-text mark.mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-legend .del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;box-shadow:inset 0 -2px 0 #e2513b}.sc-legend .add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}.sc-legend .mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-status{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);margin-left:6px;min-height:40px}
+.sc-status small{font-weight:400;color:var(--ink-soft)}
+.sc-status.done{color:#1f6a2a;animation:scPop .35s ease-out}.sc-status.err{color:#a5281c}.sc-status.wait,.sc-status.busy{color:var(--ink-soft)}
+.sc-tick{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3d9a2c;color:#fff;font-weight:800}
+.sc-spin{width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:scRot .7s linear infinite}
+@keyframes scRot{to{transform:rotate(360deg)}}@keyframes scPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+
+.sc-status{flex:1 1 320px}
+.sc-bar{position:relative;flex:1 1 180px;max-width:320px;height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.sc-bar i{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:linear-gradient(90deg,#8dc63f,#21b3c4);transition:width .6s ease-out}
+.sc-bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:200% 100%;animation:scShine 1s linear infinite}
+@keyframes scShine{from{background-position:200% 0}to{background-position:-200% 0}}
+.sc-status.done{color:#14501d;font-size:15px;padding:6px 12px 6px 6px;border-radius:999px;background:#e9f7e1;border:1px solid #b7e09c}
+.sc-status.done small{margin-left:8px}
+.sc-see-res{border:0;background:#1f6a2a;color:#fff;font:600 13px var(--body);border-radius:999px;padding:7px 12px;cursor:pointer;margin-left:6px}
+#scOut{transition:opacity .25s}#scOut.sc-loading{opacity:.25;pointer-events:none;filter:grayscale(.6)}
+
+/* which side is which: coloured headings and a faint source logo inside each box */
+.sc-side{--sc:#5b2a86;--sc2:#f7821b}.sc-side.li{--sc:#0a66c2;--sc2:#0a66c2}
+.sc-lab{display:flex!important;align-items:center;gap:10px;font:800 15px var(--body)!important;letter-spacing:.02em;color:var(--sc)!important;padding:8px 12px;border-radius:12px 12px 0 0;background:color-mix(in srgb,var(--sc) 10%,var(--surface));border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-bottom:0;margin:0!important}
+.sc-lab em{font-style:normal;font-weight:600;opacity:.85}
+.sc-badge{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sc);color:#fff;font:800 12px var(--mono);flex:none}
+.sc-side.so .sc-badge{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc2) 45%,transparent)}
+.sc-wm{position:relative;border-radius:0 0 12px 12px}
+.sc-wm::before{content:"";position:absolute;inset:0;pointer-events:none;background:center/58% auto no-repeat;opacity:.09;transition:opacity .2s;border-radius:inherit}
+.sc-side.so .sc-wm::before{background-image:url(seekout-logo.png)}.sc-side.li .sc-wm::before{background-image:url(linkedin-logo.png)}
+.sc-wm:has(textarea:placeholder-shown)::before{opacity:.16}
+.sc-side .sc-wm textarea{position:relative;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line))!important;border-top:3px solid var(--sc)!important;border-radius:0 0 12px 12px!important}
+.sc-side .sc-wm textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 22%,transparent)!important}
+.sc-side .sc-wm textarea::placeholder{color:color-mix(in srgb,var(--sc) 55%,var(--ink-soft));font-weight:600}
+.sc-cols > .so small,.sc-cols > .li small{font-weight:800;font-size:12px}.sc-cols > .so small{color:#5b2a86}.sc-cols > .li small{color:#0a66c2}
+.sc-cols > .so .sc-text{border-top:3px solid #5b2a86}.sc-cols > .li .sc-text{border-top:3px solid #0a66c2}
+.sc-for{font-size:13px;font-weight:600;color:var(--ink-soft);padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+
+.sc-kind button{font-size:14px;padding:7px 14px}.sc-kind{background:var(--surface)}
+.jt-mode .sc-grid textarea{height:110px}
+.jt-box{border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 16px;background:var(--surface)}
+.jt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(max-width:760px){.jt-grid{grid-template-columns:minmax(0,1fr)}}
+.jt-side{min-width:0;border-radius:12px;padding:10px 12px;background:var(--surface-2);border-top:3px solid #5b2a86}.jt-side.li{border-top-color:#0a66c2}
+.jt-side small{font:800 11.5px var(--mono);color:#5b2a86}.jt-side.li small{color:#0a66c2}
+.jt-raw{font-size:16px;font-weight:700;margin:4px 0;overflow-wrap:anywhere}.jt-norm{font-size:13.5px;overflow-wrap:anywhere}.jt-norm span{color:var(--ink-soft)}
+.jt-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.jt-chip{font-size:12.5px;padding:3px 9px;border-radius:999px;background:#e6f2fb;border:1px solid #b9d6ee;color:#0b4a80}.jt-chip.chk{background:#fff4dc;border-color:#f0c97a;color:#7a5200}.jt-chip i{font-style:normal;font-weight:700}
+.jt-amb{margin-top:8px;font-size:13px;padding:6px 10px;border-radius:8px;background:#fdecea;border:1px solid #f3b8ae;color:#8a2416}.jt-amb span{font-weight:600}.jt-amb em{font-style:normal;font-weight:800;margin-left:6px}
+.jt-res{margin-top:12px;padding:10px 14px;border-radius:10px;font-weight:800;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.jt-res span{font-weight:500;font-size:13.5px}
+.jt-res.m{background:#e3f4dc;color:#1f6a2a}.jt-res.n{background:#fbe3df;color:#a5281c}.jt-res.x{background:#fff4dc;color:#7a5200}
+</style></head><body>
+<style>
+.lc-in .sc-side input{width:100%;font:16px/1.4 var(--body);padding:14px 14px;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-top:3px solid var(--sc);border-radius:0 0 12px 12px;color:var(--ink);position:relative}
+.lc-in .sc-wm::before{background-size:auto 70%!important;opacity:.1}
+.lc-res{display:grid;gap:16px}
+.lc-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.lc-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(max-width:760px){.lc-cards{grid-template-columns:minmax(0,1fr)}}
+.lc-card{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);border-top:3px solid var(--sc)}.lc-card.so{--sc:#5b2a86}.lc-card.li{--sc:#0a66c2}
+.lc-card small{font:800 11.5px var(--mono);color:var(--sc)}.lc-card .q{font-weight:700;font-size:15px;margin:2px 0}.lc-card .found{font-size:13px;color:var(--ink-soft)}.lc-card a{font-size:12.5px}
+.lc-tab{width:100%;border-collapse:collapse;font-size:14px}.lc-tab th,.lc-tab td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.lc-tab thead th{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.lc-tab td.st{white-space:nowrap;font-weight:700}.lc-tab .ok{color:#1f6a2a}.lc-tab .no{color:#a5281c}.lc-tab .na{color:var(--ink-soft);font-weight:500}
+.lc-tab tr.key td{background:color-mix(in srgb,var(--gem) 7%,transparent)}
+.lc-dist{display:flex;gap:10px;flex-wrap:wrap}.lc-dist div{flex:1 1 140px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}.lc-dist b{display:block;font:800 20px var(--display)}.lc-dist span{font-size:12px;color:var(--ink-soft)}
+.lc-rule{padding:10px 14px;border-radius:12px;background:var(--surface-2);font-size:13.5px}
+</style>
+<header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Location checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
+<main>
+  <div><h1>Location checker</h1><p class="lead">Compare the location in THE FILE SAYS (SeekOut) with PUBLIC PROFILE SAYS (ZIPLabs or LinkedIn). Both places are looked up on the map, compared level by level (country, state, county or district, metro, city, neighbourhood) and given a % match, the distance and a suggested answer.</p></div>
+  <div class="panel sc-in lc-in">
+    <div class="sc-grid"><div class="f sc-side so"><label for="lcA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><input id="lcA" placeholder="e.g. Charlotte, North Carolina, United States" autocomplete="off"></div></div>
+      <div class="f sc-side li"><label for="lcB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><input id="lcB" placeholder="e.g. Charlotte Metro" autocomplete="off"></div></div></div>
+    <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-gem" type="button" id="lcGo">Compare</button><button class="btn btn-ghost" type="button" id="lcSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="lcClear">Clear</button><span class="sc-status" id="lcStatus" role="status" aria-live="polite"></span></div>
+    <p class="lc-rule" style="margin:14px 0 0"><b>Rule:</b> same county or district = Match. A town or suburb and its city in the same county = Match. “Greater X Area” or “X Metro” = city X. A missing state or country is fine. A different county or district = Not a match, even in the same state. A different country = Not a match.</p>
+  </div>
+  <div class="panel" id="lcOut" hidden></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">✗ Not a match</span>', c: '<span class="bf-a c">? Can\'t decide</span>'};
+(function locationChecker(){
+  // "Greater Chicago Area", "Charlotte Metro", "San Francisco Bay Area" -> the city the area is named after
+  const METRO = /^(greater\s+)?(.+?)(\s+(metropolitan|metro|metroplex|bay|region|city))?(\s+area)?$/i;
+  function clean(raw){ const parts = raw.split(',').map(x => x.trim()).filter(Boolean); let metro = null;
+    if (parts.length) { const m = parts[0].match(METRO); if (m && (m[1] || m[3] || m[5]) && m[2]) { metro = parts[0]; parts[0] = m[2].replace(/\s+bay$/i, '').trim(); if (/^san francisco$/i.test(parts[0]) && /bay/i.test(metro)) parts[0] = 'San Francisco'; } }
+    return {q: parts.join(', '), metro, parts}; }
+  const cache = {}; try { Object.assign(cache, JSON.parse(localStorage.getItem('cs_geo') || '{}')); } catch (e) {}
+  async function geocode(q, cc){ const key = q.toLowerCase() + '|' + (cc || ''); if (cache[key]) return cache[key];
+    const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&accept-language=en&q=' + encodeURIComponent(q) + (cc ? '&countrycodes=' + cc : '');
+    const r = await fetch(u, {headers: {'Accept': 'application/json'}}); if (!r.ok) throw new Error('lookup ' + r.status); const j = await r.json(); const hit = j[0] || null;
+    cache[key] = hit; try { localStorage.setItem('cs_geo', JSON.stringify(cache)); } catch (e) {} return hit; }
+  const levels = h => { const a = (h && h.address) || {};
+    return {country: a.country, cc: a.country_code, state: a.state || a.region || a.province, district: a.state_district, county: a.county,
+      city: a.city || a.town || a.village || a.municipality || a.hamlet, hood: a.neighbourhood || a.suburb || a.quarter || a.city_district, type: h && (h.addresstype || h.type)}; };
+  const norm = s => String(s || '').toLowerCase().replace(/\b(county|district|parish|borough|municipality|division)\b/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const km = (a, b) => { const R = 6371, t = x => x * Math.PI / 180, dLa = t(b.lat - a.lat), dLo = t(b.lon - a.lon); const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  const stat = (k, t) => { const el = $('lcStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
+  async function run(){ const ra = $('lcA').value.trim(), rb = $('lcB').value.trim(), out = $('lcOut');
+    if (!ra || !rb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.n}<p style="margin:0">${!ra && !rb ? 'Enter both locations.' : 'One side is empty and the other is not.'}</p></div>`; stat('', ''); return; }
+    stat('busy', '<span class="sc-bar"><i style="width:60%"></i></span><span>Looking up both places on the map…</span>');
+    const ca = clean(ra), cb = clean(rb); let ha, hb;
+    try { ha = await geocode(ca.q);
+      const ccA = ha && ha.address && ha.address.country_code;
+      // a short public location ("Charlotte Metro", "Kochi") is looked up in the file's country first; a full one (city, state, country) as written
+      hb = cb.parts.length >= 3 || !ccA ? await geocode(cb.q) : (await geocode(cb.q, ccA)) || await geocode(cb.q);
+      if (cb.parts.length < 3 && ccA && !hb) hb = await geocode(cb.q); }
+    catch (e) { stat('err', '⚠ The map lookup didn\'t answer. Check your internet connection and try again in a few seconds.'); return; }
+    const LA = levels(ha), LB = levels(hb), pa = ha && {lat: +ha.lat, lon: +ha.lon}, pb = hb && {lat: +hb.lat, lon: +hb.lon};
+    if (!ha || !hb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.c}<p style="margin:0">${!ha && !hb ? 'Neither place' : !ha ? 'The SeekOut location' : 'The public profile location'} could not be found on the map. Check the spelling, or use a quick map search.</p></div>`; stat('done', '<span class="sc-tick">!</span>Compare complete'); return; }
+    const d = km(pa, pb), eq = (x, y) => x && y ? (norm(x) === norm(y) ? 1 : 0) : null;
+    const distKey = (L) => [L.county, L.district].filter(Boolean).map(norm);
+    const sameDist = (() => { const a = distKey(LA), b = distKey(LB); if (!a.length || !b.length) return null; return a.some(x => b.includes(x)) ? 1 : 0; })();
+    const rows = [
+      ['Country', LA.country, LB.country, eq(LA.cc, LB.cc), 20],
+      ['State / region', LA.state, LB.state, eq(LA.state, LB.state), 20],
+      ['County / district', [LA.county, LA.district].filter(Boolean).join(' · '), [LB.county, LB.district].filter(Boolean).join(' · '), sameDist, 30],
+      ['City / town', LA.city, LB.city, eq(LA.city, LB.city), 20],
+      ['Neighbourhood / suburb', LA.hood, LB.hood, eq(LA.hood, LB.hood), 10]];
+    const metroRow = ['Metro area', ca.metro || '—', cb.metro || '—', (ca.metro || cb.metro) ? (sameDist || eq(LA.city, LB.city) || d < 40 ? 1 : 0) : null, 0];
+    let got = 0, tot = 0; rows.forEach(([, , , s, w]) => { if (s !== null && w) { tot += w; got += s * w; } });
+    let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 100) pct = Math.min(pct, 40); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
+    // suggested answer: the location rule
+    let ans, why;
+    if (eq(LA.cc, LB.cc) === 0) { ans = 'n'; why = 'Different countries.'; }
+    else if (sameDist === 1) { ans = 'm'; why = 'Same county or district' + (eq(LA.city, LB.city) === 1 ? ' and same city.' : ' (a town or suburb and its city in the same county).'); }
+    else if (sameDist === 0) { ans = 'n'; why = 'Different county or district' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
+    else if (eq(LA.city, LB.city) === 1) { ans = 'm'; why = 'Same city (the county or district isn\'t shown for one side).'; }
+    else if (!LA.city && !LA.county && !LA.district || !LB.city && !LB.county && !LB.district) { ans = 'c'; why = 'One side is only a state or country, so the county or district can\'t be worked out.'; }
+    else { ans = 'c'; why = 'The county or district couldn\'t be worked out for one side. Use a quick map search.'; }
+    if (ca.metro || cb.metro) why += ` “${esc(ca.metro || cb.metro)}” is read as the city it is named after.`;
+    const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
+    const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
+    out.hidden = false;
+    out.innerHTML = `<div class="lc-res"><div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
+        <div class="sc-verdict"><span class="bf-l">Suggested answer for Location</span>${A[ans]}<p>${why}</p><p class="hint">A helper using OpenStreetMap: you make the final decision using the location rule.</p></div></div>
+      <div class="lc-cards">${card('so', 'THE FILE SAYS (SeekOut)', ra, ha, pa, ca)}${card('li', 'PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)', rb, hb, pb, cb)}</div>
+      <div class="lc-dist"><div><b>${d < 1 ? '< 1 km' : Math.round(d).toLocaleString() + ' km'}</b><span>Distance (${d < 1.6 ? '< 1' : Math.round(d * 0.621).toLocaleString()} miles)</span></div><div><b>${pct}%</b><span>Location match</span></div><div><b>${rows.filter(r => r[3] === 1).length} of ${rows.filter(r => r[3] !== null).length}</b><span>Levels the same</span></div></div>
+      <div class="tbl"><table class="lc-tab"><thead><tr><th>Check</th><th>THE FILE SAYS</th><th>PUBLIC PROFILE SAYS</th><th>Result</th></tr></thead><tbody>
+        ${rows.concat([metroRow]).map(([n, a, b, s]) => `<tr class="${n === 'County / district' ? 'key' : ''}"><td><b>${n}</b>${n === 'County / district' ? '<div class="hint" style="font-size:11.5px">decides the answer</div>' : ''}</td><td>${esc(a || '—')}</td><td>${esc(b || '—')}</td><td class="st">${mark(s)}</td></tr>`).join('')}
+        <tr><td><b>Distance</b></td><td colspan="2">${d < 1 ? 'Under 1 km apart' : Math.round(d).toLocaleString() + ' km apart'}</td><td class="st">${d <= 25 ? '<span class="ok">✓ Close</span>' : d <= 100 ? '<span class="na">Nearby region</span>' : '<span class="no">✗ Far apart</span>'}</td></tr>
+      </tbody></table></div></div>`;
+    stat('done', `<span class="sc-tick">✓</span>Compare complete · <b>${pct}% match</b>`); }
+  $('lcGo').onclick = run; ['lcA', 'lcB'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
+  $('lcSwap').onclick = () => { const t = $('lcA').value; $('lcA').value = $('lcB').value; $('lcB').value = t; run(); };
+  $('lcClear').onclick = () => { $('lcA').value = $('lcB').value = ''; $('lcOut').hidden = true; stat('', ''); };
+  window.__lcRun = run;
+})();
+</script>
+</body></html>
