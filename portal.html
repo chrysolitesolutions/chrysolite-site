@@ -1029,6 +1029,13 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 
 .hl-tba{color:#C2412D;font-weight:800;margin-left:3px}.hl-tbat{color:#B23A26;font-weight:600}
 .hl-ext{color:#4C5F0C;font-weight:600}.hx-prev{font-size:13.5px;padding:10px 12px;border-radius:12px;background:rgba(155,181,42,.1)}.hx-prev:empty{display:none}
+.view[data-view="home"] .panel{position:relative}.view[data-view="home"] .panel > .vhead,.view[data-view="home"] .panel > h3{padding-right:34px}
+.hmin-btn{position:absolute;top:10px;right:10px;z-index:3;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);font:700 16px/1 system-ui;cursor:pointer;display:grid;place-items:center;opacity:.55;transition:opacity .2s,background .2s}
+.panel:hover > .hmin-btn,.hmin-btn:focus-visible,.panel.hmin > .hmin-btn{opacity:1}.hmin-btn:hover{background:color-mix(in srgb,var(--gem) 18%,var(--surface))}
+.panel.hmin{padding-top:12px!important;padding-bottom:12px!important;min-height:0!important;height:auto!important;cursor:default}
+.panel.hmin > :not(:first-child):not(.hmin-btn){display:none!important}.panel.hmin > .vhead{margin:0!important}.panel.hmin > .vhead > :not(h3){display:none!important}
+.panel.hmin > :first-child{margin:0!important;opacity:.75}
+.panel.hmin-new{animation:hminPulse 1.2s ease 2}@keyframes hminPulse{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--gem) 45%,transparent)}}
 </style>
 </head>
 <body>
@@ -2469,7 +2476,7 @@ function renderHours(){
     $('hStatusL').textContent = 'Working right now'; $('hStatus').textContent = working + (working === 1 ? ' person' : ' people');
   }
 }
-function renderHome(){ try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
+function renderHome(){ setTimeout(() => { try { applyHomeMin(); } catch (e) {} }, 0); try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
   try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
@@ -3947,7 +3954,7 @@ async function seedHolidays(){ if (!isAdmin || window.__hsBusy || window.__hsDon
       if (changed) await ref.set({year: +yr, items: [...upd, ...add].sort((a, b) => a.date.localeCompare(b.date)), updatedAt: new Date().toISOString()}); }
     await db.doc('adminSettings/holidaySeed').set({v: HOL_SEED_V, at: new Date().toISOString()}); window.__hsDone = 1; }
   catch (e) { console.error(e); } finally { window.__hsBusy = 0; } }
-function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; const k = todayStr(), list = me ? holidays.filter(h => h.date === k && !h.tba && !h.ext) : [];
+function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; const k = todayStr(), seenN = new Set(), list = !me ? [] : holidays.filter(h => h.date === k && !h.tba).map(h => h.ext ? {...h, name: h.ext, kind: (h.kind || 'Public holiday') + ' · extended'} : h).filter(h => !seenN.has(h.name) && seenN.add(h.name));
   let hid = ''; try { hid = localStorage.getItem('cs_hw_x') || ''; } catch (e) {}
   const show = list.filter(h => hid !== k + '|' + h.name), sig = show.map(h => h.date + h.name).join(',') + '|' + (me && me.key);
   if (box.dataset.sig === sig) return; box.dataset.sig = sig;
@@ -3996,6 +4003,27 @@ $('hxForm').addEventListener('submit', async e => { e.preventDefault(); if (!isA
   try { for (const [yr, list] of Object.entries(byYr)) { const items = holidays.filter(h => h.date.startsWith(yr)).concat(list).sort((a, b) => a.date.localeCompare(b.date)); await db.doc('holidays/' + yr).set({year: +yr, items, updatedAt: new Date().toISOString()}); }
     $('hxDlg').close(); toast(L.length + ' extra day' + (L.length === 1 ? '' : 's') + ' added to ' + hxFor.name); }
   catch (x) { err.textContent = 'That couldn\'t be saved. Try again.'; err.hidden = false; } finally { $('hxSave').disabled = false; } });
+/* ---------- Home: admins can minimise a box; it opens again when its content changes ---------- */
+const HMIN_KEY = () => 'cs_hmin_' + (actReal ? actReal.key : me ? me.key : 'x');
+const hminLoad = () => { try { return JSON.parse(localStorage.getItem(HMIN_KEY()) || '{}'); } catch (e) { return {}; } };
+const hminSave = o => { try { localStorage.setItem(HMIN_KEY(), JSON.stringify(o)); } catch (e) {} };
+// what counts as a change: the box's text, ignoring running clocks and durations (2h 13m, 10:32 PM, 5 min)
+const hminSig = el => { const c = el.cloneNode(true); c.querySelectorAll('.hmin-btn').forEach(x => x.remove());
+  return hashStr(c.textContent.replace(/\d{1,2}:\d{2}(:\d{2})?\s*([AaPp]\.?[Mm]\.?)?|\d+\s*h(\s*\d+\s*m)?\b|\d+\s*m(in)?\b|\d+(\.\d+)?\s*%/g, '').replace(/\s+/g, ' ').trim()); };
+const hminId = el => el.id || ((el.querySelector('h3, .hm-fl') || {}).textContent || '').replace(/[^a-z]+/gi, '-').toLowerCase().slice(0, 40);
+let hminBusy = false;
+function applyHomeMin(){ if (hminBusy) return; hminBusy = true; try { const view = document.querySelector('.view[data-view="home"]'); if (!view) return;
+  const adm = isAdmin && !actReal, st = hminLoad(); let dirty = false;
+  view.querySelectorAll('.panel').forEach(el => { const id = hminId(el); if (!id) return; let b = el.querySelector(':scope > .hmin-btn');
+    if (!adm) { if (b) b.remove(); el.classList.remove('hmin'); return; }
+    if (!b) { b = document.createElement('button'); b.type = 'button'; b.className = 'hmin-btn'; el.appendChild(b); }
+    const rec = st[id], sig = hminSig(el);
+    if (rec && rec !== sig) { delete st[id]; dirty = true; if (el.classList.contains('hmin')) { el.classList.remove('hmin'); el.classList.add('hmin-new'); setTimeout(() => el.classList.remove('hmin-new'), 2500); } }
+    const on = !!st[id]; el.classList.toggle('hmin', on); b.dataset.hmin = id; b.textContent = on ? '＋' : '–'; b.title = on ? 'Open this box' : 'Minimise this box (opens again when something changes)'; b.setAttribute('aria-label', b.title); });
+  if (dirty) hminSave(st); } finally { hminBusy = false; } }
+document.addEventListener('click', e => { const b = e.target.closest('.hmin-btn'); if (!b) return; const el = b.closest('.panel'), id = b.dataset.hmin, st = hminLoad();
+  if (st[id]) delete st[id]; else st[id] = hminSig(el); hminSave(st); applyHomeMin(); });
+{ let t = 0; const v = document.querySelector('.view[data-view="home"]'); if (v) new MutationObserver(() => { if (hminBusy) return; clearTimeout(t); t = setTimeout(applyHomeMin, 250); }).observe(v, {childList: true, subtree: true, characterData: true}); }
 /* ---------- confirm pop-up ---------- */
 function confirmDlg(title, msg, ok){ return new Promise(res => { const d = $('cfDlg'); $('cfT').textContent = title; $('cfMsg').textContent = msg; $('cfOk').textContent = ok || 'OK';
   const done = v => { d.close(); $('cfOk').onclick = $('cfNo').onclick = null; d.oncancel = null; res(v); };
