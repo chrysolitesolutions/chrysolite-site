@@ -615,7 +615,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .hl-row .nm{flex:1}.hl-row .nm small{display:block;color:var(--ink-soft)}.hl-row.past{opacity:.55}
 
 .org-legend{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}.org-legend span{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.org-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--rc)}
-[data-r="0"]{--rc:#5b2a86}[data-r="1"]{--rc:#0a66c2}[data-r="2"]{--rc:#2f8f6b}[data-r="3"]{--rc:#5f6f69}
+[data-r="0"]{--rc:#a8862a}[data-r="1"]{--rc:#b4513a}[data-r="2"]{--rc:#5b2a86}[data-r="3"]{--rc:#0a66c2}[data-r="4"]{--rc:#2f8f6b}[data-r="5"]{--rc:#5f6f69}
 .org-panel{padding:18px 8px}.org-scroll{overflow-x:auto;padding-bottom:6px}
 .org-tree{display:flex;justify-content:center;min-width:max-content;padding:0 12px}
 .org-tree ul{display:flex;justify-content:center;padding:22px 0 0;margin:0;position:relative;list-style:none}
@@ -1161,7 +1161,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
       <p class="hint" id="orgHidden" hidden style="margin:-4px 0 10px"></p>
       <div class="panel org-panel"><div class="org-fit" id="orgFit"><div class="org-tree" id="orgTree"></div></div></div>
       <div class="panel admin-only" hidden style="margin-top:16px"><h3>Add a planned team member</h3><p class="hint" style="margin:-4px 0 12px">For people joining soon. They show on the chart as “Joining soon” until you create their login with the same name, then the card switches to the real person automatically.</p>
-        <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option></select></div></div>
+        <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option><option>COO / Project Director</option><option>Owner</option></select></div></div>
           <div class="g2"><div class="f"><label for="opBoss">Reports to</label><select id="opBoss"></select></div><div class="f"><label for="opDate">Expected joining date</label><input id="opDate" type="date"></div></div>
           <div class="msg err" id="opErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Add to the Org Chart</button></form></div>
     </section>
@@ -1472,7 +1472,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
             <div class="f"><label for="aName">Full name</label><input id="aName" autocomplete="off" placeholder="e.g. Amara Okafor"></div>
             <div class="f"><label for="aEmail">Login email</label><input id="aEmail" type="email" autocomplete="off" placeholder="name@company.com"></div>
             <div class="g2">
-              <div class="f"><label for="aRole">Role</label><select id="aRole"><option>Team Lead</option><option>Project Manager</option><option>Senior Data Executive</option><option selected>Data Executive</option></select></div>
+              <div class="f"><label for="aRole">Role</label><select id="aRole"><option>Owner</option><option>COO / Project Director</option><option>Project Manager</option><option>Team Lead</option><option>Senior Data Executive</option><option selected>Data Executive</option></select></div>
               <div class="f"><label for="aStatus">Status</label><select id="aStatus"><option>Active</option><option>On leave</option><option>Bench</option></select></div>
             </div>
             <div class="f"><label for="aAccess">Portal access</label><select id="aAccess"><option value="contributor">Contributor: clock in and out only, everything else view-only</option><option value="admin">Admin: can edit everything in the portal</option></select>
@@ -1687,7 +1687,7 @@ let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canW
 const BRIEF_VER = 'brief-2026-11-5';   // change this to ask everyone to read and accept again
 let empInfoMine = null, empDocsMine = null, profReqMine = null, profReqAll = {}; const epEditing = {};   // employee details: own records, section being edited per container
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
-const ROLES = ['Team Lead', 'Project Manager', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
+const ROLES = ['Owner', 'COO / Project Director', 'Project Manager', 'Team Lead', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
 const SESSION_MAX = 16 * 3600000, DAY_MAX = 8 * 3600000;   // DAY_MAX = standard day; SESSION_MAX only stops a clock left running by mistake
 let accounts = [], week = {key:'', rows:[]}, nextWeek = {key:'', rows:[]}, decisions = [], anns = [], requests = [], myReq = null, myReqRaw = null, myReqDoc = null, myClockRaw = null, attDocs = [], clockDocs = [], reqLegacy = [], reqNew = [], links = [], myAtt = null, myAttRaw = null, teamAtt = [];
@@ -4280,14 +4280,14 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 
 
 /* ---------- Org Chart: everyone can see the team, reporting lines, projects and today's tasks ---------- */
-const ROLE_RANK = {'Project Manager': 0, 'Team Lead': 1, 'Senior Data Executive': 2, 'Data Executive': 3};
+const ROLE_RANK = {'Owner': 0, 'COO / Project Director': 1, 'Project Manager': 2, 'Team Lead': 3, 'Senior Data Executive': 4, 'Data Executive': 5};
 function orgTopNames(skip){ const cur = people().filter(p => p.reportsTo === '__top' && p.key !== skip); if (cur.length) return cur.map(p => p.name).join(' and '); const ps = people().filter(p => p.reportsTo !== '__none' && p.reportsTo !== '__top' && (!skip || p.key !== skip)), par = orgParents(ps); return ps.filter(p => !par[p.key]).map(p => p.name).join(' and ') || 'everyone'; }
 const ORG_SPECIAL = skip => `<option value="__none">None (not shown on the Org Chart)</option><option value="__top">Top of the chart (${esc(orgTopNames(skip))} reports to them)</option>`;
 function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + ORG_SPECIAL(a && a.key) + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
 function orgParents(ps = people()){ ps = ps.filter(p => p.reportsTo !== '__none'); const tops = ps.filter(p => p.reportsTo === '__top'); if (tops.length) { const rest = ps.filter(p => p.reportsTo !== '__top'), par = orgParents(rest); tops.forEach(t => par[t.key] = null); rest.forEach(p => { if (!par[p.key]) par[p.key] = tops[0].key; }); return par; }
-  const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
+  const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 5) === r), parent = {};
   ps.forEach(p => { if (p.reportsTo && p.reportsTo !== p.key && ps.some(x => x.key === p.reportsTo)) { parent[p.key] = p.reportsTo; return; }
-    const r = ROLE_RANK[p.role] ?? 3; for (let up = Math.min(r - 1, 1); up >= 0; up--) {   /* executives report to a Team Lead, Team Leads to a Project Manager */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
+    const r = ROLE_RANK[p.role] ?? 5; for (let up = r >= 4 ? 3 : r - 1; up >= 0; up--) {   /* executives report to a Team Lead, Team Lead to Project Manager, then COO / Project Director, then Owner */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
   // break any loop an admin may have set by mistake
   ps.forEach(p => { const seen = new Set([p.key]); let q = parent[p.key]; while (q) { if (seen.has(q)) { parent[p.key] = null; break; } seen.add(q); q = parent[q]; } });
   return parent; }
@@ -4304,14 +4304,14 @@ function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = org
   const kids = k => ps.filter(p => parent[p.key] === k);
   const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${p.plan ? '' : ORG_SPECIAL(p.key).replace(`value="${p.reportsTo}"`, `value="${p.reportsTo}" selected`)}${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
   const pic = p => photosAll[p.key] ? `<img class="oc-ph" src="${esc(photosAll[p.key])}" alt="">` : `<div class="av oc-ph" style="background:hsl(${hue(p.name)} 45% 62%)">${esc(initials(p.name))}</div>`;
-  const card = p => `<div class="org-card${p.plan ? ' plan' : ''}${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${pic(p)}<b>${esc(p.name)}</b><span>${esc(p.designation || p.role || '')}</span>${p.plan ? '<small class="oc-soon">Joining soon</small>' : ''}${bossSel(p)}${isAdmin && p.plan ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div>`;
-  const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
+  const card = p => `<div class="org-card${p.plan ? ' plan' : ''}${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 5}">${pic(p)}<b>${esc(p.name)}</b><span>${esc(p.designation || p.role || '')}</span>${p.plan ? '<small class="oc-soon">Joining soon</small>' : ''}${bossSel(p)}${isAdmin && p.plan ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div>`;
+  const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 5) - (ROLE_RANK[b.role] ?? 5) || String(a.name).localeCompare(String(b.name)));
     const vert = c.length > 1 && c.every(x => !kids(x.key).length);   /* a team with no sub-teams is stacked in a column, so the chart stays narrow and the cards stay large */
     return `<li>${card(p)}${c.length ? `<ul${vert ? ' class="vert"' : ''}>${c.map(branch).join('')}</ul>` : ''}</li>`; };
-  const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
+  const roots = ps.filter(p => !parent[p.key]).sort((a, b) => (ROLE_RANK[a.role] ?? 5) - (ROLE_RANK[b.role] ?? 5) || String(a.name).localeCompare(String(b.name)));
   box.innerHTML = `<ul>${roots.map(branch).join('')}</ul>`; fitOrg();
   if ($('opBoss')) { const keep = $('opBoss').value; $('opBoss').innerHTML = people().map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); if (keep) $('opBoss').value = keep; }
-  $('orgLegend').innerHTML = Object.keys(ROLE_RANK).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 3) === ROLE_RANK[r]).length}</b></span>`).join('');
+  $('orgLegend').innerHTML = Object.keys(ROLE_RANK).filter(r => ps.some(p => p.role === r) || ROLE_RANK[r] >= 2).map(r => `<span data-r="${ROLE_RANK[r]}">${r} <b>${ps.filter(p => (ROLE_RANK[p.role] ?? 5) === ROLE_RANK[r]).length}</b></span>`).join('');
   /* teams-by-project list removed: the chart already shows everyone */ }
 
 // shrink the chart to fit the page width so it never needs a scroll bar
