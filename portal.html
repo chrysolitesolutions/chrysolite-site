@@ -312,6 +312,7 @@ tbody tr:hover{background:var(--surface-2)}
 .zm-f:hover{border-color:#e2513b}.zm-f.on{border-color:#e2513b;background:#fdecea}.zm-n{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0a66c2;color:#fff;font:800 12px var(--mono);flex:none}.zm-f.on .zm-n{background:#e2513b}
 .zm-info{margin-top:6px;padding:12px 14px;border-radius:12px;background:var(--surface-2);display:grid;gap:8px;font-size:14px}.zm-info small{display:block;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
 .zm-row{cursor:pointer}.zm-row:hover td,.zm-row.on td{background:#fdecea}
+.zp-b kbd,.gd-doc kbd{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;margin-left:4px;border-radius:5px;border:1px solid currentColor;font:700 11px var(--mono);opacity:.75}
 .zp-card{display:grid;gap:12px;padding:16px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface)}
 .zp-top{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-soft)}
 .zp-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media(max-width:640px){.zp-two{grid-template-columns:1fr}}
@@ -1276,7 +1277,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="guides" hidden>
       <div class="vhead"><div><h1>Projects</h1><p>Guidelines for each project you work on, plus the tools and links you use every day.</p></div></div>
       <div class="gd-board">
-        <section class="gd-box gd-bench"><h2>Benchmarking</h2><div class="gd-cols" id="guideGrid"><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>1. Profile Benchmarking</h3><button class="lk gd-card" type="button" data-go="bintro"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg></div><div><b>1.1 Introduction to LinkedIn Profile Benchmarking</b><span id="gdBintroSub">What the project is, why it matters and how it works.</span></div></button><button class="lk gd-card bf-card" type="button" data-go="brief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>1.2 Profile Benchmarking - Briefing and Practice</b><span>Interactive guide to Profile Review: decision helper, rules, calculators and practice cases.</span></div></button><button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1.3 Profile Benchmarking - Steps and Instructions</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>2. Email Benchmarking</h3><button class="lk gd-card" type="button" data-go="bemailbrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>2.1 Email Benchmarking - Briefing and Practice</b><span id="gdBemailbriefSub">Rules, examples and practice for email review.</span></div></button><button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2.2 Email Benchmarking - Steps and Instructions</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot up"></span>3. Phone Number Benchmarking</h3><button class="lk gd-card" type="button" data-go="bphonebrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>3.1 Phone Number Benchmarking - Briefing and Practice</b><span id="gdBphonebriefSub">Rules, examples and practice for phone review.</span></div></button><button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3.2 Phone Number Benchmarking - Steps and Instructions</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>4. ZIPLabs Data Pull Benchmarking</h3><button class="lk gd-card" type="button" data-go="bzipbrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice</b><span id="gdBzipbriefSub">The process, the three answers and practice cases.</span></div></button><button class="lk gd-card" type="button" data-go="bzipsteps"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5"/></svg></div><div><b>4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions</b><span id="gdBzipstepsSub">Step by step on the Review ZIPLabs screen.</span></div></button></div></div></section>
+        <section class="gd-box gd-bench"><h2>Benchmarking</h2><div class="gd-cols" id="guideGrid"><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>1. Profile Benchmarking</h3><button class="lk gd-card" type="button" data-go="bintro"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg></div><div><b>1.1 Introduction to LinkedIn Profile Benchmarking</b><span id="gdBintroSub">What the project is, why it matters and how it works.</span></div></button><button class="lk gd-card bf-card" type="button" data-go="brief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>1.2 Profile Benchmarking - Briefing and Practice</b><span>Interactive guide to Profile Review: decision helper, rules, calculators and practice cases.</span></div></button><button class="lk gd-card" type="button" data-go="bprof"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg></div><div><b>1.3 Profile Benchmarking - Steps and Instructions</b><span id="gdBprofSub">Check each field of a profile against the public profile and LinkedIn.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>2. Email Benchmarking</h3><button class="lk gd-card" type="button" data-go="bemailbrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>2.1 Email Benchmarking - Briefing and Practice</b><span id="gdBemailbriefSub">Rules, examples and practice for email review.</span></div></button><button class="lk gd-card" type="button" data-go="bemail"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></div><div><b>2.2 Email Benchmarking - Steps and Instructions</b><span id="gdBemailSub">Search each email and prove it belongs to the person.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot up"></span>3. Phone Number Benchmarking</h3><button class="lk gd-card" type="button" data-go="bphonebrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>3.1 Phone Number Benchmarking - Briefing and Practice</b><span id="gdBphonebriefSub">Rules, examples and practice for phone review.</span></div></button><button class="lk gd-card" type="button" data-go="bphone"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="8" height="15" rx="2"/><path d="M9 15h2"/></svg></div><div><b>3.2 Phone Number Benchmarking - Steps and Instructions</b><span id="gdBphoneSub">Instructions coming soon.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>4. ZIPLabs Data Pull Benchmarking</h3><button class="lk gd-card" type="button" data-go="bzipbrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice</b><span id="gdBzipbriefSub">The process, the three answers and practice cases.</span></div></button><button class="lk gd-card" type="button" data-go="bzipsteps"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5"/></svg></div><div><b>4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions</b><span id="gdBzipstepsSub">Step by step on the Review ZIPLabs screen.</span></div></button></div><div class="gd-col"><h3 class="gd-group"><span class="dot on"></span>5. Name Groups Check</h3><button class="lk gd-card" type="button" data-go="bnamebrief"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5.5l7-3 7 3-7 3z"/><path d="M6 7v4.5c0 1.4 1.8 2.5 4 2.5s4-1.1 4-2.5V7M17 5.5v5"/></svg></div><div><b>5.1 Name Groups Check - Briefing and Practice</b><span id="gdBnamebriefSub">Is this grouping of names right? Rules and practice cases.</span></div></button><button class="lk gd-card" type="button" data-go="bnamesteps"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="3" width="6" height="5" rx="1.5"/><rect x="11.5" y="3" width="6" height="5" rx="1.5"/><rect x="7" y="12" width="6" height="5" rx="1.5"/><path d="M5.5 8v1.5h9V8M10 9.5V12"/></svg></div><div><b>5.2 Name Groups Check - Steps and Instructions</b><span id="gdBnamestepsSub">Step by step on the Name groups check screen.</span></div></button></div></div></section>
         <section class="gd-box gd-links"><h2>Links</h2><p class="hint" style="margin:-2px 0 10px 4px">Tools and sites you use for Chrysolite work. Each opens in a new tab.</p><div class="link-grid gd-stack" id="linkGrid"></div></section>
       </div>
       <section class="gd-box gd-other"><h2>Other projects</h2><div class="gd-row" id="guideGridUp"><button class="lk gd-card" type="button" data-go="eto"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>ETO Profile Mapping Project</b><span id="gdEtoSub">Mapping new hires to their correct LinkedIn profiles.</span></div></button><button class="lk gd-card" type="button" data-go="csm"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17h14M6 14V9M10 14V5M14 14v-3"/></svg></div><div><b>Standard Usage Reporting - CSM Project</b><span id="gdCsmSub">Guidelines for preparing CSM reports.</span></div></button><button class="lk gd-card" type="button" data-go="roi"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path d="M12 2.5V6h3.5M7.5 10h5M7.5 13h5"/></svg></div><div><b>ROI Database update Project</b><span id="gdRoiSub">Reviewing vendor hire data and uploading it for ROI analysis.</span></div></button></div></section>
@@ -1921,7 +1922,7 @@ function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
-  if (!['home','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
@@ -3044,23 +3045,65 @@ $('pfFile').addEventListener('change', async e => {
 });
 
 /* ---------- project guidelines: documents and source register ---------- */
-const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bprof: 'doc_bench_profile', bemail: 'doc_bench_email', bphone: 'doc_bench_phone', bintro: 'doc_bench_intro', bemailbrief: 'doc_bench_email_brief', bphonebrief: 'doc_bench_phone_brief', bzipbrief: 'doc_bench_zip_brief', bzipsteps: 'doc_bench_zip_steps'};
+const GDOCS = {eto: 'doc_eto', roi: 'doc_roi', csm: 'doc_csm', bprof: 'doc_bench_profile', bemail: 'doc_bench_email', bphone: 'doc_bench_phone', bintro: 'doc_bench_intro', bemailbrief: 'doc_bench_email_brief', bphonebrief: 'doc_bench_phone_brief', bzipbrief: 'doc_bench_zip_brief', bzipsteps: 'doc_bench_zip_steps', bnamebrief: 'doc_bench_name_brief', bnamesteps: 'doc_bench_name_steps'};
 const BENCH_SUB = ['bprof', 'bemail', 'bphone'];
 // built-in content shown until an admin uploads a Word document for the page
-const GDEFAULT = {bzipbrief: {title: '4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice', subtitle: 'Check the data ZIPLabs pulled against the live LinkedIn profile', html: `
+const GDEFAULT = {bnamebrief: {title: '5.1 Name Groups Check - Briefing and Practice', subtitle: 'Is a grouping of names in our data right?', html: `
 <h2>1. What is this project?</h2>
-<p>ZIPLabs pulls information from LinkedIn profiles automatically. Your job is to check that what it pulled is <strong>correct</strong>. For every person you open their <strong>live LinkedIn profile</strong> and compare it with each value ZIPLabs pulled, one field at a time.</p>
+<p>SeekOut groups different names for the <strong>same</strong> company, job title or place. For example, “Optum” is grouped under “UnitedHealth Group”. Here you check whether a grouping found in our data is <strong>right</strong>.</p>
+<div class="intro-tip"><b>The question on screen:</b> “Is <strong>Optum</strong> the same company as, or part of, <strong>UnitedHealth Group</strong>?” You see what <strong>the file says</strong> and what <strong>the public profile says</strong>, and how many profiles use this grouping.</div>
+<h2>2. The three answers</h2>
+<div class="intro-3"><div class="m"><b>✓ Match <kbd>1</kbd></b>The same thing: the same company, a brand or subsidiary of it; the same job in other words; the same metro area.</div><div class="n"><b>✗ Not a match <kbd>2</kbd></b>Something different. Add a short reason, e.g. “different companies since 2012”.</div><div class="c"><b>? Can't tell <kbd>3</kbd></b>Only when you cannot find out, even after searching the web.</div></div>
+<h2>3. When is it a match?</h2>
+<div class="tblw"><table><thead><tr><th>Type</th><th>✓ Match when</th><th>✗ Not a match when</th></tr></thead><tbody>
+<tr><td><strong>Company</strong></td><td>The same company, a brand of it, or a subsidiary of it.</td><td>A different company.</td></tr>
+<tr><td><strong>Job title</strong></td><td>The same job in other words (Sr = Senior, Dev = Developer).</td><td>A different job or a different level.</td></tr>
+<tr><td><strong>Location</strong></td><td>The same metro area (a suburb and its main city count as the same).</td><td>A different metro area, even in the same state.</td></tr></tbody></table></div>
+<h2>4. Remember</h2>
+<ol><li>Use <strong>Search the web ↗</strong> if you are not sure whether two companies are related.</li>
+<li><strong>Not a match</strong> needs a short reason (e.g. “different companies since 2012”, “different level”, “different metro area”).</li>
+<li><strong>Location:</strong> same metro area = Match. A suburb and its main city are the same; a different metro area, even in the same state, is Not a match.</li>
+<li><strong>Can't tell</strong> only when you cannot find out.</li>
+<li>Keys <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> choose; <kbd>Enter</kbd> saves.</li></ol>
+<h2>5. Practice</h2>
+<p>Try these cases. Pick the answer you would give; you see the right answer and why straight away.</p>
+<div class="ng-quiz"></div>`},
+bnamesteps: {title: '5.2 Name Groups Check - Steps and Instructions', subtitle: 'Step by step on the Name groups check screen', html: `
+<h2>1. Before you start</h2>
+<ul><li>Open <strong>My work → Name groups check</strong>. The top bar shows your count for <strong>Today</strong> and how many are <strong>waiting</strong>.</li>
+<li>Each check is <strong>reserved for you</strong> until the time shown top right (e.g. “Reserved for you until 11:24 AM”).</li>
+<li>Click <strong>?</strong> (top right) for help.</li></ul>
+<h2>2. Read the question</h2>
+<ol><li>The tag at the top tells you the <strong>type</strong>: Company, Job title or Location.</li>
+<li>Read the question, e.g. “Is <strong>Optum</strong> the same company as, or part of, <strong>UnitedHealth Group</strong>?”</li>
+<li>Compare <strong>The file says</strong> (left) with <strong>The public profile says</strong> (right).</li>
+<li>The blue line shows what both are mapped to and how many profiles use this grouping (e.g. “Both are mapped to UnitedHealth Group · seen on 1 profile”).</li></ol>
+<h2>3. Decide</h2>
+<div class="tblw"><table><thead><tr><th>Type</th><th>✓ Match when</th><th>✗ Not a match when</th></tr></thead><tbody>
+<tr><td><strong>Company</strong></td><td>The same company, a brand of it, or a subsidiary of it.</td><td>A different company.</td></tr>
+<tr><td><strong>Job title</strong></td><td>The same job in other words (Sr = Senior, Dev = Developer).</td><td>A different job or a different level.</td></tr>
+<tr><td><strong>Location</strong></td><td>The same metro area (a suburb and its main city count as the same).</td><td>A different metro area, even in the same state.</td></tr></tbody></table></div>
+<ul><li>Not sure? Click <strong>Search the web ↗</strong>.</li></ul>
+<h2>4. Answer and save</h2>
+<ol><li>Click <strong>✓ Match</strong> <kbd>1</kbd>, <strong>✗ Not a match</strong> <kbd>2</kbd> or <strong>? Can't tell</strong> <kbd>3</kbd>.</li>
+<li><strong>Not a match</strong> needs a short reason (e.g. “different companies since 2012”).</li>
+<li><strong>Can't tell</strong> only when you cannot find out.</li>
+<li>Click <strong>Save and next</strong> or press <kbd>Enter</kbd>. The next check loads.</li></ol>`},
+bzipbrief: {title: '4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice', subtitle: 'Check the data ZIPLabs pulled against the live LinkedIn profile', html: `
+<h2>1. What is this project?</h2>
+<p>Here you check whether what ZIPLabs fetched matches the person's LinkedIn page. <strong>This is the only check where you work on LinkedIn itself.</strong> For every person you open their live LinkedIn profile and compare it with each value ZIPLabs pulled, one field at a time.</p>
 <div class="intro-tip"><b>Different from Profile Benchmarking:</b> here <strong>LinkedIn is always the truth</strong>, and you open LinkedIn for <strong>every</strong> profile. You are checking ZIPLabs, not the SeekOut file.</div>
 <h2>2. The three answers</h2>
-<div class="intro-3"><div class="m"><b>✓ Matches</b>LinkedIn shows the same. Small spelling, punctuation or abbreviation differences are fine. For dates: the same month and year.</div><div class="n"><b>✗ Doesn't match</b>LinkedIn shows something else, or shows it where ZIPLabs has nothing. Type what LinkedIn shows.</div><div class="c"><b>? Can't tell</b>LinkedIn doesn't show this information at all.</div></div>
+<div class="intro-3"><div class="m"><b>✓ Match <kbd>1</kbd></b>LinkedIn shows the same. Small spelling, punctuation or abbreviation differences are fine. For dates: the same month and year.</div><div class="n"><b>✗ Not a match <kbd>2</kbd></b>LinkedIn shows something else, or shows it where ZIPLabs has nothing. Type <strong>exactly</strong> what LinkedIn shows. A second person (L2) confirms it.</div><div class="c"><b>? Can't tell <kbd>3</kbd></b>LinkedIn doesn't show it (e.g. dates hidden).</div></div>
 <h2>3. The 8 fields you check</h2>
 <p><strong>Click a field</strong> to see exactly where it is on a LinkedIn profile and when it matches.</p>
 <div class="zp-map"></div>
 <h2>4. Remember</h2>
 <ol><li><strong>Current role only:</strong> job title, company and start date come from the role that shows <strong>“Present”</strong>, not an old job and not the headline.</li>
-<li><strong>Dates:</strong> the month and the year must both be the same. Jul 2019 vs Aug 2019 = Doesn't match.</li>
-<li><strong>ZIPLabs empty but LinkedIn has it</strong> = Doesn't match. Type what LinkedIn shows.</li>
-<li><strong>LinkedIn doesn't show it</strong> (no About section, no dates) = Can't tell.</li>
+<li><strong>Dates:</strong> the month and the year must both be the same. Jul 2019 vs Aug 2019 = Not a match.</li>
+<li><strong>ZIPLabs empty but LinkedIn has it</strong> = Not a match. Type exactly what LinkedIn shows; L2 confirms it.</li>
+<li><strong>LinkedIn doesn't show it</strong> (no About section, dates hidden) = Can't tell.</li>
+<li><strong>Location:</strong> same metro area = Match. A suburb and its main city are the same; a different metro area, even in the same state, is Not a match.</li>
 <li><strong>LinkedIn won't open</strong> (private, deleted, login wall): use the <strong>LinkedIn page won't open</strong> button instead of answering.</li>
 <li>Use the <strong>Text checker</strong>, <strong>Job title checker</strong> and <strong>Location checker</strong> in Links when you are unsure.</li></ol>
 <h2>5. Practice</h2>
@@ -3071,19 +3114,23 @@ bzipsteps: {title: '4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions'
 <ul><li>The top bar shows <strong>Review ZIPLabs</strong>, your count for <strong>Today</strong> and how many profiles are <strong>Waiting</strong>.</li>
 <li>Each profile is <strong>reserved for you</strong> until the time shown top right (e.g. “Reserved for you until 01:26 PM”). Finish before then, or it goes back to the queue.</li>
 <li>Use <strong>Exit</strong> (top right) only when you want to stop.</li></ul>
-<h2>2. Open LinkedIn</h2>
-<ol><li>Click <strong>Open LinkedIn ↗</strong>. Keep it open in its own tab.</li>
-<li>Make sure it is the right person (name, photo, location, work history).</li>
-<li>If the page won't open, is private, needs a login or is deleted: click <strong>LinkedIn page won't open</strong> (bottom right) and move to the next profile.</li></ol>
-<h2>3. Read the grey rule box</h2>
-<p><strong>Matches</strong> = LinkedIn shows the same (small spelling, punctuation or abbreviation differences are fine; for dates, the same month and year). <strong>Doesn't match</strong> = LinkedIn shows something else, or shows it where ZIPLabs has nothing; say what LinkedIn shows. <strong>Can't tell</strong> = LinkedIn doesn't show it.</p>
+<h2>2. The procedure</h2>
+<p>Here you check whether what ZIPLabs fetched matches the person's LinkedIn page. <strong>This is the only check where you work on LinkedIn itself.</strong></p>
+<ol><li>Click <strong>Open LinkedIn ↗</strong> and keep it open in its own tab. Make sure it is the right person.</li>
+<li>For each row, compare the value with LinkedIn. Keys <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> answer the highlighted row.</li>
+<li><strong>✓ Match <kbd>1</kbd>:</strong> LinkedIn shows the same (small spelling, punctuation or abbreviation differences are fine; for dates, the same month and year).</li>
+<li><strong>✗ Not a match <kbd>2</kbd>:</strong> LinkedIn shows something else, or shows it where ZIPLabs has nothing. Type <strong>exactly</strong> what LinkedIn shows, then <kbd>Enter</kbd> moves on. A second person (L2) confirms it.</li>
+<li><strong>? Can't tell <kbd>3</kbd>:</strong> LinkedIn doesn't show it (e.g. dates hidden).</li>
+<li><strong>Save and next</strong> (<kbd>Enter</kbd>) when every row is answered. If the page won't open at all, use <strong>LinkedIn page won't open</strong>.</li></ol>
+<h2>3. Location rule</h2>
+<p><strong>Same metro area = Match.</strong> A suburb and its main city are the same; a different metro area, even in the same state, is Not a match.</p>
 <h2>4. Check each of the 8 fields</h2>
-<p>For each row, compare the ZIPLabs value with LinkedIn and click <strong>✓ Matches</strong>, <strong>✗ Doesn't match</strong> or <strong>? Can't tell</strong>. <strong>Click a field below</strong> to see exactly where it is on a LinkedIn profile.</p>
+<p>For each row, compare the ZIPLabs value with LinkedIn and answer <strong>✓ Match</strong>, <strong>✗ Not a match</strong> or <strong>? Can't tell</strong>. <strong>Click a field below</strong> to see exactly where it is on a LinkedIn profile.</p>
 <div class="zp-map"></div>
-<div class="intro-tip"><b>Doesn't match:</b> type what LinkedIn actually shows, so the data can be corrected.</div>
-<h2>5. Submit</h2>
-<ul><li>The counter next to <strong>Submit</strong> shows how many fields are still to answer (e.g. “8 field(s) still to answer”).</li>
-<li>When every field has an answer, click <strong>Submit</strong>. The next profile loads and your Today count goes up.</li></ul>`},
+<div class="intro-tip"><b>Not a match:</b> type exactly what LinkedIn shows, so the data can be corrected. A second person (L2) confirms it.</div>
+<h2>5. Save and next</h2>
+<ul><li>When every row is answered, press <strong>Save and next</strong> (or <kbd>Enter</kbd>). The next profile loads and your Today count goes up.</li>
+<li>If LinkedIn won't open at all (private, deleted, login wall), use <strong>LinkedIn page won't open</strong> instead.</li></ul>`},
 bintro: {title: '1.1 Introduction to LinkedIn Profile Benchmarking', subtitle: 'What the project is, how to read a LinkedIn profile, and how to decide', html: `
 <h2>1. What is profile benchmarking?</h2>
 <p>For each person, you compare what <strong>our file says (SeekOut)</strong> with what their <strong>public LinkedIn profile says</strong>, one field at a time. For every field you give one answer:</p>
@@ -3221,7 +3268,7 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 <li>Watch the reservation time if a profile has many emails.</li></ul>`}};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
-  const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE|IMG)$/;
+  const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE|IMG|KBD)$/;
   const walk = el => [...el.children].forEach(c => { if (!OK.test(c.tagName)) { c.replaceWith(...c.childNodes); return walk(el); }
     [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')) || (c.tagName === 'IMG' && ((a.name === 'src' && /^[\w-]+\.(webp|png|jpe?g)$/i.test(a.value)) || a.name === 'alt')); if (!keep) c.removeAttribute(a.name); });
     if (c.tagName === 'A') { c.target = '_blank'; c.rel = 'noopener'; } walk(c); });
@@ -3267,7 +3314,7 @@ function renderAckCards(){
 }
 function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
-  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub'], ['bintro', 'gdBintroSub'], ['bemailbrief', 'gdBemailbriefSub'], ['bphonebrief', 'gdBphonebriefSub'], ['bzipbrief', 'gdBzipbriefSub'], ['bzipsteps', 'gdBzipstepsSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
+  [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub'], ['bintro', 'gdBintroSub'], ['bemailbrief', 'gdBemailbriefSub'], ['bphonebrief', 'gdBphonebriefSub'], ['bzipbrief', 'gdBzipbriefSub'], ['bzipsteps', 'gdBzipstepsSub'], ['bnamebrief', 'gdBnamebriefSub'], ['bnamesteps', 'gdBnamestepsSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
 }
 
 // Projects page tabs: Benchmarking / Other projects (remembered on this device)
@@ -3302,22 +3349,41 @@ const ZP_CASES = [
   ['About (summary)', 'Looking to expand experience… (cut off)', 'Looking to expand experience, I would also like to further my career…', 'm', 'Compare only the part ZIPLabs shows. It is the same.'],
   ['About (summary)', 'Looking to expand experience…', 'No About section on the profile', 'c', 'LinkedIn doesn\'t show an About section.'],
   ['Name', 'Maria Lopez', 'The LinkedIn page says “This profile is not available”', 'x', 'Don\'t answer the fields: click “LinkedIn page won\'t open”.']];
-function mountZpQuiz(){ const box = document.querySelector('#gdDoc .zp-quiz'); if (!box) return; let i = 0, ok = 0, done = 0; const L = {m: '✓ Matches', n: '✗ Doesn\'t match', c: '? Can\'t tell', x: 'LinkedIn page won\'t open'};
-  const draw = () => { const [f, z, li] = ZP_CASES[i]; box.innerHTML = `<div class="zp-card"><div class="zp-top"><span>Case ${i + 1} of ${ZP_CASES.length} · <b>${esc(f)}</b></span><span>${ok} of ${done} right</span></div>
-    <div class="zp-two"><div><small>ZIPLABS SAYS</small><b>${esc(z)}</b></div><div><small>LINKEDIN SHOWS</small><b>${esc(li)}</b></div></div>
-    <div class="zp-btns">${['m', 'n', 'c', 'x'].map(k => `<button type="button" class="zp-b ${k}" data-zp="${k}">${L[k]}</button>`).join('')}</div><div class="zp-res"></div></div>`; };
-  box.addEventListener('click', e => { const b = e.target.closest('[data-zp]'), nx = e.target.closest('[data-zpnext]'); if (nx) { i = (i + 1) % ZP_CASES.length; draw(); return; } if (!b || box.querySelector('.zp-res').innerHTML) return;
-    const c = ZP_CASES[i], right = b.dataset.zp === c[3]; done++; if (right) ok++;
+function mountQuiz(cls, CASES, keys, L, colA, colB){ const box = document.querySelector('#gdDoc .' + cls); if (!box) return; let i = 0, ok = 0, done = 0;
+  const draw = () => { const [f, z, li] = CASES[i]; box.innerHTML = `<div class="zp-card"><div class="zp-top"><span>Case ${i + 1} of ${CASES.length} · <b>${esc(f)}</b></span><span>${ok} of ${done} right</span></div>
+    <div class="zp-two"><div><small>${colA}</small><b>${esc(z)}</b></div><div><small>${colB}</small><b>${esc(li)}</b></div></div>
+    <div class="zp-btns">${keys.map((k, n) => `<button type="button" class="zp-b ${k}" data-zp="${k}">${L[k]}${n < 3 ? ` <kbd>${n + 1}</kbd>` : ''}</button>`).join('')}</div><div class="zp-res"></div></div>`; };
+  box.addEventListener('click', e => { const b = e.target.closest('[data-zp]'), nx = e.target.closest('[data-zpnext]'); if (nx) { i = (i + 1) % CASES.length; draw(); return; } if (!b || box.querySelector('.zp-res').innerHTML) return;
+    const c = CASES[i], right = b.dataset.zp === c[3]; done++; if (right) ok++;
     box.querySelectorAll('[data-zp]').forEach(x => { x.disabled = true; x.classList.toggle('right', x.dataset.zp === c[3]); x.classList.toggle('wrong', x === b && !right); });
     box.querySelector('.zp-top span:last-child').textContent = ok + ' of ' + done + ' right';
-    box.querySelector('.zp-res').innerHTML = `<div class="zp-why ${right ? 'ok' : 'no'}"><b>${right ? 'Correct! ' : 'Not quite. '}The answer is ${L[c[3]]}.</b> ${esc(c[4])}</div><button type="button" class="btn btn-gem" data-zpnext>Next case →</button>`; });
+    box.querySelector('.zp-res').innerHTML = `<div class="zp-why ${right ? 'ok' : 'no'}"><b>${right ? 'Correct! ' : 'Not quite. '}The answer is ${L[c[3]].replace(/ <kbd>.*/, '')}.</b> ${esc(c[4])}</div><button type="button" class="btn btn-gem" data-zpnext>Next case →</button>`; });
   draw(); }
+const mountZpQuiz = () => { mountQuiz('zp-quiz', ZP_CASES, ['m', 'n', 'c', 'x'], {m: '✓ Match', n: '✗ Not a match', c: '? Can\'t tell', x: 'LinkedIn page won\'t open'}, 'ZIPLABS SAYS', 'LINKEDIN SHOWS');
+  mountQuiz('ng-quiz', NG_CASES, ['m', 'n', 'c'], {m: '✓ Match', n: '✗ Not a match', c: '? Can\'t tell'}, 'THE FILE SAYS', 'THE PUBLIC PROFILE SAYS'); };
+const NG_CASES = [
+  ['Company', 'UnitedHealth Group', 'Optum', 'm', 'Optum is part of UnitedHealth Group (a subsidiary). Same group = Match.'],
+  ['Company', 'Alphabet', 'Google', 'm', 'Google is a subsidiary of Alphabet.'],
+  ['Company', 'Meta', 'Instagram', 'm', 'Instagram is a brand of Meta.'],
+  ['Company', 'Amazon', 'Amazon Web Services (AWS)', 'm', 'AWS is part of Amazon.'],
+  ['Company', 'Accenture', 'Deloitte', 'n', 'Two different companies. Reason: "different companies".'],
+  ['Company', 'Oracle', 'Orange Business', 'n', 'Similar names, but not related. Reason: "different companies, not related".'],
+  ['Company', 'Facebook', 'Meta', 'm', 'The same company: Facebook was renamed Meta.'],
+  ['Company', 'Acme Data Ltd', 'Acme Data Services LLC', 'c', 'Only if you search the web and still can\'t find whether they are the same company.'],
+  ['Job title', 'Senior Software Engineer', 'Sr Software Engineer', 'm', 'The same job in other words: Sr = Senior.'],
+  ['Job title', 'Software Developer', 'Dev, Software', 'm', 'The same job written differently: Dev = Developer.'],
+  ['Job title', 'Software Engineer', 'Senior Software Engineer', 'n', 'A different level. Reason: "different level".'],
+  ['Job title', 'Data Analyst', 'Data Scientist', 'n', 'A different job. Reason: "different job".'],
+  ['Location', 'Charlotte, North Carolina', 'Charlotte Metro', 'm', 'The same metro area.'],
+  ['Location', 'Round Rock, Texas', 'Austin, Texas', 'm', 'Round Rock is a suburb of Austin: a suburb and its main city are the same.'],
+  ['Location', 'Austin, Texas', 'Dallas, Texas', 'n', 'Different metro areas, even in the same state. Reason: "different metro area".'],
+  ['Location', 'London, United Kingdom', 'London, Ontario, Canada', 'n', 'Different places in different countries.']];
 
 // 4.2 ZIPLabs steps: click a field to see where it is on a LinkedIn profile
 const ZP_FIELDS = [['name', 'Name', 'Top of the profile', 'Same name. Small spelling differences, accents and suffixes written differently are fine'],
   ['title', 'Current job title', 'Experience: the role showing “Present”', 'Same title. Abbreviations are fine (Sr = Senior)'],
   ['company', 'Current company', 'Experience: the company of the “Present” role (also shown at the top right)', 'Same company. Inc, LLC, Ltd and punctuation don\'t matter'],
-  ['loc', 'Location', 'Under the headline, at the top', 'Same place. “Greater X Area” / “X Area” = the same area'],
+  ['loc', 'Location', 'Under the headline, at the top', 'Same metro area. A suburb and its main city are the same; a different metro area, even in the same state, is Not a match'],
   ['started', 'Started the current role', 'Experience: start date of the “Present” role', 'Same month and year'],
   ['joined', 'Joined the current company', 'Experience: the first role at this company (if roles are grouped under one company, use the earliest one)', 'Same month and year'],
   ['headline', 'Headline', 'The line under the name', 'Same wording; punctuation differences are fine'],
@@ -3334,7 +3400,7 @@ function mountZpMap(){ const box = document.querySelector('#gdDoc .zp-map'); if 
   box.addEventListener('click', e => { const b = e.target.closest('[data-zm]'); if (b) { show(b.dataset.zm); if (b.tagName === 'TR') box.querySelector('.zm-pic').scrollIntoView({behavior: 'smooth', block: 'center'}); } });
   show(sel); }
 function renderGdoc(){
-  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '2.2 Email Benchmarking - Steps and Instructions', bphone: '3.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '2.1 Email Benchmarking - Briefing and Practice', bphonebrief: '3.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice', bzipsteps: '4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions'};
+  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '2.2 Email Benchmarking - Steps and Instructions', bphone: '3.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '2.1 Email Benchmarking - Briefing and Practice', bphonebrief: '3.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice', bzipsteps: '4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions', bnamebrief: '5.1 Name Groups Check - Briefing and Practice', bnamesteps: '5.2 Name Groups Check - Steps and Instructions'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
@@ -3736,7 +3802,7 @@ $('annAdmin').addEventListener('click', async e => {
 const BUILTIN_LINKS = [
   {key: 'b1', name: 'SeekOut', url: 'https://seekout.com', desc: 'Talent search and candidate profiles', builtin: true},
   {key: 'b2', name: 'DataCrunch Bench', url: 'https://datacrunchd-bench.pages.dev/', desc: 'Bench and task workspace', builtin: true},
-  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Summary / Headline checker', builtin: true}, {key: 'b4', name: 'Job title checker', url: 'https://www.chrysolite.in/job-title-checker.html', desc: 'Job title checker with the abbreviation dictionary', builtin: true}, {key: 'b5', name: 'Location checker', url: 'https://www.chrysolite.in/location-checker.html', desc: 'Location checker: county, city, distance and % match', builtin: true},
+  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Summary / Headline checker', builtin: true}, {key: 'b4', name: 'Job title checker', url: 'https://www.chrysolite.in/job-title-checker.html', desc: 'Job title checker with the abbreviation dictionary', builtin: true}, {key: 'b5', name: 'Location checker', url: 'https://www.chrysolite.in/location-checker.html', desc: 'Location checker: metro area, city, distance and % match', builtin: true},
 ];
 function safeUrl(u){ try { const x = new URL(/^https?:\/\//i.test(u) ? u : 'https://' + u); return /^https?:$/.test(x.protocol) ? x.href : null; } catch (e) { return null; } }
 

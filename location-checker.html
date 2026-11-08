@@ -131,12 +131,12 @@ html,body{overflow-x:hidden}
 </style>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Location checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
-  <div><h1>Location checker</h1><p class="lead">Compare the location in THE FILE SAYS (SeekOut) with PUBLIC PROFILE SAYS (ZIPLabs or LinkedIn). Both places are looked up on the map, compared level by level (country, state, county or district, metro, city, neighbourhood) and given a % match, the distance and a suggested answer.</p></div>
+  <div><h1>Location checker</h1><p class="lead">Compare the location in THE FILE SAYS (SeekOut) with PUBLIC PROFILE SAYS (ZIPLabs or LinkedIn). Both places are looked up on the map, compared level by level (country, state, metro area, county or district, city, neighbourhood) and given a % match, the distance and a suggested answer.</p></div>
   <div class="panel sc-in lc-in">
     <div class="sc-grid"><div class="f sc-side so"><label for="lcA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><input id="lcA" placeholder="e.g. Charlotte, North Carolina, United States" autocomplete="off"></div></div>
       <div class="f sc-side li"><label for="lcB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><input id="lcB" placeholder="e.g. Charlotte Metro" autocomplete="off"></div></div></div>
     <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-gem" type="button" id="lcGo">Compare</button><button class="btn btn-ghost" type="button" id="lcSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="lcClear">Clear</button><span class="sc-status" id="lcStatus" role="status" aria-live="polite"></span></div>
-    <p class="lc-rule" style="margin:14px 0 0"><b>Rule:</b> same county or district = Match. A town or suburb and its city in the same county = Match. “Greater X Area” or “X Metro” = city X. A missing state or country is fine. A different county or district = Not a match, even in the same state. A different country = Not a match.</p>
+    <p class="lc-rule" style="margin:14px 0 0"><b>Rule:</b> same metro area = Match. A suburb and its main city are the same. “Greater X Area” or “X Metro” = city X. A different metro area, even in the same state, is Not a match. A different country = Not a match.</p>
   </div>
   <div class="panel" id="lcOut" hidden></div>
 </main>
@@ -182,17 +182,17 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       ['County / district', [LA.county, LA.district].filter(Boolean).join(' · '), [LB.county, LB.district].filter(Boolean).join(' · '), sameDist, 30],
       ['City / town', LA.city, LB.city, eq(LA.city, LB.city), 20],
       ['Neighbourhood / suburb', LA.hood, LB.hood, eq(LA.hood, LB.hood), 10]];
-    const metroRow = ['Metro area', ca.metro || '—', cb.metro || '—', (ca.metro || cb.metro) ? (sameDist || eq(LA.city, LB.city) || d < 40 ? 1 : 0) : null, 0];
+    const metroRow = ['Metro area', ca.metro || LA.city || '—', cb.metro || LB.city || '—', eq(LA.cc, LB.cc) === 0 ? 0 : (eq(LA.city, LB.city) === 1 || d <= 40 ? 1 : 0), 0];
     let got = 0, tot = 0; rows.forEach(([, , , s, w]) => { if (s !== null && w) { tot += w; got += s * w; } });
-    let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 100) pct = Math.min(pct, 40); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
-    // suggested answer: the location rule
+    let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 40) pct = Math.min(pct, 45); else if (d <= 40) pct = Math.max(pct, 75); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
+    // suggested answer: same metro area = Match (a suburb and its main city are the same); a different metro area, even in the same state, is Not a match
+    const METRO_KM = 40, sameMetro = eq(LA.cc, LB.cc) !== 0 && (eq(LA.city, LB.city) === 1 || sameDist === 1 && d <= METRO_KM || d <= METRO_KM);
     let ans, why;
     if (eq(LA.cc, LB.cc) === 0) { ans = 'n'; why = 'Different countries.'; }
-    else if (sameDist === 1) { ans = 'm'; why = 'Same county or district' + (eq(LA.city, LB.city) === 1 ? ' and same city.' : ' (a town or suburb and its city in the same county).'); }
-    else if (sameDist === 0) { ans = 'n'; why = 'Different county or district' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
-    else if (eq(LA.city, LB.city) === 1) { ans = 'm'; why = 'Same city (the county or district isn\'t shown for one side).'; }
-    else if (!LA.city && !LA.county && !LA.district || !LB.city && !LB.county && !LB.district) { ans = 'c'; why = 'One side is only a state or country, so the county or district can\'t be worked out.'; }
-    else { ans = 'c'; why = 'The county or district couldn\'t be worked out for one side. Use a quick map search.'; }
+    else if (!LA.city && !LA.county && !LA.district || !LB.city && !LB.county && !LB.district) { ans = 'c'; why = 'One side is only a state or country, so the metro area can\'t be worked out.'; }
+    else if (eq(LA.city, LB.city) === 1) { ans = 'm'; why = 'Same city, so the same metro area.'; }
+    else if (sameMetro) { ans = 'm'; why = 'Same metro area: ' + Math.round(d) + ' km apart (a suburb and its main city count as the same).'; }
+    else { ans = 'n'; why = 'Different metro areas (' + Math.round(d) + ' km apart)' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
     if (ca.metro || cb.metro) why += ` “${esc(ca.metro || cb.metro)}” is read as the city it is named after.`;
     const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
     const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
@@ -202,8 +202,8 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       <div class="lc-cards">${card('so', 'THE FILE SAYS (SeekOut)', ra, ha, pa, ca)}${card('li', 'PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)', rb, hb, pb, cb)}</div>
       <div class="lc-dist"><div><b>${d < 1 ? '< 1 km' : Math.round(d).toLocaleString() + ' km'}</b><span>Distance (${d < 1.6 ? '< 1' : Math.round(d * 0.621).toLocaleString()} miles)</span></div><div><b>${pct}%</b><span>Location match</span></div><div><b>${rows.filter(r => r[3] === 1).length} of ${rows.filter(r => r[3] !== null).length}</b><span>Levels the same</span></div></div>
       <div class="tbl"><table class="lc-tab"><thead><tr><th>Check</th><th>THE FILE SAYS</th><th>PUBLIC PROFILE SAYS</th><th>Result</th></tr></thead><tbody>
-        ${rows.concat([metroRow]).map(([n, a, b, s]) => `<tr class="${n === 'County / district' ? 'key' : ''}"><td><b>${n}</b>${n === 'County / district' ? '<div class="hint" style="font-size:11.5px">decides the answer</div>' : ''}</td><td>${esc(a || '—')}</td><td>${esc(b || '—')}</td><td class="st">${mark(s)}</td></tr>`).join('')}
-        <tr><td><b>Distance</b></td><td colspan="2">${d < 1 ? 'Under 1 km apart' : Math.round(d).toLocaleString() + ' km apart'}</td><td class="st">${d <= 25 ? '<span class="ok">✓ Close</span>' : d <= 100 ? '<span class="na">Nearby region</span>' : '<span class="no">✗ Far apart</span>'}</td></tr>
+        ${rows.concat([metroRow]).map(([n, a, b, s]) => `<tr class="${n === 'Metro area' ? 'key' : ''}"><td><b>${n}</b>${n === 'Metro area' ? '<div class="hint" style="font-size:11.5px">decides the answer</div>' : ''}</td><td>${esc(a || '—')}</td><td>${esc(b || '—')}</td><td class="st">${mark(s)}</td></tr>`).join('')}
+        <tr><td><b>Distance</b></td><td colspan="2">${d < 1 ? 'Under 1 km apart' : Math.round(d).toLocaleString() + ' km apart'}</td><td class="st">${d <= 40 ? '<span class="ok">✓ Same metro area</span>' : '<span class="no">✗ Different metro area</span>'}</td></tr>
       </tbody></table></div></div>`;
     stat('done', `<span class="sc-tick">✓</span>Compare complete · <b>${pct}% match</b>`); }
   $('lcGo').onclick = run; ['lcA', 'lcB'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
