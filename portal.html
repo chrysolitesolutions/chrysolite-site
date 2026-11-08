@@ -17,7 +17,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<script>try { if (localStorage.getItem('cs_was_in')) document.documentElement.classList.add('resuming'); } catch (e) {}</script>
 <style>
+html.resuming #loginView{display:none!important}
+.resume-splash{display:none}html.resuming .resume-splash{display:grid;position:fixed;inset:0;z-index:200;place-items:center;background:var(--bg,#f3f6f2)}
+.resume-splash div{display:grid;justify-items:center;gap:14px;font:600 15px var(--body,sans-serif);color:var(--ink-soft,#5f7068)}
+.resume-splash img{width:72px;height:72px;border-radius:18px;background:#fff;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.3);animation:rsPulse 1.4s ease-in-out infinite}
+@keyframes rsPulse{50%{transform:scale(1.06)}}
+
 /* Layout: sign-in split screen, then an app shell with a side rail (top tabs on phones) over Roster, Schedule and Leave plans. */
 :root{
   --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
@@ -874,6 +881,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 <body>
 
 <!-- SIGN-IN -->
+<div class="resume-splash" aria-live="polite"><div><img src="logo.png" alt=""><span>Loading your portal…</span></div></div>
 <section class="login" id="loginView">
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="login-art">
@@ -4613,16 +4621,16 @@ renderAll();
   let wasIn = false; try { wasIn = !!localStorage.getItem('cs_was_in'); } catch (e) {}
   const rm = $('remember'); try { const k = localStorage.getItem('cs_keep'); rm.checked = k === null ? true : k === '1'; } catch (e) { rm.checked = true; } rm.addEventListener('change', () => { try { localStorage.setItem('cs_keep', rm.checked ? '1' : '0'); } catch (e) {} });
   const say = t => { const m = $('loginMsg') || null; if (m) { m.className = 'msg'; m.textContent = t; m.hidden = !t; } };
-  if (wasIn) say('Signing you back in…');
-  const d = await ready; if (!d) { if (!window.firebase) loginErr(NO_DB); return; }
+  const done = () => document.documentElement.classList.remove('resuming'); setTimeout(done, 12000);   /* never stay on the loading screen forever */
+  const d = await ready; if (!d) { done(); if (!window.firebase) loginErr(NO_DB); return; }
   fbAuth.onAuthStateChanged(async u => {
-    if (!u) { if (!me) say(''); try { localStorage.removeItem('cs_was_in'); } catch (e) {} return; }
+    if (!u) { if (!me) say(''); try { localStorage.removeItem('cs_was_in'); } catch (e) {} done(); return; }
     if (me || signingIn) return;
     let a = null, err = null;
     for (let i = 0; i < 3 && !a; i++) { try { a = await loadAccount(String(u.email).toLowerCase()); err = null; if (a) break; } catch (e) { err = e; await new Promise(r => setTimeout(r, 800 * (i + 1))); } }
-    if (a && a.active) { say(''); showApp(a); try { localStorage.setItem('cs_was_in', '1'); } catch (e) {} }
-    else if (err) loginErr('You are still signed in, but your account could not be loaded. Check your internet connection and refresh the page.');
-    else { say(''); await fbAuth.signOut(); }
+    if (a && a.active) { say(''); showApp(a); done(); try { localStorage.setItem('cs_was_in', '1'); } catch (e) {} }
+    else if (err) done(), loginErr('You are still signed in, but your account could not be loaded. Check your internet connection and refresh the page.');
+    else { say(''); done(); await fbAuth.signOut(); }
   });
 })();
 })();
