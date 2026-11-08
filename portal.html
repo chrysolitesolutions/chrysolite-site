@@ -302,6 +302,16 @@ tbody tr:hover{background:var(--surface-2)}
 .to-top.show{opacity:1;transform:none}.to-top span{font:800 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-top:-6px}
 .to-top:hover{animation:none;transform:translateY(-3px) scale(1.06);box-shadow:0 16px 32px -10px rgba(40,70,10,.6),0 0 0 6px color-mix(in srgb,var(--gem) 28%,transparent)}
 @keyframes toTopBob{0%,100%{translate:0 0}50%{translate:0 -5px}}@media (prefers-reduced-motion: reduce){.to-top{animation:none}}
+.zm-wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(240px,1fr);gap:16px;align-items:start}@media(max-width:820px){.zm-wrap{grid-template-columns:1fr}}
+.zm-pic{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px -18px rgba(0,0,0,.35);background:#fff}.zm-pic img{display:block;width:100%}
+.zm-spots{position:absolute;inset:0;pointer-events:none}
+.zm-spot{position:absolute;border:3px solid #e2513b;border-radius:8px;background:rgba(226,81,59,.12);box-shadow:0 0 0 4px rgba(226,81,59,.18);animation:zmPulse 1.4s ease-in-out infinite}
+.zm-spot span{position:absolute;left:-3px;bottom:100%;margin-bottom:4px;white-space:nowrap;background:#e2513b;color:#fff;font:700 12px var(--body);padding:3px 8px;border-radius:6px}
+@keyframes zmPulse{50%{box-shadow:0 0 0 9px rgba(226,81,59,.06)}}
+.zm-list{display:grid;gap:6px}.zm-f{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;color:var(--ink)}
+.zm-f:hover{border-color:#e2513b}.zm-f.on{border-color:#e2513b;background:#fdecea}.zm-n{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0a66c2;color:#fff;font:800 12px var(--mono);flex:none}.zm-f.on .zm-n{background:#e2513b}
+.zm-info{margin-top:6px;padding:12px 14px;border-radius:12px;background:var(--surface-2);display:grid;gap:8px;font-size:14px}.zm-info small{display:block;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.zm-row{cursor:pointer}.zm-row:hover td,.zm-row.on td{background:#fdecea}
 .zp-card{display:grid;gap:12px;padding:16px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface)}
 .zp-top{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-soft)}
 .zp-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media(max-width:640px){.zp-two{grid-template-columns:1fr}}
@@ -3075,15 +3085,8 @@ bzipsteps: {title: '4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions'
 <h2>3. Read the grey rule box</h2>
 <p><strong>Matches</strong> = LinkedIn shows the same (small spelling, punctuation or abbreviation differences are fine; for dates, the same month and year). <strong>Doesn't match</strong> = LinkedIn shows something else, or shows it where ZIPLabs has nothing; say what LinkedIn shows. <strong>Can't tell</strong> = LinkedIn doesn't show it.</p>
 <h2>4. Check each of the 8 fields</h2>
-<p>For each row, compare the ZIPLabs value with LinkedIn and click <strong>✓ Matches</strong>, <strong>✗ Doesn't match</strong> or <strong>? Can't tell</strong>.</p>
-<ol><li><strong>Name:</strong> top of the profile.</li>
-<li><strong>Current job title:</strong> Experience, the role showing “Present”.</li>
-<li><strong>Current company:</strong> the company of that “Present” role.</li>
-<li><strong>Location:</strong> under the headline.</li>
-<li><strong>Started the current role:</strong> start month and year of the “Present” role. The small line under the date (e.g. “Delivery Driver at J.B. Hunt…”) tells you which role ZIPLabs used.</li>
-<li><strong>Joined the current company:</strong> start month and year of the <strong>first</strong> role at this company. If LinkedIn groups several roles under one company, use the earliest one.</li>
-<li><strong>Headline:</strong> the line under the name.</li>
-<li><strong>About (summary):</strong> click <strong>more</strong> on ZIPLabs and <strong>see more</strong> on LinkedIn to read the whole text.</li></ol>
+<p>For each row, compare the ZIPLabs value with LinkedIn and click <strong>✓ Matches</strong>, <strong>✗ Doesn't match</strong> or <strong>? Can't tell</strong>. <strong>Click a field below</strong> to see exactly where it is on a LinkedIn profile.</p>
+<div class="zp-map"></div>
 <div class="intro-tip"><b>Doesn't match:</b> type what LinkedIn actually shows, so the data can be corrected.</div>
 <h2>5. Submit</h2>
 <ul><li>The counter next to <strong>Submit</strong> shows how many fields are still to answer (e.g. “8 field(s) still to answer”).</li>
@@ -3316,12 +3319,33 @@ function mountZpQuiz(){ const box = document.querySelector('#gdDoc .zp-quiz'); i
     box.querySelector('.zp-top span:last-child').textContent = ok + ' of ' + done + ' right';
     box.querySelector('.zp-res').innerHTML = `<div class="zp-why ${right ? 'ok' : 'no'}"><b>${right ? 'Correct! ' : 'Not quite. '}The answer is ${L[c[3]]}.</b> ${esc(c[4])}</div><button type="button" class="btn btn-gem" data-zpnext>Next case →</button>`; });
   draw(); }
+
+// 4.2 ZIPLabs steps: click a field to see where it is on a LinkedIn profile
+const ZP_FIELDS = [['name', 'Name', 'Top of the profile', 'Same name. Small spelling differences, accents and suffixes written differently are fine'],
+  ['title', 'Current job title', 'Experience: the role showing “Present”', 'Same title. Abbreviations are fine (Sr = Senior)'],
+  ['company', 'Current company', 'Experience: the company of the “Present” role (also shown at the top right)', 'Same company. Inc, LLC, Ltd and punctuation don\'t matter'],
+  ['loc', 'Location', 'Under the headline, at the top', 'Same place. “Greater X Area” / “X Area” = the same area'],
+  ['started', 'Started the current role', 'Experience: start date of the “Present” role', 'Same month and year'],
+  ['joined', 'Joined the current company', 'Experience: the first role at this company (if roles are grouped under one company, use the earliest one)', 'Same month and year'],
+  ['headline', 'Headline', 'The line under the name', 'Same wording; punctuation differences are fine'],
+  ['about', 'About (summary)', 'The About section (click “see more”)', 'Same text. If ZIPLabs is cut off (“…”), compare only the part shown']];
+const ZP_SPOTS = {"name": [[8.65, 37.31, 24.57, 5.22]], "title": [[19.55, 85.26, 24.05, 3.73]], "company": [[71.45, 42.16, 24.91, 4.85], [19.55, 88.81, 20.24, 3.17]], "loc": [[8.3, 47.2, 30.1, 4.1]], "started": [[19.55, 91.6, 20.93, 3.73]], "joined": [[10.38, 84.33, 46.19, 11.38]], "headline": [[5.19, 42.35, 64.01, 4.29]], "about": [[5.19, 65.3, 90.66, 13.06]]};
+function mountZpMap(){ const box = document.querySelector('#gdDoc .zp-map'); if (!box) return; let sel = 'name';
+  box.innerHTML = `<div class="zm-wrap"><div class="zm-pic"><img src="zip-profile-map.webp" alt="A LinkedIn profile with the fields marked"><div class="zm-spots"></div></div>
+    <div class="zm-list">${ZP_FIELDS.map(([k, n], i) => `<button type="button" class="zm-f" data-zm="${k}"><span class="zm-n">${i + 1}</span><b>${n}</b></button>`).join('')}<div class="zm-info"></div></div></div>
+    <div class="tblw" style="margin-top:14px"><table><thead><tr><th>Field</th><th>Where to look on LinkedIn</th><th>Matches when</th></tr></thead><tbody>${ZP_FIELDS.map(([k, n, w, m]) => `<tr data-zm="${k}" class="zm-row"><td><strong>${n}</strong></td><td>${w}</td><td>${m.replace(/month and year/, '<strong>month and year</strong>')}</td></tr>`).join('')}</tbody></table></div>`;
+  const show = k => { sel = k; const f = ZP_FIELDS.find(x => x[0] === k), n = ZP_FIELDS.indexOf(f) + 1;
+    box.querySelector('.zm-spots').innerHTML = (ZP_SPOTS[k] || []).map(([x, y, w, h], i) => `<div class="zm-spot" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%">${i === 0 ? `<span>${n}. ${f[1]}</span>` : ''}</div>`).join('');
+    box.querySelectorAll('[data-zm]').forEach(b => b.classList.toggle('on', b.dataset.zm === k));
+    box.querySelector('.zm-info').innerHTML = `<b>${n}. ${f[1]}</b><div><small>Where on LinkedIn</small>${f[2]}</div><div><small>Matches when</small>${f[3]}</div>`; };
+  box.addEventListener('click', e => { const b = e.target.closest('[data-zm]'); if (b) { show(b.dataset.zm); if (b.tagName === 'TR') box.querySelector('.zm-pic').scrollIntoView({behavior: 'smooth', block: 'center'}); } });
+  show(sel); }
 function renderGdoc(){
   const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '2.2 Email Benchmarking - Steps and Instructions', bphone: '3.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '2.1 Email Benchmarking - Briefing and Practice', bphonebrief: '3.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '4.1 ZIPLabs Data Pull Benchmarking - Briefing and Practice', bzipsteps: '4.2 ZIPLabs Data Pull Benchmarking - Steps and Instructions'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
-  $('gdDoc').innerHTML = cleanHtml(g.html || ''); try { renderAck(); } catch (e) {} try { mountZpQuiz(); } catch (e) { console.error(e); }
+  $('gdDoc').innerHTML = cleanHtml(g.html || ''); try { renderAck(); } catch (e) {} try { mountZpQuiz(); mountZpMap(); } catch (e) { console.error(e); }
   const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
   $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
   $('gdUpd').textContent = g.updatedAt ? 'Last updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (g.fileName ? ' from ' + g.fileName : '') : '';
