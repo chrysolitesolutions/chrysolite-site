@@ -240,6 +240,13 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-box .gd-card b{font-size:14px;line-height:1.3;margin-bottom:3px}.gd-box .gd-card span{font-size:12.5px;line-height:1.45}
 .gd-box .gd-card .ack-tag .pill{font-size:11.5px;padding:2px 8px}
 .gd-col .gd-group{font-size:14.5px!important;white-space:nowrap}
+/* every card on the board has the same size: titles up to 3 lines, descriptions 2 lines */
+.gd-box .gd-card{height:162px;overflow:hidden;align-content:start}
+.gd-box .gd-card > div:last-child{display:flex;flex-direction:column;min-width:0;height:100%}
+.gd-box .gd-card b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.gd-box .gd-card > div:last-child > span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gd-box .gd-card .ack-tag{margin-top:auto;padding-top:6px}
+
 .gd-board{grid-template-columns:minmax(0,3.2fr) minmax(240px,1fr)}
 .gd-tabs{display:inline-flex;width:max-content;max-width:100%;gap:4px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--surface);margin:0 0 18px}.gd-tabs button{border:0;background:none;border-radius:999px;padding:9px 18px;font:600 14px var(--body);cursor:pointer;color:var(--ink)}.gd-tabs button.on{background:var(--gem);color:#13240a}
 .gd-group{display:flex;align-items:center;gap:10px;font-size:19px;margin:22px 0 12px}.gd-group .dot{width:10px;height:10px;border-radius:50%}.gd-group .dot.on{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}.gd-group .dot.up{background:var(--info);box-shadow:0 0 0 4px color-mix(in srgb,var(--info) 20%,transparent)}
