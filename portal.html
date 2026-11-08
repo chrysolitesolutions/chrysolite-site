@@ -259,6 +259,10 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-doc .intro-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 12px}.gd-doc .intro-3 div{padding:12px 14px;border-radius:12px;font-size:14px}.gd-doc .intro-3 b{display:block;font-size:16px;margin-bottom:2px}
 .gd-doc .intro-3 .m{background:#e3f4dc;color:#1f6a2a}.gd-doc .intro-3 .n{background:#fbe3df;color:#a5281c}.gd-doc .intro-3 .c{background:#fff4dc;color:#7a5200}@media(max-width:640px){.gd-doc .intro-3{grid-template-columns:1fr}}
 .gd-doc .intro-tip{padding:10px 14px;border-left:4px solid var(--info);background:color-mix(in srgb,var(--info) 8%,var(--surface));border-radius:8px;margin:8px 0 14px}
+.to-top{position:fixed;right:max(22px,env(safe-area-inset-right,0px));bottom:max(22px,env(safe-area-inset-bottom,0px));z-index:60;display:grid;place-items:center;gap:0;width:58px;height:58px;border-radius:50%;border:0;cursor:pointer;color:#13240a;background:linear-gradient(145deg,#c4e05a,var(--gem));box-shadow:0 12px 28px -10px rgba(40,70,10,.55),0 0 0 4px color-mix(in srgb,var(--gem) 22%,transparent);opacity:0;transform:translateY(16px) scale(.85);transition:opacity .25s,transform .25s;animation:toTopBob 2.6s ease-in-out infinite}
+.to-top.show{opacity:1;transform:none}.to-top span{font:800 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-top:-6px}
+.to-top:hover{animation:none;transform:translateY(-3px) scale(1.06);box-shadow:0 16px 32px -10px rgba(40,70,10,.6),0 0 0 6px color-mix(in srgb,var(--gem) 28%,transparent)}
+@keyframes toTopBob{0%,100%{translate:0 0}50%{translate:0 -5px}}@media (prefers-reduced-motion: reduce){.to-top{animation:none}}
 .gd-toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.gd-toc a{font:500 12.5px var(--body);text-decoration:none;color:var(--ink);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}.gd-toc a:hover{border-color:var(--gem)}
 .gd-doc{max-width:980px;line-height:1.65}.gd-doc h2{font-size:21px;margin:26px 0 10px;padding-top:14px;border-top:1px solid var(--line);scroll-margin-top:20px}.gd-doc h2:first-child{margin-top:0;border-top:0;padding-top:0}
 .gd-doc h3{font-size:16px;margin:18px 0 6px;color:var(--gem-ink)}.gd-doc p{margin:0 0 10px}.gd-doc ul,.gd-doc ol{margin:0 0 12px;padding-left:22px;display:grid;gap:4px}
@@ -1518,6 +1522,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <p class="hint" style="margin:0">The employee sees "(edited)" next to changed sessions. Each change is logged with your name, the time and the reason.</p>
   </form>
 </dialog>
+<button type="button" class="to-top" id="toTop" aria-label="Back to the top of the page" title="Back to top" hidden><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V4M4.5 9.5 10 4l5.5 5.5"/></svg><span>Top</span></button>
 <dialog class="pw-dlg ecal-dlg" id="ecalDlg" aria-labelledby="ecalT">
   <div class="ecal-hd"><div class="person" id="ecalWho"></div><h3 id="ecalT" style="margin:0">Monthly attendance</h3><div class="toolbar" style="margin-left:auto;flex:0 1 auto"><input type="month" id="ecalMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="ecalX">Close</button></div></div>
   <div class="tiles mini-tiles"><div class="tile"><span>Hours worked</span><b id="ecH">0h 00m</b></div><div class="tile"><span>Days worked</span><b id="ecD">0</b></div><div class="tile"><span>Sessions</span><b id="ecS">0</b></div><div class="tile"><span>Average per day worked</span><b id="ecA">0h 00m</b></div></div>
@@ -3156,6 +3161,13 @@ function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
 function setGTab(t){ document.querySelectorAll('[data-gtab]').forEach(b => b.classList.toggle('on', b.dataset.gtab === t)); document.querySelectorAll('[data-gpane]').forEach(p => p.hidden = p.dataset.gpane !== t); try { localStorage.setItem('cs_gtab', t); } catch (e) {} }
 document.addEventListener('click', e => { const b = e.target.closest('[data-gtab]'); if (b) setGTab(b.dataset.gtab); });
 try { const t = localStorage.getItem('cs_gtab'); if (t) setGTab(t); } catch (e) {}
+
+/* floating "back to top" button on Projects and every page opened from it */
+(function(){ const b = $('toTop'), PROJ = ['guides', 'gdoc', 'brief', 'pf', 'pfsrc', 'benchhub'];
+  const upd = () => { const v = document.querySelector('.view:not([hidden])'), on = !!v && PROJ.includes(v.dataset.view) && window.scrollY > 300;
+    if (on) { b.hidden = false; requestAnimationFrame(() => b.classList.add('show')); } else { b.classList.remove('show'); if (!b.hidden) setTimeout(() => { if (!b.classList.contains('show')) b.hidden = true; }, 260); } };
+  window.addEventListener('scroll', upd, {passive: true}); document.addEventListener('click', () => setTimeout(upd, 80));
+  b.onclick = () => window.scrollTo({top: 0, behavior: reduce ? 'auto' : 'smooth'}); })();
 function renderGdoc(){
   const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '2.2 Email Benchmarking - Steps and Instructions', bphone: '3.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '2.1 Email Benchmarking - Briefing and Practice', bphonebrief: '3.1 Phone Number Benchmarking - Briefing and Practice'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
