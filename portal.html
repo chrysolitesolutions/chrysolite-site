@@ -1037,6 +1037,12 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .panel.hmin > :first-child{margin:0!important;opacity:.75}
 .panel.hmin-new{animation:hminPulse 1.2s ease 2}@keyframes hminPulse{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--gem) 45%,transparent)}}
 .mc-c.hol{background:linear-gradient(160deg,#FFF3D1,#FFFBEF);border-color:#EFCF7A}.mc-c.hol.fut{opacity:.9}.mc-c small.hol{color:#8A5A00;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mc-c.hol.has{border-color:#E2B84E}
+:root{--s8:#8b5e34;--s9:#db2777;--s10:#65a30d;--s11:#d4a017}
+.s-ng{background:color-mix(in srgb,var(--s8) 18%,transparent);box-shadow:inset 3px 0 0 var(--s8)}
+.s-phone{background:color-mix(in srgb,var(--s9) 18%,transparent);box-shadow:inset 3px 0 0 var(--s9)}
+.s-csm{background:color-mix(in srgb,var(--s10) 20%,transparent);box-shadow:inset 3px 0 0 var(--s10)}
+.s-hol{background:color-mix(in srgb,var(--s11) 22%,transparent);box-shadow:inset 3px 0 0 var(--s11);color:#7a5600}
+.ma-big .s-ng{box-shadow:inset 6px 0 0 var(--s8)}.ma-big .s-phone{box-shadow:inset 6px 0 0 var(--s9)}.ma-big .s-csm{box-shadow:inset 6px 0 0 var(--s10)}
 </style>
 </head>
 <body>
@@ -1198,11 +1204,11 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <section class="view" data-view="schedule" hidden>
       <div class="vhead"><div><h1>Schedule</h1><p id="weekLabel"></p></div>
         <div class="wk"><button id="prevWk" aria-label="Previous week">‹</button><button class="btn btn-ghost" id="thisWk" style="padding:9px 14px">This week</button><button id="nextWk" aria-label="Next week">›</button></div></div>
-      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to choose up to 3 tasks for that day, or set Off or Leave. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
+      <div class="admin-only edit-bar" hidden><span><strong>Editing:</strong> click a cell to choose up to 3 tasks for that day, or set Off, Leave or Public Holiday. Changes save automatically.</span> <button class="mini" id="copyWk" type="button">Copy previous week</button><span id="saveState" class="mono"></span></div>
       <div class="panel admin-only" hidden><h3>Assignments per day</h3><div class="chart" id="cDay"></div></div>
       <div class="panel contrib-only"><h3 id="myWkT">My assignments for the next two weeks</h3><div id="myTasks"></div><p class="legend" id="myTasksSum" hidden></p></div>
       <h2 class="sec-title">Team assignments</h2>
-      <div class="legend"><span class="shift s-prof">Profile mapper</span><span class="shift s-mail">Email mapper</span><span class="shift s-eto">Sutherland / Peraton ETO</span><span class="shift s-roi">ROI</span><span class="shift s-pf">Power Filter</span><span class="shift s-esc">Escalations</span><span class="shift s-zip">ZipLab Mapper</span><span class="shift s-off">Off</span><span class="shift s-lv">Leave</span>Approved leave shows automatically.</div>
+      <div class="legend"><span class="shift s-prof">Profile Benchmarking</span><span class="shift s-ng">Name Groups Check</span><span class="shift s-zip">ZIPLabs Data Pull Benchmarking</span><span class="shift s-mail">Email Benchmarking</span><span class="shift s-phone">Phone Number Benchmarking</span><span class="shift s-off">Off</span><span class="shift s-lv">Leave</span><span class="shift s-hol">Public Holiday</span><span class="shift s-esc">Escalation L2</span><span class="shift s-eto">Sutherland / Peraton ETO</span><span class="shift s-csm">CSM Standard Reporting</span><span class="shift s-roi">ROI</span>Approved leave and public holidays show automatically.</div>
       <div class="panel" style="padding:0"><div class="tbl"><table class="sched"><thead id="schedHead"></thead><tbody id="schedBody"></tbody></table></div></div>
     </section>
 
@@ -2078,8 +2084,9 @@ function renderRoster(){
 ['q','fTeam','fStatus'].forEach(id => $(id).addEventListener('input', renderRoster));
 
 /* ---------- schedule ---------- */
-const SH = {'':['s-none','—'],prof:['s-prof','Profile mapper'],mail:['s-mail','Email mapper'],eto:['s-eto','Sutherland / Peraton ETO'],roi:['s-roi','ROI'],pf:['s-pf','Power Filter'],esc:['s-esc','Escalations'],zip:['s-zip','ZipLab Mapper'],off:['s-off','Off'],lv:['s-lv','Leave']};
-const WORK = ['prof','mail','eto','roi','pf','esc','zip'];
+const SH = {'':['s-none','—'],prof:['s-prof','Profile Benchmarking'],ng:['s-ng','Name Groups Check'],zip:['s-zip','ZIPLabs Data Pull Benchmarking'],mail:['s-mail','Email Benchmarking'],phone:['s-phone','Phone Number Benchmarking'],esc:['s-esc','Escalation L2'],eto:['s-eto','Sutherland / Peraton ETO'],csm:['s-csm','CSM Standard Reporting'],roi:['s-roi','ROI'],pf:['s-pf','Power Filter'],off:['s-off','Off'],lv:['s-lv','Leave'],hol:['s-hol','Public Holiday']};
+const WORK = ['prof','ng','zip','mail','phone','esc','eto','csm','roi'];   // the assignments an admin can pick
+const WORK_OLD = ['pf'];   // no longer offered, still shown on old weeks
 const CYCLE = ['', 'prof', 'mail', 'eto', 'roi', 'pf', 'esc', 'zip', 'off', 'lv'];
 let weekOff = 0, saveT = null, dirty = false;
 function monday(off){ const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)+off*7); return d; }
@@ -2093,9 +2100,9 @@ function watchWeek(){
 }
 // a schedule cell holds '' | 'off' | 'lv' | up to 3 work tasks joined with '+', e.g. 'prof+esc'
 const MAX_TASKS = 3;
-const parseCell = v => { v = String(v || ''); if (v === 'off' || v === 'lv') return [v]; const seen = []; v.split('+').forEach(k => { if (WORK.includes(k) && !seen.includes(k) && seen.length < MAX_TASKS) seen.push(k); }); return seen; };
+const parseCell = v => { v = String(v || ''); if (v === 'off' || v === 'lv' || v === 'hol') return [v]; const seen = []; v.split('+').forEach(k => { if ((WORK.includes(k) || WORK_OLD.includes(k)) && !seen.includes(k) && seen.length < MAX_TASKS) seen.push(k); }); return seen; };
 const normCell = v => parseCell(v).join('+');
-const isWorkCell = v => parseCell(v).some(k => WORK.includes(k));
+const isWorkCell = v => parseCell(v).some(k => WORK.includes(k) || WORK_OLD.includes(k));
 const cellLabel = v => { const ks = parseCell(v); return ks.length ? ks.map(k => SH[k][1]).join(' + ') : '—'; };
 const cellPills = (v, extra = '') => { const ks = parseCell(v); return ks.length ? ks.map(k => `<span class="shift ${SH[k][0]}${extra}">${SH[k][1]}</span>`).join('') : `<span class="shift s-none${extra}">—</span>`; };
 const cellOf = (email, i) => { const r = week.rows.find(x => x.email === email); return normCell(r && r.s ? r.s[i] : ''); };
@@ -2108,17 +2115,17 @@ function renderSchedule(){
   if (!isAdmin) { $('myWkT').textContent = me ? me.name + "'s assignments for the next two weeks" : 'Assignments for the next two weeks'; }
   if (!list.length) { $('schedBody').innerHTML = `<tr><td colspan="8" class="empty">No one to schedule yet. ${isAdmin ? 'Add employees in Admin first.' : ''}</td></tr>`; return; }
   $('schedBody').innerHTML = list.map(p => '<tr' + (me && p.email === me.email ? ' class="me-row"' : '') + '><td><div class="person">' + av(p.name) + '<div>' + esc(p.name) + '<div style="font-size:12px;color:var(--ink-soft)">' + esc(p.project||'') + '</div></div></div></td>' +
-    days.map((d, i) => { let k = cellOf(p.email, i); if (!k && onLeave(p.email, ymd(d))) k = 'lv'; const lab = cellLabel(k); return `<td>${isAdmin ? `<button type="button" class="cellbtn cellstack" data-e="${esc(p.email)}" data-i="${i}" aria-label="${esc(p.name)}, ${d.toLocaleDateString(undefined,{weekday:'long'})}: ${esc(lab)}">${cellPills(k)}</button>` : `<div class="cellstack">${cellPills(k)}</div>`}</td>`; }).join('') + '</tr>').join('');
+    days.map((d, i) => { let k = cellOf(p.email, i); if (!k && onLeave(p.email, ymd(d))) k = 'lv'; if (!k && holidays.some(h => h.date === ymd(d) && !h.tba)) k = 'hol'; const lab = cellLabel(k); return `<td>${isAdmin ? `<button type="button" class="cellbtn cellstack" data-e="${esc(p.email)}" data-i="${i}" aria-label="${esc(p.name)}, ${d.toLocaleDateString(undefined,{weekday:'long'})}: ${esc(lab)}">${cellPills(k)}</button>` : `<div class="cellstack">${cellPills(k)}</div>`}</td>`; }).join('') + '</tr>').join('');
 }
 // admin picks up to 3 tasks for a day in a small panel next to the cell
 let pick = null;
 const pickEl = document.createElement('div'); pickEl.className = 'cellpick'; pickEl.hidden = true; pickEl.setAttribute('role', 'dialog'); document.body.appendChild(pickEl);
 function setCell(email, i, v){ let r = week.rows.find(x => x.email === email); if (!r) { r = {email, s: ['','','','','','','']}; week.rows.push(r); }
   r.s = [...r.s]; r.s[i] = v; dirty = true; $('saveState').textContent = 'Unsaved changes…'; renderSchedule(); clearTimeout(saveT); saveT = setTimeout(saveWeek, 700); }
-function drawPick(){ if (!pick) return; const cur = parseCell(cellOf(pick.email, pick.i)), work = cur.filter(k => WORK.includes(k)), full = work.length >= MAX_TASKS, p = people().find(x => x.email === pick.email);
+function drawPick(){ if (!pick) return; const cur = parseCell(cellOf(pick.email, pick.i)), work = cur.filter(k => WORK.includes(k) || WORK_OLD.includes(k)), full = work.length >= MAX_TASKS, p = people().find(x => x.email === pick.email);
   pickEl.innerHTML = `<div class="cp-h"><b>${esc(p ? p.name : pick.email)}</b><span>${esc(pick.day)}</span></div><p class="hint" style="margin:0">Choose up to ${MAX_TASKS} tasks.</p>
     <div class="cp-tasks">${WORK.map(k => { const on = work.includes(k); return `<button type="button" class="shift ${SH[k][0]} cp-t${on ? ' on' : ''}" data-k="${k}" ${!on && full ? 'disabled' : ''} aria-pressed="${on}">${on ? '✓ ' : ''}${SH[k][1]}</button>`; }).join('')}</div>
-    <div class="cp-row"><button type="button" class="mini${cur[0] === 'off' ? ' on' : ''}" data-set="off">Off</button><button type="button" class="mini${cur[0] === 'lv' ? ' on' : ''}" data-set="lv">Leave</button><button type="button" class="mini" data-set="">Clear</button><button type="button" class="mini cp-done" data-done="1">Done</button></div>`; }
+    <div class="cp-row"><button type="button" class="mini${cur[0] === 'off' ? ' on' : ''}" data-set="off">Off</button><button type="button" class="mini${cur[0] === 'lv' ? ' on' : ''}" data-set="lv">Leave</button><button type="button" class="mini${cur[0] === 'hol' ? ' on' : ''}" data-set="hol">Public Holiday</button><button type="button" class="mini" data-set="">Clear</button><button type="button" class="mini cp-done" data-done="1">Done</button></div>`; }
 function openPick(b){ const d = weekDays()[+b.dataset.i]; pick = {email: b.dataset.e, i: +b.dataset.i, day: d.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'})}; drawPick(); pickEl.hidden = false;
   const r = b.getBoundingClientRect(), w = Math.min(320, innerWidth - 24); pickEl.style.width = w + 'px'; pickEl.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + scrollX)) + 'px'; pickEl.style.top = (r.bottom + scrollY + 6) + 'px'; }
 const closePick = () => { pick = null; pickEl.hidden = true; };
@@ -2494,7 +2501,7 @@ function renderHome(){ setTimeout(() => { try { applyHomeMin(); } catch (e) {} }
   const sorted = [...anns].sort((a,b) => String(b.date).localeCompare(String(a.date)));
   $('annList').innerHTML = sorted.length ? sorted.slice(0,6).map(a => annRow(a, annAckBtn(a))).join('') : '<p class="empty">No announcements yet.</p>';
   $('teamDayT').textContent = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
-  { const live = week.key === ymd(monday(0)), k = me && live ? cellOf(me.email, di) : ''; $('hmTasks').innerHTML = me ? (isWorkCell(k) ? cellPills(k) : `<span class="hint">${k === 'off' ? 'Day off today' : k === 'lv' || (me && onLeave(me.email, today)) ? 'On leave today' : 'No tasks on today\'s schedule'}</span>`) : ''; }
+  { const live = week.key === ymd(monday(0)), k = me && live ? cellOf(me.email, di) : ''; $('hmTasks').innerHTML = me ? (isWorkCell(k) ? cellPills(k) : `<span class="hint">${k === 'hol' || holidays.some(h => h.date === today && !h.tba) ? 'Public holiday today' : k === 'off' ? 'Day off today' : k === 'lv' || (me && onLeave(me.email, today)) ? 'On leave today' : 'No tasks on today\'s schedule'}</span>`) : ''; }
   try { renderFun(); } catch (e) { console.error(e); }
   const m0 = monday(0), m6 = new Date(m0); m6.setDate(m6.getDate() + 6), sameM = m0.getMonth() === m6.getMonth();
   const mo = d => d.toLocaleDateString(undefined, {month: 'short'});
@@ -2580,7 +2587,7 @@ const asgRec = (email, day) => { const r = asgAcks[String(email).toLowerCase()];
 const asgAccepted = (email, task, day) => { const a = asgRec(email, day); return !!(a && a.task === task); };
 function todayTask(){ if (!me) return {k: '', state: 'none'}; const di = (new Date().getDay() + 6) % 7, today = todayStr();
   const k = weekLoadedToday() ? cellOf(me.email, di) : '', a = asgRec(me.email, today);
-  if (onLeave(me.email, today) || k === 'lv') return {k, state: 'leave'}; if (k === 'off') return {k, state: 'off'}; if (!isWorkCell(k)) return {k, state: 'none'};
+  if (onLeave(me.email, today) || k === 'lv') return {k, state: 'leave'}; if (k === 'hol' || (!isWorkCell(k) && holidays.some(h => h.date === today && !h.tba))) return {k, state: 'holiday'}; if (k === 'off') return {k, state: 'off'}; if (!isWorkCell(k)) return {k, state: 'none'};
   return {k, a, state: a && a.task === k ? 'accepted' : a ? 'changed' : 'pending'}; }
 function weekLoadedToday(){ return week.key === ymd(monday(0)); }
 // clock-in is allowed only after today's assignment is accepted (when there is one)
@@ -2593,6 +2600,7 @@ function renderMyAssign(){
   const t = todayTask(), today = todayStr(), when = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
   const head = `<div class="ma-top"><div><span class="ma-eye">Step 1 · Today's assignment · ${esc(when)}</span>`;
   if (t.state === 'leave') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">You're on leave today</b></div></div>`; return; }
+  if (t.state === 'holiday') { const hn = (holidays.find(h => h.date === todayStr() && !h.tba) || {}).name; box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">Public Holiday${hn ? ' · ' + esc(hn) : ''}</b></div></div><p class="hint" style="margin:0">No assignment today. Enjoy the holiday!</p>`; return; }
   if (t.state === 'off') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">Day off</b></div></div><p class="hint" style="margin:0">You have no assignment today.</p>`; return; }
   if (t.state === 'none') { box.className = 'panel my-assign off'; box.innerHTML = head + `<b class="ma-task">No assignment yet</b></div></div><p class="hint" style="margin:0">Nothing is on today's schedule for you. You can still clock in; check with your Team Lead what to work on.</p>`; return; }
   const n = parseCell(t.k).length, done = t.state === 'accepted';
@@ -4543,7 +4551,7 @@ $('attCopy').onclick = () => {
 setInterval(() => { if (isAdmin && !$('appView').hidden) renderTeamAtt(); }, 60000);
 
 /* ---------- charts (real portal data) ---------- */
-const TASKS = [['prof','Profile mapper','--s1'],['mail','Email mapper','--s2'],['eto','Sutherland / Peraton ETO','--s3'],['roi','ROI','--s4'],['pf','Power Filter','--s5'],['esc','Escalations','--s6'],['zip','ZipLab Mapper','--s7']];
+const TASKS = [['prof','Profile Benchmarking','--s1'],['ng','Name Groups Check','--s8'],['zip','ZIPLabs Data Pull Benchmarking','--s7'],['mail','Email Benchmarking','--s2'],['phone','Phone Number Benchmarking','--s9'],['esc','Escalation L2','--s6'],['eto','Sutherland / Peraton ETO','--s3'],['csm','CSM Standard Reporting','--s10'],['roi','ROI','--s4']];
 const SER = ['--s1','--s2','--s3','--s4','--s5'];
 const nf = n => (Math.round(n * 10) / 10).toLocaleString();
 const widthOf = el => Math.max(300, Math.round(el.clientWidth || (el.parentElement && el.parentElement.clientWidth) || 600));
