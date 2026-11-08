@@ -1158,6 +1158,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
     <section class="view" data-view="org" hidden>
       <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team and who they report to.</p><p class="hint admin-only" hidden style="margin-top:4px">Admins: change who someone reports to with the “Reports to” menu on their card.</p></div><span class="pill ok" id="orgCount"></span></div>
       <div class="org-legend" id="orgLegend"></div>
+      <p class="hint" id="orgHidden" hidden style="margin:-4px 0 10px"></p>
       <div class="panel org-panel"><div class="org-fit" id="orgFit"><div class="org-tree" id="orgTree"></div></div></div>
       <div class="panel admin-only" hidden style="margin-top:16px"><h3>Add a planned team member</h3><p class="hint" style="margin:-4px 0 12px">For people joining soon. They show on the chart as “Joining soon” until you create their login with the same name, then the card switches to the real person automatically.</p>
         <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option></select></div></div>
@@ -4280,8 +4281,11 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 
 /* ---------- Org Chart: everyone can see the team, reporting lines, projects and today's tasks ---------- */
 const ROLE_RANK = {'Project Manager': 0, 'Team Lead': 1, 'Senior Data Executive': 2, 'Data Executive': 3};
-function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
-function orgParents(ps = people()){ const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
+function orgTopNames(skip){ const cur = people().filter(p => p.reportsTo === '__top' && p.key !== skip); if (cur.length) return cur.map(p => p.name).join(' and '); const ps = people().filter(p => p.reportsTo !== '__none' && p.reportsTo !== '__top' && (!skip || p.key !== skip)), par = orgParents(ps); return ps.filter(p => !par[p.key]).map(p => p.name).join(' and ') || 'everyone'; }
+const ORG_SPECIAL = skip => `<option value="__none">None (not shown on the Org Chart)</option><option value="__top">Top of the chart (${esc(orgTopNames(skip))} reports to them)</option>`;
+function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + ORG_SPECIAL(a && a.key) + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
+function orgParents(ps = people()){ ps = ps.filter(p => p.reportsTo !== '__none'); const tops = ps.filter(p => p.reportsTo === '__top'); if (tops.length) { const rest = ps.filter(p => p.reportsTo !== '__top'), par = orgParents(rest); tops.forEach(t => par[t.key] = null); rest.forEach(p => { if (!par[p.key]) par[p.key] = tops[0].key; }); return par; }
+  const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 3) === r), parent = {};
   ps.forEach(p => { if (p.reportsTo && p.reportsTo !== p.key && ps.some(x => x.key === p.reportsTo)) { parent[p.key] = p.reportsTo; return; }
     const r = ROLE_RANK[p.role] ?? 3; for (let up = Math.min(r - 1, 1); up >= 0; up--) {   /* executives report to a Team Lead, Team Leads to a Project Manager */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
   // break any loop an admin may have set by mistake
@@ -4291,13 +4295,14 @@ let orgPlan = [], photosAll = {}, photoSynced = false;
 // admins: copy each employee's profile photo to the shared photos/<email> record the Org Chart reads (bank details stay private)
 async function syncPhotos(){ if (!isAdmin || photoSynced || !db) return; photoSynced = true;
   for (const p of people()) { try { const d = await db.doc('empInfo/' + p.key).get(); const ph = d.exists && d.data().photo; if (ph && photosAll[p.key] !== ph) await db.doc('photos/' + p.key).set({photo: ph, updatedAt: new Date().toISOString()}); } catch (x) {} } }
-function orgPeople(){ const real = people(), names = new Set(real.map(p => String(p.name).trim().toLowerCase()));
+function orgPeople(){ const real = people().filter(p => p.reportsTo !== '__none'), names = new Set(real.map(p => String(p.name).trim().toLowerCase()));
   return real.concat(orgPlan.filter(x => x.name && !names.has(String(x.name).trim().toLowerCase())).map(x => ({key: 'plan:' + x.id, name: x.name, role: x.role, reportsTo: x.reportsTo, project: x.project || 'Seekout', plan: x}))); }
 function renderOrg(){ const box = $('orgTree'); if (!box) return; const ps = orgPeople(), parent = orgParents(ps), di = (new Date().getDay() + 6) % 7, today = todayStr(), live = weekOff === 0 || week.key === ymd(monday(0));
   $('orgCount').textContent = ps.length + (ps.length === 1 ? ' person' : ' people');
+  { const hid = people().filter(p => p.reportsTo === '__none'), n = $('orgHidden'); if (n) { n.hidden = !isAdmin || !hid.length; n.innerHTML = 'Not shown on the chart: ' + hid.map(p => `<b>${esc(p.name)}</b> <button type="button" class="linkbtn" data-orgshow="${esc(p.key)}">Show again</button>`).join(' · '); } }
   if (!ps.length) { box.innerHTML = '<p class="empty">No employees yet.</p>'; return; }
   const kids = k => ps.filter(p => parent[p.key] === k);
-  const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
+  const bossSel = p => isAdmin ? `<label class="oc-boss">Reports to <select data-boss="${esc(p.key)}"><option value="">Automatic</option>${p.plan ? '' : ORG_SPECIAL(p.key).replace(`value="${p.reportsTo}"`, `value="${p.reportsTo}" selected`)}${ps.filter(x => x.key !== p.key && !x.plan).map(x => `<option value="${esc(x.key)}"${(p.reportsTo || '') === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
   const pic = p => photosAll[p.key] ? `<img class="oc-ph" src="${esc(photosAll[p.key])}" alt="">` : `<div class="av oc-ph" style="background:hsl(${hue(p.name)} 45% 62%)">${esc(initials(p.name))}</div>`;
   const card = p => `<div class="org-card${p.plan ? ' plan' : ''}${me && p.key === me.key ? ' me' : ''}" data-r="${ROLE_RANK[p.role] ?? 3}">${pic(p)}<b>${esc(p.name)}</b><span>${esc(p.designation || p.role || '')}</span>${p.plan ? '<small class="oc-soon">Joining soon</small>' : ''}${bossSel(p)}${isAdmin && p.plan ? `<button class="mini danger" type="button" data-opdel="${esc(p.plan.id)}">Remove</button>` : ''}</div>`;
   const branch = p => { const c = kids(p.key).sort((a, b) => (ROLE_RANK[a.role] ?? 3) - (ROLE_RANK[b.role] ?? 3) || String(a.name).localeCompare(String(b.name)));
@@ -4320,6 +4325,7 @@ $('orgTree').addEventListener('change', async e => { const sel = e.target.closes
   catch (x) { toast('That couldn\'t be saved. Check the Firestore rules are published.'); } });
 $('orgTree').addEventListener('click', async e => { const b = e.target.closest('[data-opdel]'); if (!b || !isAdmin) return; if (!confirm('Remove this planned team member?')) return;
   try { await db.doc('orgPlan/' + b.dataset.opdel).delete(); toast('Removed'); } catch (x) { toast('Couldn\'t remove it. Try again.'); } });
+$('orgHidden').addEventListener('click', async e => { const b = e.target.closest('[data-orgshow]'); if (!b || !isAdmin) return; try { await db.doc('accounts/' + b.dataset.orgshow).update({reportsTo: null}); toast('Shown on the Org Chart again'); } catch (x) { toast('That couldn\'t be saved. Try again.'); } });
 $('opForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const name = $('opName').value.trim(), err = $('opErr');
   if (!name) { err.textContent = 'Type the person\'s name.'; err.hidden = false; return; } err.hidden = true;
   const id = 'p' + Date.now().toString(36);
