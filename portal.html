@@ -952,6 +952,81 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .hl-it .hl-ic{font-size:20px;width:30px;text-align:center}.hl-it b{display:block;font-size:14px}.hl-it span{font-size:13px;color:var(--ink-soft)}.hl-it .hl-act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .hl-it .btn{padding:7px 16px;font-size:13.5px}@media(max-width:640px){.hl-it{grid-template-columns:auto 1fr}.hl-it .hl-act{grid-column:1/-1;justify-content:flex-start}}
 
+/* holiday wish on Home */
+.hw{position:relative;overflow:hidden;border-radius:22px;min-height:210px;padding:26px 30px;display:flex;align-items:center;margin-bottom:16px;isolation:isolate;box-shadow:0 18px 40px -24px rgba(0,0,0,.35);animation:hwIn .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes hwIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.hw-fx{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.hw-txt{max-width:min(560px,62%);display:grid;gap:6px}
+.hw-eye{font:600 11.5px var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.hw h2{margin:0;font:800 clamp(24px,3vw,34px)/1.1 var(--display,inherit);animation:hwTitle 1s .2s both}
+@keyframes hwTitle{from{opacity:0;letter-spacing:.06em}to{opacity:1}}
+.hw p{margin:0;font-size:15px;line-height:1.55}
+.hw-sign{font-size:13px;font-weight:600;opacity:.85;margin-top:2px}
+.hw-x{position:absolute;top:10px;right:12px;border:0;background:rgba(255,255,255,.18);color:inherit;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;z-index:2}
+.hw.dark{color:#FFF8E7}.hw.dark .hw-x{background:rgba(255,255,255,.14)}
+@media(max-width:700px){.hw{min-height:400px;align-items:flex-start;padding:22px 20px}.hw-txt{max-width:100%}.hw-fx{top:58%}.hw .fw b{width:30px}.hw .diya{transform:scale(.8)}.hw .pook{width:130px;height:130px;margin-top:-65px}.hw .pook2{width:70px;height:70px;margin-top:-35px;right:calc(6% + 30px)}.hw .flag{width:140px;height:92px;margin-top:-46px}.hw .pole{display:none}.hw .tree{border-left-width:50px;border-right-width:50px;border-bottom-width:110px}.hw .moon{top:4px;width:70px;height:70px}}
+/* shared particles */
+.hw-fx i{position:absolute;display:block}
+@keyframes hwFall{from{transform:translate(0,-30px) rotate(0)}to{transform:translate(var(--dx,20px),260px) rotate(var(--rot,360deg))}}
+@keyframes hwTwinkle{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes hwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes hwSpin{to{transform:rotate(360deg)}}
+.hw .tw{width:4px;height:4px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.8);animation:hwTwinkle var(--d,2.4s) var(--dl,0s) ease-in-out infinite}
+/* fireworks */
+.hw .fw{width:0;height:0;animation:hwFwPos var(--d,2.8s) var(--dl,0s) infinite}
+.hw .fw b{position:absolute;left:0;top:0;width:46px;height:2.5px;border-radius:2px;transform-origin:0 50%;background:linear-gradient(90deg,transparent,var(--c,#ffd84d));transform:rotate(var(--a)) scaleX(0);animation:hwRay var(--d,2.8s) var(--dl,0s) infinite}
+@keyframes hwRay{0%,8%{transform:rotate(var(--a)) scaleX(0);opacity:1}30%{transform:rotate(var(--a)) scaleX(1);opacity:1}60%,100%{transform:rotate(var(--a)) scaleX(1.15) translateX(14px);opacity:0}}
+@keyframes hwFwPos{0%{opacity:0}8%{opacity:1}100%{opacity:1}}
+/* Diwali */
+.hw-diwali{background:radial-gradient(120% 140% at 85% 110%,#7a2e0e 0%,#3a1252 45%,#140a2e 100%)}
+.hw .diya{bottom:18px;width:54px;height:24px;border-radius:0 0 30px 30px;background:linear-gradient(#e2803a,#a2441a);box-shadow:inset 0 4px 0 #f6b46b}
+.hw .diya::before{content:"";position:absolute;left:50%;top:-30px;width:14px;height:30px;margin-left:-7px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:radial-gradient(circle at 50% 75%,#fff7c2 0 25%,#ffd34d 45%,#ff8a1f 75%,transparent 80%);filter:drop-shadow(0 0 10px #ffb347) drop-shadow(0 0 22px rgba(255,160,40,.7));transform-origin:50% 100%;animation:hwFlick var(--d,1.2s) ease-in-out infinite alternate}
+@keyframes hwFlick{0%{transform:scale(1,1) rotate(-3deg)}50%{transform:scale(.92,1.08) rotate(2deg)}100%{transform:scale(1.05,.95) rotate(-1deg)}}
+/* Christmas */
+.hw-christmas{background:linear-gradient(160deg,#0f3b2e 0%,#12503c 55%,#7b1d23 130%)}
+.hw .snow{top:-10px;width:var(--s,6px);height:var(--s,6px);border-radius:50%;background:#fff;opacity:.9;animation:hwFall var(--d,6s) var(--dl,0s) linear infinite}
+.hw .tree{right:8%;bottom:0;width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:150px solid #1f7a4d;filter:drop-shadow(0 0 0 #000)}
+.hw .tree::after{content:"★";position:absolute;left:-14px;top:-26px;font-size:30px;color:#ffd84d;text-shadow:0 0 14px #ffd84d;animation:hwTwinkle 2s infinite}
+.hw .bulb{width:9px;height:9px;border-radius:50%;animation:hwTwinkle var(--d,1.4s) var(--dl,0s) infinite}
+/* Onam */
+.hw-onam{background:linear-gradient(135deg,#fff6d6 0%,#ffe08a 55%,#ffc06b 100%);color:#4a2a00}
+.hw .pook{right:6%;top:50%;width:190px;height:190px;margin-top:-95px;border-radius:50%;background:repeating-conic-gradient(#e6392f 0 15deg,#ffb100 15deg 30deg,#ffffff 30deg 45deg,#9c27b0 45deg 60deg,#ff7a00 60deg 75deg,#2e9e44 75deg 90deg);animation:hwSpin 40s linear infinite;-webkit-mask:radial-gradient(circle,transparent 0 18%,#000 19%);mask:radial-gradient(circle,transparent 0 18%,#000 19%);box-shadow:0 0 0 8px rgba(255,255,255,.6)}
+.hw .pook2{right:calc(6% + 45px);top:50%;width:100px;height:100px;margin-top:-50px;border-radius:50%;background:repeating-conic-gradient(#ffd400 0 20deg,#e6392f 20deg 40deg,#fff 40deg 60deg);animation:hwSpin 22s linear infinite reverse}
+.hw .petal{top:-10px;width:12px;height:16px;border-radius:60% 0;background:var(--c,#ff7a00);animation:hwFall var(--d,7s) var(--dl,0s) linear infinite}
+/* Eid */
+.hw-eid{background:linear-gradient(160deg,#0b3d4a 0%,#0e5e5a 60%,#16334f 100%)}
+.hw .moon{right:8%;top:30px;width:90px;height:90px;border-radius:50%;box-shadow:-22px 10px 0 0 #ffe7a3;transform:rotate(-20deg);filter:drop-shadow(0 0 18px rgba(255,231,163,.55));animation:hwFloat 6s ease-in-out infinite}
+.hw .lantern{top:0;width:26px;height:40px;border-radius:8px 8px 12px 12px;background:linear-gradient(#ffd56b,#e59b2c);box-shadow:0 0 18px rgba(255,200,90,.7);transform-origin:50% -60px;animation:hwSwing var(--d,3s) ease-in-out infinite alternate}
+.hw .lantern::before{content:"";position:absolute;left:50%;top:-60px;width:1.5px;height:60px;background:rgba(255,231,163,.6)}
+@keyframes hwSwing{from{transform:translateY(60px) rotate(-7deg)}to{transform:translateY(60px) rotate(7deg)}}
+/* Holi */
+.hw-holi{background:#fffaf3;color:#3b1d4a}
+.hw .blob{width:var(--s,120px);height:var(--s,120px);border-radius:50%;background:var(--c);filter:blur(18px);opacity:.75;animation:hwBlob var(--d,5s) var(--dl,0s) ease-in-out infinite}
+@keyframes hwBlob{0%,100%{transform:scale(.7) translate(0,0);opacity:.35}50%{transform:scale(1.25) translate(10px,-8px);opacity:.85}}
+/* India: Independence / Republic Day */
+.hw-india{background:linear-gradient(180deg,#ffe3c4 0%,#ffffff 50%,#d8f0d2 100%);color:#13321f}
+.hw .flag{right:7%;top:50%;width:200px;height:132px;margin-top:-66px;border-radius:6px;background:linear-gradient(#ff9933 0 33.3%,#fff 33.3% 66.6%,#138808 66.6%);box-shadow:0 10px 24px -10px rgba(0,0,0,.35);animation:hwWave 3s ease-in-out infinite;transform-origin:0 50%}
+.hw .flag::after{content:"";position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px;border-radius:50%;border:2.5px solid #000080;background:repeating-conic-gradient(#000080 0 2deg,transparent 2deg 15deg);animation:hwSpin 8s linear infinite}
+@keyframes hwWave{0%,100%{transform:perspective(500px) rotateY(-8deg) skewY(-2deg)}50%{transform:perspective(500px) rotateY(8deg) skewY(2deg)}}
+.hw .pole{right:calc(7% + 200px);top:22px;width:5px;height:180px;border-radius:3px;background:#8a6a4a}
+/* New Year / default confetti */
+.hw-newyear{background:linear-gradient(150deg,#1b1442 0%,#2e1c6b 60%,#0d2a4a 100%)}
+.hw-party{background:linear-gradient(135deg,#f4ffe0 0%,#e9f7ff 100%);color:#183018}
+.hw .conf{top:-14px;width:8px;height:14px;border-radius:2px;background:var(--c);animation:hwFall var(--d,5s) var(--dl,0s) linear infinite}
+/* Pongal / Sankranti kites */
+.hw-kite{background:linear-gradient(180deg,#bfe6ff 0%,#fff3d6 100%);color:#1f3550}
+.hw .kt{width:44px;height:44px;transform:rotate(45deg);background:linear-gradient(135deg,var(--c) 50%,var(--c2) 50%);border-radius:3px;animation:hwKite var(--d,6s) var(--dl,0s) ease-in-out infinite alternate}
+@keyframes hwKite{from{transform:translate(0,0) rotate(40deg)}to{transform:translate(-30px,-18px) rotate(52deg)}}
+/* Vishu */
+.hw-vishu{background:linear-gradient(140deg,#fffbe0 0%,#ffe58a 100%);color:#4a3a00}
+/* calm (Good Friday, Muharram, Gandhi Jayanti) */
+.hw-calm{background:linear-gradient(160deg,#eef2f7 0%,#dfe7f0 100%);color:#22303f}
+.hw .orb{width:var(--s,14px);height:var(--s,14px);border-radius:50%;background:radial-gradient(circle,#fff 0,#fff7d6 40%,transparent 70%);animation:hwOrb var(--d,8s) var(--dl,0s) ease-in-out infinite}
+@keyframes hwOrb{0%{transform:translateY(40px);opacity:0}30%,70%{opacity:.9}100%{transform:translateY(-120px);opacity:0}}
+.hw .candle{right:12%;bottom:0;width:34px;height:100px;border-radius:6px 6px 0 0;background:linear-gradient(90deg,#f7f1e3,#e8dcc0)}
+.hw .candle::before{content:"";position:absolute;left:50%;top:-34px;width:16px;height:32px;margin-left:-8px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:radial-gradient(circle at 50% 75%,#fff 0 25%,#ffd34d 50%,#ff9a2e 75%,transparent 80%);filter:drop-shadow(0 0 12px #ffc65c);transform-origin:50% 100%;animation:hwFlick 1.4s ease-in-out infinite alternate}
+@media (prefers-reduced-motion: reduce){.hw *,.hw{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -1072,6 +1147,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
       </div>
       <div class="panel hm-leave" id="hmLeave" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">🌴 Leave updates</h3><span class="hint">Click “Got it” to file an update in Time Off Management.</span></div><div class="hl-list" id="hmLeaveList"></div></div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
+      <div id="hmHoliday"></div>
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
 </div>
@@ -1831,7 +1907,7 @@ function startData() {
   watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('photos', db.collection('photos'), s => { photosAll = {}; s.docs.forEach(d => { const x = d.data(); if (x && x.photo) photosAll[d.id] = x.photo; }); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => ({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
-  watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); });
+  watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); try { renderHolidayWish(); } catch (e) {} if (isAdmin) seedHolidays(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
@@ -2394,7 +2470,7 @@ function renderHours(){
     $('hStatusL').textContent = 'Working right now'; $('hStatus').textContent = working + (working === 1 ? ' person' : ' people');
   }
 }
-function renderHome(){ try { renderHomeLeave(); } catch (e) { console.error(e); }
+function renderHome(){ try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
   try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
@@ -3829,6 +3905,54 @@ document.addEventListener('click', async e => { const b = e.target.closest('[dat
   try { await saveBrief({brief_parts: {v: BRIEF_VER, parts}}); renderBriefAck(); const nx = BRIEF_PAGES.find(([q]) => !parts[q]);
     toast(nx ? 'Page accepted. Next: ' + nx[1] : 'All pages accepted. You can now accept the briefing below.'); if (nx && window.__bfShowTab) { window.__bfShowTab(nx[0]); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); } }
   catch (x) { b.disabled = false; b.textContent = 'Accept this page'; toast('That couldn\'t be saved. Try again.'); } });
+/* ---------- Home: holiday wish ---------- */
+const HW_THEMES = [
+  {re: /diwali|deepavali/i, k: 'diwali', dark: 1, t: (n) => `Happy Diwali, ${n}! 🪔`, m: () => 'May the festival of lights fill your home with joy, good health and prosperity. Wishing you and your family a bright and happy Diwali.'},
+  {re: /christmas|x-?mas/i, k: 'christmas', dark: 1, t: (n) => `Merry Christmas, ${n}! 🎄`, m: () => 'Wishing you and your family a season full of peace, love and joy, and a wonderful time together.'},
+  {re: /onam|thiruvonam/i, k: 'onam', t: (n) => `Happy Onam, ${n}! 🌼`, m: () => 'May this harvest festival bring you and your family happiness, togetherness and a plentiful sadya.'},
+  {re: /eid|ramzan|ramadan|bakrid|bakri/i, k: 'eid', dark: 1, t: (n) => `Eid Mubarak, ${n}! 🌙`, m: () => 'May this blessed day bring peace, happiness and prosperity to you and your family.'},
+  {re: /holi\b/i, k: 'holi', t: (n) => `Happy Holi, ${n}! 🎨`, m: () => 'May your life be as bright and colourful as the festival itself. Wishing you and your family a joyful Holi.'},
+  {re: /independence|republic|swatantra/i, k: 'india', t: (n, h) => `Happy ${h}, ${n}! 🇮🇳`, m: () => 'Celebrating the spirit of our nation with pride. Wishing you and your family a proud and happy day. Jai Hind!'},
+  {re: /new year/i, k: 'newyear', dark: 1, t: (n) => `Happy New Year, ${n}! 🎆`, m: () => 'Wishing you and your family a year full of good health, happiness and new achievements.'},
+  {re: /pongal|sankranti|lohri|makar/i, k: 'kite', t: (n, h) => `Happy ${h}, ${n}! 🪁`, m: () => 'May this harvest festival bring warmth, sweetness and prosperity to you and your family.'},
+  {re: /vishu/i, k: 'vishu', t: (n) => `Happy Vishu, ${n}! 🌼`, m: () => 'May the Vishukkani bring you and your family a year of prosperity and happiness.'},
+  {re: /good friday|muharram|gandhi|martyr/i, k: 'calm', calm: 1, t: (n, h) => `A peaceful ${h}, ${n}`, m: (h) => `Today we observe ${h}. Wishing you and your family a calm and reflective day.`}];
+const HW_DEF = {k: 'party', t: (n, h) => `Happy ${h}, ${n}! 🎉`, m: (h) => `Wishing you and your family a wonderful ${h}. Enjoy the day off and make some lovely memories together.`};
+const hwTheme = name => HW_THEMES.find(x => x.re.test(name)) || HW_DEF;
+function hwFx(k){ const R = (a, b) => (a + Math.random() * (b - a)).toFixed(1), out = [], add = (n, f) => { for (let i = 0; i < n; i++) out.push(f(i)); };
+  const tw = n => add(n, () => `<i class="tw" style="left:${R(30, 98)}%;top:${R(4, 80)}%;--d:${R(1.6, 3.4)}s;--dl:${R(0, 3)}s"></i>`);
+  const fw = (n, cols) => add(n, i => { const c = cols[i % cols.length]; let rays = ''; for (let a = 0; a < 360; a += 30) rays += `<b style="--a:${a}deg"></b>`; return `<i class="fw" style="left:${R(50, 94)}%;top:${R(15, 60)}%;--c:${c};--d:${R(2.4, 3.4)}s;--dl:${R(0, 2.5)}s">${rays}</i>`; });
+  const fall = (n, cls, cols) => add(n, i => `<i class="${cls}" style="left:${R(0, 100)}%;--c:${cols[i % cols.length]};--d:${R(4, 9)}s;--dl:-${R(0, 9)}s;--dx:${R(-40, 40)}px;--s:${R(3, 8)}px"></i>`);
+  if (k === 'diwali') { tw(14); fw(3, ['#ffd84d', '#ff6fb1', '#7fe0ff']); add(5, i => `<i class="diya" style="left:${46 + i * 10}%;--d:${R(.9, 1.5)}s"></i>`); }
+  else if (k === 'christmas') { fall(40, 'snow', ['#fff']); out.push('<i class="tree"></i>'); add(8, i => `<i class="bulb" style="right:calc(8% + ${R(30, 110)}px);bottom:${R(15, 120)}px;background:${['#ff4d4d', '#ffd84d', '#6ad1ff', '#fff'][i % 4]};--d:${R(1, 2)}s;--dl:${R(0, 2)}s"></i>`); }
+  else if (k === 'onam') { out.push('<i class="pook"></i><i class="pook2"></i>'); fall(14, 'petal', ['#ff7a00', '#e6392f', '#ffd400', '#9c27b0']); }
+  else if (k === 'eid') { tw(22); out.push('<i class="moon"></i>'); add(4, i => `<i class="lantern" style="left:${44 + i * 8}%;--d:${R(2.4, 3.6)}s"></i>`); }
+  else if (k === 'holi') add(9, i => `<i class="blob" style="left:${R(35, 92)}%;top:${R(-10, 70)}%;--s:${R(90, 170)}px;--c:${['#ff2e93', '#ffd400', '#21c46b', '#2f8cff', '#9b4dff', '#ff7a00'][i % 6]};--d:${R(4, 7)}s;--dl:-${R(0, 6)}s"></i>`);
+  else if (k === 'india') { out.push('<i class="pole"></i><i class="flag"></i>'); fall(14, 'petal', ['#ff9933', '#138808', '#ff9933']); }
+  else if (k === 'newyear') { tw(16); fw(5, ['#ffd84d', '#ff6fb1', '#7fe0ff', '#a6ff7f', '#ffffff']); }
+  else if (k === 'kite') add(4, i => `<i class="kt" style="left:${55 + i * 10}%;top:${R(12, 55)}%;--c:${['#ff4d6d', '#ffb703', '#3a86ff', '#8ac926'][i]};--c2:${['#ffd6e0', '#fff1c1', '#cfe0ff', '#e3f6c5'][i]};--d:${R(4, 7)}s;--dl:-${R(0, 4)}s"></i>`);
+  else if (k === 'vishu') fall(26, 'petal', ['#ffd400', '#ffbf00', '#ffe066']);
+  else if (k === 'calm') { out.push('<i class="candle"></i>'); add(10, () => `<i class="orb" style="left:${R(40, 95)}%;bottom:${R(0, 40)}%;--s:${R(8, 18)}px;--d:${R(6, 10)}s;--dl:-${R(0, 10)}s"></i>`); }
+  else fall(36, 'conf', ['#ff4d6d', '#ffb703', '#3a86ff', '#8ac926', '#9b5de5']);
+  return out.join(''); }
+function hwHtml(h, first, closable){ const th = hwTheme(h.name), when = new Date(h.date + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
+  return `<div class="hw hw-${th.k}${th.dark ? ' dark' : ''}" data-hw="${esc(h.date + '|' + h.name)}"><div class="hw-fx" aria-hidden="true">${hwFx(th.k)}</div>${closable ? '<button type="button" class="hw-x" data-hwx title="Hide for today" aria-label="Hide for today">×</button>' : ''}
+    <div class="hw-txt"><span class="hw-eye">${esc(h.kind || 'Public holiday')} · ${esc(when)}</span><h2>${esc(th.t(first, h.name))}</h2><p>${esc(th.m(h.name))}</p><span class="hw-sign">With warm wishes from all of us at Chrysolite</span></div></div>`; }
+const HOL_SEED_V = 'hol-2026-27a', HOL_SEED = [{"date": "2026-11-08", "name": "Diwali (Deepavali)", "kind": "Public holiday"}, {"date": "2026-12-25", "name": "Christmas", "kind": "Public holiday"}, {"date": "2027-01-01", "name": "New Year's Day", "kind": "Public holiday"}, {"date": "2027-01-14", "name": "Lohri", "kind": "Public holiday"}, {"date": "2027-01-15", "name": "Pongal / Makar Sankranti", "kind": "Public holiday"}, {"date": "2027-01-26", "name": "Republic Day", "kind": "Public holiday"}, {"date": "2027-03-10", "name": "Eid ul-Fitr (Ramzan)", "kind": "Public holiday"}, {"date": "2027-03-23", "name": "Holi", "kind": "Public holiday"}, {"date": "2027-03-26", "name": "Good Friday", "kind": "Public holiday"}, {"date": "2027-04-15", "name": "Vishu", "kind": "Public holiday"}, {"date": "2027-05-01", "name": "May Day", "kind": "Public holiday"}, {"date": "2027-05-17", "name": "Bakrid (Eid ul-Adha)", "kind": "Public holiday"}, {"date": "2027-06-16", "name": "Muharram", "kind": "Public holiday"}, {"date": "2027-08-15", "name": "Independence Day", "kind": "Public holiday"}, {"date": "2027-09-12", "name": "Thiruvonam (Onam)", "kind": "Public holiday"}, {"date": "2027-10-02", "name": "Gandhi Jayanti", "kind": "Public holiday"}, {"date": "2027-10-29", "name": "Diwali (Deepavali)", "kind": "Public holiday"}, {"date": "2027-12-25", "name": "Christmas", "kind": "Public holiday"}];
+// added once to the Holiday calendar by the first admin who opens the portal (admins can still remove any of them)
+async function seedHolidays(){ if (!isAdmin || window.__hsBusy || window.__hsDone) return; window.__hsBusy = 1;
+  try { const f = await db.doc('adminSettings/holidaySeed').get(); if (f.exists && (f.data() || {}).v === HOL_SEED_V) { window.__hsDone = 1; return; }
+    for (const yr of [...new Set(HOL_SEED.map(h => h.date.slice(0, 4)))]) { const ref = db.doc('holidays/' + yr), snap = await ref.get(), items = snap.exists ? ((snap.data() || {}).items || []) : [];
+      const add = HOL_SEED.filter(h => h.date.startsWith(yr) && !items.some(x => x.date === h.date && x.name === h.name));
+      if (add.length) await ref.set({year: +yr, items: [...items, ...add].sort((a, b) => a.date.localeCompare(b.date)), updatedAt: new Date().toISOString()}); }
+    await db.doc('adminSettings/holidaySeed').set({v: HOL_SEED_V, at: new Date().toISOString()}); window.__hsDone = 1; }
+  catch (e) { console.error(e); } finally { window.__hsBusy = 0; } }
+function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; const k = todayStr(), list = me ? holidays.filter(h => h.date === k) : [];
+  let hid = ''; try { hid = localStorage.getItem('cs_hw_x') || ''; } catch (e) {}
+  const show = list.filter(h => hid !== k + '|' + h.name), sig = show.map(h => h.date + h.name).join(',') + '|' + (me && me.key);
+  if (box.dataset.sig === sig) return; box.dataset.sig = sig;
+  box.innerHTML = show.map(h => hwHtml(h, String(me.name || '').split(' ')[0] || 'there', true)).join(''); }
+$('hmHoliday').addEventListener('click', e => { const b = e.target.closest('[data-hwx]'); if (!b) return; const c = b.closest('[data-hw]'); try { localStorage.setItem('cs_hw_x', c.dataset.hw); } catch (x) {} c.style.transition = 'opacity .3s, transform .3s'; c.style.opacity = 0; c.style.transform = 'scale(.97)'; setTimeout(() => { $('hmHoliday').dataset.sig = ''; renderHolidayWish(); }, 300); });
 /* ---------- employee Home: leave updates to acknowledge ---------- */
 // one line per decision on the employee's leave; "Got it" stores the version seen in their own leaveRequests doc
 const lvVer = d => [d.status, d.from, d.to, d.type, d.decidedAt || '', d.cancelled ? d.cancelled.at : ''].join('|');
