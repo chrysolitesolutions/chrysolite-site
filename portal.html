@@ -1149,7 +1149,6 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
       </div>
       <div id="hmHoliday"></div>
       <div class="panel hm-leave" id="hmLeave" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">🌴 Leave updates</h3><span class="hint">Click “Got it” to file an update in Time Off Management.</span></div><div class="hl-list" id="hmLeaveList"></div></div>
-      <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
 </div>
@@ -1651,18 +1650,6 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
             <div class="msg" id="impMsg" hidden style="margin-top:12px"></div>
             <div id="impCreds" hidden style="margin-top:12px"></div>
           </div>
-          <div class="panel" id="waPanel">
-            <h3>Daily timesheet on WhatsApp</h3>
-            <p class="hint" style="margin:-4px 0 14px">Builds the day's timesheet for everyone who uses the time clock and opens it in WhatsApp, addressed to the admin number. Press Send in WhatsApp to deliver it. After 6 pm, Home reminds admins if today's report hasn't been sent.</p>
-            <form class="adm-form" id="waForm" novalidate>
-              <div class="g2"><div class="f"><label for="waNum">Admin WhatsApp number</label><input id="waNum" type="tel" autocomplete="off" placeholder="+91 98765 43210"></div>
-              <div class="f"><label for="waDate">Report date</label><input id="waDate" type="date"></div></div>
-              <div class="msg err" id="waErr" hidden></div>
-              <div class="row" style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn btn-ghost" type="submit">Save number</button><a class="btn btn-gem" id="waSend" href="#" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn btn-ghost" type="button" id="waCopy">Copy report</button></div>
-              <small class="hint" id="waLast"></small>
-            </form>
-            <pre class="wa-prev" id="waPrev"></pre>
-          </div>
           <div class="panel">
             <h3>Announcements</h3>
             <form class="adm-form" id="annForm" novalidate>
@@ -1975,7 +1962,6 @@ function startAdminData() {
   watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('otReqAll', db.collection('otRequests'), s => { otReqAll = s.docs.map(d => ({key: d.id, ...d.data()})); renderOt(); });
   watch('otApprAll', db.collection('otApprovals'), s => { otApprAll = {}; s.docs.forEach(d => otApprAll[d.id] = d.data()); setAtt(); renderOt(); enforceTeam(); });
-  watch('waCfg', db.doc('adminSettings/report'), s => { waCfg = s.exists ? s.data() : {}; renderWa(); });
 }
 // Admin UI needs both: the portal role on the account (or the owner's admin entry) and Editor access to the database
 function applyRole() {
@@ -4396,48 +4382,7 @@ setInterval(tick, 1000); tick();
 setInterval(() => { if (!$('appView').hidden) { enforceMine(); enforceTeam(); } }, 30000);
 $('attDate').value = todayStr(); $('attMonth').value = monthKey(new Date());
 let attMode = 'day';
-/* ---------- daily timesheet report (WhatsApp) ---------- */
-const waDigits = v => String(v || '').replace(/\D/g, '');
-function buildReport(date){
-  const d = new Date(date + 'T00:00'), list = clockPeople(), lines = [], absent = [];
-  let total = 0, n = 0;
-  list.forEach(p => { const rec = teamAtt.find(a => a.email === p.email), l = (rec && rec.days && rec.days[date]) || [];
-    if (!l.length) { absent.push(p.name + (onLeave(p.email, date) ? ' (on leave)' : '')); return; }
-    const ms = sessMs(l), open = !l[l.length - 1].out; total += ms; n++;
-    lines.push(`${n}. ${p.name} · ${fmtH(ms)}${open ? ' (still working)' : ''}\n   ${l.length} session${l.length === 1 ? '' : 's'}: ${timesOf(l)}`); });
-  return `*Chrysolite Solutions · Daily timesheet*\n${d.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}\n\n` +
-    (lines.length ? lines.join('\n') : 'No one clocked in on this day.') +
-    (absent.length ? `\n\nNot clocked in: ${absent.join(', ')}` : '') +
-    `\n\nTeam total: ${fmtH(total)} · ${n} of ${list.length} clocked in`;
-}
-function renderWa(){
-  const rem = $('waRemind');
-  rem.hidden = !(isAdmin && waDigits(waCfg.whatsapp).length >= 8 && new Date().getHours() >= 18 && waCfg.lastSent !== todayStr());
-  if (!isAdmin) return;
-  if (document.activeElement !== $('waNum')) $('waNum').value = waCfg.whatsapp || '';
-  if (!$('waDate').value) $('waDate').value = todayStr();
-  const text = buildReport($('waDate').value), num = waDigits(waCfg.whatsapp);
-  $('waPrev').textContent = text;
-  $('waSend').href = num.length >= 8 ? 'https://wa.me/' + num + '?text=' + encodeURIComponent(text) : '#';
-  $('waSend').classList.toggle('disabled', num.length < 8);
-  $('waLast').textContent = waCfg.lastSent ? 'Last sent: ' + new Date(waCfg.lastSent + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}) + (waCfg.lastBy ? ' by ' + waCfg.lastBy : '') : 'Not sent yet.';
-}
-$('waDate').addEventListener('change', renderWa);
-$('waForm').addEventListener('submit', async e => {
-  e.preventDefault(); const err = $('waErr'), raw = $('waNum').value.trim(), num = waDigits(raw);
-  if (num.length < 8 || num.length > 15) { err.textContent = 'Enter the full number with country code, like +91 98765 43210.'; err.hidden = false; return; }
-  err.hidden = true;
-  try { await db.doc('adminSettings/report').set({...waCfg, whatsapp: raw, updatedAt: new Date().toISOString()}); toast('WhatsApp number saved'); }
-  catch (x) { err.textContent = 'The number couldn\'t be saved. Only portal admins can change this.'; err.hidden = false; }
-});
-$('waSend').addEventListener('click', e => {
-  if (waDigits(waCfg.whatsapp).length < 8) { e.preventDefault(); const err = $('waErr'); err.textContent = 'Save the admin WhatsApp number first.'; err.hidden = false; return; }
-  const date = $('waDate').value || todayStr();
-  db.doc('adminSettings/report').set({...waCfg, lastSent: date > (waCfg.lastSent || '') ? date : waCfg.lastSent, lastBy: me ? me.name : 'Admin', lastSentAt: new Date().toISOString()}).catch(() => {});
-});
-$('waCopy').onclick = () => navigator.clipboard.writeText($('waPrev').textContent).then(() => toast('Report copied')).catch(() => toast('Copy was blocked by the browser. Select the preview text instead.'));
-$('waRemindGo').onclick = () => { go('admin'); $('waDate').value = todayStr(); renderWa(); setTimeout(() => $('waPanel').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'}), 60); };
-setInterval(() => { if (!$('appView').hidden && isAdmin) renderWa(); }, 60000);
+function renderWa(){}   // the WhatsApp timesheet report was removed
 function attRows(){
   const date = $('attDate').value || todayStr();
   return clockPeople().map(p => { const rec = teamAtt.find(a => a.email === p.email), l = (rec && rec.days && rec.days[date]) || [];
