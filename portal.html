@@ -1028,6 +1028,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 @media (prefers-reduced-motion: reduce){.hw *,.hw{animation:none!important}}
 
 .hl-tba{color:#C2412D;font-weight:800;margin-left:3px}.hl-tbat{color:#B23A26;font-weight:600}
+.hl-ext{color:#4C5F0C;font-weight:600}.hx-prev{font-size:13.5px;padding:10px 12px;border-radius:12px;background:rgba(155,181,42,.1)}.hx-prev:empty{display:none}
 </style>
 </head>
 <body>
@@ -1749,6 +1750,14 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
   </form>
 </dialog>
 <div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
+<dialog class="pw-dlg cf-dlg" id="hxDlg" aria-labelledby="hxT"><form id="hxForm" novalidate style="display:grid;gap:12px">
+  <h3 id="hxT" style="margin:0">Extend holiday</h3><p class="hint" id="hxWho" style="margin:0"></p>
+  <div class="ladj-grid"><div class="f"><label for="hxN">Extra days</label><input id="hxN" type="number" min="1" max="10" value="1"></div>
+    <div class="f"><label for="hxWhere">Add them</label><select id="hxWhere"><option value="after">After the holiday</option><option value="before">Before the holiday</option></select></div>
+    <div class="f full"><label for="hxStart">Or start from a specific date (optional)</label><input id="hxStart" type="date"></div></div>
+  <label style="display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer"><input type="checkbox" id="hxSkip" checked style="width:18px;height:18px;margin:0;flex:none"> Skip Saturdays, Sundays and days that are already holidays</label>
+  <div class="hx-prev" id="hxPrev"></div><div class="msg err" id="hxErr" hidden></div>
+  <div class="cf-acts"><button type="button" class="cf-no" id="hxX">Cancel</button><button type="submit" class="cf-ok" id="hxSave">Add extra days</button></div></form></dialog>
 <dialog class="pw-dlg cf-dlg" id="cfDlg" aria-labelledby="cfT"><h3 id="cfT"></h3><p id="cfMsg"></p><div class="cf-acts"><button type="button" class="cf-ok" id="cfOk">OK</button><button type="button" class="cf-no" id="cfNo">Cancel</button></div></dialog>
 <dialog class="pw-dlg ladj-dlg" id="ladjDlg" aria-labelledby="ladjT"><form id="ladjForm" novalidate>
   <h3 id="ladjT" style="margin:0">Change leave</h3><p class="hint" id="ladjWho" style="margin:0"></p>
@@ -2403,7 +2412,7 @@ function renderTeamCal(){ const g = $('tcGrid'); if (!g) return; const y = tcMon
   g.innerHTML = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div class="tc-h">${x}</div>`).join('') + cells.join(''); }
 function renderHolidays(){ const box = $('hlList'); if (!box) return; $('hlYear').textContent = hlYear; const list = holidays.filter(h => h.date.startsWith(hlYear + '')), today = todayStr();
   box.innerHTML = list.length ? list.map(h => { const d = new Date(h.date + 'T00:00');
-    return `<div class="hl-row${h.date < today ? ' past' : ''}"><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString(undefined, {month: 'short'})}</small></div><div class="nm"><b>${esc(h.name)}${h.tba ? '<span class="hl-tba" title="Date to be announced">*</span>' : ''}</b><small>${d.toLocaleDateString(undefined, {weekday: 'long'})} · ${esc(h.kind || 'Public holiday')}${h.tba ? ' · <span class="hl-tbat">Date TBA (expected date shown)</span>' : ''}</small></div>${isAdmin ? `<span class="row" style="gap:6px">${h.tba ? `<button class="mini ok-btn" type="button" data-hlok="${esc(h.date)}|${esc(h.name)}">Confirm date</button>` : ''}<button class="mini danger" type="button" data-hldel="${esc(h.date)}|${esc(h.name)}">Remove</button></span>` : ''}</div>`; }).join('') + (list.some(h => h.tba) ? '<p class="hint" style="margin:10px 0 0"><span class="hl-tba">*</span> Date TBA: the date depends on the moon or has not been officially announced yet. The expected date is shown and will be updated once it is confirmed.</p>' : '')
+    return `<div class="hl-row${h.date < today ? ' past' : ''}"><div class="dt"><b>${d.getDate()}</b><small>${d.toLocaleDateString(undefined, {month: 'short'})}</small></div><div class="nm"><b>${esc(h.name)}${h.tba ? '<span class="hl-tba" title="Date to be announced">*</span>' : ''}</b><small>${d.toLocaleDateString(undefined, {weekday: 'long'})} · ${esc(h.kind || 'Public holiday')}${h.ext ? ' · <span class="hl-ext">Extra day added to ' + esc(h.ext) + '</span>' : ''}${h.tba ? ' · <span class="hl-tbat">Date TBA (expected date shown)</span>' : ''}</small></div>${isAdmin ? `<span class="row" style="gap:6px">${!h.ext ? `<button class="mini" type="button" data-hlext="${esc(h.date)}|${esc(h.name)}">+ Extend</button>` : ''}${h.tba ? `<button class="mini ok-btn" type="button" data-hlok="${esc(h.date)}|${esc(h.name)}">Confirm date</button>` : ''}<button class="mini danger" type="button" data-hldel="${esc(h.date)}|${esc(h.name)}">Remove</button></span>` : ''}</div>`; }).join('') + (list.some(h => h.tba) ? '<p class="hint" style="margin:10px 0 0"><span class="hl-tba">*</span> Date TBA: the date depends on the moon or has not been officially announced yet. The expected date is shown and will be updated once it is confirmed.</p>' : '')
     : `<p class="empty">No holidays added for ${hlYear} yet.${isAdmin ? ' Add them below.' : ''}</p>`; }
 function renderTimeOff(){ try { renderTeamCal(); renderHolidays(); } catch (e) { console.error(e); } }
 $('tcPrev').onclick = () => { tcMonth.setMonth(tcMonth.getMonth() - 1); renderTeamCal(); };
@@ -3952,7 +3961,7 @@ async function seedHolidays(){ if (!isAdmin || window.__hsBusy || window.__hsDon
       if (changed) await ref.set({year: +yr, items: [...upd, ...add].sort((a, b) => a.date.localeCompare(b.date)), updatedAt: new Date().toISOString()}); }
     await db.doc('adminSettings/holidaySeed').set({v: HOL_SEED_V, at: new Date().toISOString()}); window.__hsDone = 1; }
   catch (e) { console.error(e); } finally { window.__hsBusy = 0; } }
-function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; const k = todayStr(), list = me ? holidays.filter(h => h.date === k && !h.tba) : [];
+function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; const k = todayStr(), list = me ? holidays.filter(h => h.date === k && !h.tba && !h.ext) : [];
   let hid = ''; try { hid = localStorage.getItem('cs_hw_x') || ''; } catch (e) {}
   const show = list.filter(h => hid !== k + '|' + h.name), sig = show.map(h => h.date + h.name).join(',') + '|' + (me && me.key);
   if (box.dataset.sig === sig) return; box.dataset.sig = sig;
@@ -3981,6 +3990,26 @@ async function markLeaveSeen(keys){ if (!me || !keys.length) return; const seen 
   await db.doc('leaveRequests/' + me.key).set(doc); myReqDoc = doc; renderHomeLeave(); }
 document.addEventListener('click', async e => { const b = e.target.closest('[data-lvseen]'); if (!b || !me) return; b.disabled = true;
   try { await markLeaveSeen([b.dataset.lvseen]); toast('Saved in Time Off Management › Leave history'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } });
+/* ---------- admin: extend a holiday with extra days ---------- */
+let hxFor = null;
+function hxDays(){ if (!hxFor) return []; const n = Math.max(1, Math.min(10, +$('hxN').value || 1)), skip = $('hxSkip').checked, back = $('hxWhere').value === 'before' && !$('hxStart').value, out = [];
+  const d = new Date(($('hxStart').value || hxFor.date) + 'T00:00'); if (!$('hxStart').value) d.setDate(d.getDate() + (back ? -1 : 1)); let guard = 0;
+  // when extending after the holiday, also step over extra days already added to it
+  while (out.length < n && guard++ < 60) { const k = ymd(d), w = d.getDay(), taken = holidays.some(h => h.date === k && (h.name === hxFor.name || h.ext === hxFor.name));
+    if (!taken && !(skip && (w === 0 || w === 6 || holOn(k)))) out.push(k); d.setDate(d.getDate() + (back ? -1 : 1)); }
+  return out.sort(); }
+const hxDraw = () => { const L = hxDays(); $('hxPrev').innerHTML = L.length ? '<b>Days to add:</b> ' + L.map(k => new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'})).join(' · ') : ''; };
+['hxN', 'hxWhere', 'hxStart', 'hxSkip'].forEach(id => { $(id).addEventListener('input', hxDraw); $(id).addEventListener('change', hxDraw); });
+$('hlList').addEventListener('click', e => { const b = e.target.closest('[data-hlext]'); if (!b || !isAdmin) return; const [date, name] = b.dataset.hlext.split('|'); hxFor = holidays.find(h => h.date === date && h.name === name); if (!hxFor) return;
+  $('hxT').textContent = 'Extend ' + name; $('hxWho').textContent = 'Now on ' + new Date(date + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}) + '. The extra days are added to the Holiday calendar as paid holidays and show on the team calendar.';
+  $('hxN').value = 1; $('hxWhere').value = 'after'; $('hxStart').value = ''; $('hxSkip').checked = true; $('hxErr').hidden = true; hxDraw(); $('hxDlg').showModal(); });
+$('hxX').onclick = () => $('hxDlg').close();
+$('hxForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin || !hxFor) return; const L = hxDays(), err = $('hxErr'); if (!L.length) { err.textContent = 'No days to add. Change the number of days or the start date.'; err.hidden = false; return; }
+  const add = L.map(k => ({date: k, name: hxFor.name + ' (extra day)', kind: hxFor.kind || 'Public holiday', ext: hxFor.name, ...(hxFor.tba ? {tba: true} : {})})), byYr = {};
+  add.forEach(h => (byYr[h.date.slice(0, 4)] = byYr[h.date.slice(0, 4)] || []).push(h)); $('hxSave').disabled = true;
+  try { for (const [yr, list] of Object.entries(byYr)) { const items = holidays.filter(h => h.date.startsWith(yr)).concat(list).sort((a, b) => a.date.localeCompare(b.date)); await db.doc('holidays/' + yr).set({year: +yr, items, updatedAt: new Date().toISOString()}); }
+    $('hxDlg').close(); toast(L.length + ' extra day' + (L.length === 1 ? '' : 's') + ' added to ' + hxFor.name); }
+  catch (x) { err.textContent = 'That couldn\'t be saved. Try again.'; err.hidden = false; } finally { $('hxSave').disabled = false; } });
 /* ---------- confirm pop-up ---------- */
 function confirmDlg(title, msg, ok){ return new Promise(res => { const d = $('cfDlg'); $('cfT').textContent = title; $('cfMsg').textContent = msg; $('cfOk').textContent = ok || 'OK';
   const done = v => { d.close(); $('cfOk').onclick = $('cfNo').onclick = null; d.oncancel = null; res(v); };
