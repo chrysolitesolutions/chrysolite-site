@@ -946,6 +946,12 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .ev .lv-sugg .acts{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:0}.ev .lv-sugg span{display:inline;margin:0}.ev .lv-sugg .btn{padding:7px 16px;font-size:13.5px}.lv-chg{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:2px}.lv-chg.lv-cx{color:#B23A26}
 .ev.has-sugg{flex-wrap:wrap}.ev.has-sugg .lv-sugg{flex-basis:100%}
 
+.hm-leave{margin-bottom:16px}.hl-list{display:grid;gap:8px}
+.hl-it{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(155,181,42,.07)}
+.hl-it.warn{background:#FFF6DB;border-color:#F0D68A}.hl-it.off{background:rgba(194,65,45,.06);border-color:rgba(194,65,45,.25)}.hl-it.info{background:transparent;border-style:dashed}
+.hl-it .hl-ic{font-size:20px;width:30px;text-align:center}.hl-it b{display:block;font-size:14px}.hl-it span{font-size:13px;color:var(--ink-soft)}.hl-it .hl-act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.hl-it .btn{padding:7px 16px;font-size:13.5px}@media(max-width:640px){.hl-it{grid-template-columns:auto 1fr}.hl-it .hl-act{grid-column:1/-1;justify-content:flex-start}}
+
 </style>
 </head>
 <body>
@@ -1064,6 +1070,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
           <span class="hm-go">Open My Workday →</span>
         </button>
       </div>
+      <div class="panel hm-leave" id="hmLeave" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">🌴 Leave updates</h3><span class="hint">Click “Got it” to file an update in Time Off Management.</span></div><div class="hl-list" id="hmLeaveList"></div></div>
       <div class="msg wa-remind" id="waRemind" hidden><span>Today's timesheet hasn't been sent to WhatsApp yet.</span> <button class="mini" type="button" id="waRemindGo">Send it now</button></div>
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
@@ -1663,7 +1670,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Send for approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
   </form>
 </dialog>
-<div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Anything you save counts as their answer.</span><button type="button" id="actStop">Stop acting</button></div>
+<div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
 <dialog class="pw-dlg cf-dlg" id="cfDlg" aria-labelledby="cfT"><h3 id="cfT"></h3><p id="cfMsg"></p><div class="cf-acts"><button type="button" class="cf-ok" id="cfOk">OK</button><button type="button" class="cf-no" id="cfNo">Cancel</button></div></dialog>
 <dialog class="pw-dlg ladj-dlg" id="ladjDlg" aria-labelledby="ladjT"><form id="ladjForm" novalidate>
   <h3 id="ladjT" style="margin:0">Change leave</h3><p class="hint" id="ladjWho" style="margin:0"></p>
@@ -1755,13 +1762,15 @@ function mergeAtt(docs){ const by = {}; docs.forEach(d => attRecs(d).forEach(r =
 const unsub = {};
 // Every save goes through this guard: unless the signed-in portal account has Admin rights, the page can only
 // write the employee's own time clock and leave-request documents, even though employees hold the Editor share level.
+// an admin acting as an employee keeps full rights: every save is allowed, employee-only limits are lifted
+function acting(){ try { return !!actReal; } catch (e) { return false; } }
 function ownWritable(path){
   if (!me) return false;
   return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
-  const allowed = path => isAdmin || ownWritable(path);
+  const allowed = path => isAdmin || acting() || ownWritable(path);
   const wrapDoc = (ref, path) => ({ get id(){ return ref.id; }, path,
     get: (...a) => ref.get(...a), onSnapshot: (...a) => ref.onSnapshot(...a),
     set: (...a) => allowed(path) ? ref.set(...a) : deny(), update: (...a) => allowed(path) ? ref.update(...a) : deny(), delete: (...a) => allowed(path) ? ref.delete(...a) : deny(),
@@ -1769,7 +1778,7 @@ function guardDb(raw){
   const wrapCol = (ref, path) => ({ path, get: (...a) => ref.get(...a), onSnapshot: (...a) => ref.onSnapshot(...a),
     where: (...a) => ref.where(...a), orderBy: (...a) => ref.orderBy(...a), limit: (...a) => ref.limit(...a),
     doc: id => { const d = id === undefined ? ref.doc() : ref.doc(id); return wrapDoc(d, path + '/' + d.id); },
-    add: (...a) => isAdmin ? ref.add(...a) : deny() });
+    add: (...a) => isAdmin || acting() ? ref.add(...a) : deny() });
   return { doc: p => wrapDoc(raw.doc(p), p), collection: p => wrapCol(raw.collection(p), p) };
 }
 // Firebase: Authentication holds the logins, Firestore holds the portal data, security rules decide who may write what.
@@ -1853,7 +1862,7 @@ function watchMine(){
   watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
   watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
-  watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); });
+  watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); try { renderHomeLeave(); } catch (e) {} });
   watch('myCarryReq', db.doc('carryReq/' + me.key), s => { carryReqMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
   watch('myCarryAppr', db.doc('carryAppr/' + me.key), s => { carryApprMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
   watch('myOtReq', db.doc('otRequests/' + me.key), s => { otReqMine = s.exists ? s.data() : null; renderClock(); });
@@ -2190,18 +2199,19 @@ const epShow = (f, v, ctx, reveal) => { if (v == null || v === '') return null;
   if (f[2] === 'date') { const d = new Date(v + 'T00:00:00'); return isNaN(d) ? v : d.toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}); }
   if (f[2] === 'acno' && !reveal) return '•••• ' + String(v).slice(-4);
   return String(v); };
-const canEdit = (ctx, f) => ctx.admin || f[3] !== 'acct';
+const canEdit = (ctx, f) => ctx.admin || acting() || f[3] !== 'acct';
 function epPhoto(acct, info, mine){ const ph = info && info.photo;
   return `<div class="ep-photo">${ph ? `<img src="${esc(ph)}" alt="">` : `<div class="av big" style="background:hsl(${hue(acct.name)} 45% 62%)">${esc(initials(acct.name))}</div>`}${mine ? `<label title="Update photo"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6.5h3l1.5-2h5l1.5 2h3v10H3z"/><circle cx="10" cy="11" r="3"/></svg><input type="file" accept="image/*" data-ep-photo></label>` : ''}</div>`; }
 
 const acctOf = key => accounts.find(a => a.key === key) || (me && me.key === key ? me : null);
-const isLocked = key => { const a = acctOf(key); return !!(a && a.profileLock === true); };
+const isLocked = key => { if (acting()) return false; const a = acctOf(key); return !!(a && a.profileLock === true); };
 const fmtDT = t => t ? new Date(t).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) : '';
 function epLockBar(ctx){ const lk = ctx.admin ? ctx.acct.profileLock === true : isLocked(ctx.key), rq = ctx.req || null, st = rq && rq.status;
   if (ctx.admin) {
     const pend = st === 'pending' ? `<div class="ep-lt" style="flex-basis:100%"><b>📝 ${esc(ctx.acct.name)} asked to change their details</b>${esc(rq.reason || 'No reason given')} <small class="hint">· ${fmtDT(rq.at)}</small></div>` : st === 'done' ? `<div class="ep-lt" style="flex-basis:100%"><b>✓ ${esc(ctx.acct.name)} has finished their changes</b><small class="hint">${fmtDT(rq.doneAt)}. Check the details, then lock them again.</small></div>` : '';
     return `<div class="ep-lock ${lk ? 'locked' : 'open'}">${pend}<div class="ep-lt"><b>${lk ? '🔒 Locked: the employee can\'t change these details' : '🔓 Open: the employee can change these details'}</b>${lk ? 'Unlock to let them update something.' : 'Lock them once the details are complete and checked.'}</div>
       <div class="acts">${st === 'pending' ? `<button class="btn btn-gem" type="button" data-ep-lock="approve">Approve and unlock</button><button class="btn btn-ghost" type="button" data-ep-lock="decline">Decline</button>` : lk ? '<button class="btn btn-gem" type="button" data-ep-lock="unlock">Unlock for the employee</button>' : '<button class="btn btn-gem" type="button" data-ep-lock="lock">🔒 Lock changes</button>'}</div></div>`; }
+  if (acting()) return `<div class="ep-lock open"><div class="ep-lt"><b>🛠 Admin access: acting as ${esc(ctx.acct.name)}</b>Every section is open for you to edit, including the details only admins can change${ctx.acct.profileLock ? '. Their details stay locked for them' : ''}.</div></div>`;
   if (lk) { if (st === 'pending') return `<div class="ep-lock locked"><div class="ep-lt"><b>⏳ Request sent, waiting for Project Manager approval</b>You asked on ${fmtDT(rq.at)}: “${esc(rq.reason || '')}”</div><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="cancel">Cancel request</button></div></div>`;
     return `<div class="ep-lock locked"><div class="ep-lt"><b>🔒 Your details are locked</b>${st === 'declined' ? `Your last request was declined${rq.note ? ': “' + esc(rq.note) + '”' : ''}. ` : ''}Need to change something, like new bank details? Ask your Project Manager for access.</div><div class="acts"><button class="btn btn-gem" type="button" data-ep-lock="ask">Request access to update</button></div>
       <form data-ep-ask hidden><label for="epAskWhy" style="font-weight:600">What do you need to change, and why?</label><textarea id="epAskWhy" rows="2" maxlength="300" placeholder="e.g. I changed my bank account, I need to update the bank details and passbook copy"></textarea><p class="msg err" data-ep-askerr hidden></p><div class="acts"><button class="btn btn-ghost" type="button" data-ep-lock="askno">Cancel</button><button class="btn btn-gem" type="submit">Send request</button></div></form></div>`; }
@@ -2242,7 +2252,7 @@ function renderEP(el, ctx){ if (!el) return; el._ctx = ctx; const ed = epEditing
     return `<section class="ep-sec" data-ep-sec="${S.k}"><div class="ep-hd"><h3>${ic}${S.t}</h3>${when}${editable && ed !== S.k ? `<button class="ep-ed" type="button" data-ep-edit="${S.k}"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13.5 3.5l3 3L7 16H4v-3z"/></svg>Edit</button>` : ''}</div><div class="ep-bd">${body}</div></section>`; }).join('');
   el.insertAdjacentHTML('afterbegin', epLockBar(ctx));
 }
-const epWho = () => me ? me.name : 'Admin';
+const epWho = () => me ? (acting() ? actReal.name + ' (as ' + me.name + ')' : me.name) : 'Admin';
 async function epSaveInfo(ctx, vals, sec){ const ref = db.doc('empInfo/' + ctx.key), now = new Date().toISOString();
   const next = {...(ctx.info || {}), ...vals, email: ctx.key, name: ctx.acct.name, updatedAt: now}; if (sec) { next['at_' + sec] = now; next['by_' + sec] = epWho(); }
   await ref.set(next); ctx.info = next; }
@@ -2334,7 +2344,7 @@ $('hlList').addEventListener('click', async e => { const b = e.target.closest('[
   try { await db.doc('holidays/' + yr).set({year: +yr, items, updatedAt: new Date().toISOString()}); toast('Holiday removed'); } catch (x) { toast('Couldn\'t remove it. Try again.'); } });
 const decisionOf = q => decisions.find(d => d.key === (q._src || (me && me.key)) + '~' + q.id);
 ['rqFrom','rqTo'].forEach(id => $(id).addEventListener('change', () => { const f = $('rqFrom').value, t = $('rqTo').value || f; if (f && t >= f) $('rqDays').value = workdays(f, t); }));
-async function saveReqs(list){ await db.doc('leaveRequests/' + me.key).set({email: me.email, name: me.name, requests: list, updatedAt: new Date().toISOString()}); }
+async function saveReqs(list){ await db.doc('leaveRequests/' + me.key).set({email: me.email, name: me.name, requests: list, ...(myReqDoc && myReqDoc.seen ? {seen: myReqDoc.seen} : {}), updatedAt: new Date().toISOString()}); }
 $('rqForm').addEventListener('submit', async e => {
   e.preventDefault(); if (!me) return;
   const f = $('rqFrom').value, t = $('rqTo').value || f, err = $('rqErr'), btn = $('rqBtn'), fail = m => { err.textContent = m; err.hidden = false; };
@@ -2342,10 +2352,10 @@ $('rqForm').addEventListener('submit', async e => {
   if (canWrite === false) return fail(VIEW_ONLY);
   if (!f) return fail('Pick the first day of your leave.');
   if (t < f) return fail('The end date is before the start date. Pick an end date on or after ' + fmtDay(f) + '.');
-  if (f < todayStr()) return fail('Leave can\'t start in the past. Ask your admin to record past leave for you.');
+  if (f < todayStr() && !acting()) return fail('Leave can\'t start in the past. Ask your admin to record past leave for you.');
   const days = workdays(f, t); if (!days) return fail('That range has no working days. Pick at least one weekday.');
   if (myReqs().some(q => !(decisionOf(q) && ['Rejected', 'Cancelled'].includes(decisionOf(q).status)) && q.from <= t && q.to >= f)) return fail('You already have a request covering some of these days.');
-  if ($('rqType').value === 'Compensation') { const left = compGiven(me) - compUsed(me) - myReqs().filter(q => q.type === 'Compensation' && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
+  if ($('rqType').value === 'Compensation' && !acting()) { const left = compGiven(me) - compUsed(me) - myReqs().filter(q => q.type === 'Compensation' && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
     if (left <= 0) return fail('You have no compensation leave to use. It is added by your admin when you work an extra day.'); if (days > left) return fail('You have ' + left + ' compensation day' + (left === 1 ? '' : 's') + ' left, but this request is for ' + days + '.'); }
   err.hidden = true; btn.disabled = true; btn.textContent = 'Sending…';
   const all = JSON.parse(JSON.stringify((myReqDoc && myReqDoc.requests) || []));
@@ -2384,7 +2394,7 @@ function renderHours(){
     $('hStatusL').textContent = 'Working right now'; $('hStatus').textContent = working + (working === 1 ? ' person' : ' people');
   }
 }
-function renderHome(){
+function renderHome(){ try { renderHomeLeave(); } catch (e) { console.error(e); }
   try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
@@ -3328,7 +3338,7 @@ const ACK_KEYS = PROJ.flatMap(p => p.pages);
 const QUIZ_OF = {bzipbrief: 'zp-quiz', bnamebrief: 'ng-quiz'};   // pages with a practice that must be passed at 100%
 const projOf = k => PROJ.find(p => p.pages.includes(k));
 // what still blocks accepting page k: earlier pages of the same project (with content) not accepted, or its practice not passed
-function ackBlock(k){ const p = projOf(k); if (!p) return [];
+function ackBlock(k){ const p = projOf(k); if (!p || acting()) return [];
   const out = p.pages.slice(0, p.pages.indexOf(k)).filter(q => ackVer(q) && ackState(ackMine, q) !== 'ok').map(q => 'accept ' + ACK_NAMES[q] + ' first');
   const qc = QUIZ_OF[k]; if (qc && document.querySelector('#gdDoc .' + qc) && !(window.__qzDone || {})[qc]) out.push('answer every practice case on this page correctly (' + ((window.__qzN || {})[qc] || 0) + ' of ' + ((window.__qzT || {})[qc] || '?') + ' correct)');
   return out; }
@@ -3801,12 +3811,12 @@ function renderBriefAck(){ const box = $('bfAck'); if (!box) return; if (!me) { 
   // a read-and-accept strip at the end of every page
   document.querySelectorAll('.bf-pane').forEach(pn => { const k = pn.dataset.p, nm = (BRIEF_PAGES.find(x => x[0] === k) || [])[1]; if (!nm) return; let el = pn.querySelector(':scope > .bf-pack'); if (!el) { el = document.createElement('div'); el.className = 'bf-pack'; pn.appendChild(el); }
     if (parts[k]) { el.className = 'bf-pack ok'; el.innerHTML = `<span>✓ You accepted “${nm}” on ${ackFmt(parts[k])}</span>`; return; }
-    const needQuiz = k === 'quiz' && qn < QUIZ_MIN(); el.className = 'bf-pack';
+    const needQuiz = k === 'quiz' && qn < QUIZ_MIN() && !acting(); el.className = 'bf-pack';
     el.innerHTML = `<label class="ack-chk"><input type="checkbox" data-pk="${k}" ${needQuiz ? 'disabled' : ''}> I have read and understood the “${nm}” page.</label>${needQuiz ? `<small class="hint">Answer all ${QUIZ_MIN()} practice cases correctly first (${qn} of ${QUIZ_MIN()} correct). A wrong answer comes back later until you get it right.</small>` : ''}<button class="btn btn-gem" type="button" data-pkb="${k}" disabled>Accept this page</button>`; });
   document.querySelectorAll('#bfTabs [data-t]').forEach(b => { b.classList.toggle('done', !!parts[b.dataset.t]); });
   const a = ackMine && ackMine.pages && ackMine.pages.brief;
   if (a && a.v === BRIEF_VER) { box.innerHTML = `<div class="ack-ok">✓ You accepted the Benchmarking Briefing on ${ackFmt(a.at)}</div>`; return; }
-  const needIntro = ackVer('bintro') && ackState(ackMine, 'bintro') !== 'ok', all = done.length === BRIEF_PAGES.length && !needIntro;
+  const needIntro = !acting() && ackVer('bintro') && ackState(ackMine, 'bintro') !== 'ok', all = done.length === BRIEF_PAGES.length && !needIntro;
   box.innerHTML = `<h3>Read and accept the briefing</h3><div class="bf-prog"><div class="bar"><i style="width:${done.length / BRIEF_PAGES.length * 100}%"></i></div><span>${done.length} of ${BRIEF_PAGES.length} pages accepted</span></div>
     <div class="bf-plist">${BRIEF_PAGES.map(([k, nm], i) => `<button type="button" class="${parts[k] ? 'ok' : ''}" data-goto="${k}">${parts[k] ? '✓' : i + 1} ${nm}</button>`).join('')}</div>
     <label class="ack-chk"><input type="checkbox" id="bfChk" ${all ? '' : 'disabled'}> I have read and understood the whole Benchmarking Briefing, and I will follow it in my work.</label>
@@ -3819,6 +3829,29 @@ document.addEventListener('click', async e => { const b = e.target.closest('[dat
   try { await saveBrief({brief_parts: {v: BRIEF_VER, parts}}); renderBriefAck(); const nx = BRIEF_PAGES.find(([q]) => !parts[q]);
     toast(nx ? 'Page accepted. Next: ' + nx[1] : 'All pages accepted. You can now accept the briefing below.'); if (nx && window.__bfShowTab) { window.__bfShowTab(nx[0]); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); } }
   catch (x) { b.disabled = false; b.textContent = 'Accept this page'; toast('That couldn\'t be saved. Try again.'); } });
+/* ---------- employee Home: leave updates to acknowledge ---------- */
+// one line per decision on the employee's leave; "Got it" stores the version seen in their own leaveRequests doc
+const lvVer = d => [d.status, d.from, d.to, d.type, d.decidedAt || '', d.cancelled ? d.cancelled.at : ''].join('|');
+function lvUpdates(){ if (!me) return []; const seen = (myReqDoc && myReqDoc.seen) || {}, cut = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+  const dec = decisions.filter(d => d.email === me.email && d.status !== 'Pending' && (d.to >= cut || d.sugg) && seen[d.key] !== lvVer(d)).sort((a, b) => String(b.decidedAt || '').localeCompare(String(a.decidedAt || '')));
+  const pend = myReqs().filter(q => !decisionOf(q) || decisionOf(q).status === 'Pending').filter(q => q.to >= todayStr()); return {dec, pend}; }
+function renderHomeLeave(){ const box = $('hmLeave'); if (!box) return; const u = lvUpdates(); if (!me || !u.dec) { box.hidden = true; return; }
+  const rg = x => fmtDay(x.from) + (x.to !== x.from ? ' – ' + fmtDay(x.to) : ''), dl = x => x.days + ' working day' + (x.days === 1 ? '' : 's');
+  const row = d => { let ic = '✅', head = 'Approved', body = rg(d) + ' · ' + dl(d), cls = 'ok', act = `<button type="button" class="btn btn-gem" data-lvseen="${esc(d.key)}">Got it</button>`;
+    if (d.sugg) { ic = '📅'; head = 'New dates suggested'; cls = 'warn'; body = `${esc(d.sugg.by || 'Your admin')} suggests ${rg(d.sugg)} (${dl(d.sugg)}) instead of ${rg(d)}: ${esc(d.sugg.why)}`; act = `<button type="button" class="btn btn-gem" data-sgans="accept" data-k="${esc(d.key)}">Accept new dates</button><button type="button" class="btn btn-ghost" data-sgans="decline" data-k="${esc(d.key)}">Keep my dates</button>`; }
+    else if (d.status === 'Rejected') { ic = '✕'; head = 'Not approved'; cls = 'off'; body += d.note ? ' · ' + esc(d.note) : ''; }
+    else if (d.status === 'Cancelled') { ic = '🚫'; head = 'Cancelled by ' + esc((d.cancelled && d.cancelled.by) || 'admin'); cls = 'off'; body += (d.cancelled ? ': ' + esc(d.cancelled.why) : '') + ' · days returned to your balance'; }
+    else if (d.changed) { ic = '✎'; head = 'Approved with changed dates'; body += ` · was ${rg(d.changed)}: ${esc(d.changed.why)}`; }
+    else if (String(d.key).startsWith('adm~')) head = 'Recorded by your admin';
+    return `<div class="hl-it ${cls}"><span class="hl-ic">${ic}</span><div><b>${head} · ${esc(d.type)} leave</b><span>${body}</span></div><div class="hl-act">${act}</div></div>`; };
+  const prow = q => `<div class="hl-it info"><span class="hl-ic">⏳</span><div><b>Waiting for approval · ${esc(q.type)} leave</b><span>${rg(q)} · ${dl(q)}</span></div></div>`;
+  box.hidden = !u.dec.length && !u.pend.length; $('hmLeaveList').innerHTML = u.dec.map(row).join('') + u.pend.map(prow).join(''); }
+async function markLeaveSeen(keys){ if (!me || !keys.length) return; const seen = {...((myReqDoc && myReqDoc.seen) || {})};
+  keys.forEach(k => { const d = decisions.find(x => x.key === k); if (d) seen[k] = lvVer(d); });
+  const doc = {email: me.email, name: me.name, requests: JSON.parse(JSON.stringify((myReqDoc && myReqDoc.requests) || [])), seen, updatedAt: new Date().toISOString()};
+  await db.doc('leaveRequests/' + me.key).set(doc); myReqDoc = doc; renderHomeLeave(); }
+document.addEventListener('click', async e => { const b = e.target.closest('[data-lvseen]'); if (!b || !me) return; b.disabled = true;
+  try { await markLeaveSeen([b.dataset.lvseen]); toast('Saved in Time Off Management › Leave history'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } });
 /* ---------- confirm pop-up ---------- */
 function confirmDlg(title, msg, ok){ return new Promise(res => { const d = $('cfDlg'); $('cfT').textContent = title; $('cfMsg').textContent = msg; $('cfOk').textContent = ok || 'OK';
   const done = v => { d.close(); $('cfOk').onclick = $('cfNo').onclick = null; d.oncancel = null; res(v); };
@@ -3883,7 +3916,7 @@ document.addEventListener('click', async e => { const b = e.target.closest('[dat
   const {key, ...rest} = d; delete rest.sugg; const now = new Date().toISOString();
   const doc = ok ? {...rest, type: s.type, from: s.from, to: s.to, days: s.days, status: 'Approved', reply: {answer: 'accepted', at: now, note: '', sugg: s}}
                  : {...rest, status: d.prevStatus || 'Approved', reply: {answer: 'declined', at: now, note, sugg: s}};
-  b.disabled = true; try { await db.doc('leaveDecision/' + key).set(doc); toast(ok ? 'New dates accepted' : 'You kept your dates. Your admin will see your answer.'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } });
+  b.disabled = true; try { await db.doc('leaveDecision/' + key).set(doc); toast(ok ? 'New dates accepted' : 'You kept your dates. Your admin will see your answer.'); setTimeout(() => { const nd = decisions.find(x => x.key === key); if (nd && !nd.sugg) markLeaveSeen([key]).catch(() => {}); }, 600); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } });
 /* ---------- admin: one-time import from the old portal ---------- */
 $('impFile').addEventListener('change', async e => {
   const f = e.target.files[0], m = $('impMsg'), out = $('impCreds'); if (!f || !isAdmin) return;
