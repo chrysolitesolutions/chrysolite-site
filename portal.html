@@ -625,6 +625,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .tc-nav{display:flex;align-items:center;gap:8px}.tc-nav b{min-width:130px;text-align:center}
 .tc-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12.5px;color:var(--ink-soft)}.tc-legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-2px}
 .tc-legend .lv::before{background:color-mix(in srgb,var(--s2) 55%,var(--surface))}.tc-legend .pd::before{border:1.5px dashed #c98a00}.tc-legend .hol::before{background:#fde8c4}.tc-legend .we::before{background:var(--surface-2)}
+.tc-d .p.adj{cursor:pointer}.tc-d .p.adj:hover{outline:2px solid var(--gem);outline-offset:1px}
 .tc-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.tc-h{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);text-align:center;padding:4px 0}
 .tc-d{min-height:92px;border:1px solid var(--line);border-radius:10px;padding:6px;display:grid;align-content:start;gap:3px;background:var(--surface);font-size:12px;min-width:0}
 .tc-d.we{background:var(--surface-2)}.tc-d.hol{background:#fff4e0;border-color:#f2c879}.tc-d.out{opacity:.35}.tc-d.today{box-shadow:0 0 0 2px var(--gem)}
@@ -938,11 +939,11 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .act-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.act-row select{min-width:240px;flex:1}
 /* admin: change or suggest leave dates */
 .ladj-dlg{width:min(560px,calc(100vw - 24px))}.ladj-dlg form{display:grid;gap:12px}
-.ladj-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ladj-mode label{display:grid;gap:2px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px}
-.ladj-mode label b{font-size:14px}.ladj-mode label:has(input:checked){border-color:var(--gem);background:rgba(155,181,42,.1)}.ladj-mode input{position:absolute;opacity:0}
+.ladj-mode{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.ladj-mode label[hidden]{display:none}.ladj-dlg.cx .ladj-dt{display:none}.ladj-dlg.cx #ladjSave{background:#C2412D!important;background-image:none!important;color:#fff!important;box-shadow:none}.ladj-dlg{overflow-x:hidden}.ladj-mode label{display:grid;gap:2px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px}
+.ladj-mode label b{font-size:14px}.ladj-mode label:has(input:checked){border-color:var(--gem);background:rgba(155,181,42,.1)}.ladj-mode label{position:relative}.ladj-mode input{position:absolute;opacity:0;top:8px;left:8px;width:1px;height:1px}
 .ladj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ladj-grid .full{grid-column:1/-1}
 .lv-sugg{grid-column:1/-1;margin-top:6px;padding:10px 12px;border-radius:12px;background:#FFF6DB;border:1px solid #F0D68A;color:#5A4500;font-size:13.5px;display:grid;gap:8px}
-.ev .lv-sugg .acts{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:0}.ev .lv-sugg span{display:inline;margin:0}.ev .lv-sugg .btn{padding:7px 16px;font-size:13.5px}.lv-chg{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.ev .lv-sugg .acts{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:0}.ev .lv-sugg span{display:inline;margin:0}.ev .lv-sugg .btn{padding:7px 16px;font-size:13.5px}.lv-chg{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:2px}.lv-chg.lv-cx{color:#B23A26}
 .ev.has-sugg{flex-wrap:wrap}.ev.has-sugg .lv-sugg{flex-basis:100%}
 
 </style>
@@ -1233,7 +1234,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
         <div class="panel"><h3>Leave history</h3><p class="hint" style="margin:-4px 0 12px">Every leave you requested or the admin recorded for you, newest first.</p><div class="timeline" id="rqList"></div></div>
       </div>
       <div class="panel" id="toTeam"><div class="vhead" style="margin:0 0 10px"><h3 style="margin:0">Team calendar</h3><div class="row tc-nav"><button class="mini" type="button" id="tcPrev">‹ Prev</button><b id="tcTitle"></b><button class="mini" type="button" id="tcNext">Next ›</button><button class="mini" type="button" id="tcToday">Today</button></div></div>
-        <div class="tc-legend"><span class="lv">On leave</span><span class="pd admin-only" hidden>Pending request</span><span class="hol">Holiday</span><span class="we">Weekend</span></div>
+        <p class="hint admin-only" hidden style="margin:-4px 0 8px">Admins: click a name on the calendar to approve, change, suggest other dates or cancel that leave.</p><div class="tc-legend"><span class="lv">On leave</span><span class="pd admin-only" hidden>Pending request</span><span class="hol">Holiday</span><span class="we">Weekend</span></div>
         <div class="tc-grid" id="tcGrid"></div></div>
       <div class="two">
         <div class="panel"><h3>People on leave, next 30 days</h3><div class="chart" id="cLeave30p"></div></div>
@@ -1666,13 +1667,13 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 <dialog class="pw-dlg cf-dlg" id="cfDlg" aria-labelledby="cfT"><h3 id="cfT"></h3><p id="cfMsg"></p><div class="cf-acts"><button type="button" class="cf-ok" id="cfOk">OK</button><button type="button" class="cf-no" id="cfNo">Cancel</button></div></dialog>
 <dialog class="pw-dlg ladj-dlg" id="ladjDlg" aria-labelledby="ladjT"><form id="ladjForm" novalidate>
   <h3 id="ladjT" style="margin:0">Change leave</h3><p class="hint" id="ladjWho" style="margin:0"></p>
-  <div class="ladj-mode"><label><input type="radio" name="ladjM" value="change" checked><b>Change the dates</b><span class="hint">Takes effect now. The employee sees the change and your reason.</span></label><label><input type="radio" name="ladjM" value="suggest"><b>Suggest other dates</b><span class="hint">The employee accepts or keeps their dates.</span></label></div>
-  <div class="ladj-grid"><div class="f"><label for="ladjType">Type</label><select id="ladjType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
-    <div class="f"><label for="ladjDays">Working days</label><input id="ladjDays" type="number" readonly></div>
-    <div class="f"><label for="ladjFrom">From</label><input id="ladjFrom" type="date"></div><div class="f"><label for="ladjTo">To</label><input id="ladjTo" type="date"></div>
+  <div class="ladj-mode"><label><input type="radio" name="ladjM" value="change" checked><b>Change the dates</b><span class="hint">Takes effect now. The employee sees the change and your reason.</span></label><label><input type="radio" name="ladjM" value="suggest"><b>Suggest other dates</b><span class="hint">The employee accepts or keeps their dates.</span></label><label id="ladjCxL"><input type="radio" name="ladjM" value="cancel"><b>Cancel this leave</b><span class="hint">Removed from the calendars. The days go back to the employee's balance.</span></label></div>
+  <div class="ladj-grid"><div class="f ladj-dt"><label for="ladjType">Type</label><select id="ladjType"><option>Annual</option><option>Sick</option><option>Personal</option><option>Compensation</option><option>Unpaid</option></select></div>
+    <div class="f ladj-dt"><label for="ladjDays">Working days</label><input id="ladjDays" type="number" readonly></div>
+    <div class="f ladj-dt"><label for="ladjFrom">From</label><input id="ladjFrom" type="date"></div><div class="f ladj-dt"><label for="ladjTo">To</label><input id="ladjTo" type="date"></div>
     <div class="f full"><label for="ladjWhy">Short explanation for the employee</label><input id="ladjWhy" maxlength="200" placeholder="e.g. Project deadline that week. Could you take the following week?"></div></div>
   <div class="msg err" id="ladjErr" hidden></div>
-  <div class="row" style="justify-content:flex-end;gap:10px"><button class="btn btn-ghost" type="button" id="ladjX">Cancel</button><button class="btn btn-gem" type="submit" id="ladjSave">Save change</button></div>
+  <div class="row" style="justify-content:flex-end;gap:10px;flex-wrap:wrap"><span id="ladjDec" style="margin-right:auto;display:flex;gap:8px"><button class="mini ok-btn" type="button" data-ladjdec="Approved">Approve as requested</button><button class="mini danger" type="button" data-ladjdec="Rejected">Reject</button></span><button class="btn btn-ghost" type="button" id="ladjX">Close</button><button class="btn btn-gem" type="submit" id="ladjSave">Save change</button></div>
 </form></dialog>
 <dialog class="pw-dlg" id="pwDlg" aria-labelledby="pwDlgT">
   <form method="dialog" id="pwDlgForm" novalidate>
@@ -2100,8 +2101,8 @@ function renderLeave(){ try { renderComp(); } catch (e) {} try { renderTimeOff()
     b.hidden = !pend.length; b.textContent = pend.length;
   } else b.hidden = true;
   const up = approved().filter(d => d.to >= todayStr()).sort((a,b) => a.from.localeCompare(b.from));
-  if ($('leaveList2')) $('leaveList2').innerHTML = up.length ? up.map((d, i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button>` : ''}${d.sugg ? '<span class="pill warn">Suggestion sent</span>' : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave booked for the team.</p>';
-  $('leaveList').innerHTML = up.length ? up.map((d,i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button><button class="mini danger" data-undo="${esc(d.key)}">Remove</button>` : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave.</p>';
+  if ($('leaveList2')) $('leaveList2').innerHTML = up.length ? up.map((d, i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button><button class="mini danger" data-adj="dec" data-mode="cancel" data-k="${esc(d.key)}">Cancel leave</button>` : ''}${d.sugg ? '<span class="pill warn">Suggestion sent</span>' : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave booked for the team.</p>';
+  $('leaveList').innerHTML = up.length ? up.map((d,i) => evRow(d, `<div class="acts">${isAdmin ? `<button class="mini" data-adj="dec" data-k="${esc(d.key)}">Change / suggest</button><button class="mini danger" data-adj="dec" data-mode="cancel" data-k="${esc(d.key)}">Cancel leave</button>` : ''}<span class="pill ok">Approved</span></div>`, i)).join('') : '<p class="empty">No upcoming leave.</p>';
 }
 ['lvFrom','lvTo'].forEach(id=>$(id).addEventListener('change',()=>{ const f=$('lvFrom').value,t=$('lvTo').value||f; if(f&&t>=f) $('lvDays').value=workdays(f,t); }));
 $('lvForm').addEventListener('submit', async e => {
@@ -2148,15 +2149,15 @@ function renderProfile(){
   { const ctx = {key: me.key, acct: acctOf(me.key) || me, info: empInfoMine || {}, docs: empDocsMine || {}, pay: payMine, admin: false, req: profReqMine}, el = $('epMine');
     if (epEditing.epMine && el.querySelector('[data-ep-form]')) el._ctx = ctx; else renderEP(el, ctx); }
   const year = new Date().getFullYear(), mine = myLeave(), allow = allowOf(me), used = t => mine.filter(d => d.type === t && d.from.slice(0,4) == year).reduce((a,d) => a + (d.days||0), 0);
-  const pendDays = t => myReqs().filter(q => q.type === t && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
+  const pendDays = t => myReqs().filter(q => q.type === t && (!decisionOf(q) || decisionOf(q).status === 'Pending')).reduce((a, q) => a + (q.days || 0), 0);
   $('profBalYear').textContent = year;
   $('profBal').innerHTML = Object.keys(DEF_ALLOW).map(t => { const tot = +allow[t] || 0, u = used(t), left = Math.max(0, tot - u), pc = tot ? left / tot * 100 : 0, pd = pendDays(t);
     return `<div class="bal"><div class="top"><span><b>${t}</b></span><span class="mono"><b>${left}</b> of ${tot} left</span></div><div class="bar"><i style="width:${pc}%"></i></div><div class="bal-sub"><span>${u} used</span>${pd ? `<span class="pd">${pd} pending</span>` : ''}</div></div>`; }).join('') + compBal(me, pendDays);
   const reqs = [...myReqs()].sort((a, b) => String(b.from).localeCompare(String(a.from)));
-  $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? (d.status === 'Suggested' ? 'New dates suggested' : d.status) : 'Pending', base = d && d.status === 'Approved' ? {...q, type: d.type, from: d.from, to: d.to, days: d.days} : q;
-    return lvSuggRow(evRow({...base, name: 'You'}, `<div class="acts">${!d || d.status === 'Pending' ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' ? 'off' : 'warn'}">${st}</span></div>`, i), d); }).join('') : '';
-  { const linked = new Set(reqs.map(q => { const d = decisionOf(q); return d && d.key; }).filter(Boolean)), rec = myLeave().filter(d => !linked.has(d.key));
-    $('rqList').innerHTML += rec.map((d, i) => lvSuggRow(evRow({...d, name: 'You'}, '<div class="acts"><span class="pill info">Recorded by admin</span><span class="pill ok">Approved</span></div>', i), d)).join('');
+  $('rqList').innerHTML = reqs.length ? reqs.map((q, i) => { const d = decisionOf(q), st = d ? (d.status === 'Suggested' ? 'New dates suggested' : d.status) : 'Pending', base = d && (d.status === 'Approved' || d.status === 'Cancelled') ? {...q, type: d.type, from: d.from, to: d.to, days: d.days} : q;
+    return lvSuggRow(evRow({...base, name: 'You'}, `<div class="acts">${!d || d.status === 'Pending' ? `<button class="mini danger" data-cancel="${esc(q.id)}">Cancel</button>` : ''}<span class="pill ${st === 'Approved' ? 'ok' : st === 'Rejected' || st === 'Cancelled' ? 'off' : 'warn'}">${st}</span></div>`, i), d); }).join('') : '';
+  { const linked = new Set(reqs.map(q => { const d = decisionOf(q); return d && d.key; }).filter(Boolean)), rec = decisions.filter(d => d.email === me.email && (d.status === 'Approved' || (d.status === 'Cancelled' && d.key.startsWith('adm~'))) && !linked.has(d.key)).sort((a, b) => b.from.localeCompare(a.from));
+    $('rqList').innerHTML += rec.map((d, i) => lvSuggRow(evRow({...d, name: 'You'}, `<div class="acts"><span class="pill info">Recorded by admin</span><span class="pill ${d.status === 'Cancelled' ? 'off">Cancelled' : 'ok">Approved'}</span></div>`, i), d)).join('');
     const ns = decisions.filter(d => d.email === me.email && d.sugg).length; $('lvSuggMsg').hidden = !ns; $('lvSuggMsg').innerHTML = ns ? `<b>Your admin suggested new dates for ${ns} leave ${ns === 1 ? 'request' : 'requests'}.</b> See Leave history below to accept them or keep your dates.` : '';
     if (!$('rqList').innerHTML) $('rqList').innerHTML = '<p class="empty">No leave yet. Apply for leave above.</p>'; }
 }
@@ -2309,7 +2310,8 @@ function renderTeamCal(){ const g = $('tcGrid'); if (!g) return; const y = tcMon
   const ap = approved(), pend = isAdmin ? pendingAll() : [], today = todayStr(), cells = [];
   for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { const k = ymd(d), w = d.getDay(), h = holOn(k);
     const on = ap.filter(x => x.from <= k && x.to >= k), pd = pend.filter(x => x.from <= k && x.to >= k), names = new Set();
-    const chip = (x, cls) => { if (names.has(x.email + cls)) return ''; names.add(x.email + cls); const first = String(x.name || x.email).split(' ')[0]; return `<span class="p ${cls}${me && x.email === me.email ? ' me' : ''}" title="${esc((x.name || x.email) + ' · ' + (x.type || 'Leave') + (cls ? ' (pending)' : ''))}">${esc(first)}</span>`; };
+    const chip = (x, cls) => { if (names.has(x.email + cls)) return ''; names.add(x.email + cls); const first = String(x.name || x.email).split(' ')[0]; const adm = !isAdmin ? '' : cls ? ` role="button" tabindex="0" data-adj="req" data-u="${esc(x.uid)}" data-id="${esc(x.id)}"` : ` role="button" tabindex="0" data-adj="dec" data-k="${esc(x.key)}"`;
+      return `<span class="p ${cls}${me && x.email === me.email ? ' me' : ''}${adm ? ' adj' : ''}"${adm} title="${esc((x.name || x.email) + ' · ' + (x.type || 'Leave') + ' · ' + fmtDay(x.from) + (x.to !== x.from ? ' – ' + fmtDay(x.to) : '') + (cls ? ' (pending)' : '') + (adm ? ' · click to approve, change or cancel' : ''))}">${esc(first)}</span>`; };
     cells.push(`<div class="tc-d${w === 0 || w === 6 ? ' we' : ''}${h ? ' hol' : ''}${d.getMonth() !== m ? ' out' : ''}${k === today ? ' today' : ''}"><b>${d.getDate()}</b>${h ? `<span class="h">${esc(h.name)}</span>` : ''}${on.map(x => chip(x, '')).join('')}${pd.map(x => chip(x, 'pd')).join('')}</div>`); }
   g.innerHTML = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div class="tc-h">${x}</div>`).join('') + cells.join(''); }
 function renderHolidays(){ const box = $('hlList'); if (!box) return; $('hlYear').textContent = hlYear; const list = holidays.filter(h => h.date.startsWith(hlYear + '')), today = todayStr();
@@ -2342,7 +2344,7 @@ $('rqForm').addEventListener('submit', async e => {
   if (t < f) return fail('The end date is before the start date. Pick an end date on or after ' + fmtDay(f) + '.');
   if (f < todayStr()) return fail('Leave can\'t start in the past. Ask your admin to record past leave for you.');
   const days = workdays(f, t); if (!days) return fail('That range has no working days. Pick at least one weekday.');
-  if (myReqs().some(q => !(decisionOf(q) && decisionOf(q).status === 'Rejected') && q.from <= t && q.to >= f)) return fail('You already have a request covering some of these days.');
+  if (myReqs().some(q => !(decisionOf(q) && ['Rejected', 'Cancelled'].includes(decisionOf(q).status)) && q.from <= t && q.to >= f)) return fail('You already have a request covering some of these days.');
   if ($('rqType').value === 'Compensation') { const left = compGiven(me) - compUsed(me) - myReqs().filter(q => q.type === 'Compensation' && !decisionOf(q)).reduce((a, q) => a + (q.days || 0), 0);
     if (left <= 0) return fail('You have no compensation leave to use. It is added by your admin when you work an extra day.'); if (days > left) return fail('You have ' + left + ' compensation day' + (left === 1 ? '' : 's') + ' left, but this request is for ' + days + '.'); }
   err.hidden = true; btn.disabled = true; btn.textContent = 'Sending…';
@@ -3842,15 +3844,24 @@ let ladjCtx = null;
 document.addEventListener('click', e => { const b = e.target.closest('[data-adj]'); if (!b || !isAdmin) return; let base, key, prev;
   if (b.dataset.adj === 'req') { const r = requests.find(x => x.uid === b.dataset.u), q = r && (r.requests || []).find(x => x.id === b.dataset.id); if (!q) return; base = {email: q.email || r.email, name: q.name || r.name, type: q.type, from: q.from, to: q.to, days: q.days, note: q.note || ''}; key = r.uid + '~' + q.id; prev = 'Pending'; }
   else { const d = decisions.find(x => x.key === b.dataset.k); if (!d) return; base = {email: d.email, name: d.name, type: d.type, from: d.from, to: d.to, days: d.days, note: d.note || ''}; key = d.key; prev = d.status === 'Suggested' ? (d.prevStatus || 'Pending') : 'Approved'; }
-  ladjCtx = {base, key, prev}; const rng = fmtDay(base.from) + (base.to !== base.from ? ' – ' + fmtDay(base.to) : '');
+  ladjCtx = {base, key, prev, d: b.dataset.adj === 'dec' ? decisions.find(x => x.key === b.dataset.k) : null}; $('ladjCxL').hidden = prev !== 'Approved'; $('ladjDec').hidden = prev !== 'Pending'; $('ladjDec').style.display = prev === 'Pending' ? 'flex' : 'none'; const rng = fmtDay(base.from) + (base.to !== base.from ? ' – ' + fmtDay(base.to) : '');
   $('ladjT').textContent = prev === 'Pending' ? 'Change or suggest dates for a leave request' : 'Change approved leave'; $('ladjWho').textContent = base.name + ' · ' + base.type + ' · now ' + rng + ' (' + base.days + ' working day' + (base.days === 1 ? '' : 's') + ')';
-  $('ladjType').value = base.type; $('ladjFrom').value = base.from; $('ladjTo').value = base.to; $('ladjDays').value = base.days; $('ladjWhy').value = ''; $('ladjErr').hidden = true; document.querySelector('[name="ladjM"][value="change"]').checked = true; ladjMode(); $('ladjDlg').showModal(); });
-const ladjMode = () => { const sg = document.querySelector('[name="ladjM"]:checked').value === 'suggest'; $('ladjSave').textContent = sg ? 'Send suggestion' : (ladjCtx && ladjCtx.prev === 'Pending' ? 'Approve with these dates' : 'Save change'); };
+  $('ladjType').value = base.type; $('ladjFrom').value = base.from; $('ladjTo').value = base.to; $('ladjDays').value = base.days; $('ladjWhy').value = ''; $('ladjErr').hidden = true; document.querySelector(`[name="ladjM"][value="${b.dataset.mode === 'cancel' && prev === 'Approved' ? 'cancel' : 'change'}"]`).checked = true; ladjMode(); $('ladjDlg').showModal(); });
+const ladjMode = () => { const m = document.querySelector('[name="ladjM"]:checked').value, sg = m === 'suggest'; $('ladjDlg').classList.toggle('cx', m === 'cancel'); $('ladjWhy').placeholder = m === 'cancel' ? 'e.g. Urgent client delivery that week. Sorry for the change.' : 'e.g. Project deadline that week. Could you take the following week?'; $('ladjErr').hidden = true;
+  if (m === 'cancel') { $('ladjSave').textContent = 'Cancel this leave'; return; } $('ladjSave').textContent = sg ? 'Send suggestion' : (ladjCtx && ladjCtx.prev === 'Pending' ? 'Approve with these dates' : 'Save change'); };
 document.querySelectorAll('[name="ladjM"]').forEach(r => r.addEventListener('change', ladjMode));
 ['ladjFrom', 'ladjTo'].forEach(id => $(id).addEventListener('change', () => { const f = $('ladjFrom').value, t = $('ladjTo').value || f; if (f && t >= f) $('ladjDays').value = workdays(f, t); }));
 $('ladjX').onclick = () => $('ladjDlg').close();
+$('tcGrid').addEventListener('keydown', e => { const c = e.target.closest('[data-adj]'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); c.click(); } });
+// pending requests opened from the calendar: approve or reject as requested
+$('ladjDlg').addEventListener('click', async e => { const b = e.target.closest('[data-ladjdec]'); if (!b || !ladjCtx || !isAdmin) return; const {base, key} = ladjCtx, st = b.dataset.ladjdec;
+  b.disabled = true; try { await db.doc('leaveDecision/' + key).set({...base, status: st, decidedAt: new Date().toISOString()}); $('ladjDlg').close(); toast((st === 'Approved' ? 'Approved ' : 'Rejected ') + base.name + '\'s ' + String(base.type).toLowerCase() + ' leave'); }
+  catch (x) { toast('That decision couldn\'t be saved. Try again.'); } finally { b.disabled = false; } });
 $('ladjForm').addEventListener('submit', async e => { e.preventDefault(); if (!ladjCtx || !isAdmin) return; const {base, key, prev} = ladjCtx, err = $('ladjErr'), fail = m => { err.textContent = m; err.hidden = false; };
-  const f = $('ladjFrom').value, t = $('ladjTo').value || f, type = $('ladjType').value, why = $('ladjWhy').value.trim().slice(0, 200), sg = document.querySelector('[name="ladjM"]:checked').value === 'suggest';
+  const f = $('ladjFrom').value, t = $('ladjTo').value || f, type = $('ladjType').value, why = $('ladjWhy').value.trim().slice(0, 200), mode = document.querySelector('[name="ladjM"]:checked').value, sg = mode === 'suggest';
+  if (mode === 'cancel') { if (!why) return fail('Write a short reason for the employee.'); const d = ladjCtx.d; if (!d) return; const {key: _k, sugg: _s, ...rest} = d;
+    $('ladjSave').disabled = true; try { await db.doc('leaveDecision/' + key).set({...rest, status: 'Cancelled', cancelled: {why, by: me ? me.name : 'Admin', at: new Date().toISOString()}}); $('ladjDlg').close(); toast('Leave cancelled. ' + d.days + ' day' + (d.days === 1 ? '' : 's') + ' returned to ' + base.name + '\'s balance'); }
+    catch (x) { fail('That couldn\'t be saved. Try again.'); } finally { $('ladjSave').disabled = false; } return; }
   if (!f) return fail('Pick the first day.'); if (t < f) return fail('The end date is before the start date.'); const days = workdays(f, t); if (!days) return fail('That range has no working days.');
   if (!why) return fail('Write a short explanation for the employee.'); if (f === base.from && t === base.to && type === base.type) return fail('The dates and type are the same as now. Change something first.');
   const now = new Date().toISOString(), by = me ? me.name : 'Admin', head = {email: base.email, name: base.name, note: base.note, decidedAt: now};
@@ -3860,7 +3871,8 @@ $('ladjForm').addEventListener('submit', async e => { e.preventDefault(); if (!l
   try { await db.doc('leaveDecision/' + key).set(doc); $('ladjDlg').close(); toast(sg ? 'Suggestion sent to ' + base.name : 'Leave changed for ' + base.name); }
   catch (x) { fail('That couldn\'t be saved. Try again.'); } finally { $('ladjSave').disabled = false; } });
 // employee: see the change or answer the suggestion
-function lvSuggRow(html, d){ if (!d || (!d.sugg && !d.changed)) return html; const rg = x => fmtDay(x.from) + (x.to !== x.from ? ' – ' + fmtDay(x.to) : '');
+function lvSuggRow(html, d){ if (!d || (!d.sugg && !d.changed && !d.cancelled)) return html; const rg = x => fmtDay(x.from) + (x.to !== x.from ? ' – ' + fmtDay(x.to) : '');
+  if (d.status === 'Cancelled' && d.cancelled) { const c = d.cancelled, add = `<span class="lv-chg lv-cx">✕ Cancelled by ${esc(c.by || 'admin')} on ${fmtDay(c.at.slice(0, 10))}: ${esc(String(c.why).replace(/[.\s]+$/, ''))}. ${d.days} day${d.days === 1 ? '' : 's'} returned to your balance.</span>`; return html.replace(/(<div><b>[^]*?<\/span>)(<\/div>)/, (m, x, y) => x + add + y); }
   const add = d.sugg ? `<div class="lv-sugg"><span><b>${esc(d.sugg.by || 'Your admin')} suggests ${rg(d.sugg)}</b> (${esc(d.sugg.type)}, ${d.sugg.days} working day${d.sugg.days === 1 ? '' : 's'}): ${esc(d.sugg.why)}</span>${d.status === 'Approved' ? '<span class="hint">Your current dates stay approved unless you accept.</span>' : ''}<div class="acts"><button type="button" class="btn btn-gem" data-sgans="accept" data-k="${esc(d.key)}">Accept new dates</button><button type="button" class="btn btn-ghost" data-sgans="decline" data-k="${esc(d.key)}">Keep my dates</button></div></div>`
     : `<span class="lv-chg">✎ Changed by ${esc(d.changed.by || 'admin')} from ${rg(d.changed)}${d.changed.type !== d.type ? ' (' + esc(d.changed.type) + ')' : ''}: ${esc(d.changed.why)}</span>`;
   if (d.sugg) return html.replace('class="ev"', 'class="ev has-sugg"').replace(/<\/div>$/, () => add + '</div>');
