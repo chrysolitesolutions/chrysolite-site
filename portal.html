@@ -910,10 +910,10 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 
 <!-- SIGN-IN -->
 <div class="resume-splash" aria-live="polite"><div class="rs-tun" id="rsTun"></div><div class="rs-c"><div class="rs-core"><div class="rs-logo"><img src="logo.png" alt=""></div><div class="rs-txt">Loading your portal<i>...</i></div><div class="rs-bar"><b></b></div><div class="rs-sub">Chrysolite · secure employee portal</div></div></div></div>
-<script>(function(){ if (!document.documentElement.classList.contains('resuming')) return; const t = document.getElementById('rsTun'), r = (a, b) => a + Math.random() * (b - a); let h = '';
+<script>window.__rsBuild = function(){ const t = document.getElementById('rsTun'); if (!t || t.childElementCount) return; const r = (a, b) => a + Math.random() * (b - a); let h = '';
   for (let i = 0; i < 34; i++) { const ang = r(0, 6.283), rad = r(140, 520); h += '<div class="rs-p' + (Math.random() < .2 ? ' o' : '') + '" style="--w:' + r(70, 220) + 'px;--h:' + r(40, 140) + 'px;--x:' + Math.cos(ang) * rad + 'px;--y:' + Math.sin(ang) * rad * .7 + 'px;--t:' + r(3.2, 6) + 's;--d:-' + r(0, 6) + 's"></div>'; }
   for (let i = 0; i < 40; i++) h += '<span class="rs-s" style="--a:' + r(0, 360) + 'deg;--l:' + r(40, 140) + 'px;--c:' + (Math.random() < .25 ? 'rgba(240,140,60,.85)' : 'rgba(42,127,212,.8)') + ';--t:' + r(1.4, 3) + 's;--d:-' + r(0, 3) + 's"></span>';
-  t.innerHTML = h; })();</script>
+  t.innerHTML = h; }; if (document.documentElement.classList.contains('resuming')) window.__rsBuild();</script>
 <section class="login" id="loginView">
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="login-art">
@@ -1875,7 +1875,10 @@ $('loginForm').addEventListener('submit', async e => {
     const a = await loadAccount(key);
     if (!a) { await fbAuth.signOut(); return loginErr('Your login works, but there is no portal profile for this email yet. Ask your admin to add you in Admin.'); }
     if (!a.active) { await fbAuth.signOut(); return loginErr('Your account is turned off. Ask your admin to turn it back on.'); }
-    $('pw').value = ''; showApp(a); try { localStorage.setItem('cs_was_in', '1'); } catch (e) {}
+    $('pw').value = ''; try { localStorage.setItem('cs_was_in', '1'); } catch (e) {}
+    // show the loading animation, open the portal behind it on Home, then reveal it
+    try { window.__rsBuild && window.__rsBuild(); } catch (e) {} document.documentElement.classList.add('resuming');
+    showApp(a); go('home'); setTimeout(() => document.documentElement.classList.remove('resuming'), 2400);
   } catch (err) {
     const c = err && err.code || '';
     if (/invalid-credential|wrong-password|user-not-found|invalid-email|invalid-login/.test(c)) { await new Promise(r => setTimeout(r, 500)); loginErr('That email and password don\'t match an account. Check both, or use "Forgot password?".'); }
