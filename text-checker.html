@@ -117,9 +117,9 @@ html,body{overflow-x:hidden}
 </style></head><body>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Text checker</small></span></div><a class="back" href="portal.html#brief">Benchmarking Briefing →</a></header>
 <main>
-  <div><h1>Text checker</h1><p class="lead">Compare any field (Summary / About, Headline or Job title) in THE FILE SAYS with PUBLIC PROFILE SAYS. See every difference highlighted, the % match, 20 automatic checks and a suggested answer.</p></div>
+  <div><h1>Text checker</h1><p class="lead">Compare any text field (Summary / About, Headline and more) in THE FILE SAYS with PUBLIC PROFILE SAYS. See every difference highlighted, the % match, 20 automatic checks and a suggested answer.</p></div>
 
-        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><div class="sc-seg sc-kind" id="scKind" role="tablist" aria-label="Checker"><button type="button" data-k="text" class="on">Text checker</button><button type="button" data-k="jt">Job title checker</button></div><span class="sc-for" id="scFor">For Summary / About, Headline, Job title and any other text field</span>
+        <div class="panel sc-in"><div class="vhead" style="margin:0;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Text checker</h3><span class="sc-for" id="scFor">For Summary / About, Headline and any other text field · job titles: use the <a href="job-title-checker.html">Job title checker</a></span>
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
           <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
           <div class="sc-grid"><div class="f sc-side so"><label for="scA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><textarea id="scA" rows="7" placeholder="Paste the SeekOut text here (THE FILE SAYS)"></textarea></div></div><div class="f sc-side li"><label for="scB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><textarea id="scB" rows="7" placeholder="Paste the public profile text here (ZIPLabs or LinkedIn)"></textarea></div></div></div>
@@ -333,11 +333,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
           $('scSeeRes').onclick = () => out.scrollIntoView({behavior: 'smooth', block: 'start'}); }, left + 60); }, 40); }
     $('scGo').onclick = go; ['scA', 'scB'].forEach(id => $(id).addEventListener('input', () => { clearTimeout(go.t); stat('wait', 'Text changed: click Compare (updates automatically)'); go.t = setTimeout(go, 600); }));
     $('scCase').onchange = e => { cs = e.target.checked; go(); };
-    $('scKind').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) return; kind = b.dataset.k; $('scKind').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    if ($('scKind')) $('scKind').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) return; kind = b.dataset.k; $('scKind').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
       $('scFor').textContent = kind === 'jt' ? 'Text check plus job title abbreviations (Sr = Senior, Mgr = Manager, SWE = Software Engineer…)' : 'For Summary / About, Headline, Job title and any other text field';
       document.body.classList.toggle('jt-mode', kind === 'jt'); $('scA').placeholder = kind === 'jt' ? 'Paste the SeekOut job title here' : 'Paste the SeekOut text here (THE FILE SAYS)'; $('scB').placeholder = kind === 'jt' ? 'Paste the public profile job title here' : 'Paste the public profile text here (ZIPLabs or LinkedIn)';
       try { history.replaceState(null, '', kind === 'jt' ? '#jobtitle' : '#'); } catch (x) {} if ($('scA').value.trim() || $('scB').value.trim()) go(); });
-    if (location.hash === '#jobtitle') setTimeout(() => document.querySelector('#scKind [data-k="jt"]').click());
+    if (location.hash === '#jobtitle') location.replace('job-title-checker.html');   /* the Job title checker has its own page now */
     $('scMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = b.dataset.m; $('scMode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); go(); });
     $('scSwap').onclick = () => { const t = $('scA').value; $('scA').value = $('scB').value; $('scB').value = t; go(); };
     $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; go(); };
