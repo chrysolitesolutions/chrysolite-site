@@ -1043,6 +1043,9 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .s-csm{background:color-mix(in srgb,var(--s10) 20%,transparent);box-shadow:inset 3px 0 0 var(--s10)}
 .s-hol{background:color-mix(in srgb,var(--s11) 22%,transparent);box-shadow:inset 3px 0 0 var(--s11);color:#7a5600}
 .ma-big .s-ng{box-shadow:inset 6px 0 0 var(--s8)}.ma-big .s-phone{box-shadow:inset 6px 0 0 var(--s9)}.ma-big .s-csm{box-shadow:inset 6px 0 0 var(--s10)}
+/* the menu stays in place while the page scrolls */
+.app > .rail{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;overflow-y:auto;z-index:40}
+@media(max-width:860px){.app > .rail{height:auto;max-height:none;overflow:visible;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 18px -14px rgba(0,0,0,.4)}}
 </style>
 </head>
 <body>
