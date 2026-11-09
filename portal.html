@@ -1738,7 +1738,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <h3 id="otDlgT">You worked more than 8 hours today</h3>
     <p class="hint" id="otDlgMsg" style="margin:0"></p>
     <div class="ot-big" id="otBig"></div>
-    <div class="ot-choice" role="radiogroup" aria-label="What to do with the extra time">
+    <div class="ot-choice" id="otChoice" role="radiogroup" aria-label="What to do with the extra time">
       <label><input type="radio" name="otMode" value="ot" checked><span><b>Request overtime for today</b><small>The extra time is paid or counted as overtime on today's date.</small></span></label>
       <label id="otCarryOpt"><input type="radio" name="otMode" value="carry"><span><b>Carry it over to another day this month</b><small id="otCarryHint">Add it to a shorter day this month, earlier or later, so you can make up hours or leave early another day.</small></span></label>
     </div>
@@ -1750,7 +1750,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <input id="otHrs" type="hidden">
     <div class="f"><label for="otWhy">Reason</label><textarea id="otWhy" rows="4" maxlength="500" placeholder="e.g. Finishing today's batch for the client deadline"></textarea></div>
     <div class="msg err" id="otErr" hidden></div>
-    <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Send for approval</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
+    <div class="row"><button class="btn btn-gem" type="submit" id="otSend">Send for approval</button><button class="btn btn-ghost" type="button" id="otIgnore" hidden>Ignore, no overtime</button><button class="btn btn-ghost" type="button" id="otLater">Not now</button></div>
   </form>
 </dialog>
 <div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
@@ -4233,7 +4233,7 @@ function renderClock(){
   st.textContent = open ? 'Working since ' + fmtT(open.in) + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
   st.className = 'clock-status' + (open ? ' on' : brk ? ' brk' : '');
   $('clockDot').hidden = !open;
-  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() > 60000 ? ` <small class="pend">+${fmtH(extraPending())} over 8h, not counted until approved</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
+  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() - ignMs(otReqMine, todayStr()) > 60000 ? ` <small class="pend">+${fmtH(extraPending() - ignMs(otReqMine, todayStr()))} over 8h, not counted until approved</small>` : ignMs(otReqMine, todayStr()) ? ` <small class="pend ok">✓ accepted without overtime</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   renderMyMonth();
 }
@@ -4260,12 +4260,16 @@ $('myCal').addEventListener('click', e => { const b = e.target.closest('[data-da
   const ms = sessMs(l), raw = rawMs(l), dd = $('dayDlg');
   $('dayDlgT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
   const fdd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), cIn = myCarry().filter(x => x.to === k && x.status === 'approved'), cOut = myCarry().filter(x => x.from === k && x.status !== 'rejected');
-  const left = raw + (l.carryIn || 0) - ms - (l.carryOut || 0);
-  $('dayDlgSub').innerHTML = `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${cIn.map(x => `<div class="cin">+${fmtH(x.ms)} carried over from ${fdd(x.from)}</div>`).join('')}${cOut.map(x => `<div class="cout">${fmtH(x.ms)} carried to ${fdd(x.to)}${x.status === 'pending' ? ' (waiting for approval)' : ''}</div>`).join('')}${left > 60000 ? ` <div style="color:#a86a00">${fmtH(left)} over 8h not approved / waiting</div>` : ''}`;
+  const ign = ignMs(otReqMine, k), left = raw + (l.carryIn || 0) - ms - (l.carryOut || 0) - ign;
+  $('dayDlgSub').innerHTML = `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${cIn.map(x => `<div class="cin">+${fmtH(x.ms)} carried over from ${fdd(x.from)}</div>`).join('')}${cOut.map(x => `<div class="cout">${fmtH(x.ms)} carried to ${fdd(x.to)}${x.status === 'pending' ? ' (waiting for approval)' : ''}</div>`).join('')}${left > 60000 ? ` <div style="color:#a86a00">${fmtH(left)} over 8h not approved / waiting</div>${left < OT_SHORT && k < todayStr() && !(otReqMine && otReqMine.days && otReqMine.days[k] && otReqMine.days[k].hours) ? `<button type="button" class="mini" data-ignday="${k}" data-ms="${Math.round(left)}" style="margin-top:6px">Accept without overtime</button>` : ''}` : ''}${ign > 60000 && left <= 60000 ? ` <div style="color:#3f6a12">✓ Total ${fmtH(raw)} · accepted by you without an overtime request</div>` : ''}`;
   $('dayDlgList').innerHTML = l.map((x, i) => { const d = x.out ? Math.max(0, Math.min(+new Date(x.out), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)) : Date.now() - +new Date(x.in);
     return `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? '<small style="display:block;color:var(--ink-soft)">then a break</small>' : ''}${x.ot ? '<small style="display:block;color:var(--ink-soft)">overtime</small>' : ''}${x.auto ? '<small style="display:block;color:var(--ink-soft)">stopped automatically</small>' : ''}${x.edit ? `<small style="display:block;color:var(--ink-soft)">edited by ${esc(x.edit.by || 'admin')}</small>` : ''}</span><span class="h mono">${fmtH(d)}</span></div>`; }).join('');
   try { dd.showModal(); } catch (x) { dd.setAttribute('open', ''); } });
-$('dayDlgX').onclick = () => $('dayDlg').close(); $('dayDlg').addEventListener('click', e => { if (e.target === $('dayDlg')) $('dayDlg').close(); });
+$('dayDlgX').onclick = () => $('dayDlg').close();
+$('dayDlg').addEventListener('click', async e => { const b = e.target.closest('[data-ignday]'); if (!b || !me) return; const k = b.dataset.ignday; b.disabled = true;
+  try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + (+b.dataset.ms || 0), ignoredAt: new Date().toISOString()};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+    $('dayDlg').close(); renderMyMonth(); renderClock(); toast('Saved without overtime'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } }); $('dayDlg').addEventListener('click', e => { if (e.target === $('dayDlg')) $('dayDlg').close(); });
 $('myMonthCopy').onclick = () => {
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value, keys = monthDays(days, m);
   const text = ['Date\tSessions\tSession times\tHours'].concat(keys.map(k => [k, days[k].length, timesOf(days[k]), (sessMs(days[k]) / 3600000).toFixed(2)].join('\t'))).concat(['Total\t\t\t' + (stats(days, keys).ms / 3600000).toFixed(2)]).join('\n');
@@ -4293,11 +4297,13 @@ const rawMs = l => capWalk(l || [], 1e15).reduce((a, r) => a + r.d, 0);         
 const todayRaw = () => rawMs(((myAtt && myAtt.days) || {})[todayStr()]);
 const dayList = k => ((myAtt && myAtt.days) || {})[k] || [];
 const extraPending = () => Math.max(0, todayRaw() - todayAllow() - (dayList(todayStr()).carryOut || 0));   // extra time today not yet approved or sent anywhere
-const extraUnsent = () => { const st = myOtToday(), ot = st && st.status === 'pending' ? st.hours * 3600000 : 0; return Math.max(0, extraPending() - ot); };
+const ignMs = (rq, k) => +(((rq && rq.days && rq.days[k]) || {}).ignoredMs || 0);   // over-8h time the employee chose to leave out (no overtime)
+const extraUnsent = () => { const st = myOtToday(), ot = st && st.status === 'pending' ? st.hours * 3600000 : 0; return Math.max(0, extraPending() - ot - ignMs(otReqMine, todayStr())); };
+const OT_SHORT = 3600000;   // under 1 hour over 8: overtime or ignore; 1 hour or more: carry over (or overtime)
 const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(todayStr()).carryOut || 0) - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
 const onBreak = days => { const t = (days || {})[todayStr()] || []; const l = t[t.length - 1]; return !!(l && l.out && l.brk); };
 const myOtToday = () => { const k = todayStr(), a = otApprMine && otApprMine.days && otApprMine.days[k], r = otReqMine && otReqMine.days && otReqMine.days[k];
-  if (a && (!r || a.at >= r.at)) return {status: a.status, hours: a.hours}; return r ? {status: 'pending', hours: r.hours} : null; };
+  if (a && (!r || !r.hours || a.at >= r.at)) return {status: a.status, hours: a.hours}; return r && r.hours ? {status: 'pending', hours: r.hours} : null; };
 // days this month (before today) that are short of 8 hours and can receive carried-over time
 // any other day in the current month (past or future, worked or not) that is under 8 hours can receive carried-over time
 function carryTargets(){ const today = todayStr(), m = today.slice(0, 7), [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), days = (myAtt && myAtt.days) || {}, out = [];
@@ -4314,15 +4320,23 @@ function askOvertime(auto){
   const k = todayStr(), extra = extraUnsent(); if (extra < 60000) return;
   if (auto && otAsked === k) return; otAsked = k;
   $('otHrs').value = otHoursNeeded();
-  $('otDlgMsg').textContent = `You worked ${fmtH(todayRaw())} today. Choose what to do with the extra time. It counts only after your Project Manager approves it.`;
+  const short = extra < OT_SHORT; $('otDlg').classList.toggle('ot-short', short);
+  $('otDlgT').textContent = short ? 'You worked a little over 8 hours today' : 'You worked more than 8 hours today';
+  $('otDlgMsg').textContent = short ? `You worked ${fmtH(todayRaw())} today, ${fmtH(extra)} over 8 hours. Does this extra time need overtime approval? Send it to your Project Manager, or ignore it: then no overtime is recorded and your day is saved as worked.` : `You worked ${fmtH(todayRaw())} today. Carry the extra time over to another day this month, or request overtime. It counts only after your Project Manager approves it.`;
   $('otBig').innerHTML = `<b>${fmtH(extra)}</b><span>over 8 hours${dayList(k).carryOut ? ' still to assign' : ''}</span>`;
   const tg = carryTargets(), opt = t => `<option value="${t.k}">${new Date(t.k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})} · ${t.fut ? (t.got ? 'already ' + fmtH(t.got) + ' added' : 'upcoming day') : t.none ? 'no work recorded' : 'worked ' + fmtH(t.got)}, ${fmtH(t.short)} short</option>`;
   const past = tg.filter(t => !t.fut), fut = tg.filter(t => t.fut); $('otTo').innerHTML = (past.length ? `<optgroup label="Earlier this month">${past.map(opt).join('')}</optgroup>` : '') + (fut.length ? `<optgroup label="Later this month (e.g. to leave early)">${fut.map(opt).join('')}</optgroup>` : '');
   const can = tg.length > 0; $('otCarryOpt').classList.toggle('dis', !can); $('otCarryOpt').querySelector('input').disabled = !can; $('otCarryHint').textContent = can ? 'Add it to a shorter day this month, earlier or later, so you can make up hours or leave early another day.' : 'No other day this month can take more time.';
-  document.querySelector('input[name="otMode"][value="ot"]').checked = true; otModeUi(); $('otTo').dispatchEvent(new Event('change'));
+  $('otChoice').hidden = short; $('otIgnore').hidden = !short; $('otLater').hidden = short;
+  document.querySelector(`input[name="otMode"][value="${!short && can ? 'carry' : 'ot'}"]`).checked = true; otModeUi(); $('otTo').dispatchEvent(new Event('change'));
   $('otErr').hidden = true; $('otWhy').value = ''; const d = $('otDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
 }
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
+$('otIgnore').onclick = async () => { if (!me) return; const k = todayStr(), b = $('otIgnore'), add = extraUnsent(); b.disabled = true;
+  try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + add, ignoredAt: new Date().toISOString()};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+    $('otLater').click(); renderClock(); renderMyMonth(); toast('Saved: ' + fmtH(todayRaw()) + ' worked, no overtime requested'); }
+  catch (x) { $('otErr').textContent = 'That couldn\'t be saved. Try again.'; $('otErr').hidden = false; } finally { b.disabled = false; } };
 $('otForm').addEventListener('submit', async e => {
   e.preventDefault(); if (!me) return; const k = todayStr(), btn = $('otSend'), err = $('otErr'), fail = t => { err.textContent = t; err.hidden = false; };
   const why = $('otWhy').value.trim(); if (!why) return fail('Add a short reason.');
@@ -4335,7 +4349,7 @@ $('otForm').addEventListener('submit', async e => {
       const items = [...((carryReqMine && carryReqMine.items) || []), {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), from: k, to, ms, reason: why.slice(0, 500), at: new Date().toISOString()}].slice(-120);
       await db.doc('carryReq/' + me.key).set({email: me.email, name: me.name, items}); carryReqMine = {email: me.email, name: me.name, items}; pickMyAtt();
       toast('Carry-over sent to your Project Manager for approval'); }
-    else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {hours: otHoursNeeded(), reason: why.slice(0, 500), at: new Date().toISOString()};
+    else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] && days[k].ignoredMs ? {ignoredMs: days[k].ignoredMs, ignoredAt: days[k].ignoredAt} : {}), hours: Math.max(0.25, Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(k).carryOut || 0) - ignMs(otReqMine, k) - 60000) / 900000) / 4), reason: why.slice(0, 500), at: new Date().toISOString()};
       Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); toast('Overtime sent to your Project Manager for approval'); }
     $('otLater').click(); renderClock(); renderMyMonth();
     if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500);
@@ -4374,7 +4388,7 @@ $('carryList').addEventListener('click', async e => { const b = e.target.closest
 function renderOt(){
   if (!isAdmin) return; renderCarryAdmin();
   const pend = [];
-  otReqAll.forEach(r => Object.entries(r.days || {}).forEach(([k, q]) => { const a = otApprAll[r.key] && otApprAll[r.key].days && otApprAll[r.key].days[k]; if (!a || a.at < q.at) pend.push({...q, k, email: r.key, name: r.name}); }));
+  otReqAll.forEach(r => Object.entries(r.days || {}).forEach(([k, q]) => { if (!q || !q.hours) return; const a = otApprAll[r.key] && otApprAll[r.key].days && otApprAll[r.key].days[k]; if (!a || a.at < q.at) pend.push({...q, k, email: r.key, name: r.name}); }));
   pend.sort((a, b) => String(b.k).localeCompare(String(a.k)));
   $('otList').innerHTML = pend.length ? pend.map(q => `<div class="ev"><div class="d">${new Date(q.k + 'T00:00').getDate()}<small>${new Date(q.k + 'T00:00').toLocaleDateString(undefined, {month: 'short'})}</small></div><div><b>${esc(q.name || q.email)} · ${q.hours} h overtime</b><span>${esc(q.reason || '')}</span></div><div class="acts"><button class="mini ok-btn" data-ot="approved" data-e="${esc(q.email)}" data-k="${q.k}" data-h="${q.hours}">Approve</button><button class="mini danger" data-ot="rejected" data-e="${esc(q.email)}" data-k="${q.k}" data-h="${q.hours}">Reject</button></div></div>`).join('') : '<p class="empty">No overtime requests waiting.</p>';
 }
@@ -4455,7 +4469,7 @@ $('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data
   const k = b.dataset.eday, rec = teamAtt.find(a => a.email === p.email), l = ((rec && rec.days) || {})[k] || [], now = Date.now();
   $('ecalGrid').querySelectorAll('.sel').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
   const dur = x => Math.max(0, (x.out ? new Date(x.out) : now) - new Date(x.in)), raw = rawMs(l), counted = sessMs(l), extra = Math.max(0, raw - DAY_MAX);
-  const otQ = (otReqAll.find(r => r.key === p.key) || {}).days, ot = otQ && otQ[k], otA = otApprAll[p.key] && otApprAll[p.key].days && otApprAll[p.key].days[k];
+  const otQ = (otReqAll.find(r => r.key === p.key) || {}).days, otRaw = otQ && otQ[k], ot = otRaw && otRaw.hours ? otRaw : null, ign = +((otRaw && otRaw.ignoredMs) || 0), otA = otApprAll[p.key] && otApprAll[p.key].days && otApprAll[p.key].days[k];
   const cItems = carryItems(carryReqAll[p.key], carryApprAll[p.key]), cOut = cItems.filter(x => x.from === k), cIn = cItems.filter(x => x.to === k && x.status === 'approved');
   const fdd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), stP = st => st === 'approved' ? '<span class="pill ok">Approved</span>' : st === 'rejected' ? '<span class="pill off">Not approved</span>' : '<span class="pill warn">Waiting for approval</span>';
   const lv = decisions.find(d => d.email === p.email && d.status === 'Approved' && d.from <= k && d.to >= k), h = holOn(k);
@@ -4464,11 +4478,12 @@ $('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data
   const sess = l.length ? `<table class="att eday-tab"><thead><tr><th>#</th><th>Clock in</th><th>Clock out</th><th>Duration</th><th>Note</th></tr></thead><tbody>${l.map((x, i) => `<tr><td>${i + 1}</td><td class="mono">${fmtT(x.in)}</td><td class="mono">${x.out ? fmtT(x.out) : '<span class="pill ok">Working now</span>'}</td><td class="mono"><b>${fmtH(dur(x))}</b></td><td>${[x.brk ? 'Ended for a break' : '', x.auto ? autoTag(x).replace(/[()]/g, '').trim() : '', x.ot ? 'Overtime session' : '', x.edit ? 'Added or corrected by admin' : ''].filter(Boolean).join(' · ') || '—'}</td></tr>`).join('')}</tbody></table>` : '<p class="empty">No sessions on this day.</p>';
   const tiles = `<div class="eday-tiles"><div><span>Total clocked</span><b>${fmtH(raw)}</b></div><div><span>Counted for pay</span><b>${fmtH(counted)}</b></div><div class="${extra > 60000 ? 'warn' : ''}"><span>Over 8 hours</span><b>${extra > 60000 ? fmtH(extra) : 'No'}</b></div><div><span>Sessions</span><b>${l.length}</b></div></div>`;
   let ex = '';
-  if (extra > 60000 || ot || cOut.length) { const otMs = ot ? (+ot.hours || 0) * 3600000 : 0, cMs = cOut.filter(x => x.status !== 'rejected').reduce((a, x) => a + x.ms, 0), otOk = otA && otA.status === 'approved' ? (+otA.hours || 0) * 3600000 : 0;
-    const left = Math.max(0, extra - (otA && otA.status === 'rejected' ? 0 : otMs) - cMs);
+  if (extra > 60000 || ot || cOut.length || ign) { const otMs = ot ? (+ot.hours || 0) * 3600000 : 0, cMs = cOut.filter(x => x.status !== 'rejected').reduce((a, x) => a + x.ms, 0), otOk = otA && otA.status === 'approved' ? (+otA.hours || 0) * 3600000 : 0;
+    const left = Math.max(0, extra - (otA && otA.status === 'rejected' ? 0 : otMs) - cMs - ign);
     ex = `<h4 class="eday-h">What happened to the extra time</h4><div class="eday-x">
       ${ot ? `<div><b>⏱ Sent as overtime:</b> ${(+ot.hours || 0)} h ${stP(otA ? otA.status : 'pending')}${ot.reason ? `<small>Reason: ${esc(ot.reason)}</small>` : ''}${otA && otA.by ? `<small>Decided by ${esc(otA.by)}${otA.at ? ', ' + fmtDT2(otA.at) : ''}</small>` : ''}</div>` : ''}
       ${cOut.map(x => `<div><b>↪ Carried to ${fdd(x.to)}:</b> ${fmtH(x.ms)} ${stP(x.status)}${x.reason ? `<small>Reason: ${esc(x.reason)}</small>` : ''}</div>`).join('')}
+      ${ign > 60000 ? `<div><b>✓ Accepted by the employee without overtime:</b> ${fmtH(ign)} over 8 hours. No overtime was requested, so it is not paid as overtime.</div>` : ''}
       ${left > 60000 ? `<div class="ign"><b>✗ Not used:</b> ${fmtH(left)} over 8 hours was neither sent as overtime nor carried to another day, so it is <b>not counted</b> for pay.</div>` : ''}
       ${!ot && !cOut.length && left <= 60000 ? '<div>All time is within 8 hours.</div>' : ''}</div>`; }
   const cin = cIn.length ? `<h4 class="eday-h">Time added from other days</h4><div class="eday-x">${cIn.map(x => `<div><b>↩ From ${fdd(x.from)}:</b> +${fmtH(x.ms)} ${stP(x.status)}${x.reason ? `<small>Reason: ${esc(x.reason)}</small>` : ''}</div>`).join('')}</div>` : '';
