@@ -1847,7 +1847,7 @@ const SESSION_MAX = 16 * 3600000, DAY_MAX = 8 * 3600000;   // DAY_MAX = standard
 let accounts = [], week = {key:'', rows:[]}, nextWeek = {key:'', rows:[]}, decisions = [], anns = [], requests = [], myReq = null, myReqRaw = null, myReqDoc = null, myClockRaw = null, attDocs = [], clockDocs = [], reqLegacy = [], reqNew = [], links = [], myAtt = null, myAttRaw = null, teamAtt = [];
 // attendance/<claude user id> holds one record per employee email, so several employees using one device or Claude account never share hours
 const attRecs = d => !d ? [] : Array.isArray(d.recs) ? d.recs : (d.email && d.days ? [{email: d.email, name: d.name, days: d.days}] : []);
-function pickMyAtt(){ myAtt = me ? (mergeAtt([myAttRaw, myClockRaw]).find(r => r.email === me.email) || null) : null; if (myAtt) { tagAllow(myAtt.days, otApprMine); tagCarry(myAtt.days, myCarry()); } }
+function pickMyAtt(){ myAtt = me ? (mergeAtt([myAttRaw, myClockRaw]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase()) || null) : null; if (myAtt) { tagAllow(myAtt.days, otApprMine); tagCarry(myAtt.days, myCarry()); } }
 function mergeAtt(docs){ const by = {}; docs.forEach(d => attRecs(d).forEach(r => { if (!r || !r.email) return; const m = by[r.email] || (by[r.email] = {email: r.email, name: r.name, days: {}});
   Object.entries(r.days || {}).forEach(([k, l]) => { const u = {}; (m.days[k] || []).concat(l || []).forEach(x => { if (x && x.in && (!u[x.in] || x.out)) u[x.in] = x; }); m.days[k] = Object.values(u).sort((a, b) => String(a.in).localeCompare(String(b.in))); }); })); return Object.values(by); }
 const unsub = {};
@@ -4417,16 +4417,24 @@ async function extendForOvertime(email, k, hours){
   await db.doc('timeclock/' + email).set({...raw, updatedAt: new Date().toISOString()});
   return sess.out ? fmtT(sess.out) : fmtT(new Date(end).toISOString()) + ' (clock running)';
 }
+let punching = false;
 async function punch(kind){
-  const err = $('clkErr'); err.hidden = true;
-  const days = JSON.parse(JSON.stringify((myAtt && myAtt.days) || {})), k = todayStr(), now = new Date().toISOString();
+  const err = $('clkErr'); err.hidden = true; if (punching) return;
+  // always start from the saved time clock, never from what this page happens to have loaded so far,
+  // so a click before the history has loaded can never replace earlier days
+  let fresh = null; punching = true;
+  try { const snap = await db.doc('timeclock/' + me.key).get(); fresh = snap.exists ? snap.data() : null; }
+  catch (x) { punching = false; err.textContent = 'Your time clock could not be loaded, so nothing was changed. Check your connection and try again.'; err.hidden = false; return; }
+  punching = false;
+  const mineRec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase());
+  const days = JSON.parse(JSON.stringify((mineRec && mineRec.days) || {})), k = todayStr(), now = new Date().toISOString();
   const list = days[k] || (days[k] = []);
   if (kind === 'in') { if (openSession(days)) return; const g = clockGate(); if (g) { err.textContent = g; err.hidden = false; toast(g); return; } list.push({in: now}); }
   else if (kind === 'break') { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; o.brk = true; }
   else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).filter(x => (days[x] || []).length).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(myClockRaw && myClockRaw.edits ? {edits: myClockRaw.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out'); $('clkBrk').onclick = () => punch('break');
