@@ -1046,6 +1046,11 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 /* the menu stays in place while the page scrolls */
 .app > .rail{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;overflow-y:auto;z-index:40}
 @media(max-width:860px){.app > .rail{height:auto;max-height:none;overflow:visible;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 18px -14px rgba(0,0,0,.4)}}
+.hm-amend{margin-bottom:16px;border-color:#E9C46A;background:linear-gradient(160deg,#FFF8E1,var(--surface))}.am-list{display:grid;gap:8px}
+.am-it{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;width:100%;padding:12px 14px;border-radius:14px;border:1px solid #F0D68A;background:#FFFDF5;cursor:pointer;font:inherit;color:inherit;transition:transform .15s,box-shadow .15s}
+.am-it:hover{transform:translateY(-1px);box-shadow:0 10px 22px -16px rgba(120,80,0,.5)}.am-it .am-ic{font-size:22px}.am-it b{display:block;font-size:14.5px}.am-it small{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px}
+.am-it .am-go{font-weight:700;color:#7A5200;white-space:nowrap}@media(max-width:640px){.am-it{grid-template-columns:auto 1fr}.am-it .am-go{grid-column:2}}
+.bf-pack.upd{border-color:#E9C46A;background:#FFF8E1}.bf-upd{flex-basis:100%;font-size:14px;color:#6B4A00;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -1165,6 +1170,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
         </button>
       </div>
       <div id="hmHoliday"></div>
+      <div class="panel hm-amend" id="hmAmend" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">📝 Procedure amendments</h3><span class="hint">A page you accepted has changed. Read and accept just that page again.</span></div><div class="am-list" id="hmAmendList"></div></div>
       <div class="panel hm-leave" id="hmLeave" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">🌴 Leave updates</h3><span class="hint">Click “Got it” to file an update in Time Off Management.</span></div><div class="hl-list" id="hmLeaveList"></div></div>
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
@@ -1839,6 +1845,14 @@ function compBal(a, pendDays){ const tot = compGiven(a); const u = compUsed(a), 
 /* ---------- state ---------- */
 let db = null, user = null, uid = null, isAdmin = false, canEditDb = false, canWrite = null, isOwnerViewer = false;
 const BRIEF_VER = 'brief-2026-11-10-yrs';   // change this to ask everyone to read and accept again
+const BRIEF_PAGES = [['ov', 'Overview'], ['wiz', 'Decide a field'], ['tbl', 'Decision table'], ['fld', 'Field rules'], ['yrs', 'Years calculator'], ['jt', 'Job title checker'], ['quiz', 'Practice'], ['tips', 'Quick tips']];
+// Each briefing page has its own version. When a page changes, raise ONLY its number (and say what changed in BRIEF_AMEND):
+// staff then read and accept just that page again, and Home shows them the amendment.
+const BRIEF_PV = {ov: 1, wiz: 1, tbl: 2, fld: 2, yrs: 2, jt: 1, quiz: 2, tips: 2};
+const BRIEF_AMEND = {tbl: 'Worked example updated: years are now the file year minus the start year.', fld: 'Years in current role and Years at company: file year minus start year. Months don\'t count.',
+  yrs: 'New years rule: the file year minus the start year. Months don\'t count, and the "one more" allowance is gone.', quiz: 'Years practice cases updated to the new rule. Answer every case correctly again.',
+  tips: 'Years tip updated: file year minus start year.'};
+const BRIEF_LEGACY = {'brief-2026-11-9': 1, 'brief-2026-11-10-yrs': 2};   // acceptances saved before per-page versions
 let empInfoMine = null, empDocsMine = null, profReqMine = null, profReqAll = {}; const epEditing = {};   // employee details: own records, section being edited per container
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
 const ROLES = ['Owner', 'COO / Project Director', 'Project Manager', 'Team Lead', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
@@ -1945,7 +1959,7 @@ function watchMine(){
   watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
   watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
-  watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); });
+  watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); try { renderHomeAmend(); } catch (e) {} });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
   watch('empInfoMine', db.doc('empInfo/' + me.key), s => { empInfoMine = s.exists ? s.data() : {}; renderProfile(); });
   watch('empDocsMine', db.doc('empDocs/' + me.key), s => { empDocsMine = s.exists ? s.data() : {}; renderProfile(); });
@@ -2487,7 +2501,7 @@ function renderHours(){
     $('hStatusL').textContent = 'Working right now'; $('hStatus').textContent = working + (working === 1 ? ' person' : ' people');
   }
 }
-function renderHome(){ setTimeout(() => { try { applyHomeMin(); } catch (e) {} }, 0); try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
+function renderHome(){ try { renderHomeAmend(); } catch (e) { console.error(e); } setTimeout(() => { try { applyHomeMin(); } catch (e) {} }, 0); try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
   try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
@@ -3434,14 +3448,16 @@ const QUIZ_OF = {bzipbrief: 'zp-quiz', bnamebrief: 'ng-quiz'};   // pages with a
 const projOf = k => PROJ.find(p => p.pages.includes(k));
 // what still blocks accepting page k: earlier pages of the same project (with content) not accepted, or its practice not passed
 function ackBlock(k){ const p = projOf(k); if (!p || acting()) return [];
-  const out = p.pages.slice(0, p.pages.indexOf(k)).filter(q => ackVer(q) && ackState(ackMine, q) !== 'ok').map(q => 'accept ' + ACK_NAMES[q] + ' first');
+  const out = p.pages.slice(0, p.pages.indexOf(k)).filter(q => ackVer(q) && ackState(ackMine, q) === 'no').map(q => 'accept ' + ACK_NAMES[q] + ' first');   // an earlier page that was only amended does not block
   const qc = QUIZ_OF[k]; if (qc && document.querySelector('#gdDoc .' + qc) && !(window.__qzDone || {})[qc]) out.push('answer every practice case on this page correctly (' + ((window.__qzN || {})[qc] || 0) + ' of ' + ((window.__qzT || {})[qc] || '?') + ' correct)');
   return out; }
 const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
 const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
 const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k); return d && d.html ? hashStr(d.html) : null; };
 // 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
-function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k]; return !a ? 'no' : a.v === v ? 'ok' : 'old'; }
+function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k];
+  if (k === 'brief') { if (!a) return 'no'; const save = ackMine; ackMine = rec; try { return briefAllOk() ? 'ok' : 'old'; } finally { ackMine = save; } }
+  return !a ? 'no' : a.v === v ? 'ok' : 'old'; }
 const ackFmt = iso => new Date(iso).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
 function renderAck(){
   const box = $('gdAck'); if (!box) return;
@@ -3457,7 +3473,7 @@ function renderAck(){
   $('ackChk').onchange = e => $('ackBtn').disabled = !e.target.checked || ackBlock(k).length > 0;
   $('ackBtn').onclick = async () => { const b = $('ackBtn'); b.disabled = true; b.textContent = 'Saving…';
     const pages = {...((ackMine && ackMine.pages) || {}), [k]: {v: ackVer(k), at: new Date().toISOString(), title: ACK_NAMES[k]}};
-    try { await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; renderAck(); renderAckCards(); toast(ACK_NAMES[k] + ' accepted'); }
+    try { await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; renderAck(); renderAckCards(); toast(ACK_NAMES[k] + ' accepted'); try { renderHomeAmend(); } catch (e) {} }
     catch (x) { b.disabled = false; b.textContent = 'Accept procedures'; toast('Your acceptance couldn\'t be saved. Try again.'); } };
 }
 function renderAckCards(){
@@ -3868,9 +3884,9 @@ $('srcFile').addEventListener('change', async e => {
   window.__bfQuizTotal = QZ.length;
   // progress: which cases have been answered correctly (kept on this device, per person and briefing version)
   let good = new Set(), queue = [], qKey = '', answered = false, lastOk = false, tries = 0;
-  const qk = () => 'cs_bf_quiz_' + (typeof BRIEF_VER === 'string' ? BRIEF_VER : '') + '_' + (me && me.email || 'anon');
+  const qk = () => 'cs_bf_quiz_q' + BRIEF_PV.quiz + '_' + (me && me.email || 'anon');
   const qSave = () => { try { localStorage.setItem(qKey, JSON.stringify([...good])); } catch (e) {} };
-  const qLoad = () => { if (qKey === qk()) return; qKey = qk(); good = new Set(); try { JSON.parse(localStorage.getItem(qKey) || '[]').forEach(i => { if (QZ[i]) good.add(i); }); } catch (e) {}
+  const qLoad = () => { if (qKey === qk()) return; qKey = qk(); good = new Set(); try { JSON.parse(localStorage.getItem(qKey) || localStorage.getItem('cs_bf_quiz_brief-2026-11-10-yrs_' + (me && me.email || 'anon')) || '[]').forEach(i => { if (QZ[i]) good.add(i); }); } catch (e) {}
     queue = QZ.map((_, i) => i).filter(i => !good.has(i)).sort(() => Math.random() - .5); window.__bfQuizN = good.size; };
   const qScore = () => { $('qzScore').innerHTML = `<b>${good.size} of ${QZ.length}</b> correct${queue.length ? ` · ${queue.length} to go` : ''}`; };
   const drawQ = () => { qLoad(); answered = false; qScore();
@@ -3897,33 +3913,49 @@ $('srcFile').addEventListener('change', async e => {
   $('tpList').addEventListener('change', e => { const c = e.target.closest('[data-i]'); if (!c) return; ticks[c.dataset.i] = c.checked; try { localStorage.setItem('cs_bf_tips', JSON.stringify(ticks)); } catch (x) {} drawTips(); }); drawTips();
 })();
 // read & accept for the briefing (same record as the other benchmarking procedures)
-const BRIEF_PAGES = [['ov', 'Overview'], ['wiz', 'Decide a field'], ['tbl', 'Decision table'], ['fld', 'Field rules'], ['yrs', 'Years calculator'], ['jt', 'Job title checker'], ['quiz', 'Practice'], ['tips', 'Quick tips']];
 const QUIZ_MIN = () => window.__bfQuizTotal || 100;   // every practice case must be answered correctly
-const briefParts = () => { const r = ackMine && ackMine.pages && ackMine.pages.brief_parts; return r && r.v === BRIEF_VER ? (r.parts || {}) : {}; };
+function briefPartRec(k){ const r = ackMine && ackMine.pages && ackMine.pages.brief_parts; if (!r || !r.parts || !r.parts[k]) return null; const x = r.parts[k];
+  if (r.v === 'pp') return x; const lv = BRIEF_LEGACY[r.v]; return lv ? {at: x, v: lv} : null; }
+const briefPartState = k => { const x = briefPartRec(k); return !x ? 'no' : (+x.v || 0) >= (BRIEF_PV[k] || 1) ? 'ok' : 'old'; };
+const briefAllOk = () => BRIEF_PAGES.every(([k]) => briefPartState(k) === 'ok');
+const briefParts = () => { const o = {}; BRIEF_PAGES.forEach(([k]) => { if (briefPartState(k) === 'ok') o[k] = briefPartRec(k).at; }); return o; };
 async function saveBrief(extra){ const pages = {...((ackMine && ackMine.pages) || {}), ...extra}; await db.doc('guideAck/' + me.key).set({email: me.email, name: me.name, pages}); ackMine = {email: me.email, name: me.name, pages}; }
 function renderBriefAck(){ const box = $('bfAck'); if (!box) return; if (!me) { box.hidden = true; return; } box.hidden = false;
   if (window.__bfQuizSync) window.__bfQuizSync(); const parts = briefParts(), done = BRIEF_PAGES.filter(([k]) => parts[k]), qn = window.__bfQuizN || 0;
   // a read-and-accept strip at the end of every page
   document.querySelectorAll('.bf-pane').forEach(pn => { const k = pn.dataset.p, nm = (BRIEF_PAGES.find(x => x[0] === k) || [])[1]; if (!nm) return; let el = pn.querySelector(':scope > .bf-pack'); if (!el) { el = document.createElement('div'); el.className = 'bf-pack'; pn.appendChild(el); }
     if (parts[k]) { el.className = 'bf-pack ok'; el.innerHTML = `<span>✓ You accepted “${nm}” on ${ackFmt(parts[k])}</span>`; return; }
-    const needQuiz = k === 'quiz' && qn < QUIZ_MIN() && !acting(); el.className = 'bf-pack';
-    el.innerHTML = `<label class="ack-chk"><input type="checkbox" data-pk="${k}" ${needQuiz ? 'disabled' : ''}> I have read and understood the “${nm}” page.</label>${needQuiz ? `<small class="hint">Answer all ${QUIZ_MIN()} practice cases correctly first (${qn} of ${QUIZ_MIN()} correct). A wrong answer comes back later until you get it right.</small>` : ''}<button class="btn btn-gem" type="button" data-pkb="${k}" disabled>Accept this page</button>`; });
+    const needQuiz = k === 'quiz' && qn < QUIZ_MIN() && !acting(); el.className = 'bf-pack' + (briefPartState(k) === 'old' ? ' upd' : '');
+    el.innerHTML = (briefPartState(k) === 'old' ? `<div class="bf-upd"><b>📝 This page was updated.</b> ${esc(BRIEF_AMEND[k] || 'Please read it again.')} Only this page needs to be accepted again.</div>` : '') + `<label class="ack-chk"><input type="checkbox" data-pk="${k}" ${needQuiz ? 'disabled' : ''}> I have read and understood the “${nm}” page.</label>${needQuiz ? `<small class="hint">Answer all ${QUIZ_MIN()} practice cases correctly first (${qn} of ${QUIZ_MIN()} correct). A wrong answer comes back later until you get it right.</small>` : ''}<button class="btn btn-gem" type="button" data-pkb="${k}" disabled>Accept this page</button>`; });
   document.querySelectorAll('#bfTabs [data-t]').forEach(b => { b.classList.toggle('done', !!parts[b.dataset.t]); });
   const a = ackMine && ackMine.pages && ackMine.pages.brief;
-  if (a && a.v === BRIEF_VER) { box.innerHTML = `<div class="ack-ok">✓ You accepted the Benchmarking Briefing on ${ackFmt(a.at)}</div>`; return; }
-  const needIntro = !acting() && ackVer('bintro') && ackState(ackMine, 'bintro') !== 'ok', all = done.length === BRIEF_PAGES.length && !needIntro;
+  if (a && briefAllOk()) { box.innerHTML = `<div class="ack-ok">✓ You accepted the Benchmarking Briefing on ${ackFmt(a.at)}</div>`; return; }
+  if (a) { const up = BRIEF_PAGES.filter(([k]) => briefPartState(k) !== 'ok'); box.innerHTML = `<h3>Briefing updated</h3><p style="margin:0">You accepted the briefing on ${ackFmt(a.at)}. Since then ${up.length === 1 ? 'one page was' : up.length + ' pages were'} updated. Accept only ${up.length === 1 ? 'that page' : 'those pages'}:</p><div class="bf-plist">${up.map(([k, nm]) => `<button type="button" data-goto="${k}">📝 ${nm}</button>`).join('')}</div>`; return; }
+  const needIntro = !acting() && ackVer('bintro') && ackState(ackMine, 'bintro') === 'no', all = done.length === BRIEF_PAGES.length && !needIntro;
   box.innerHTML = `<h3>Read and accept the briefing</h3><div class="bf-prog"><div class="bar"><i style="width:${done.length / BRIEF_PAGES.length * 100}%"></i></div><span>${done.length} of ${BRIEF_PAGES.length} pages accepted</span></div>
     <div class="bf-plist">${BRIEF_PAGES.map(([k, nm], i) => `<button type="button" class="${parts[k] ? 'ok' : ''}" data-goto="${k}">${parts[k] ? '✓' : i + 1} ${nm}</button>`).join('')}</div>
     <label class="ack-chk"><input type="checkbox" id="bfChk" ${all ? '' : 'disabled'}> I have read and understood the whole Benchmarking Briefing, and I will follow it in my work.</label>
     ${all ? '' : `<small class="hint">${needIntro ? 'Accept 1.1 Introduction first. ' : ''}Accept every page above first, including the Practice page (all ${QUIZ_MIN()} cases correct). Pages still to do are not ticked.</small>`}<div><button class="btn btn-gem" type="button" id="bfBtn" disabled>Accept briefing</button></div>`;
   $('bfChk').onchange = e => $('bfBtn').disabled = !e.target.checked || !all;
-  $('bfBtn').onclick = async () => { try { await saveBrief({brief: {v: BRIEF_VER, at: new Date().toISOString(), title: 'Benchmarking Briefing'}}); renderBriefAck(); renderAckCards(); toast('Briefing accepted. Thank you!'); } catch (x) { toast('That couldn\'t be saved. Try again.'); } }; }
+  $('bfBtn').onclick = async () => { try { await saveBrief({brief: {v: 'pp', at: new Date().toISOString(), title: 'Benchmarking Briefing'}}); renderBriefAck(); renderAckCards(); toast('Briefing accepted. Thank you!'); } catch (x) { toast('That couldn\'t be saved. Try again.'); } }; }
 document.addEventListener('change', e => { const c = e.target.closest('[data-pk]'); if (!c) return; const b = document.querySelector(`[data-pkb="${c.dataset.pk}"]`); if (b) b.disabled = !c.checked; });
 document.addEventListener('click', async e => { const b = e.target.closest('[data-pkb]'); if (!b || !me) return; const k = b.dataset.pkb; b.disabled = true; b.textContent = 'Saving…';
-  const parts = {...briefParts(), [k]: new Date().toISOString()};
-  try { await saveBrief({brief_parts: {v: BRIEF_VER, parts}}); renderBriefAck(); const nx = BRIEF_PAGES.find(([q]) => !parts[q]);
-    toast(nx ? 'Page accepted. Next: ' + nx[1] : 'All pages accepted. You can now accept the briefing below.'); if (nx && window.__bfShowTab) { window.__bfShowTab(nx[0]); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); } }
+  const pp = {}; BRIEF_PAGES.forEach(([q]) => { const x = briefPartRec(q); if (x) pp[q] = {at: x.at, v: +x.v || 1}; }); pp[k] = {at: new Date().toISOString(), v: BRIEF_PV[k] || 1};
+  const parts = {}; BRIEF_PAGES.forEach(([q]) => { if (pp[q] && pp[q].v >= (BRIEF_PV[q] || 1)) parts[q] = pp[q].at; });
+  try { await saveBrief({brief_parts: {v: 'pp', parts: pp}}); renderBriefAck(); renderAckCards(); try { renderHomeAmend(); } catch (x) {} const nx = BRIEF_PAGES.find(([q]) => !parts[q]);
+    toast(nx ? 'Page accepted. Next: ' + nx[1] : (ackMine.pages.brief ? 'All pages accepted. Your briefing is up to date.' : 'All pages accepted. You can now accept the briefing below.')); if (nx && window.__bfShowTab) { window.__bfShowTab(nx[0]); document.getElementById('bfTabs').scrollIntoView({behavior: 'smooth', block: 'start'}); } }
   catch (x) { b.disabled = false; b.textContent = 'Accept this page'; toast('That couldn\'t be saved. Try again.'); } });
+/* ---------- Home: pages that changed after the employee accepted them ---------- */
+function amendments(){ if (!me || !ackMine) return []; const out = [];
+  PROJ.forEach(p => p.pages.forEach(k => {
+    if (k === 'brief') BRIEF_PAGES.forEach(([q, nm]) => { if (briefPartState(q) === 'old') out.push({go: 'brief', tab: q, proj: p.n, title: '1.2 Briefing and Practice › ' + nm, note: BRIEF_AMEND[q] || ''}); });
+    else if (ackState(ackMine, k) === 'old') out.push({go: k, proj: p.n, title: ACK_NAMES[k], note: ''}); }));
+  return out; }
+function renderHomeAmend(){ const box = $('hmAmend'); if (!box) return; const L = amendments(); box.hidden = !L.length; if (!L.length) return;
+  $('hmAmendList').innerHTML = L.map(x => `<button type="button" class="am-it" data-amgo="${esc(x.go)}" data-amtab="${esc(x.tab || '')}"><span class="am-ic">📝</span><span><b>${esc(x.proj)} · ${esc(x.title)}</b>${x.note ? `<small>${esc(x.note)}</small>` : '<small>This page was updated. Read it and accept it again.</small>'}</span><span class="am-go">Open the amended page →</span></button>`).join(''); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-amgo]'); if (!b) return; const v = b.dataset.amgo, t = b.dataset.amtab; go(v);
+  if (t) setTimeout(() => { try { window.__bfShowTab && window.__bfShowTab(t); const pn = document.querySelector(`.bf-pane[data-p="${t}"] .bf-pack`) || document.getElementById('bfTabs'); pn && pn.closest('.bf-pane') ? document.querySelector(`.bf-pane[data-p="${t}"]`).scrollIntoView({behavior: 'smooth', block: 'start'}) : 0; } catch (x) {} }, 120);
+  else setTimeout(() => { const a = $('gdAck'); if (a && !a.hidden) a.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 300); });
 /* ---------- Home: holiday wish ---------- */
 const HW_THEMES = [
   {re: /diwali|deepavali/i, k: 'diwali', dark: 1, t: (n) => `Happy Diwali, ${n}! 🪔`, m: () => 'May the festival of lights fill your home with joy, good health and prosperity. Wishing you and your family a bright and happy Diwali.'},
