@@ -1067,6 +1067,33 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .wl-dlg{width:min(480px,calc(100vw - 24px))}.wl-dlg form{display:grid;gap:12px}.wl-rows{display:grid;gap:8px}
 .wl-row{display:grid;grid-template-columns:auto 1fr 110px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px}.wl-row input{text-align:right;font:700 16px var(--mono);padding:8px 10px}
 .wl-tot{text-align:right;font-size:14px;color:var(--ink-soft)}.wl-tot b{font:800 20px var(--display);color:var(--ink)}.wl-remind{margin-bottom:16px}
+.ps-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-bottom:14px}@media(max-width:1000px){.ps-top{grid-template-columns:1fr}}
+.ps-hero{display:flex;gap:20px;align-items:center;margin:0}.ps-hero:empty{display:none}
+.ps-ring{--p:0;flex:none;width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--gem) calc(var(--p) * 1%),var(--surface-2) 0);display:grid;place-items:center;align-content:center;position:relative}
+.ps-ring::before{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--surface)}.ps-ring b,.ps-ring span{position:relative}.ps-ring b{font:800 30px var(--display)}.ps-ring span{font-size:12px;color:var(--ink-soft);margin-top:-4px}
+.ps-hero-t{display:grid;gap:6px;flex:1;min-width:0}.ps-hero-t > b{font:800 22px/1.2 var(--display)}.ps-hero-t > span{color:var(--ink-soft);font-size:14px}.ps-hero-t small{font-size:12.5px;color:var(--ink-soft)}
+.ps-tl{position:relative;height:12px;border-radius:7px;background:var(--surface-2);overflow:hidden}.ps-tl i{position:absolute;left:0;top:0;bottom:0;border-radius:7px}.ps-tl .t{background:repeating-linear-gradient(45deg,rgba(0,0,0,.08) 0 6px,transparent 6px 12px)}.ps-tl .w{background:var(--gem);height:6px;top:3px}
+.ps-alerts{display:grid;gap:8px;align-content:start}.ps-al{padding:10px 14px;border-radius:14px;font-size:14px;border:1px solid}.ps-al.bad{background:#fdecea;border-color:#f3b8ae;color:#7a2416}.ps-al.warn{background:#fff6db;border-color:#f0d68a;color:#5a4500}.ps-al.good{background:#eaf6e3;border-color:#b9dfa6;color:#2d5a14}
+.ps-kpis{grid-template-columns:repeat(7,minmax(0,1fr))}@media(max-width:1300px){.ps-kpis{grid-template-columns:repeat(4,1fr)}}@media(max-width:700px){.ps-kpis{grid-template-columns:repeat(2,1fr)}}
+.ps-kpi.good{border-color:#b9dfa6;background:color-mix(in srgb,#5aa02c 7%,var(--surface))}.ps-kpi.bad{border-color:#f3b8ae;background:color-mix(in srgb,#c2412d 7%,var(--surface))}
+.ps-checks{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}@media(max-width:1000px){.ps-checks{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.ps-checks{grid-template-columns:1fr}}
+.ps-ck{text-align:left;font:inherit;color:inherit;cursor:pointer;padding:12px 14px;gap:7px;transition:transform .15s,box-shadow .15s,border-color .15s}.ps-ck:hover{transform:translateY(-2px);box-shadow:0 10px 22px -16px rgba(0,0,0,.35)}.ps-ck.sel{outline:2px solid var(--ink);outline-offset:1px}
+.ps-ck.st-behind{background:rgba(220,70,50,.08);border-color:rgba(220,70,50,.35)}.ps-ck.st-ok{background:rgba(240,200,60,.13);border-color:rgba(220,170,30,.4)}.ps-ck.st-done{background:rgba(90,170,60,.12);border-color:rgba(90,170,60,.4)}
+.ps-ck .ps-bar{display:flex;height:9px}.ps-ck .ps-bar i{height:100%;border-radius:0}.ps-ck .ps-bar i:first-child{border-radius:5px 0 0 5px}.ps-bar i.td,.pg-bar i.td{opacity:.45}
+.ps-barl{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft)}.ps-barl b{color:var(--ink)}
+.ps-ckg{grid-template-columns:repeat(4,1fr);gap:6px 10px}.ps-ckg .w2{grid-column:span 4;display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);padding-top:6px}.ps-ckg b{font:700 16px var(--display)}.ps-ckg b.neg{color:#b23a26}.ps-ckg sup{color:#b23a26}
+.ps-detail{margin-top:12px;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--surface)}.ps-dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ps-dh b{font-size:16px}
+.ps-d2{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}@media(max-width:800px){.ps-d2{grid-template-columns:1fr}}.ps-d2 h4{margin:0 0 8px;font-size:13px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em}
+.ps-days{position:relative;display:flex;align-items:flex-end;gap:6px;height:150px;padding-bottom:18px}.ps-days > div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.ps-days > div i{width:100%;border-radius:5px 5px 0 0;min-height:1px}.ps-days > div b{font:700 11px var(--mono);order:-1}.ps-days > div span{position:absolute;bottom:-18px;font:500 11px var(--mono);color:var(--ink-soft)}
+.ps-days em{position:absolute;left:0;right:0;border-top:2px dashed #c2412d;margin-bottom:18px}.ps-days em span{position:absolute;right:0;top:-18px;font:700 11px var(--mono);color:#c2412d;background:var(--surface);padding:0 4px}
+.ps-wr{display:grid;grid-template-columns:120px 1fr auto auto;gap:8px;align-items:center;margin-bottom:6px;font-size:13.5px}.ps-wr div{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}.ps-wr div i{display:block;height:100%}.ps-wr small{color:var(--ink-soft);min-width:60px}.ps-wr em,.ps-who em{font-style:normal;font-size:10.5px;font-weight:700;padding:1px 5px;border-radius:5px;background:#ece6fb;color:#5b45b0}
+.pg-list{display:grid;gap:14px}.pg-h{display:flex;justify-content:space-between;font-size:14px;margin-bottom:5px}.pg-bar{position:relative;display:flex;height:16px;border-radius:9px;background:var(--surface-2);overflow:visible}.pg-bar i{height:100%}.pg-bar i:first-child{border-radius:9px 0 0 9px}
+.pg-bar em{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed var(--ink)}.pg-bar.big{height:12px}.pg-f{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--ink-soft);margin-top:4px}
+.pg-key{display:inline-block;width:0;height:12px;border-left:2px dashed var(--ink);vertical-align:-2px;margin:0 3px}
+.ps-fill{font-size:14px;margin-bottom:10px}.ps-fill b{font:800 22px var(--display)}
+.team-perf{display:grid;gap:8px;margin-bottom:16px;border-width:1.5px}.team-perf.good{border-color:#b9dfa6;background:linear-gradient(160deg,color-mix(in srgb,#5aa02c 8%,var(--surface)),var(--surface))}.team-perf.bad{border-color:#f3b8ae;background:linear-gradient(160deg,color-mix(in srgb,#c2412d 7%,var(--surface)),var(--surface))}
+.tpf-h{display:flex;justify-content:space-between;align-items:center}.tpf-h b{font:800 17px var(--display)}.tpf-k{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}@media(max-width:700px){.tpf-k{grid-template-columns:repeat(2,1fr)}}
+.tpf-k div{display:grid;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface)}.tpf-k span{font-size:11.5px;color:var(--ink-soft)}.tpf-k b{font:800 20px var(--display)}.tpf-k b small{font:600 11px var(--mono);color:var(--ink-soft)}.tpf-k b.neg{color:#b23a26}
 </style>
 </head>
 <body>
@@ -1259,6 +1286,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <section class="view" data-view="clock" hidden>
       <div class="vhead"><div><h1>My Workday</h1><p>Accept today's assignment, then clock in. Clock in and out as many times as you need each day. Every login–logout pair is saved as a session, and the sessions add up to your daily, weekly and monthly hours.</p></div></div>
       <div class="panel my-assign self-only" id="myAssign"></div>
+      <div class="panel team-perf" id="myTeamPerf" hidden></div>
       <div class="tiles hours-tiles hm-hours">
         <div class="tile"><span id="hTodayL">My hours today</span><b id="hToday">0h 00m</b></div>
         <div class="tile"><span id="hWeekL">My hours this week</span><b id="hWeek">0h 00m</b></div>
@@ -1325,9 +1353,12 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <section class="view" data-view="pstat" hidden>
       <div class="vhead"><div><h1>Project Status</h1><p>Files waiting, what the team did each day, speed, and whether we will make the deadline.</p></div><div class="row" style="gap:8px;align-items:center"><input type="month" id="psMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="psLog">✎ My numbers</button></div></div>
       <div class="msg warn" id="psNoPlan" hidden></div>
+      <div class="ps-top"><div class="panel ps-hero" id="psHero"></div><div class="ps-alerts" id="psAlerts" hidden></div></div>
       <div class="ps-kpis" id="psKpis"></div>
-      <div class="panel"><div class="vhead" style="margin:0 0 6px"><h3 style="margin:0">Each check</h3><span class="hint" id="psDl"></span></div><div class="ps-checks" id="psChecks"></div></div>
-      <div class="panel"><div class="vhead" style="margin:0 0 6px"><h3 style="margin:0">Files done per day (team)</h3><span class="hint">Last 14 working days · the line is what is needed per day to finish on time</span></div><div id="psDaily"></div></div>
+      <div class="panel ps-ckpanel"><div class="vhead" style="margin:0 0 8px"><h3 style="margin:0">Each check <span class="hint" style="font-weight:400">· click a check for details</span></h3><span class="hint" id="psDl"></span></div><div class="ps-checks" id="psChecks"></div>
+        <p class="hint" id="psCkNote" hidden style="margin:8px 0 0"><sup>*</sup> At its own speed this check would finish much later; the date assumes the team moves to it as other checks finish.</p>
+        <div class="ps-detail" id="psDetail" hidden></div></div>
+      <div class="panel"><div class="vhead" style="margin:0 0 8px"><h3 style="margin:0">Progress by check</h3><span class="hint">Dark: done before today · light: done today · grey: waiting · <em class="pg-key"></em> where we should be today</span></div><div class="pg-list" id="psProg"></div></div>
       <div class="two">
         <div class="panel" id="psMePanel"><h3>My stats</h3><div id="psMe"></div></div>
         <div class="panel"><h3>Who has filled in today</h3><div id="psToday"></div></div>
@@ -4064,7 +4095,7 @@ function openWorkLog(day, fromClockOut, after){ if (!me) { after && after(); ret
   $('wlLater').textContent = 'Cancel'; $('wlSave').textContent = fromClockOut ? 'Save and clock out' : 'Save my numbers';
   $('wlT').textContent = fromClockOut ? 'Before you clock out: what did you do today?' : 'Today\'s numbers'; drawWl(); $('wlErr').hidden = true; $('wlDlg').showModal(); setTimeout(() => { const i = $('wlRows').querySelector('input'); i && i.focus(); i && i.select(); }, 50); }
 function drawWl(){ const d = $('wlDate').value || todayStr(), cur = wlDay(me.key, d) || {};
-  $('wlRows').innerHTML = CHECKS.map(c => `<label class="wl-row"><span class="wl-dot" style="background:${c.c}"></span><span>${c.n}</span><input type="number" min="0" max="5000" inputmode="numeric" data-wl="${c.k}" value="${cur[c.k] != null ? +cur[c.k] : ''}" placeholder="0"></label>`).join('');
+  $('wlRows').innerHTML = (isL2(me) ? [...CHECKS.filter(c => c.k === 'l2'), ...CHECKS.filter(c => c.k !== 'l2')] : CHECKS).map(c => `<label class="wl-row"><span class="wl-dot" style="background:${c.c}"></span><span>${c.n}</span><input type="number" min="0" max="5000" inputmode="numeric" data-wl="${c.k}" value="${cur[c.k] != null ? +cur[c.k] : ''}" placeholder="0"></label>`).join('');
   $('wlSub').textContent = cur.at ? 'Saved ' + new Date(cur.at).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) + '. Change anything and save again (today only).' : 'Enter how many items you finished in each check today. Numbers are entered on the same day: they can\'t be added for another day later.'; wlSum(); }
 const wlSum = () => { const t = [...$('wlRows').querySelectorAll('[data-wl]')].reduce((a, i) => a + (+i.value || 0), 0); $('wlTot').innerHTML = `Total today: <b>${t}</b>`; };
 $('wlRows').addEventListener('input', wlSum); $('wlDate').addEventListener('change', drawWl);
@@ -4075,7 +4106,7 @@ $('wlDlg').addEventListener('cancel', e => { if (wlClockOut) e.preventDefault();
 $('wlForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const d = $('wlDate').value || todayStr(), err = $('wlErr'), x = {};
   if (d !== todayStr()) { err.textContent = 'Numbers can only be entered for today.'; err.hidden = false; return; }
   for (const i of $('wlRows').querySelectorAll('[data-wl]')) { const v = i.value.trim(); if (v === '') { x[i.dataset.wl] = 0; continue; } if (!/^\d+$/.test(v) || +v > 5000) { err.textContent = 'Use whole numbers from 0 to 5000.'; err.hidden = false; i.focus(); return; } x[i.dataset.wl] = +v; }
-  x.at = new Date().toISOString(); const days = {...((workAll[me.key] || {}).days || {}), [d]: x}; Object.keys(days).sort().slice(0, -400).forEach(k => delete days[k]);
+  x.at = new Date().toISOString(); try { const tl = ((myAtt && myAtt.days) || {})[d]; if (tl) x.ms = Math.round(sessMs(tl)); } catch (z) {} const days = {...((workAll[me.key] || {}).days || {}), [d]: x}; Object.keys(days).sort().slice(0, -400).forEach(k => delete days[k]);
   $('wlSave').disabled = true;
   try { await db.doc('workLog/' + me.key).set({email: me.email, name: me.name, days, updatedAt: x.at}); workAll[me.key] = {...(workAll[me.key] || {}), email: me.email, name: me.name, days}; toast('Saved: ' + wlTot(x) + ' items for ' + fmtDay(d)); renderPstat(); renderWlRemind(); wlClose(); }
   catch (x2) { err.textContent = 'Your numbers couldn\'t be saved. Try again.'; err.hidden = false; } finally { $('wlSave').disabled = false; } });
@@ -4088,7 +4119,7 @@ function renderWlRemind(){ const r = $('wlRemind'); if (!r) return; const l = ((
 
 // numbers already done before the daily form existed (project started 10 Nov 2026): added once by the first admin who opens the portal.
 // A number an employee saved themselves is never lowered.
-const WL_SEED_V = 'wl-2026-11-11a', WL_SEED = {
+const WL_SEED_V = 'wl-2026-11-11b', WL_SEED = {
   'blessy@chrysolite.in': {name: 'Blessy Bessanio', '2026-11-10': {li: 65}, '2026-11-11': {li: 151}},
   'nusrath@chrysolite.in': {name: 'Nusrath Ep', '2026-11-10': {prof: 4, li: 20, ng: 4}, '2026-11-11': {li: 50}},
   'shygi@chrysolite.in': {name: 'Shygi Hana Reji', '2026-11-10': {prof: 2, li: 17}, '2026-11-11': {li: 82}},
@@ -4098,89 +4129,135 @@ async function seedWorkLog(){ if (!isAdmin || acting() || window.__wlsBusy || wi
     for (const [email, sd] of Object.entries(WL_SEED)) { const ref = db.doc('workLog/' + email), snap = await ref.get(), cur = snap.exists ? snap.data() : {}, days = {...(cur.days || {})};
       for (const [d, nums] of Object.entries(sd)) { if (d === 'name') continue; const x = {...(days[d] || {})}; CHECKS.forEach(c => { const v = Math.max(+x[c.k] || 0, +nums[c.k] || 0); x[c.k] = v; }); x.at = x.at || new Date().toISOString(); x.src = x.src || 'import'; days[d] = x; }
       const acc = accounts.find(a => a.key === email); await ref.set({email, name: (acc && acc.name) || cur.name || sd.name, days, updatedAt: new Date().toISOString()}); }
+    { const pr = db.doc('projPlan/2026-11'), ps2 = await pr.get(), cur = ps2.exists ? ps2.data() : {month: '2026-11', deadline: '2026-11-27'}, snaps = {...(cur.snaps || {})};
+      if (!snaps['2026-11-12']) { snaps['2026-11-12'] = {prof: 2779, li: 707, ng: 25, email: 1506, company: 0}; await pr.set({...cur, month: '2026-11', deadline: cur.deadline || '2026-11-27', snaps, by: cur.by || (me ? me.name : 'Admin'), updatedAt: new Date().toISOString()}); } }
     await db.doc('adminSettings/workSeed').set({v: WL_SEED_V, at: new Date().toISOString()}); window.__wlsDone = 1; toast('Earlier numbers (10–11 Nov) added to Project Status'); }
   catch (e) { console.error(e); } finally { window.__wlsBusy = 0; } }
 // hours from My Workday for a person and a range of days
 const hoursOf = (email, from, to) => { const rec = (isAdmin ? teamAtt : [myAtt]).find(r => r && r.email && r.email.toLowerCase() === String(email).toLowerCase()); if (!rec) return 0; let t = 0; Object.entries(rec.days || {}).forEach(([d, l]) => { if (d >= from && d <= to) t += sessMs(l); }); return t; };
 // ----- the maths -----
+const WL_L2 = ['divya@chrysolite.in'];   // L2 reviewers: escalations first, checks when there is time; not counted in "who has filled in"
+const isL2 = a => !!a && (WL_L2.includes(String(a.key || a.email || '').toLowerCase()) || /^divya jacob$/i.test(String(a.name || '').trim()));
 function planFor(m){ const p = projPlans[m]; if (!p) return null; const snaps = Object.entries(p.snaps || {}).sort((a, b) => a[0].localeCompare(b[0])); return {...p, snaps}; }
 function teamDone(day, k){ return Object.values(workAll).reduce((a, w) => a + (+(((w.days || {})[day] || {})[k]) || 0), 0); }
 function doneBetween(k, from, to){ let t = 0; for (const w of Object.values(workAll)) for (const [d, x] of Object.entries(w.days || {})) if (d >= from && d <= to) t += +x[k] || 0; return t; }
 function workdaysBetween(a, b){ if (b < a) return 0; let n = 0; for (let d = a; d <= b; d = addDays(d, 1)) if (isWorkday(d)) n++; return n; }
 function lastWorkdays(before, n){ const out = []; let d = addDays(before, -1); for (let g = 0; out.length < n && g < 60; g++, d = addDays(d, -1)) if (isWorkday(d)) out.push(d); return out; }
+function addWorkdays(from, n){ let d = from; while (n > 0) { d = addDays(d, 1); if (isWorkday(d)) n--; } return d; }
+// hours behind the numbers: saved with the numbers at clock-out (x.ms); admins can also read everyone's clock
+const msOfDay = (key, d) => { const x = wlDay(key, d); if (x && x.ms) return +x.ms; if (isAdmin || (me && key === me.key)) { const a = accounts.find(q => q.key === key); return a ? hoursOf(a.email, d, d) : 0; } return 0; };
 function stat(m){ const plan = planFor(m), today = todayStr(), mStart = m + '-01', mEnd = ymd(new Date(+m.slice(0, 4), +m.slice(5, 7), 0)), until = today < mEnd ? today : mEnd;
-  const deadline = plan && plan.deadline || mEnd, cur = today.slice(0, 7) === m, past = today > mEnd;
-  // speed: team files per working day over the last 7 working days before today that have numbers (falls back to the month so far)
+  const deadline = plan && plan.deadline || mEnd, cur = today.slice(0, 7) === m;
   const recent = lastWorkdays(cur ? today : addDays(mEnd, 1), 7).filter(d => d >= mStart || cur), withData = recent.filter(d => CHECKS.some(c => teamDone(d, c.k) > 0));
-  // today counts towards the speed once more than half of the team has entered today's numbers
-  const req = people().filter(wlRequired); if (cur && isWorkday(today) && req.length && req.filter(p2 => wlDay(p2.key, today)).length * 2 > req.length) { withData.unshift(today); if (withData.length > 7) withData.pop(); }
-  const left = workdaysBetween(cur ? today : mEnd < today ? addDays(mEnd, 1) : mStart, deadline);
-  const per = CHECKS.map(c => { const base = plan ? (() => { const sn = plan.snaps.filter(([d]) => d <= until && (d.slice(0, 7) === m)); const last = sn.length ? sn[sn.length - 1] : null; return last ? {d: last[0], n: +last[1][c.k] || 0} : null; })() : null;
+  const req = people().filter(p2 => wlRequired(p2) && !isL2(p2)); if (cur && isWorkday(today) && req.length && req.filter(p2 => wlDay(p2.key, today)).length * 2 > req.length && !withData.includes(today)) { withData.unshift(today); if (withData.length > 7) withData.pop(); }
+  // the latest waiting numbers of this month; numbers dated after today ("at the start of tomorrow") count as they are
+  const last = plan ? plan.snaps.filter(([d]) => d.slice(0, 7) === m).pop() : null, baseD = last ? last[0] : null;
+  const from = baseD && baseD > today ? baseD : today, doneTodayAll = CHECKS.reduce((a, c) => a + teamDone(today, c.k), 0);
+  // working days still available: from the waiting numbers' day, or from today (today only if nothing has been entered yet)
+  const daysLeft = baseD && baseD > today ? workdaysBetween(baseD, deadline) : cur ? workdaysBetween(isWorkday(today) && doneTodayAll === 0 ? today : addDays(today, 1), deadline) : 0;
+  const per = CHECKS.map(c => { const base = last ? {d: baseD, n: +last[1][c.k] || 0} : null;
     const done = doneBetween(c.k, mStart, until), doneToday = teamDone(today, c.k), sinceBase = base ? doneBetween(c.k, base.d, until) : 0;
-    const remaining = c.pend && base ? Math.max(0, base.n - sinceBase) : null;
+    const remaining = c.pend && base ? Math.max(0, base.n - sinceBase) : null, total = base ? base.n + (base.d > mStart ? doneBetween(c.k, mStart, addDays(base.d, -1)) : 0) : null;
     const spd = withData.length ? withData.reduce((a, d) => a + teamDone(d, c.k), 0) / withData.length : 0;
-    // today is still running: what is left to do from tomorrow on is needed over the remaining working days after today
-    const daysLeft = cur ? Math.max(0, left - (isWorkday(today) ? 1 : 0)) + (isWorkday(today) && doneToday === 0 ? 1 : 0) : left;
     const need = remaining == null ? null : remaining === 0 ? 0 : daysLeft > 0 ? Math.ceil(remaining / daysLeft) : remaining;
-    let finish = null; if (remaining != null && remaining > 0 && spd > 0) { let r = remaining, d = today; while (r > 0) { d = addDays(d, 1); if (isWorkday(d)) r -= spd; } finish = d; } else if (remaining === 0) finish = 'done';
+    const own = remaining > 0 && spd > 0 ? addWorkdays(from > today ? addDays(from, -1) : today, Math.ceil(remaining / spd)) : null;
     const behind = remaining == null ? 0 : Math.max(0, Math.round(remaining - spd * daysLeft));
-    return {...c, base, done, doneToday, remaining, spd, need, finish, behind, daysLeft}; });
-  const P = per.filter(x => x.pend), tot = k => P.reduce((a, x) => a + (x[k] || 0), 0), hasBase = P.some(x => x.base);
-  const team = {remaining: hasBase ? tot('remaining') : null, done: per.reduce((a, x) => a + x.done, 0), today: per.reduce((a, x) => a + x.doneToday, 0), spd: tot('spd'), behind: tot('behind'),
-    need: hasBase ? P.reduce((a, x) => a + (x.need || 0), 0) : null};
-  const fins = P.filter(x => x.finish && x.finish !== 'done').map(x => x.finish).sort(); team.finish = !hasBase ? null : P.every(x => x.remaining === 0) ? 'done' : P.some(x => x.remaining > 0 && !x.spd) ? null : fins[fins.length - 1];
-  return {m, plan, deadline, left, per, team, mStart, until, recent: withData}; }
+    return {...c, base, total, done, doneToday, remaining, spd, need, own, behind}; });
+  const P = per.filter(x => x.pend), tot = k => P.reduce((a, x) => a + (x[k] || 0), 0), hasBase = !!last;
+  const team = {remaining: hasBase ? tot('remaining') : null, total: hasBase ? tot('total') : null, done: per.reduce((a, x) => a + x.done, 0), donePend: tot('done'), today: doneTodayAll, spd: tot('spd'), behind: 0, need: hasBase ? tot('need') : null};
+  // projected finish: the whole team's speed working through everything that is left (people move to the next check when one is finished)
+  team.finish = !hasBase ? null : team.remaining === 0 ? 'done' : team.spd > 0 ? addWorkdays(from > today ? addDays(from, -1) : today, Math.ceil(team.remaining / team.spd)) : null;
+  team.behind = hasBase ? Math.max(0, Math.round(team.remaining - team.spd * daysLeft)) : 0;
+  per.forEach(x => { x.finish = x.remaining === 0 && x.pend ? 'done' : !x.pend || x.remaining == null ? null : x.own && team.finish && x.own <= team.finish ? x.own : team.finish; x.pooled = !!(x.finish && x.finish !== 'done' && x.finish !== x.own); });
+  // time per file: hours behind the numbers on days that have both
+  let ms = 0, files = 0, msDays = 0; Object.entries(workAll).forEach(([key, w]) => Object.entries(w.days || {}).forEach(([d, x]) => { if (d < mStart || d > until) return; const h = msOfDay(key, d); if (!h) return; ms += h; files += wlTot(x); msDays++; }));
+  const teamDays = new Set(); Object.values(workAll).forEach(w => Object.keys(w.days || {}).forEach(d => { if (d >= mStart && d <= until) teamDays.add(d); }));
+  const hoursPerDay = teamDays.size ? ms / teamDays.size : 0;   // team hours per working day
+  team.minPerFile = files ? ms / 60000 / files : null; team.minNeeded = team.need && hoursPerDay ? hoursPerDay / 60000 / team.need : null;
+  team.elapsed = workdaysBetween(mStart, until); team.window = workdaysBetween(mStart, deadline);
+  return {m, plan, deadline, daysLeft, per, team, mStart, until, recent: withData, baseD, today}; }
 
 // ----- the page -----
 const fmtN = n => n == null ? '—' : Math.round(n).toLocaleString();
 const fdS = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'});
-function renderPstat(){ const v = document.querySelector('.view[data-view="pstat"]'); if (!v || !$('psMonth')) return; if (!$('psMonth').value) $('psMonth').value = monthKey(new Date());
-  const S = stat($('psMonth').value), T = S.team, late = T.finish && T.finish !== 'done' && T.finish > S.deadline, lateDays = late ? workdaysBetween(addDays(S.deadline, 1), T.finish) : 0, slow = S.per.filter(x => x.pend && x.finish && x.finish !== 'done').sort((a, b) => b.finish.localeCompare(a.finish))[0];
+const fdW = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
+const psState = x => !x.pend ? 'rev' : x.remaining === 0 ? 'done' : x.remaining == null ? 'none' : x.behind > 0 ? 'behind' : 'ok';
+const psPill = x => ({rev: ['info', 'Review work'], done: ['ok', '✓ Done'], none: ['', 'No plan'], behind: ['off', 'Behind ' + fmtN(x.behind)], ok: ['ok', 'On track']})[psState(x)];
+let psSel = null;
+function renderPstat(){ const v = document.querySelector('.view[data-view="pstat"]'); try { renderTeamPerf(); } catch (e) {} if (!v || !$('psMonth')) return; if (!$('psMonth').value) $('psMonth').value = monthKey(new Date());
+  const S = stat($('psMonth').value), T = S.team, late = T.finish && T.finish !== 'done' && T.finish > S.deadline, lateDays = late ? workdaysBetween(addDays(S.deadline, 1), T.finish) : 0;
   $('psNoPlan').hidden = !!S.plan; $('psNoPlan').innerHTML = isAdmin ? '<b>No month plan yet.</b> Add the deadline and the waiting numbers in <b>Month plan</b> at the bottom of this page.' : 'Your Project Manager hasn\'t added this month\'s plan yet. Your numbers are still saved.';
-  $('psDl').textContent = 'Deadline ' + fdS(S.deadline) + ' · ' + S.left + ' working day' + (S.left === 1 ? '' : 's') + ' left';
-  const status = T.remaining === 0 ? ['ok', '✓ All done'] : T.remaining == null ? ['', 'Add the month plan'] : !T.spd ? ['warn', 'No speed yet'] : T.behind > 0 ? ['off', 'Behind by ' + fmtN(T.behind) + ' files'] : ['ok', 'On track'];
+  // alerts: the most important things first
+  const al = []; if (S.plan) { if (late) al.push(['bad', `⚠ At today's speed the project finishes on <b>${fdW(T.finish)}</b>, <b>${lateDays} working day${lateDays === 1 ? '' : 's'} after</b> the deadline (${fdW(S.deadline)}).`]);
+    else if (T.finish && T.finish !== 'done') al.push(['good', `✓ At today's speed everything is finished by <b>${fdW(T.finish)}</b>, before the deadline (${fdW(S.deadline)}).`]);
+    S.per.filter(x => x.pend && x.remaining > 0 && !x.spd).forEach(x => al.push(['warn', `⏳ <b>${x.n}</b> hasn't started: ${fmtN(x.remaining)} waiting, needs <b>${fmtN(x.need)}/day</b> from now.`]));
+    S.per.filter(x => psState(x) === 'behind' && x.spd).forEach(x => al.push(['warn', `🐢 <b>${x.n}</b> does ${fmtN(x.spd)}/day but needs <b>${fmtN(x.need)}/day</b>.`])); }
+  $('psAlerts').innerHTML = al.map(([c, t]) => `<div class="ps-al ${c}">${t}</div>`).join(''); $('psAlerts').hidden = !al.length;
+  const pc = T.total ? Math.round((T.total - T.remaining) / T.total * 100) : 0, tp = T.window ? Math.round(T.elapsed / T.window * 100) : 0;
+  $('psHero').innerHTML = S.plan ? `<div class="ps-ring" style="--p:${pc}"><b>${pc}%</b><span>done</span></div><div class="ps-hero-t"><b>${fmtN(T.total - T.remaining)} of ${fmtN(T.total)} files done</b><span>${fmtN(T.remaining)} still waiting · deadline <b>${fdW(S.deadline)}</b> · ${S.daysLeft} working day${S.daysLeft === 1 ? '' : 's'} left</span>
+    <div class="ps-tl" title="Time used vs work done"><i class="t" style="width:${Math.min(100, tp)}%"></i><i class="w" style="width:${pc}%"></i></div><small>${pc >= tp ? '✓ Work is ahead of the calendar' : '⚠ Work is behind the calendar'}: ${pc}% of the files done, ${tp}% of the working days used</small></div>` : '';
+  $('psDl').textContent = 'Deadline ' + fdS(S.deadline) + ' · ' + S.daysLeft + ' working day' + (S.daysLeft === 1 ? '' : 's') + ' left' + (S.baseD ? ' · waiting numbers from ' + fdS(S.baseD) : '');
+  const status = T.remaining === 0 ? ['ok', '✓ All done'] : T.remaining == null ? ['', 'Add the month plan'] : !T.spd ? ['warn', 'No speed yet'] : T.behind > 0 ? ['off', 'Behind by ' + fmtN(T.behind)] : ['ok', 'On track'];
+  const tpf = T.minPerFile, tpn = T.minNeeded;
   $('psKpis').innerHTML = [
-    ['Files still waiting', fmtN(T.remaining), 'across all checks'],
-    ['Done this month', fmtN(T.done), fmtN(T.today) + ' so far today'],
-    ['Team speed', T.spd ? fmtN(T.spd) + '<small>/day</small>' : '—', S.recent.length ? 'average of the last ' + S.recent.length + ' working day' + (S.recent.length === 1 ? '' : 's') : 'no numbers yet'],
-    ['Needed per day', T.need == null ? '—' : fmtN(T.need) + '<small>/day</small>', 'to finish by ' + fdS(S.deadline)],
-    ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' late · slowest: ' + slow.n : 'on or before the deadline') : (T.remaining && !T.finish ? (S.per.filter(x => x.pend && x.remaining > 0 && !x.spd).map(x => x.n).join(', ') || 'some checks') + ': no numbers yet' : 'at the current speed')],
-    ['Status', `<span class="pill ${status[0]}">${status[1]}</span>`, T.behind > 0 && slow ? slow.n + ' needs ' + fmtN(slow.need) + '/day, doing ' + fmtN(slow.spd) : T.remaining != null && T.spd ? 'every check can finish by ' + fdS(S.deadline) : '']
-  ].map(([a, b, c], i) => `<div class="ps-kpi${i === 5 && T.behind > 0 ? ' bad' : ''}"><span>${a}</span><b>${b}</b><small>${c}</small></div>`).join('');
-  $('psChecks').innerHTML = S.per.map(x => { const tot = x.base ? x.base.n + (x.base.d > S.mStart ? doneBetween(x.k, S.mStart, addDays(x.base.d, -1)) : 0) : 0, pc = x.pend && tot ? Math.min(100, (tot - x.remaining) / tot * 100) : 0;
-    const st = !x.pend ? ['info', 'Review work'] : x.remaining === 0 ? ['ok', 'Done'] : x.remaining == null ? ['', 'No plan'] : !x.spd ? ['warn', 'No speed yet'] : x.behind > 0 ? ['off', 'Behind ' + fmtN(x.behind)] : ['ok', 'On track'];
-    return `<div class="ps-ck"><div class="ps-ckh"><span class="wl-dot" style="background:${x.c}"></span><b>${x.n}</b><span class="pill ${st[0]}">${st[1]}</span></div>
-      ${x.pend ? `<div class="ps-bar"><i style="width:${pc}%;background:${x.c}"></i></div>` : ''}
-      <div class="ps-ckg"><div><span>Waiting</span><b>${x.pend ? fmtN(x.remaining) : '—'}</b></div><div><span>Done (month)</span><b>${fmtN(x.done)}</b></div><div><span>Speed / day</span><b>${x.spd ? fmtN(x.spd) : '—'}</b></div><div><span>Needed / day</span><b>${x.pend ? fmtN(x.need) : '—'}</b></div><div><span>Finish at this speed</span><b>${x.finish === 'done' ? 'Done' : x.finish ? fdS(x.finish) : '—'}</b></div></div></div>`; }).join('');
-  // daily chart
-  const days = lastWorkdays(addDays(S.until, 1), 14).filter(d => d >= S.mStart).reverse(), mx = Math.max(1, T.need || 0, ...days.map(d => CHECKS.reduce((a, c) => a + teamDone(d, c.k), 0)));
-  const W = 900, H = 230, L = 36, B = 26, bw = (W - L - 8) / Math.max(1, days.length), y = v2 => H - B - v2 / mx * (H - B - 12);
-  let svg = `<svg viewBox="0 0 ${W} ${H}" class="ps-svg" role="img" aria-label="Files done per day">`;
-  [0, .5, 1].forEach(f => { const v2 = Math.round(mx * f); svg += `<line x1="${L}" x2="${W - 4}" y1="${y(v2)}" y2="${y(v2)}" class="gl"/><text x="${L - 6}" y="${y(v2) + 4}" text-anchor="end" class="tl">${v2}</text>`; });
-  days.forEach((d, i) => { let acc = 0; const x0 = L + i * bw + 5; CHECKS.forEach(c => { const v2 = teamDone(d, c.k); if (!v2) return; const y1 = y(acc + v2), y0 = y(acc); svg += `<rect x="${x0}" y="${y1}" width="${bw - 10}" height="${Math.max(0, y0 - y1)}" rx="3" fill="${c.c}"><title>${fdS(d)} · ${c.n}: ${v2}</title></rect>`; acc += v2; });
-    svg += `<text x="${x0 + (bw - 10) / 2}" y="${H - 8}" text-anchor="middle" class="tl">${new Date(d + 'T00:00').getDate()}</text>${acc ? `<text x="${x0 + (bw - 10) / 2}" y="${y(acc) - 4}" text-anchor="middle" class="tv">${acc}</text>` : ''}`; });
-  if (T.need) svg += `<line x1="${L}" x2="${W - 4}" y1="${y(T.need)}" y2="${y(T.need)}" class="nd"/><text x="${L + 6}" y="${y(T.need) - 6}" class="ndt">needed ${fmtN(T.need)}/day</text>`;
-  $('psDaily').innerHTML = svg + '</svg><div class="ps-leg">' + CHECKS.map(c => `<span><i style="background:${c.c}"></i>${c.n}</span>`).join('') + '</div>';
+    ['Files still waiting', fmtN(T.remaining), 'across all checks', ''],
+    ['Done today', fmtN(T.today), fmtN(T.done) + ' this month', ''],
+    ['Team speed', T.spd ? fmtN(T.spd) + '<small>/day</small>' : '—', S.recent.length ? 'average of ' + S.recent.length + ' working day' + (S.recent.length === 1 ? '' : 's') : 'no numbers yet', T.need && T.spd ? (T.spd >= T.need ? 'good' : 'bad') : ''],
+    ['Needed per day', T.need == null ? '—' : fmtN(T.need) + '<small>/day</small>', 'to finish by ' + fdS(S.deadline), ''],
+    ['Time per file', tpf ? tpf.toFixed(1) + '<small>min</small>' : '—', tpn ? 'needs ' + tpn.toFixed(1) + ' min to hit the deadline' : 'from hours worked', tpf && tpn ? (tpf <= tpn ? 'good' : 'bad') : ''],
+    ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' late' : 'on time') : 'needs the month plan and numbers', late ? 'bad' : T.finish ? 'good' : ''],
+    ['Status', `<span class="pill ${status[0]}">${status[1]}</span>`, T.behind > 0 && T.spd ? 'need ' + fmtN(T.need - T.spd) + ' more files a day' : '', T.behind > 0 ? 'bad' : '']
+  ].map(([a, b, c, k]) => `<div class="ps-kpi ${k}"><span>${a}</span><b>${b}</b><small>${c}</small></div>`).join('');
+  // each check: coloured by status, click for details
+  $('psChecks').innerHTML = S.per.map(x => { const st = psState(x), p2 = psPill(x), tot = x.total || 0, pcd = x.pend && tot ? Math.min(100, (tot - x.remaining) / tot * 100) : 0, pct = x.pend && tot ? Math.min(100 - pcd, x.doneToday / tot * 100) : 0;
+    return `<button type="button" class="ps-ck st-${st}${psSel === x.k ? ' sel' : ''}" data-psck="${x.k}"><div class="ps-ckh"><span class="wl-dot" style="background:${x.c}"></span><b>${x.n}</b><span class="pill ${p2[0]}">${p2[1]}</span></div>
+      ${x.pend ? `<div class="ps-bar" title="${fmtN(tot - x.remaining)} of ${fmtN(tot)} done"><i style="width:${pcd - pct}%;background:${x.c}"></i><i class="td" style="width:${pct}%;background:${x.c}"></i></div><div class="ps-barl"><span><b>${fmtN(tot - (x.remaining || 0))}</b> of ${fmtN(tot)} done</span><span>${Math.round(pcd)}%</span></div>` : `<div class="ps-barl"><span><b>${fmtN(x.done)}</b> reviews this month · ${fmtN(x.doneToday)} today</span></div>`}
+      <div class="ps-ckg"><div><span>Waiting</span><b>${x.pend ? fmtN(x.remaining) : '—'}</b></div><div><span>Speed / day</span><b>${x.spd ? fmtN(x.spd) : '0'}</b></div><div><span>Needed / day</span><b class="${x.pend && x.need > x.spd ? 'neg' : ''}">${x.pend ? fmtN(x.need) : '—'}</b></div>
+        <div><span>Done today</span><b>${fmtN(x.doneToday)}</b></div><div class="w2"><span>Finish at this speed</span><b>${x.finish === 'done' ? 'Done' : x.finish ? fdW(x.finish) + (x.pooled ? '<sup>*</sup>' : '') : x.pend ? '—' : 'Ongoing'}</b></div></div></button>`; }).join('');
+  $('psCkNote').hidden = !S.per.some(x => x.pooled);
+  drawPsDetail(S);
+  // progress by check
+  $('psProg').innerHTML = S.per.filter(x => x.pend && x.total).map(x => { const tot = x.total, dn = tot - x.remaining, pcd = dn / tot * 100, pt = Math.min(pcd, x.doneToday / tot * 100), exp = T.window ? Math.min(100, T.elapsed / T.window * 100) : 0;
+    return `<div class="pg-row"><div class="pg-h"><span><span class="wl-dot" style="background:${x.c}"></span> <b>${x.n}</b></span><span><b>${fmtN(dn)}</b> / ${fmtN(tot)} · ${Math.round(pcd)}%</span></div>
+      <div class="pg-bar" title="Done ${fmtN(dn)} · today ${fmtN(x.doneToday)} · waiting ${fmtN(x.remaining)}"><i style="width:${pcd - pt}%;background:${x.c}"></i><i class="td" style="width:${pt}%;background:${x.c}"></i><em style="left:${exp}%" title="Where we should be today to finish on time"></em></div>
+      <div class="pg-f"><span>Today +${fmtN(x.doneToday)}</span><span>${fmtN(x.remaining)} waiting</span><span>Needs ${fmtN(x.need)}/day · doing ${fmtN(x.spd)}/day</span></div></div>`; }).join('') || '<p class="empty">Add the month plan to see progress.</p>';
   // my stats
-  $('psMePanel').hidden = !wlRequired(me); $('psLog').hidden = !wlRequired(me);
   if (me && wlRequired(me)) { const mine = (workAll[me.key] || {}).days || {}, md = Object.entries(mine).filter(([d]) => d >= S.mStart && d <= S.until), mt = md.reduce((a, [, x]) => a + wlTot(x), 0), td = mine[todayStr()];
     const hT = hoursOf(me.email, todayStr(), todayStr()), hM = hoursOf(me.email, S.mStart, S.until);
-    $('psMe').innerHTML = `<div class="ps-mek"><div><span>Today</span><b>${td ? wlTot(td) : '—'}</b><small>${fmtH(hT)} worked</small></div><div><span>This month</span><b>${fmtN(mt)}</b><small>${fmtH(hM)} worked</small></div><div><span>My speed</span><b>${md.length ? fmtN(mt / md.length) : '—'}<small>/day</small></b><small>${hM > 0 && mt ? (mt / (hM / 3600000)).toFixed(1) + ' per hour' : '&nbsp;'}</small></div></div>
+    $('psMe').innerHTML = `<div class="ps-mek"><div><span>Today</span><b>${td ? wlTot(td) : '—'}</b><small>${fmtH(hT)} worked</small></div><div><span>This month</span><b>${fmtN(mt)}</b><small>${fmtH(hM)} worked</small></div><div><span>My speed</span><b>${md.length ? fmtN(mt / md.length) : '—'}<small>/day</small></b><small>${hM > 0 && mt ? (hM / 60000 / mt).toFixed(1) + ' min per file' : '&nbsp;'}</small></div></div>
       <div class="tbl"><table class="att"><thead><tr><th>Check</th><th>Today</th><th>This month</th></tr></thead><tbody>${CHECKS.map(c => `<tr><td><span class="wl-dot" style="background:${c.c}"></span> ${c.n}</td><td>${td ? +td[c.k] || 0 : '—'}</td><td>${md.reduce((a, [, x]) => a + (+x[c.k] || 0), 0)}</td></tr>`).join('')}</tbody></table></div>
       <button class="btn btn-ghost" type="button" data-wlopen style="margin-top:10px">${td ? '✎ Change today\'s numbers' : '+ Add today\'s numbers'}</button>`; }
-  // who has filled in today (names only)
-  const ps = people().filter(wlRequired), today = todayStr(), filled = ps.filter(p => wlDay(p.key, today));
-  $('psToday').innerHTML = `<p class="hint" style="margin:-4px 0 10px">${filled.length} of ${ps.length} have entered today's numbers.</p><div class="ps-who">${ps.map(p => { const x = wlDay(p.key, today); const h = isAdmin ? hoursOf(p.email, today, today) : 0; return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p.name).split(' ')[0])}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}${isAdmin && h ? ' <small>' + fmtH(h) + '</small>' : ''}</span>`; }).join('')}</div>`;
+  $('psMePanel').hidden = !wlRequired(me); $('psLog').hidden = !wlRequired(me);
+  // who has filled in today: specialists; L2 shown on its own
+  const today = todayStr(), sp = people().filter(p2 => wlRequired(p2) && !isL2(p2)), l2 = people().filter(p2 => wlRequired(p2) && isL2(p2)), filled = sp.filter(p2 => wlDay(p2.key, today));
+  const chip = p2 => { const x = wlDay(p2.key, today), h = isAdmin ? hoursOf(p2.email, today, today) : 0; return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p2.name).split(' ')[0])}${isL2(p2) ? ' <em>L2</em>' : ''}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}${isAdmin && h ? ' <small>' + fmtH(h) + '</small>' : ''}</span>`; };
+  $('psToday').innerHTML = `<div class="ps-fill"><b>${filled.length}</b> of ${sp.length} specialists have entered today's numbers</div><div class="ps-who">${sp.map(chip).join('')}${l2.map(chip).join('')}</div>`;
   // admin: per person
-  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Per hour</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
-    const rows = ps.map(p => { const dd = Object.entries((workAll[p.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p.key, today);
-      const hT = hoursOf(p.email, today, today), hM = hoursOf(p.email, S.mStart, S.until); return {p, dd, tot, t, hT, hM, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
-    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td class="mono">${r.hT ? fmtH(r.hT) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td class="mono">${r.hM ? fmtH(r.hM) : '<span class="hint">—</span>'}</td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td><td>${r.hM && r.tot ? (r.tot / (r.hM / 3600000)).toFixed(1) : '<span class="hint">—</span>'}</td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${8 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
-    // month plan form
-    if (!document.activeElement || !$('psAdmin').contains(document.activeElement)) { const p = S.plan, last = p && p.snaps.length ? p.snaps[p.snaps.length - 1] : null;
+  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Min / file</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
+    const rows = people().filter(wlRequired).map(p2 => { const dd = Object.entries((workAll[p2.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p2.key, today);
+      const hT = hoursOf(p2.email, today, today), hM = dd.reduce((a, [d]) => a + msOfDay(p2.key, d), 0); return {p: p2, dd, tot, t, hT, hM, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
+    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}${isL2(r.p) ? ' <span class="pill info" style="margin-left:6px">L2</span>' : ''}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td class="mono">${r.hT ? fmtH(r.hT) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td class="mono">${r.hM ? fmtH(r.hM) : '<span class="hint">—</span>'}</td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td><td>${r.hM && r.tot ? (r.hM / 60000 / r.tot).toFixed(1) : '<span class="hint">—</span>'}</td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${8 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
+    if (!document.activeElement || !$('psAdmin').contains(document.activeElement)) { const p = S.plan, lastS = p && p.snaps.length ? p.snaps[p.snaps.length - 1] : null;
       $('psDeadline').value = p && p.deadline || ''; $('psSnapDate').value = todayStr().slice(0, 7) === S.m ? todayStr() : S.mStart;
-      $('psPlanInputs').innerHTML = CHECKS.filter(c => c.pend).map(c => `<div class="f"><label>${c.n} · waiting</label><input type="number" min="0" data-ps="${c.k}" value="${last ? +last[1][c.k] || 0 : ''}" placeholder="e.g. 2779"></div>`).join('');
-      $('psPlanInfo').textContent = p ? 'Last updated ' + (last ? 'waiting numbers as of ' + fdS(last[0]) : '') + (p.by ? ' by ' + p.by : '') : 'No plan for this month yet.'; } } }
+      $('psPlanInputs').innerHTML = CHECKS.filter(c => c.pend).map(c => `<div class="f"><label>${c.n} · waiting</label><input type="number" min="0" data-ps="${c.k}" value="${lastS ? +lastS[1][c.k] || 0 : ''}" placeholder="e.g. 2779"></div>`).join('');
+      $('psPlanInfo').textContent = p ? 'Latest waiting numbers: start of ' + (lastS ? fdW(lastS[0]) : '—') + (p.by ? ' · by ' + p.by : '') : 'No plan for this month yet.'; } } }
+// details of one check: who did it, and the last working days
+function drawPsDetail(S){ const box = $('psDetail'); if (!psSel) { box.hidden = true; return; } const x = S.per.find(q => q.k === psSel); if (!x) { box.hidden = true; return; } box.hidden = false;
+  const first = Object.values(workAll).flatMap(w => Object.keys(w.days || {})).filter(d => d >= S.mStart).sort()[0] || S.mStart;
+  const days = lastWorkdays(addDays(S.until, 1), 10).filter(d => d >= first).reverse(), mx = Math.max(1, x.need || 0, ...days.map(d => teamDone(d, x.k)));
+  const who = people().filter(wlRequired).map(p2 => ({p: p2, n: Object.entries((workAll[p2.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until).reduce((a, [, y]) => a + (+y[x.k] || 0), 0), t: +(wlDay(p2.key, S.today) || {})[x.k] || 0})).filter(r => r.n).sort((a, b) => b.n - a.n), wt = Math.max(1, ...who.map(r => r.n));
+  box.innerHTML = `<div class="ps-dh"><b><span class="wl-dot" style="background:${x.c}"></span> ${x.n}</b><button type="button" class="mini" data-psck="${x.k}">Close</button></div>
+    <div class="ps-d2"><div><h4>Last working days</h4><div class="ps-days">${days.map(d => { const n = teamDone(d, x.k); return `<div title="${fdW(d)}: ${n}"><i style="height:${n / mx * 100}%;background:${x.c}"></i><b>${n || ''}</b><span>${new Date(d + 'T00:00').getDate()}</span></div>`; }).join('')}${x.need ? `<em style="bottom:${x.need / mx * 100}%"><span>needed ${fmtN(x.need)}</span></em>` : ''}</div></div>
+    <div><h4>Who did it this month</h4>${who.length ? who.map(r => `<div class="ps-wr"><span>${esc(r.p.name)}${isL2(r.p) ? ' <em>L2</em>' : ''}</span><div><i style="width:${r.n / wt * 100}%;background:${x.c}"></i></div><b>${fmtN(r.n)}</b><small>${r.t ? '+' + r.t + ' today' : ''}</small></div>`).join('') : '<p class="empty">Nobody yet this month.</p>'}</div></div>`; }
+document.addEventListener('click', e => { const b = e.target.closest('[data-psck]'); if (!b) return; psSel = psSel === b.dataset.psck ? null : b.dataset.psck; renderPstat(); if (psSel) setTimeout(() => $('psDetail').scrollIntoView({behavior: 'smooth', block: 'nearest'}), 30); });
+document.addEventListener('click', e => { if (e.target.closest('[data-psgo]')) { go('pstat'); renderPstat(); } });
+// My Workday: the team's progress in one strip
+function renderTeamPerf(){ const box = $('myTeamPerf'); if (!box) return; if (!me || !wlRequired(me) || !projPlans[monthKey(new Date())]) { box.hidden = true; return; }
+  const S = stat(monthKey(new Date())), T = S.team, pc = T.total ? Math.round((T.total - T.remaining) / T.total * 100) : 0, late = T.finish && T.finish !== 'done' && T.finish > S.deadline, mine = wlDay(me.key, todayStr());
+  box.hidden = false; box.className = 'panel team-perf ' + (late || T.behind > 0 ? 'bad' : 'good');
+  box.innerHTML = `<div class="tpf-h"><b>Team progress</b><button type="button" class="linkbtn" data-psgo="1">Open Project Status →</button></div>
+    <div class="pg-bar big"><i style="width:${pc}%;background:var(--gem)"></i></div><div class="pg-f"><span><b>${pc}%</b> done · ${fmtN(T.remaining)} files waiting</span><span>Deadline ${fdW(S.deadline)}</span></div>
+    <div class="tpf-k"><div><span>Team today</span><b>${fmtN(T.today)}</b></div><div><span>Team speed</span><b>${T.spd ? fmtN(T.spd) : '—'}<small>/day</small></b></div><div><span>Needed</span><b class="${T.need > T.spd ? 'neg' : ''}">${fmtN(T.need)}<small>/day</small></b></div><div><span>Finish at this speed</span><b>${T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—'}</b></div><div><span>Me today</span><b>${mine ? wlTot(mine) : '—'}</b></div></div>`; }
 $('psMonth').addEventListener('change', renderPstat);
 $('psPlanForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const m = $('psMonth').value || monthKey(new Date()), err = $('psPlanErr'), dl = $('psDeadline').value, sd = $('psSnapDate').value;
   if (!dl) { err.textContent = 'Pick the deadline.'; err.hidden = false; return; } if (!sd || sd.slice(0, 7) !== m) { err.textContent = 'The "as of" date must be in ' + m + '.'; err.hidden = false; return; }
