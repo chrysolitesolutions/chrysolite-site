@@ -1060,7 +1060,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .wl-dot{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}
 .ps-svg{width:100%;height:auto;display:block}.ps-svg .gl{stroke:var(--line);stroke-width:1}.ps-svg .tl{font:500 11px var(--mono);fill:var(--ink-soft)}.ps-svg .tv{font:700 11px var(--mono);fill:var(--ink)}.ps-svg .nd{stroke:#c2412d;stroke-width:2;stroke-dasharray:6 5}.ps-svg .ndt{font:700 11.5px var(--mono);fill:#c2412d}
 .ps-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--ink-soft)}.ps-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-.ps-mek{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}.ps-mek div{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid}.ps-mek span{font-size:12px;color:var(--ink-soft)}.ps-mek b{font:800 24px var(--display)}
+.ps-mek{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}.ps-mek div{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid}.ps-mek span{font-size:12px;color:var(--ink-soft)}.ps-mek b{font:800 24px var(--display)}.ps-mek b small{font:600 12px var(--mono);color:var(--ink-soft);margin-left:2px}.ps-mek small{font-size:12px;color:var(--ink-soft)}.ps-who small{font:500 11.5px var(--mono);color:var(--ink-soft)}
 .ps-who{display:flex;flex-wrap:wrap;gap:8px}.ps-who span{padding:6px 12px;border-radius:999px;border:1px dashed var(--line);font-size:13.5px;color:var(--ink-soft)}.ps-who span.ok{border-style:solid;border-color:color-mix(in srgb,var(--gem) 50%,var(--line));background:color-mix(in srgb,var(--gem) 12%,var(--surface));color:var(--ink)}
 .ps-spd{display:flex;align-items:center;gap:8px;min-width:120px}.ps-spd i{display:block;height:8px;border-radius:4px;background:var(--gem)}
 .ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
@@ -1983,7 +1983,7 @@ function startData() {
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
   watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); renderClock(); });
   watch('presence', db.collection('presence'), s => { presence = {}; s.docs.forEach(d => presence[d.id] = d.data()); renderHome(); });
-  watch('workLog', db.collection('workLog'), s => { workAll = {}; s.docs.forEach(d => workAll[d.id] = d.data()); renderPstat(); renderWlRemind(); });
+  watch('workLog', db.collection('workLog'), s => { workAll = {}; s.docs.forEach(d => workAll[d.id] = d.data()); renderPstat(); renderWlRemind(); if (isAdmin) seedWorkLog(); });
   watch('projPlan', db.collection('projPlan'), s => { projPlans = {}; s.docs.forEach(d => projPlans[d.id] = d.data()); renderPstat(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
@@ -2009,7 +2009,7 @@ function watchMine(){
   watch('slipAckMine', db.doc('slipAck/' + me.key), s => { slipAckMine = s.exists ? s.data() : null; try { drawMySlips(); } catch (e) {} });
   watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
-  watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); });
+  watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); try { renderPstat(); } catch (e) {} });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); try { renderHomeLeave(); } catch (e) {} });
   watch('myCarryReq', db.doc('carryReq/' + me.key), s => { carryReqMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
   watch('myCarryAppr', db.doc('carryAppr/' + me.key), s => { carryApprMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
@@ -2030,7 +2030,7 @@ function startAdminData() {
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
   watch('requests2', db.collection('leaveRequests'), s => { reqNew = s.docs.map(d => ({uid: d.id, ...d.data()})); setReqs(); });
-  const setAtt = () => { teamAtt = mergeAtt([...attDocs, ...clockDocs]); teamAtt.forEach(r => { tagAllow(r.days, otApprAll[r.email]); tagCarry(r.days, carryItems(carryReqAll[r.email], carryApprAll[r.email])); }); renderTeamAtt(); renderHome(); renderWa(); };
+  const setAtt = () => { teamAtt = mergeAtt([...attDocs, ...clockDocs]); teamAtt.forEach(r => { tagAllow(r.days, otApprAll[r.email]); tagCarry(r.days, carryItems(carryReqAll[r.email], carryApprAll[r.email])); }); renderTeamAtt(); renderHome(); renderWa(); try { renderPstat(); } catch (e) {} };
   watch('teamClock', db.collection('timeclock'), s => { clockDocs = s.docs.map(d => d.data()); clockIds = s.docs.map(d => d.id); setAtt(); enforceTeam(); });
   watch('carryReqAll', db.collection('carryReq'), s => { carryReqAll = {}; s.docs.forEach(d => carryReqAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
@@ -4085,6 +4085,23 @@ $('psLog').onclick = () => openWorkLog(todayStr(), false);
 function renderWlRemind(){ const r = $('wlRemind'); if (!r) return; const l = ((myAtt && myAtt.days) || {})[todayStr()] || [];
   r.hidden = !(wlRequired(me) && l.length && l[l.length - 1].out && !wlDay(me.key, todayStr())); }
 
+
+// numbers already done before the daily form existed (project started 10 Nov 2026): added once by the first admin who opens the portal.
+// A number an employee saved themselves is never lowered.
+const WL_SEED_V = 'wl-2026-11-11a', WL_SEED = {
+  'blessy@chrysolite.in': {name: 'Blessy Bessanio', '2026-11-10': {li: 65}, '2026-11-11': {li: 151}},
+  'nusrath@chrysolite.in': {name: 'Nusrath Ep', '2026-11-10': {prof: 4, li: 20, ng: 4}, '2026-11-11': {li: 50}},
+  'shygi@chrysolite.in': {name: 'Shygi Hana Reji', '2026-11-10': {prof: 2, li: 17}, '2026-11-11': {li: 82}},
+  'divya@chrysolite.in': {name: 'Divya Jacob', '2026-11-11': {ng: 110}}};
+async function seedWorkLog(){ if (!isAdmin || acting() || window.__wlsBusy || window.__wlsDone) return; window.__wlsBusy = 1;
+  try { const f = await db.doc('adminSettings/workSeed').get(); if (f.exists && (f.data() || {}).v === WL_SEED_V) { window.__wlsDone = 1; return; }
+    for (const [email, sd] of Object.entries(WL_SEED)) { const ref = db.doc('workLog/' + email), snap = await ref.get(), cur = snap.exists ? snap.data() : {}, days = {...(cur.days || {})};
+      for (const [d, nums] of Object.entries(sd)) { if (d === 'name') continue; const x = {...(days[d] || {})}; CHECKS.forEach(c => { const v = Math.max(+x[c.k] || 0, +nums[c.k] || 0); x[c.k] = v; }); x.at = x.at || new Date().toISOString(); x.src = x.src || 'import'; days[d] = x; }
+      const acc = accounts.find(a => a.key === email); await ref.set({email, name: (acc && acc.name) || cur.name || sd.name, days, updatedAt: new Date().toISOString()}); }
+    await db.doc('adminSettings/workSeed').set({v: WL_SEED_V, at: new Date().toISOString()}); window.__wlsDone = 1; toast('Earlier numbers (10–11 Nov) added to Project Status'); }
+  catch (e) { console.error(e); } finally { window.__wlsBusy = 0; } }
+// hours from My Workday for a person and a range of days
+const hoursOf = (email, from, to) => { const rec = (isAdmin ? teamAtt : [myAtt]).find(r => r && r.email && r.email.toLowerCase() === String(email).toLowerCase()); if (!rec) return 0; let t = 0; Object.entries(rec.days || {}).forEach(([d, l]) => { if (d >= from && d <= to) t += sessMs(l); }); return t; };
 // ----- the maths -----
 function planFor(m){ const p = projPlans[m]; if (!p) return null; const snaps = Object.entries(p.snaps || {}).sort((a, b) => a[0].localeCompare(b[0])); return {...p, snaps}; }
 function teamDone(day, k){ return Object.values(workAll).reduce((a, w) => a + (+(((w.days || {})[day] || {})[k]) || 0), 0); }
@@ -4095,6 +4112,8 @@ function stat(m){ const plan = planFor(m), today = todayStr(), mStart = m + '-01
   const deadline = plan && plan.deadline || mEnd, cur = today.slice(0, 7) === m, past = today > mEnd;
   // speed: team files per working day over the last 7 working days before today that have numbers (falls back to the month so far)
   const recent = lastWorkdays(cur ? today : addDays(mEnd, 1), 7).filter(d => d >= mStart || cur), withData = recent.filter(d => CHECKS.some(c => teamDone(d, c.k) > 0));
+  // today counts towards the speed once more than half of the team has entered today's numbers
+  const req = people().filter(wlRequired); if (cur && isWorkday(today) && req.length && req.filter(p2 => wlDay(p2.key, today)).length * 2 > req.length) { withData.unshift(today); if (withData.length > 7) withData.pop(); }
   const left = workdaysBetween(cur ? today : mEnd < today ? addDays(mEnd, 1) : mStart, deadline);
   const per = CHECKS.map(c => { const base = plan ? (() => { const sn = plan.snaps.filter(([d]) => d <= until && (d.slice(0, 7) === m)); const last = sn.length ? sn[sn.length - 1] : null; return last ? {d: last[0], n: +last[1][c.k] || 0} : null; })() : null;
     const done = doneBetween(c.k, mStart, until), doneToday = teamDone(today, c.k), sinceBase = base ? doneBetween(c.k, base.d, until) : 0;
@@ -4125,7 +4144,7 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
     ['Done this month', fmtN(T.done), fmtN(T.today) + ' so far today'],
     ['Team speed', T.spd ? fmtN(T.spd) + '<small>/day</small>' : '—', S.recent.length ? 'average of the last ' + S.recent.length + ' working day' + (S.recent.length === 1 ? '' : 's') : 'no numbers yet'],
     ['Needed per day', T.need == null ? '—' : fmtN(T.need) + '<small>/day</small>', 'to finish by ' + fdS(S.deadline)],
-    ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' late · slowest: ' + slow.n : 'on or before the deadline') : 'at the current speed'],
+    ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' late · slowest: ' + slow.n : 'on or before the deadline') : (T.remaining && !T.finish ? (S.per.filter(x => x.pend && x.remaining > 0 && !x.spd).map(x => x.n).join(', ') || 'some checks') + ': no numbers yet' : 'at the current speed')],
     ['Status', `<span class="pill ${status[0]}">${status[1]}</span>`, T.behind > 0 && slow ? slow.n + ' needs ' + fmtN(slow.need) + '/day, doing ' + fmtN(slow.spd) : T.remaining != null && T.spd ? 'every check can finish by ' + fdS(S.deadline) : '']
   ].map(([a, b, c], i) => `<div class="ps-kpi${i === 5 && T.behind > 0 ? ' bad' : ''}"><span>${a}</span><b>${b}</b><small>${c}</small></div>`).join('');
   $('psChecks').innerHTML = S.per.map(x => { const tot = x.base ? x.base.n + (x.base.d > S.mStart ? doneBetween(x.k, S.mStart, addDays(x.base.d, -1)) : 0) : 0, pc = x.pend && tot ? Math.min(100, (tot - x.remaining) / tot * 100) : 0;
@@ -4145,17 +4164,18 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
   // my stats
   $('psMePanel').hidden = !wlRequired(me); $('psLog').hidden = !wlRequired(me);
   if (me && wlRequired(me)) { const mine = (workAll[me.key] || {}).days || {}, md = Object.entries(mine).filter(([d]) => d >= S.mStart && d <= S.until), mt = md.reduce((a, [, x]) => a + wlTot(x), 0), td = mine[todayStr()];
-    $('psMe').innerHTML = `<div class="ps-mek"><div><span>Today</span><b>${td ? wlTot(td) : '—'}</b></div><div><span>This month</span><b>${fmtN(mt)}</b></div><div><span>My speed / day</span><b>${md.length ? fmtN(mt / md.length) : '—'}</b></div></div>
+    const hT = hoursOf(me.email, todayStr(), todayStr()), hM = hoursOf(me.email, S.mStart, S.until);
+    $('psMe').innerHTML = `<div class="ps-mek"><div><span>Today</span><b>${td ? wlTot(td) : '—'}</b><small>${fmtH(hT)} worked</small></div><div><span>This month</span><b>${fmtN(mt)}</b><small>${fmtH(hM)} worked</small></div><div><span>My speed</span><b>${md.length ? fmtN(mt / md.length) : '—'}<small>/day</small></b><small>${hM > 0 && mt ? (mt / (hM / 3600000)).toFixed(1) + ' per hour' : '&nbsp;'}</small></div></div>
       <div class="tbl"><table class="att"><thead><tr><th>Check</th><th>Today</th><th>This month</th></tr></thead><tbody>${CHECKS.map(c => `<tr><td><span class="wl-dot" style="background:${c.c}"></span> ${c.n}</td><td>${td ? +td[c.k] || 0 : '—'}</td><td>${md.reduce((a, [, x]) => a + (+x[c.k] || 0), 0)}</td></tr>`).join('')}</tbody></table></div>
       <button class="btn btn-ghost" type="button" data-wlopen style="margin-top:10px">${td ? '✎ Change today\'s numbers' : '+ Add today\'s numbers'}</button>`; }
   // who has filled in today (names only)
   const ps = people().filter(wlRequired), today = todayStr(), filled = ps.filter(p => wlDay(p.key, today));
-  $('psToday').innerHTML = `<p class="hint" style="margin:-4px 0 10px">${filled.length} of ${ps.length} have entered today's numbers.</p><div class="ps-who">${ps.map(p => { const x = wlDay(p.key, today); return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p.name).split(' ')[0])}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}</span>`; }).join('')}</div>`;
+  $('psToday').innerHTML = `<p class="hint" style="margin:-4px 0 10px">${filled.length} of ${ps.length} have entered today's numbers.</p><div class="ps-who">${ps.map(p => { const x = wlDay(p.key, today); const h = isAdmin ? hoursOf(p.email, today, today) : 0; return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p.name).split(' ')[0])}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}${isAdmin && h ? ' <small>' + fmtH(h) + '</small>' : ''}</span>`; }).join('')}</div>`;
   // admin: per person
-  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Days logged</th><th>Month total</th><th>Speed / day</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
+  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Per hour</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
     const rows = ps.map(p => { const dd = Object.entries((workAll[p.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p.key, today);
-      return {p, dd, tot, t, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
-    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${5 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
+      const hT = hoursOf(p.email, today, today), hM = hoursOf(p.email, S.mStart, S.until); return {p, dd, tot, t, hT, hM, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
+    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td class="mono">${r.hT ? fmtH(r.hT) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td class="mono">${r.hM ? fmtH(r.hM) : '<span class="hint">—</span>'}</td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td><td>${r.hM && r.tot ? (r.tot / (r.hM / 3600000)).toFixed(1) : '<span class="hint">—</span>'}</td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${8 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
     // month plan form
     if (!document.activeElement || !$('psAdmin').contains(document.activeElement)) { const p = S.plan, last = p && p.snaps.length ? p.snaps[p.snaps.length - 1] : null;
       $('psDeadline').value = p && p.deadline || ''; $('psSnapDate').value = todayStr().slice(0, 7) === S.m ? todayStr() : S.mStart;
