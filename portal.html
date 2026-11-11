@@ -1051,6 +1051,22 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .am-it:hover{transform:translateY(-1px);box-shadow:0 10px 22px -16px rgba(120,80,0,.5)}.am-it .am-ic{font-size:22px}.am-it b{display:block;font-size:14.5px}.am-it small{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px}
 .am-it .am-go{font-weight:700;color:#7A5200;white-space:nowrap}@media(max-width:640px){.am-it{grid-template-columns:auto 1fr}.am-it .am-go{grid-column:2}}
 .bf-pack.upd{border-color:#E9C46A;background:#FFF8E1}.bf-upd{flex-basis:100%;font-size:14px;color:#6B4A00;margin-bottom:6px}
+.ps-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:16px}@media(max-width:1200px){.ps-kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:640px){.ps-kpis{grid-template-columns:repeat(2,1fr)}}
+.ps-kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:grid;gap:4px}.ps-kpi span{font-size:12.5px;color:var(--ink-soft)}.ps-kpi b{font:800 28px/1.1 var(--display)}.ps-kpi b small{font:600 13px var(--mono);color:var(--ink-soft);margin-left:3px}.ps-kpi small{font-size:12px;color:var(--ink-soft)}
+.ps-kpi.bad{border-color:#f3b8ae;background:color-mix(in srgb,#c2412d 6%,var(--surface))}
+.ps-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}.ps-ck{border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px;background:var(--surface)}
+.ps-ckh{display:flex;align-items:center;gap:8px}.ps-ckh b{flex:1;font-size:15px}.ps-bar{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden}.ps-bar i{display:block;height:100%;border-radius:5px}
+.ps-ckg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 10px}.ps-ckg div{display:grid}.ps-ckg span{font-size:11.5px;color:var(--ink-soft)}.ps-ckg b{font:700 17px var(--display)}
+.wl-dot{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}
+.ps-svg{width:100%;height:auto;display:block}.ps-svg .gl{stroke:var(--line);stroke-width:1}.ps-svg .tl{font:500 11px var(--mono);fill:var(--ink-soft)}.ps-svg .tv{font:700 11px var(--mono);fill:var(--ink)}.ps-svg .nd{stroke:#c2412d;stroke-width:2;stroke-dasharray:6 5}.ps-svg .ndt{font:700 11.5px var(--mono);fill:#c2412d}
+.ps-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--ink-soft)}.ps-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.ps-mek{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}.ps-mek div{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid}.ps-mek span{font-size:12px;color:var(--ink-soft)}.ps-mek b{font:800 24px var(--display)}
+.ps-who{display:flex;flex-wrap:wrap;gap:8px}.ps-who span{padding:6px 12px;border-radius:999px;border:1px dashed var(--line);font-size:13.5px;color:var(--ink-soft)}.ps-who span.ok{border-style:solid;border-color:color-mix(in srgb,var(--gem) 50%,var(--line));background:color-mix(in srgb,var(--gem) 12%,var(--surface));color:var(--ink)}
+.ps-spd{display:flex;align-items:center;gap:8px;min-width:120px}.ps-spd i{display:block;height:8px;border-radius:4px;background:var(--gem)}
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.wl-dlg{width:min(480px,calc(100vw - 24px))}.wl-dlg form{display:grid;gap:12px}.wl-rows{display:grid;gap:8px}
+.wl-row{display:grid;grid-template-columns:auto 1fr 110px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px}.wl-row input{text-align:right;font:700 16px var(--mono);padding:8px 10px}
+.wl-tot{text-align:right;font-size:14px;color:var(--ink-soft)}.wl-tot b{font:800 20px var(--display);color:var(--ink)}.wl-remind{margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -1112,6 +1128,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
       <button class="tab" role="tab" data-v="schedule"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>Schedule</button>
       <button class="tab" role="tab" data-v="clock"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>My Workday<span class="dot-live" id="clockDot" hidden></span></button>
       <button class="tab" role="tab" data-v="guides"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3.5h8.5L16 7v9.5H4z"/><path d="M12 3.5V7h4M7 10.5h6M7 13.5h4"/></svg>Projects</button>
+      <button class="tab" role="tab" data-v="pstat"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 16.5h14"/><rect x="4" y="9" width="3" height="5.5" rx="1"/><rect x="8.5" y="5.5" width="3" height="9" rx="1"/><rect x="13" y="3" width="3" height="11.5" rx="1"/></svg>Project Status</button>
       <button class="tab" role="tab" data-v="org"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7.5" y="2.5" width="5" height="4" rx="1"/><rect x="2.5" y="13.5" width="5" height="4" rx="1"/><rect x="12.5" y="13.5" width="5" height="4" rx="1"/><path d="M10 6.5v3.5M5 13.5V10h10v3.5"/></svg>Org Chart</button>
       <button class="tab" role="tab" data-v="timeoff"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4" width="15" height="13.5" rx="2"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3M7.5 12.5l2 2 3.5-3.5"/></svg>Time Off Management<span class="badge" id="leaveBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
@@ -1171,6 +1188,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
       </div>
       <div id="hmHoliday"></div>
       <div class="panel hm-amend" id="hmAmend" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">📝 Procedure amendments</h3><span class="hint">A page you accepted has changed. Read and accept just that page again.</span></div><div class="am-list" id="hmAmendList"></div></div>
+      <div class="msg warn wl-remind" id="wlRemind" hidden><span>📋 You haven't entered today's numbers yet.</span> <button class="mini" type="button" data-wlopen>Add them now</button></div>
       <div class="panel hm-leave" id="hmLeave" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">🌴 Leave updates</h3><span class="hint">Click “Got it” to file an update in Time Off Management.</span></div><div class="hl-list" id="hmLeaveList"></div></div>
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
@@ -1304,6 +1322,23 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 
 
     <!-- ORG CHART -->
+    <section class="view" data-view="pstat" hidden>
+      <div class="vhead"><div><h1>Project Status</h1><p>Files waiting, what the team did each day, speed, and whether we will make the deadline.</p></div><div class="row" style="gap:8px;align-items:center"><input type="month" id="psMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="psLog">✎ My numbers</button></div></div>
+      <div class="msg warn" id="psNoPlan" hidden></div>
+      <div class="ps-kpis" id="psKpis"></div>
+      <div class="panel"><div class="vhead" style="margin:0 0 6px"><h3 style="margin:0">Each check</h3><span class="hint" id="psDl"></span></div><div class="ps-checks" id="psChecks"></div></div>
+      <div class="panel"><div class="vhead" style="margin:0 0 6px"><h3 style="margin:0">Files done per day (team)</h3><span class="hint">Last 14 working days · the line is what is needed per day to finish on time</span></div><div id="psDaily"></div></div>
+      <div class="two">
+        <div class="panel" id="psMePanel"><h3>My stats</h3><div id="psMe"></div></div>
+        <div class="panel"><h3>Who has filled in today</h3><div id="psToday"></div></div>
+      </div>
+      <div class="panel admin-only" hidden style="padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Speed of each person</h3><span class="hint">Files per working day they logged · this month</span></div><div class="tbl"><table class="att"><thead id="psPeopleH"></thead><tbody id="psPeople"></tbody></table></div></div>
+      <div class="panel admin-only" hidden id="psAdmin"><h3>Month plan <span class="hint" style="font-weight:400">· admins</span></h3>
+        <p class="hint" style="margin:-4px 0 12px">At the start of each month, enter the deadline and how many files are waiting for each check (from the "Checks you can do" screen). During the month, update the waiting numbers whenever you like: the dashboard always counts from the latest numbers.</p>
+        <form id="psPlanForm" class="adm-form" novalidate><div class="g2"><div class="f"><label for="psDeadline">Deadline</label><input type="date" id="psDeadline"></div><div class="f"><label for="psSnapDate">Waiting numbers at the start of</label><input type="date" id="psSnapDate"></div></div>
+          <div class="ps-grid" id="psPlanInputs"></div><div class="msg err" id="psPlanErr" hidden></div>
+          <div class="row" style="gap:10px"><button class="btn btn-gem" type="submit">Save month plan</button><span class="hint" id="psPlanInfo"></span></div></form></div>
+    </section>
     <section class="view" data-view="org" hidden>
       <div class="vhead"><div><h1>Org Chart</h1><p>Who is in the team and who they report to.</p><p class="hint admin-only" hidden style="margin-top:4px">Admins: change who someone reports to with the “Reports to” menu on their card.</p></div><span class="pill ok" id="orgCount"></span></div>
       <div class="org-legend" id="orgLegend"></div>
@@ -1760,6 +1795,12 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
   </form>
 </dialog>
 <div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
+<dialog class="pw-dlg wl-dlg" id="wlDlg" aria-labelledby="wlT"><form id="wlForm" novalidate>
+  <h3 id="wlT" style="margin:0">What did you do today?</h3><p class="hint" id="wlSub" style="margin:0">Enter how many items you finished in each check. You can change it until the end of the day.</p>
+  <div class="f" style="max-width:220px"><label for="wlDate">Day</label><input type="date" id="wlDate"></div>
+  <div class="wl-rows" id="wlRows"></div><div class="wl-tot" id="wlTot"></div><div class="msg err" id="wlErr" hidden></div>
+  <div class="row" style="justify-content:flex-end;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" type="button" id="wlLater">I'll add it later</button><button class="btn btn-gem" type="submit" id="wlSave">Save my numbers</button></div>
+</form></dialog>
 <dialog class="pw-dlg cf-dlg" id="hxDlg" aria-labelledby="hxT"><form id="hxForm" novalidate style="display:grid;gap:12px">
   <h3 id="hxT" style="margin:0">Extend holiday</h3><p class="hint" id="hxWho" style="margin:0"></p>
   <div class="ladj-grid"><div class="f"><label for="hxN">Extra days</label><input id="hxN" type="number" min="1" max="10" value="1"></div>
@@ -1871,7 +1912,7 @@ const unsub = {};
 function acting(){ try { return !!actReal; } catch (e) { return false; } }
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || path === 'workLog/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -1942,6 +1983,8 @@ function startData() {
   watch('pfStatus', db.collection('pfStatus'), s => { pfStat = {}; s.docs.forEach(d => pfStat[d.id] = d.data()); renderPf(); renderPfDlg(); });
   watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); renderClock(); });
   watch('presence', db.collection('presence'), s => { presence = {}; s.docs.forEach(d => presence[d.id] = d.data()); renderHome(); });
+  watch('workLog', db.collection('workLog'), s => { workAll = {}; s.docs.forEach(d => workAll[d.id] = d.data()); renderPstat(); renderWlRemind(); });
+  watch('projPlan', db.collection('projPlan'), s => { projPlans = {}; s.docs.forEach(d => projPlans[d.id] = d.data()); renderPstat(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -2071,7 +2114,7 @@ function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
-  if (!['home','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','pstat','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
@@ -2501,7 +2544,7 @@ function renderHours(){
     $('hStatusL').textContent = 'Working right now'; $('hStatus').textContent = working + (working === 1 ? ' person' : ' people');
   }
 }
-function renderHome(){ try { renderHomeAmend(); } catch (e) { console.error(e); } setTimeout(() => { try { applyHomeMin(); } catch (e) {} }, 0); try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
+function renderHome(){ try { renderWlRemind(); } catch (e) {} try { renderHomeAmend(); } catch (e) { console.error(e); } setTimeout(() => { try { applyHomeMin(); } catch (e) {} }, 0); try { renderHomeLeave(); } catch (e) { console.error(e); } try { renderHolidayWish(); } catch (e) { console.error(e); }
   try { renderPay(); } catch (e) { console.error(e); }
   queueCharts(); renderWa();
   renderHours();
@@ -4005,6 +4048,127 @@ function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; cons
   if (box.dataset.sig === sig) return; box.dataset.sig = sig;
   box.innerHTML = show.map(h => hwHtml(h, String(me.name || '').split(' ')[0] || 'there', true)).join(''); }
 $('hmHoliday').addEventListener('click', e => { const b = e.target.closest('[data-hwx]'); if (!b) return; const c = b.closest('[data-hw]'); try { localStorage.setItem('cs_hw_x', c.dataset.hw); } catch (x) {} c.style.transition = 'opacity .3s, transform .3s'; c.style.opacity = 0; c.style.transform = 'scale(.97)'; setTimeout(() => { $('hmHoliday').dataset.sig = ''; renderHolidayWish(); }, 300); });
+/* ---------- daily work numbers and the Project Status dashboard ---------- */
+// pend: counts against the files waiting; L2 reviews are work done but do not reduce the queue
+const CHECKS = [{k: 'prof', n: 'Profile check', pend: 1, c: '#2a78d6'}, {k: 'li', n: 'LinkedIn check', pend: 1, c: '#0f8fa8'}, {k: 'ng', n: 'Name groups check', pend: 1, c: '#8b5e34'},
+  {k: 'email', n: 'Email check', pend: 1, c: '#eb6834'}, {k: 'company', n: 'Company list check', pend: 1, c: '#65a30d'}, {k: 'l2', n: 'L2 Review', pend: 0, c: '#7b5bd6'}];
+let workAll = {}, projPlans = {}, wlAfter = null, wlClockOut = false;
+// who must enter daily numbers: everyone who uses the time clock, except admins and the people listed here
+const WL_EXEMPT = ['anisha@chrysolite.in'];
+const wlRequired = a => !!a && a.clock !== false && a.access !== 'admin' && a.key !== OWNER && !WL_EXEMPT.includes(String(a.key || a.email || '').toLowerCase()) && !/^anisha kabeer$/i.test(String(a.name || '').trim());
+const wlDay = (key, d) => ((workAll[key] || {}).days || {})[d] || null;
+const wlTot = (x, onlyPend) => !x ? 0 : CHECKS.reduce((a, c) => a + (onlyPend && !c.pend ? 0 : +x[c.k] || 0), 0);
+const isWorkday = k => { const w = new Date(k + 'T00:00').getDay(); return w > 0 && w < 6 && !holidays.some(h => h.date === k && !h.tba); };
+const addDays = (k, n) => { const d = new Date(k + 'T00:00'); d.setDate(d.getDate() + n); return ymd(d); };
+function openWorkLog(day, fromClockOut, after){ if (!me) { after && after(); return; } wlAfter = after || null; wlClockOut = !!fromClockOut; $('wlDate').value = todayStr(); $('wlDate').disabled = true; $('wlLater').hidden = fromClockOut;
+  $('wlLater').textContent = 'Cancel'; $('wlSave').textContent = fromClockOut ? 'Save and clock out' : 'Save my numbers';
+  $('wlT').textContent = fromClockOut ? 'Before you clock out: what did you do today?' : 'Today\'s numbers'; drawWl(); $('wlErr').hidden = true; $('wlDlg').showModal(); setTimeout(() => { const i = $('wlRows').querySelector('input'); i && i.focus(); i && i.select(); }, 50); }
+function drawWl(){ const d = $('wlDate').value || todayStr(), cur = wlDay(me.key, d) || {};
+  $('wlRows').innerHTML = CHECKS.map(c => `<label class="wl-row"><span class="wl-dot" style="background:${c.c}"></span><span>${c.n}</span><input type="number" min="0" max="5000" inputmode="numeric" data-wl="${c.k}" value="${cur[c.k] != null ? +cur[c.k] : ''}" placeholder="0"></label>`).join('');
+  $('wlSub').textContent = cur.at ? 'Saved ' + new Date(cur.at).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) + '. Change anything and save again (today only).' : 'Enter how many items you finished in each check today. Numbers are entered on the same day: they can\'t be added for another day later.'; wlSum(); }
+const wlSum = () => { const t = [...$('wlRows').querySelectorAll('[data-wl]')].reduce((a, i) => a + (+i.value || 0), 0); $('wlTot').innerHTML = `Total today: <b>${t}</b>`; };
+$('wlRows').addEventListener('input', wlSum); $('wlDate').addEventListener('change', drawWl);
+const wlClose = () => { $('wlDlg').close(); const f = wlAfter; wlAfter = null; f && f(); };
+$('wlLater').onclick = () => { wlAfter = null; $('wlDlg').close(); };
+// at clock-out the numbers can't be skipped: Esc does not close the form
+$('wlDlg').addEventListener('cancel', e => { if (wlClockOut) e.preventDefault(); });
+$('wlForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const d = $('wlDate').value || todayStr(), err = $('wlErr'), x = {};
+  if (d !== todayStr()) { err.textContent = 'Numbers can only be entered for today.'; err.hidden = false; return; }
+  for (const i of $('wlRows').querySelectorAll('[data-wl]')) { const v = i.value.trim(); if (v === '') { x[i.dataset.wl] = 0; continue; } if (!/^\d+$/.test(v) || +v > 5000) { err.textContent = 'Use whole numbers from 0 to 5000.'; err.hidden = false; i.focus(); return; } x[i.dataset.wl] = +v; }
+  x.at = new Date().toISOString(); const days = {...((workAll[me.key] || {}).days || {}), [d]: x}; Object.keys(days).sort().slice(0, -400).forEach(k => delete days[k]);
+  $('wlSave').disabled = true;
+  try { await db.doc('workLog/' + me.key).set({email: me.email, name: me.name, days, updatedAt: x.at}); workAll[me.key] = {...(workAll[me.key] || {}), email: me.email, name: me.name, days}; toast('Saved: ' + wlTot(x) + ' items for ' + fmtDay(d)); renderPstat(); renderWlRemind(); wlClose(); }
+  catch (x2) { err.textContent = 'Your numbers couldn\'t be saved. Try again.'; err.hidden = false; } finally { $('wlSave').disabled = false; } });
+document.addEventListener('click', e => { if (e.target.closest('[data-wlopen]')) openWorkLog(todayStr(), false); });
+$('psLog').onclick = () => openWorkLog(todayStr(), false);
+// reminder: clocked in today, clocked out, but no numbers yet
+function renderWlRemind(){ const r = $('wlRemind'); if (!r) return; const l = ((myAtt && myAtt.days) || {})[todayStr()] || [];
+  r.hidden = !(wlRequired(me) && l.length && l[l.length - 1].out && !wlDay(me.key, todayStr())); }
+
+// ----- the maths -----
+function planFor(m){ const p = projPlans[m]; if (!p) return null; const snaps = Object.entries(p.snaps || {}).sort((a, b) => a[0].localeCompare(b[0])); return {...p, snaps}; }
+function teamDone(day, k){ return Object.values(workAll).reduce((a, w) => a + (+(((w.days || {})[day] || {})[k]) || 0), 0); }
+function doneBetween(k, from, to){ let t = 0; for (const w of Object.values(workAll)) for (const [d, x] of Object.entries(w.days || {})) if (d >= from && d <= to) t += +x[k] || 0; return t; }
+function workdaysBetween(a, b){ if (b < a) return 0; let n = 0; for (let d = a; d <= b; d = addDays(d, 1)) if (isWorkday(d)) n++; return n; }
+function lastWorkdays(before, n){ const out = []; let d = addDays(before, -1); for (let g = 0; out.length < n && g < 60; g++, d = addDays(d, -1)) if (isWorkday(d)) out.push(d); return out; }
+function stat(m){ const plan = planFor(m), today = todayStr(), mStart = m + '-01', mEnd = ymd(new Date(+m.slice(0, 4), +m.slice(5, 7), 0)), until = today < mEnd ? today : mEnd;
+  const deadline = plan && plan.deadline || mEnd, cur = today.slice(0, 7) === m, past = today > mEnd;
+  // speed: team files per working day over the last 7 working days before today that have numbers (falls back to the month so far)
+  const recent = lastWorkdays(cur ? today : addDays(mEnd, 1), 7).filter(d => d >= mStart || cur), withData = recent.filter(d => CHECKS.some(c => teamDone(d, c.k) > 0));
+  const left = workdaysBetween(cur ? today : mEnd < today ? addDays(mEnd, 1) : mStart, deadline);
+  const per = CHECKS.map(c => { const base = plan ? (() => { const sn = plan.snaps.filter(([d]) => d <= until && (d.slice(0, 7) === m)); const last = sn.length ? sn[sn.length - 1] : null; return last ? {d: last[0], n: +last[1][c.k] || 0} : null; })() : null;
+    const done = doneBetween(c.k, mStart, until), doneToday = teamDone(today, c.k), sinceBase = base ? doneBetween(c.k, base.d, until) : 0;
+    const remaining = c.pend && base ? Math.max(0, base.n - sinceBase) : null;
+    const spd = withData.length ? withData.reduce((a, d) => a + teamDone(d, c.k), 0) / withData.length : 0;
+    // today is still running: what is left to do from tomorrow on is needed over the remaining working days after today
+    const daysLeft = cur ? Math.max(0, left - (isWorkday(today) ? 1 : 0)) + (isWorkday(today) && doneToday === 0 ? 1 : 0) : left;
+    const need = remaining == null ? null : remaining === 0 ? 0 : daysLeft > 0 ? Math.ceil(remaining / daysLeft) : remaining;
+    let finish = null; if (remaining != null && remaining > 0 && spd > 0) { let r = remaining, d = today; while (r > 0) { d = addDays(d, 1); if (isWorkday(d)) r -= spd; } finish = d; } else if (remaining === 0) finish = 'done';
+    const behind = remaining == null ? 0 : Math.max(0, Math.round(remaining - spd * daysLeft));
+    return {...c, base, done, doneToday, remaining, spd, need, finish, behind, daysLeft}; });
+  const P = per.filter(x => x.pend), tot = k => P.reduce((a, x) => a + (x[k] || 0), 0), hasBase = P.some(x => x.base);
+  const team = {remaining: hasBase ? tot('remaining') : null, done: per.reduce((a, x) => a + x.done, 0), today: per.reduce((a, x) => a + x.doneToday, 0), spd: tot('spd'), behind: tot('behind'),
+    need: hasBase ? P.reduce((a, x) => a + (x.need || 0), 0) : null};
+  const fins = P.filter(x => x.finish && x.finish !== 'done').map(x => x.finish).sort(); team.finish = !hasBase ? null : P.every(x => x.remaining === 0) ? 'done' : P.some(x => x.remaining > 0 && !x.spd) ? null : fins[fins.length - 1];
+  return {m, plan, deadline, left, per, team, mStart, until, recent: withData}; }
+
+// ----- the page -----
+const fmtN = n => n == null ? '—' : Math.round(n).toLocaleString();
+const fdS = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short'});
+function renderPstat(){ const v = document.querySelector('.view[data-view="pstat"]'); if (!v || !$('psMonth')) return; if (!$('psMonth').value) $('psMonth').value = monthKey(new Date());
+  const S = stat($('psMonth').value), T = S.team, late = T.finish && T.finish !== 'done' && T.finish > S.deadline, lateDays = late ? workdaysBetween(addDays(S.deadline, 1), T.finish) : 0, slow = S.per.filter(x => x.pend && x.finish && x.finish !== 'done').sort((a, b) => b.finish.localeCompare(a.finish))[0];
+  $('psNoPlan').hidden = !!S.plan; $('psNoPlan').innerHTML = isAdmin ? '<b>No month plan yet.</b> Add the deadline and the waiting numbers in <b>Month plan</b> at the bottom of this page.' : 'Your Project Manager hasn\'t added this month\'s plan yet. Your numbers are still saved.';
+  $('psDl').textContent = 'Deadline ' + fdS(S.deadline) + ' · ' + S.left + ' working day' + (S.left === 1 ? '' : 's') + ' left';
+  const status = T.remaining === 0 ? ['ok', '✓ All done'] : T.remaining == null ? ['', 'Add the month plan'] : !T.spd ? ['warn', 'No speed yet'] : T.behind > 0 ? ['off', 'Behind by ' + fmtN(T.behind) + ' files'] : ['ok', 'On track'];
+  $('psKpis').innerHTML = [
+    ['Files still waiting', fmtN(T.remaining), 'across all checks'],
+    ['Done this month', fmtN(T.done), fmtN(T.today) + ' so far today'],
+    ['Team speed', T.spd ? fmtN(T.spd) + '<small>/day</small>' : '—', S.recent.length ? 'average of the last ' + S.recent.length + ' working day' + (S.recent.length === 1 ? '' : 's') : 'no numbers yet'],
+    ['Needed per day', T.need == null ? '—' : fmtN(T.need) + '<small>/day</small>', 'to finish by ' + fdS(S.deadline)],
+    ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' late · slowest: ' + slow.n : 'on or before the deadline') : 'at the current speed'],
+    ['Status', `<span class="pill ${status[0]}">${status[1]}</span>`, T.behind > 0 && slow ? slow.n + ' needs ' + fmtN(slow.need) + '/day, doing ' + fmtN(slow.spd) : T.remaining != null && T.spd ? 'every check can finish by ' + fdS(S.deadline) : '']
+  ].map(([a, b, c], i) => `<div class="ps-kpi${i === 5 && T.behind > 0 ? ' bad' : ''}"><span>${a}</span><b>${b}</b><small>${c}</small></div>`).join('');
+  $('psChecks').innerHTML = S.per.map(x => { const tot = x.base ? x.base.n + (x.base.d > S.mStart ? doneBetween(x.k, S.mStart, addDays(x.base.d, -1)) : 0) : 0, pc = x.pend && tot ? Math.min(100, (tot - x.remaining) / tot * 100) : 0;
+    const st = !x.pend ? ['info', 'Review work'] : x.remaining === 0 ? ['ok', 'Done'] : x.remaining == null ? ['', 'No plan'] : !x.spd ? ['warn', 'No speed yet'] : x.behind > 0 ? ['off', 'Behind ' + fmtN(x.behind)] : ['ok', 'On track'];
+    return `<div class="ps-ck"><div class="ps-ckh"><span class="wl-dot" style="background:${x.c}"></span><b>${x.n}</b><span class="pill ${st[0]}">${st[1]}</span></div>
+      ${x.pend ? `<div class="ps-bar"><i style="width:${pc}%;background:${x.c}"></i></div>` : ''}
+      <div class="ps-ckg"><div><span>Waiting</span><b>${x.pend ? fmtN(x.remaining) : '—'}</b></div><div><span>Done (month)</span><b>${fmtN(x.done)}</b></div><div><span>Speed / day</span><b>${x.spd ? fmtN(x.spd) : '—'}</b></div><div><span>Needed / day</span><b>${x.pend ? fmtN(x.need) : '—'}</b></div><div><span>Finish at this speed</span><b>${x.finish === 'done' ? 'Done' : x.finish ? fdS(x.finish) : '—'}</b></div></div></div>`; }).join('');
+  // daily chart
+  const days = lastWorkdays(addDays(S.until, 1), 14).filter(d => d >= S.mStart).reverse(), mx = Math.max(1, T.need || 0, ...days.map(d => CHECKS.reduce((a, c) => a + teamDone(d, c.k), 0)));
+  const W = 900, H = 230, L = 36, B = 26, bw = (W - L - 8) / Math.max(1, days.length), y = v2 => H - B - v2 / mx * (H - B - 12);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="ps-svg" role="img" aria-label="Files done per day">`;
+  [0, .5, 1].forEach(f => { const v2 = Math.round(mx * f); svg += `<line x1="${L}" x2="${W - 4}" y1="${y(v2)}" y2="${y(v2)}" class="gl"/><text x="${L - 6}" y="${y(v2) + 4}" text-anchor="end" class="tl">${v2}</text>`; });
+  days.forEach((d, i) => { let acc = 0; const x0 = L + i * bw + 5; CHECKS.forEach(c => { const v2 = teamDone(d, c.k); if (!v2) return; const y1 = y(acc + v2), y0 = y(acc); svg += `<rect x="${x0}" y="${y1}" width="${bw - 10}" height="${Math.max(0, y0 - y1)}" rx="3" fill="${c.c}"><title>${fdS(d)} · ${c.n}: ${v2}</title></rect>`; acc += v2; });
+    svg += `<text x="${x0 + (bw - 10) / 2}" y="${H - 8}" text-anchor="middle" class="tl">${new Date(d + 'T00:00').getDate()}</text>${acc ? `<text x="${x0 + (bw - 10) / 2}" y="${y(acc) - 4}" text-anchor="middle" class="tv">${acc}</text>` : ''}`; });
+  if (T.need) svg += `<line x1="${L}" x2="${W - 4}" y1="${y(T.need)}" y2="${y(T.need)}" class="nd"/><text x="${L + 6}" y="${y(T.need) - 6}" class="ndt">needed ${fmtN(T.need)}/day</text>`;
+  $('psDaily').innerHTML = svg + '</svg><div class="ps-leg">' + CHECKS.map(c => `<span><i style="background:${c.c}"></i>${c.n}</span>`).join('') + '</div>';
+  // my stats
+  $('psMePanel').hidden = !wlRequired(me); $('psLog').hidden = !wlRequired(me);
+  if (me && wlRequired(me)) { const mine = (workAll[me.key] || {}).days || {}, md = Object.entries(mine).filter(([d]) => d >= S.mStart && d <= S.until), mt = md.reduce((a, [, x]) => a + wlTot(x), 0), td = mine[todayStr()];
+    $('psMe').innerHTML = `<div class="ps-mek"><div><span>Today</span><b>${td ? wlTot(td) : '—'}</b></div><div><span>This month</span><b>${fmtN(mt)}</b></div><div><span>My speed / day</span><b>${md.length ? fmtN(mt / md.length) : '—'}</b></div></div>
+      <div class="tbl"><table class="att"><thead><tr><th>Check</th><th>Today</th><th>This month</th></tr></thead><tbody>${CHECKS.map(c => `<tr><td><span class="wl-dot" style="background:${c.c}"></span> ${c.n}</td><td>${td ? +td[c.k] || 0 : '—'}</td><td>${md.reduce((a, [, x]) => a + (+x[c.k] || 0), 0)}</td></tr>`).join('')}</tbody></table></div>
+      <button class="btn btn-ghost" type="button" data-wlopen style="margin-top:10px">${td ? '✎ Change today\'s numbers' : '+ Add today\'s numbers'}</button>`; }
+  // who has filled in today (names only)
+  const ps = people().filter(wlRequired), today = todayStr(), filled = ps.filter(p => wlDay(p.key, today));
+  $('psToday').innerHTML = `<p class="hint" style="margin:-4px 0 10px">${filled.length} of ${ps.length} have entered today's numbers.</p><div class="ps-who">${ps.map(p => { const x = wlDay(p.key, today); return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p.name).split(' ')[0])}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}</span>`; }).join('')}</div>`;
+  // admin: per person
+  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Days logged</th><th>Month total</th><th>Speed / day</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
+    const rows = ps.map(p => { const dd = Object.entries((workAll[p.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p.key, today);
+      return {p, dd, tot, t, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
+    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${5 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
+    // month plan form
+    if (!document.activeElement || !$('psAdmin').contains(document.activeElement)) { const p = S.plan, last = p && p.snaps.length ? p.snaps[p.snaps.length - 1] : null;
+      $('psDeadline').value = p && p.deadline || ''; $('psSnapDate').value = todayStr().slice(0, 7) === S.m ? todayStr() : S.mStart;
+      $('psPlanInputs').innerHTML = CHECKS.filter(c => c.pend).map(c => `<div class="f"><label>${c.n} · waiting</label><input type="number" min="0" data-ps="${c.k}" value="${last ? +last[1][c.k] || 0 : ''}" placeholder="e.g. 2779"></div>`).join('');
+      $('psPlanInfo').textContent = p ? 'Last updated ' + (last ? 'waiting numbers as of ' + fdS(last[0]) : '') + (p.by ? ' by ' + p.by : '') : 'No plan for this month yet.'; } } }
+$('psMonth').addEventListener('change', renderPstat);
+$('psPlanForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const m = $('psMonth').value || monthKey(new Date()), err = $('psPlanErr'), dl = $('psDeadline').value, sd = $('psSnapDate').value;
+  if (!dl) { err.textContent = 'Pick the deadline.'; err.hidden = false; return; } if (!sd || sd.slice(0, 7) !== m) { err.textContent = 'The "as of" date must be in ' + m + '.'; err.hidden = false; return; }
+  const snap = {}; for (const i of $('psPlanInputs').querySelectorAll('[data-ps]')) { if (i.value === '' || !/^\d+$/.test(i.value)) { err.textContent = 'Enter the waiting number for every check (0 if none).'; err.hidden = false; i.focus(); return; } snap[i.dataset.ps] = +i.value; }
+  err.hidden = true; const cur = projPlans[m] || {};
+  try { await db.doc('projPlan/' + m).set({month: m, deadline: dl, snaps: {...(cur.snaps || {}), [sd]: snap}, by: me ? me.name : 'Admin', updatedAt: new Date().toISOString()}); toast('Month plan saved'); }
+  catch (x) { err.textContent = 'It couldn\'t be saved. Check the Firestore rules are published.'; err.hidden = false; } });
+document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="pstat"]')) setTimeout(renderPstat, 30); });
 /* ---------- employee Home: leave updates to acknowledge ---------- */
 // one line per decision on the employee's leave; "Got it" stores the version seen in their own leaveRequests doc
 const lvVer = d => [d.status, d.from, d.to, d.type, d.decidedAt || '', d.cancelled ? d.cancelled.at : ''].join('|');
@@ -4470,7 +4634,7 @@ async function punch(kind){
   try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
-$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => punch('out'); $('clkBrk').onclick = () => punch('break');
+$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me)) openWorkLog(todayStr(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
 function tick(){ const n = new Date(); $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
   if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {}) && n.getSeconds() === 0) { renderClock(); renderHome(); } }
 setInterval(tick, 1000); tick();
