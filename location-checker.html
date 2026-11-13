@@ -147,9 +147,16 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
 (function locationChecker(){
   // "Greater Chicago Area", "Charlotte Metro", "San Francisco Bay Area" -> the city the area is named after
   const METRO = /^(greater\s+)?(.+?)(\s+(metropolitan|metro|metroplex|bay|region|city))?(\s+area)?$/i;
+  // metro wording can be on any part: "Austin, Texas Metropolitan Area", "Greater Chicago Area", "Dallas-Fort Worth Metroplex"
+  const AREA = /\s+(metropolitan|metro|metroplex|bay|region|urban)?\s*(area|region|metroplex|metro)$/i;
   function clean(raw){ const parts = raw.split(',').map(x => x.trim()).filter(Boolean); let metro = null;
-    if (parts.length) { const m = parts[0].match(METRO); if (m && (m[1] || m[3] || m[5]) && m[2]) { metro = parts[0]; parts[0] = m[2].replace(/\s+bay$/i, '').trim(); if (/^san francisco$/i.test(parts[0]) && /bay/i.test(metro)) parts[0] = 'San Francisco'; } }
-    return {q: parts.join(', '), metro, parts}; }
+    parts.forEach((pt, i) => { let x = pt, hit = false; if (/^greater\s+/i.test(x)) { x = x.replace(/^greater\s+/i, ''); hit = true; } if (AREA.test(x)) { x = x.replace(AREA, '').trim(); hit = true; }
+      if (/^(san francisco|sf)$/i.test(x) && /bay/i.test(pt)) x = 'San Francisco'; if (i === 0 && /-/.test(x) && hit) x = x.split('-')[0].trim();   // "Dallas-Fort Worth Metroplex" -> Dallas
+      if (hit && x) { metro = raw.trim(); parts[i] = x; } });
+    const ps = parts.filter(Boolean); return {q: ps.join(', '), metro, parts: ps}; }
+  // try the full text first, then shorter versions (city and state, then the city alone)
+  async function geocodeAny(c, cc){ const tries = [c.q, c.parts.slice(0, 2).join(', '), c.parts[0]].filter((x, i, a) => x && a.indexOf(x) === i);
+    for (const t of tries) { const h = await geocode(t, cc); if (h) return h; } return null; }
   const cache = {}; try { Object.assign(cache, JSON.parse(localStorage.getItem('cs_geo') || '{}')); } catch (e) {}
   async function geocode(q, cc){ const key = q.toLowerCase() + '|' + (cc || ''); if (cache[key]) return cache[key];
     const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&accept-language=en&q=' + encodeURIComponent(q) + (cc ? '&countrycodes=' + cc : '');
@@ -164,7 +171,8 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   const lmCache = {}; try { Object.assign(lmCache, JSON.parse(localStorage.getItem('cs_lm') || '{}')); } catch (e) {}
   async function landmarks(p){ const key = p.lat.toFixed(2) + ',' + p.lon.toFixed(2); if (lmCache[key]) return lmCache[key];
     const q = `[out:json][timeout:25];(nwr(around:150000,${p.lat},${p.lon})["aeroway"="aerodrome"]["iata"];nwr(around:25000,${p.lat},${p.lon})["railway"="station"]["name"];nwr(around:25000,${p.lat},${p.lon})["amenity"~"^(university|college)$"]["name"];);out center tags 400;`;
-    const r = await fetch('https://overpass-api.de/api/interpreter', {method: 'POST', body: 'data=' + encodeURIComponent(q), headers: {'Content-Type': 'application/x-www-form-urlencoded'}}); if (!r.ok) throw new Error('landmarks ' + r.status);
+    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 15000);
+    const r = await fetch('https://overpass-api.de/api/interpreter', {method: 'POST', body: 'data=' + encodeURIComponent(q), headers: {'Content-Type': 'application/x-www-form-urlencoded'}, signal: ac.signal}).finally(() => clearTimeout(to)); if (!r.ok) throw new Error('landmarks ' + r.status);
     const j = await r.json(), best = {}; (j.elements || []).forEach(e => { const t = e.tags || {}, c = e.center || e, la = +c.lat, lo = +c.lon; if (!la || !lo) return;
       const kind = t.aeroway === 'aerodrome' ? 'air' : t.railway === 'station' ? 'rail' : 'uni', dist = km(p, {lat: la, lon: lo}), name = t['name:en'] || t.name || t.iata;
       if (!name) return; if (!best[kind] || dist < best[kind].km) best[kind] = {name, code: t.iata || '', km: dist}; });
@@ -176,11 +184,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     if (!ra || !rb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.n}<p style="margin:0">${!ra && !rb ? 'Enter both locations.' : 'One side is empty and the other is not.'}</p></div>`; stat('', ''); return; }
     stat('busy', '<span class="sc-bar"><i style="width:60%"></i></span><span>Looking up both places on the map…</span>');
     const ca = clean(ra), cb = clean(rb); let ha, hb;
-    try { ha = await geocode(ca.q);
+    try { ha = await geocodeAny(ca);
       const ccA = ha && ha.address && ha.address.country_code;
       // a short public location ("Charlotte Metro", "Kochi") is looked up in the file's country first; a full one (city, state, country) as written
-      hb = cb.parts.length >= 3 || !ccA ? await geocode(cb.q) : (await geocode(cb.q, ccA)) || await geocode(cb.q);
-      if (cb.parts.length < 3 && ccA && !hb) hb = await geocode(cb.q); }
+      hb = cb.parts.length >= 3 || !ccA ? await geocodeAny(cb) : (await geocodeAny(cb, ccA)) || await geocodeAny(cb);
+      if (!hb && ccA) hb = await geocodeAny(cb, ccA); }
     catch (e) { stat('err', '⚠ The map lookup didn\'t answer. Check your internet connection and try again in a few seconds.'); return; }
     const LA = levels(ha), LB = levels(hb), pa = ha && {lat: +ha.lat, lon: +ha.lon}, pb = hb && {lat: +hb.lat, lon: +hb.lon};
     if (!ha || !hb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.c}<p style="margin:0">${!ha && !hb ? 'Neither place' : !ha ? 'The SeekOut location' : 'The public profile location'} could not be found on the map. Check the spelling, or use a quick map search.</p></div>`; stat('done', '<span class="sc-tick">!</span>Compare complete'); return; }
