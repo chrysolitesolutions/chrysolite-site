@@ -1062,7 +1062,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .ps-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--ink-soft)}.ps-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .ps-mek{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}.ps-mek div{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid}.ps-mek span{font-size:12px;color:var(--ink-soft)}.ps-mek b{font:800 24px var(--display)}.ps-mek b small{font:600 12px var(--mono);color:var(--ink-soft);margin-left:2px}.ps-mek small{font-size:12px;color:var(--ink-soft)}.ps-who small{font:500 11.5px var(--mono);color:var(--ink-soft)}
 .ps-who{display:flex;flex-wrap:wrap;gap:8px}.ps-who span{padding:6px 12px;border-radius:999px;border:1px dashed var(--line);font-size:13.5px;color:var(--ink-soft)}.ps-who span.ok{border-style:solid;border-color:color-mix(in srgb,var(--gem) 50%,var(--line));background:color-mix(in srgb,var(--gem) 12%,var(--surface));color:var(--ink)}
-.ps-spd{display:flex;align-items:center;gap:8px;min-width:120px}.ps-spd i{display:block;height:8px;border-radius:4px;background:var(--gem)}
+td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:center;gap:8px;min-width:120px}.ps-spd i{display:block;height:8px;border-radius:4px;background:var(--gem)}
 .ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .wl-dlg{width:min(480px,calc(100vw - 24px))}.wl-dlg form{display:grid;gap:12px}.wl-rows{display:grid;gap:8px}
 .wl-row{display:grid;grid-template-columns:auto 1fr 110px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px}.wl-row input{text-align:right;font:700 16px var(--mono);padding:8px 10px}
@@ -1102,6 +1102,22 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
 .pc-d span{font:600 10.5px var(--mono);color:var(--ink-soft)}.pc-d b{font:800 16px var(--display)}.pc-d small{font-size:10.5px;color:var(--ink-soft);line-height:1.2}
 .pc-d.off{background:var(--surface-2);opacity:.7}.pc-d.fut{opacity:.45}.pc-d.today{outline:2px solid var(--ink);outline-offset:-1px}.pc-d.hit{box-shadow:inset 0 -3px 0 #3f8a1e}.pc-d.miss{box-shadow:inset 0 -3px 0 #c2412d}
 .pc-key{font:500 11px var(--mono);text-transform:none;letter-spacing:0;margin-left:8px}.pc-key i{display:inline-block;width:14px;height:3px;margin:0 3px 2px 6px;vertical-align:middle}.pc-key i.hit{background:#3f8a1e}.pc-key i.miss{background:#c2412d}
+.sw-card{font-family:"Public Sans",system-ui,sans-serif;color:#13221A;background:#fff;border-radius:24px;padding:20px 22px;display:grid;gap:10px;justify-items:center;text-align:center;width:min(380px,92vw);box-shadow:0 40px 90px -30px rgba(0,0,0,.55);border:2px solid #B6D441;animation:swIn .35s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes swIn{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.sw-top{display:flex;align-items:center;gap:8px;font:600 11px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6B62}.sw-top img{width:22px;height:22px;border-radius:6px}
+.sw-big{font:800 25px/1.15 "Bricolage Grotesque",system-ui,sans-serif}.sw-card p{margin:0;color:#44564B;font-size:14.5px;line-height:1.45}.sw-card small{color:#5B6B62;font-size:12.5px}
+.sw-moods{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.sw-moods button{border:1.5px solid #DCE5C8;background:#F7FAEF;border-radius:999px;padding:6px 12px;font:600 13px inherit;cursor:pointer;color:#13221A}.sw-moods button.on{background:#E6F0C4;border-color:#9BB52A}
+.sw-row{display:flex;align-items:center;gap:22px}
+.sw-ring{--p:100;width:74px;height:74px;border-radius:50%;background:conic-gradient(#9BB52A calc(var(--p)*1%),#EDF1E6 0);display:grid;place-items:center;align-content:center;position:relative}.sw-ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}.sw-ring b,.sw-ring span{position:relative}.sw-ring b{font:800 22px/1 "Bricolage Grotesque",sans-serif}.sw-ring span{font-size:10px;color:#5B6B62}
+.sw-sensor{position:relative;width:96px;height:96px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#d6ef73,#9BB52A 70%);box-shadow:0 0 0 8px rgba(155,181,42,.18),0 12px 30px -10px rgba(60,90,10,.6);display:grid;place-items:center;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;animation:swPulse 1.6s ease-in-out infinite}
+.sw-sensor .sw-fp{font-size:40px;position:relative;z-index:1}.sw-sensor i{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(19,36,10,.28);transition:height 0s}
+.sw-sensor.hold i{height:100%;transition:height .9s linear}.sw-sensor.done{background:#2d6a14}
+@keyframes swPulse{50%{box-shadow:0 0 0 16px rgba(155,181,42,.08),0 12px 30px -10px rgba(60,90,10,.6)}}
+.sw-brk{border:0;background:none;color:#5B6B62;font:600 13px inherit;cursor:pointer;text-decoration:underline}
+.sw-card.missed{border-color:#C2412D}.sw-card.missed .sw-big{color:#9b2c1a;font-size:28px}.sw-card.missed .sw-sensor{background:radial-gradient(circle at 35% 30%,#f39b8c,#C2412D 70%);box-shadow:0 0 0 8px rgba(194,65,45,.18)}
+.sw-idle{font-family:"Public Sans",system-ui,sans-serif;display:grid;gap:10px;padding:16px;color:#13221A}.sw-idle img{width:32px;height:32px;border-radius:8px}.sw-idle > div{display:grid}.sw-idle b{font:800 20px "Bricolage Grotesque",sans-serif}.sw-idle span{color:#5B6B62}.sw-idle small{color:#5B6B62;font-size:12px}
+
+.sw-ov{position:fixed;inset:0;z-index:300;background:rgba(15,38,32,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px}.sw-ov[hidden]{display:none}.sw-pipbtn{margin:8px 0}
 </style>
 </head>
 <body>
@@ -1305,6 +1321,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
           <div class="clock-now"><b id="clkTime">--:--</b><span id="clkDate"></span></div>
           <div class="clock-status" id="clkStatus">Not clocked in</div>
           <p class="msg" id="clkBlock" hidden></p>
+          <button class="btn btn-ghost sw-pipbtn" type="button" id="swPipBtn" hidden>📌 Keep the “still working?” check on top of all windows</button>
           <div class="msg ot-box" id="otBox" hidden></div>
           <div class="clock-btns"><button class="btn btn-gem big-btn" id="clkIn" type="button">Clock in</button><button class="btn btn-ghost big-btn" id="clkBrk" type="button" disabled>☕ Take a break</button><button class="btn btn-ghost big-btn" id="clkOut" type="button" disabled>Clock out</button></div>
           <div class="msg err" id="clkErr" hidden></div>
@@ -1820,8 +1837,10 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
     <div class="ot-big" id="otBig"></div>
     <div class="ot-choice" id="otChoice" role="radiogroup" aria-label="What to do with the extra time">
       <label><input type="radio" name="otMode" value="ot" checked><span><b>Request overtime for today</b><small>The extra time is paid or counted as overtime on today's date.</small></span></label>
+      <label id="otSplitOpt"><input type="radio" name="otMode" value="split"><span><b>Split: part overtime, the rest ignored</b><small>Choose how much to send for overtime. The rest is not counted as overtime.</small></span></label>
       <label id="otCarryOpt"><input type="radio" name="otMode" value="carry"><span><b>Carry it over to another day this month</b><small id="otCarryHint">Add it to a shorter day this month, earlier or later, so you can make up hours or leave early another day.</small></span></label>
     </div>
+    <div class="ot-carry" id="otSplitBox" hidden><div class="g2"><div class="f"><label for="otSh">Overtime hours</label><input id="otSh" type="number" min="0" max="8" value="0"></div><div class="f"><label for="otSm">Minutes</label><input id="otSm" type="number" min="0" max="59" step="15" value="30"></div></div><small class="hint" id="otSplitInfo"></small></div>
     <div class="ot-carry" id="otCarryBox" hidden>
       <div class="f"><label for="otTo">Add the time to</label><select id="otTo"></select></div>
       <div class="g2"><div class="f"><label for="otCh">Hours</label><input id="otCh" type="number" min="0" max="8" value="0"></div><div class="f"><label for="otCm">Minutes</label><input id="otCm" type="number" min="0" max="59" step="5" value="0"></div></div>
@@ -1834,6 +1853,7 @@ html.acting body{padding-top:44px}@media(max-width:700px){html.acting body{paddi
   </form>
 </dialog>
 <div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
+<div class="sw-ov" id="swOverlay" hidden></div>
 <dialog class="pw-dlg wl-dlg" id="wlDlg" aria-labelledby="wlT"><form id="wlForm" novalidate>
   <h3 id="wlT" style="margin:0">What did you do today?</h3><p class="hint" id="wlSub" style="margin:0">Enter how many items you finished in each check. You can change it until the end of the day.</p>
   <div class="f" style="max-width:220px"><label for="wlDate">Day</label><input type="date" id="wlDate"></div>
@@ -1951,7 +1971,7 @@ const unsub = {};
 function acting(){ try { return !!actReal; } catch (e) { return false; } }
 function ownWritable(path){
   if (!me) return false;
-  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || path === 'workLog/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
+  return /^pfStatus\/[^/]+$/.test(path) || path === 'guideAck/' + me.key || path === 'assignAck/' + me.key || path === 'annAck/' + me.key || path === 'presence/' + me.key || path === 'mood/' + me.key || path === 'carryReq/' + me.key || path === 'timeclock/' + me.key || path === 'leaveRequests/' + me.key || path === 'otRequests/' + me.key || path === 'empInfo/' + me.key || path === 'empDocs/' + me.key || path === 'profileReq/' + me.key || path === 'photos/' + me.key || path === 'slipAck/' + me.key || path === 'workLog/' + me.key || path === 'activityCheck/' + me.key || (path.startsWith('leaveDecision/') && decisions.some(d => 'leaveDecision/' + d.key === path && d.email === me.email && d.sugg)) || (uid && (path === 'attendance/' + uid || path === 'leaveReq/' + uid));
 }
 function guardDb(raw){
   const deny = () => Promise.reject({code: 'not_allowed', message: 'Only portal admins can change this.'});
@@ -2045,6 +2065,7 @@ function watchMine(){
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
   watch('empInfoMine', db.doc('empInfo/' + me.key), s => { empInfoMine = s.exists ? s.data() : {}; renderProfile(); });
   watch('empDocsMine', db.doc('empDocs/' + me.key), s => { empDocsMine = s.exists ? s.data() : {}; renderProfile(); });
+  watch('swMine', db.doc('activityCheck/' + me.key), s => { if (s.exists) swAll[me.key] = s.data(); });
   watch('slipAckMine', db.doc('slipAck/' + me.key), s => { slipAckMine = s.exists ? s.data() : null; try { drawMySlips(); } catch (e) {} });
   watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
@@ -2074,6 +2095,7 @@ function startAdminData() {
   watch('carryReqAll', db.collection('carryReq'), s => { carryReqAll = {}; s.docs.forEach(d => carryReqAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('otReqAll', db.collection('otRequests'), s => { otReqAll = s.docs.map(d => ({key: d.id, ...d.data()})); renderOt(); });
+  watch('swAllW', db.collection('activityCheck'), s => { s.docs.forEach(d => swAll[d.id] = d.data()); try { renderPstat(); } catch (e) {} });
   watch('otApprAll', db.collection('otApprovals'), s => { otApprAll = {}; s.docs.forEach(d => otApprAll[d.id] = d.data()); setAtt(); renderOt(); enforceTeam(); });
 }
 // Admin UI needs both: the portal role on the account (or the owner's admin entry) and Editor access to the database
@@ -4099,7 +4121,7 @@ const wlDay = (key, d) => ((workAll[key] || {}).days || {})[d] || null;
 const wlTot = (x, onlyPend) => !x ? 0 : CHECKS.reduce((a, c) => a + (onlyPend && !c.pend ? 0 : +x[c.k] || 0), 0);
 const isWorkday = k => { const w = new Date(k + 'T00:00').getDay(); return w > 0 && w < 6 && !holidays.some(h => h.date === k && !h.tba); };
 const addDays = (k, n) => { const d = new Date(k + 'T00:00'); d.setDate(d.getDate() + n); return ymd(d); };
-function openWorkLog(day, fromClockOut, after){ if (!me) { after && after(); return; } wlAfter = after || null; wlClockOut = !!fromClockOut; $('wlDate').value = todayStr(); $('wlDate').disabled = true; $('wlLater').hidden = fromClockOut;
+function openWorkLog(day, fromClockOut, after){ if (!me) { after && after(); return; } wlAfter = after || null; wlClockOut = !!fromClockOut; $('wlDate').value = curDay(); $('wlDate').disabled = true; $('wlLater').hidden = fromClockOut;
   $('wlLater').textContent = 'Cancel'; $('wlSave').textContent = fromClockOut ? 'Save and clock out' : 'Save my numbers';
   $('wlT').textContent = fromClockOut ? 'Before you clock out: what did you do today?' : 'Today\'s numbers'; drawWl(); $('wlErr').hidden = true; $('wlDlg').showModal(); setTimeout(() => { const i = $('wlRows').querySelector('input'); i && i.focus(); i && i.select(); }, 50); }
 function drawWl(){ const d = $('wlDate').value || todayStr(), cur = wlDay(me.key, d) || {};
@@ -4113,7 +4135,7 @@ $('wlLater').onclick = () => { wlAfter = null; $('wlDlg').close(); };
 // at clock-out the numbers can't be skipped: Esc does not close the form
 $('wlDlg').addEventListener('cancel', e => { if (wlClockOut) e.preventDefault(); });
 $('wlForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const d = $('wlDate').value || todayStr(), err = $('wlErr'), x = {};
-  if (d !== todayStr()) { err.textContent = 'Numbers can only be entered for today.'; err.hidden = false; return; }
+  if (d !== todayStr() && d !== curDay()) { err.textContent = 'Numbers can only be entered for today.'; err.hidden = false; return; }
   for (const i of $('wlRows').querySelectorAll('[data-wl]')) { const v = i.value.trim(); if (v === '') { x[i.dataset.wl] = 0; continue; } if (!/^\d+$/.test(v) || +v > 5000) { err.textContent = 'Use whole numbers from 0 to 5000.'; err.hidden = false; i.focus(); return; } x[i.dataset.wl] = +v; }
   { const lp = $('wlRows').querySelector('[data-wlp]'); if (lp) { const v = lp.value.trim(); if (v === '' || !/^\d+$/.test(v)) { err.textContent = 'Enter how many L2 files are still waiting now (0 if none).'; err.hidden = false; lp.focus(); return; } x.l2pend = +v; } }
   x.at = new Date().toISOString(); try { const tl = ((myAtt && myAtt.days) || {})[d]; if (tl) x.ms = Math.round(sessMs(tl)); } catch (z) {} const days = {...((workAll[me.key] || {}).days || {}), [d]: x}; Object.keys(days).sort().slice(0, -400).forEach(k => delete days[k]);
@@ -4257,10 +4279,10 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
   const chip = p2 => { const x = wlDay(p2.key, today), h = isAdmin ? hoursOf(p2.email, today, today) : 0; return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p2.name).split(' ')[0])}${isL2(p2) ? ' <em>L2</em>' : ''}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}${isAdmin && h ? ' <small>' + fmtH(h) + '</small>' : ''}</span>`; };
   $('psToday').innerHTML = `<div class="ps-fill"><b>${filled.length}</b> of ${sp.length} specialists have entered today's numbers</div><div class="ps-who">${sp.map(chip).join('')}${l2.map(chip).join('')}</div>`;
   // admin: per person
-  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Min / file</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
+  if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Checks today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Min / file</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
     const rows = people().filter(wlRequired).map(p2 => { const dd = Object.entries((workAll[p2.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p2.key, today);
       const hT = hoursOf(p2.email, today, today), hM = dd.reduce((a, [d]) => a + msOfDay(p2.key, d), 0); return {p: p2, dd, tot, t, hT, hM, spd: dd.length ? tot / dd.length : 0}; }).sort((a, b) => b.spd - a.spd), top = Math.max(1, ...rows.map(r => r.spd));
-    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}${isL2(r.p) ? ' <span class="pill info" style="margin-left:6px">L2</span>' : ''}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td class="mono">${r.hT ? fmtH(r.hT) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td class="mono">${r.hM ? fmtH(r.hM) : '<span class="hint">—</span>'}</td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td><td>${r.hM && r.tot ? (r.hM / 60000 / r.tot).toFixed(1) : '<span class="hint">—</span>'}</td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${8 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
+    $('psPeople').innerHTML = rows.map(r => `<tr><td><div class="person">${av(r.p.name)}${esc(r.p.name)}${isL2(r.p) ? ' <span class="pill info" style="margin-left:6px">L2</span>' : ''}</div></td><td>${r.t ? wlTot(r.t) : '<span class="hint">—</span>'}</td><td>${(() => { const l = ((swAll[r.p.key] || {}).days || {})[today] || [], ok = l.filter(x => x.res === 'ok').length, ms = l.filter(x => x.res === 'missed' || x.res === 'closed').length; return l.length ? `<span class="${ms ? 'neg' : ''}">${ok} ✓${ms ? ' · ' + ms + ' ✗' : ''}</span>` : '<span class="hint">—</span>'; })()}</td><td class="mono">${r.hT ? fmtH(r.hT) : '<span class="hint">—</span>'}</td><td>${r.dd.length}</td><td><b>${fmtN(r.tot)}</b></td><td class="mono">${r.hM ? fmtH(r.hM) : '<span class="hint">—</span>'}</td><td><div class="ps-spd"><i style="width:${r.spd / top * 100}%"></i><b>${r.spd ? fmtN(r.spd) : '—'}</b></div></td><td>${r.hM && r.tot ? (r.hM / 60000 / r.tot).toFixed(1) : '<span class="hint">—</span>'}</td>${CHECKS.map(c => `<td>${r.dd.reduce((a, [, x]) => a + (+x[c.k] || 0), 0) || '<span class="hint">0</span>'}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${9 + CHECKS.length}" class="empty">No employees yet.</td></tr>`;
     if (!document.activeElement || !$('psAdmin').contains(document.activeElement)) { const p = S.plan, lastS = p && p.snaps.length ? p.snaps[p.snaps.length - 1] : null;
       $('psDeadline').value = p && p.deadline || ''; $('psSnapDate').value = todayStr().slice(0, 7) === S.m ? todayStr() : S.mStart;
       $('psPlanInputs').innerHTML = CHECKS.filter(c => c.pend).map(c => `<div class="f"><label>${c.n} · waiting</label><input type="number" min="0" data-ps="${c.k}" value="${lastS ? +lastS[1][c.k] || 0 : ''}" placeholder="e.g. 2779"></div>`).join('');
@@ -4528,8 +4550,12 @@ function enforceDays(days, appr){ let changed = false; const out = JSON.parse(JS
       const bySess = st + SESSION_MAX, byDay = x.ot ? st + x.ot * 3600000 : Infinity, stop = Math.min(bySess, byDay);   // the day is no longer stopped at 8h: extra time waits for approval instead
       if (now >= stop) { x.out = new Date(stop).toISOString(); x.auto = stop === byDay && byDay < bySess ? 'day' : 'session'; changed = true; acc += stop - st; } }); });
   return changed ? out : null; }
-const openSession = days => { const t = days && days[todayStr()]; return t && t.length && !t[t.length - 1].out ? t[t.length - 1] : null; };
-const autoTag = x => x.auto ? (x.auto === 'day' ? ' (stopped: 8h day limit)' : ' (stopped automatically after 16h)') : '';
+// the working day a clock belongs to: a session that runs past midnight stays on the day it started
+function curDayOf(days){ const t = todayStr(), l = (days || {})[t]; if (l && l.length) return t; const d = new Date(t + 'T00:00'); d.setDate(d.getDate() - 1); const y = ymd(d), yl = (days || {})[y];
+  if (yl && yl.length) { const last = yl[yl.length - 1]; if (!last.out || new Date(last.out) >= new Date(t + 'T00:00')) return y; } return t; }
+const curDay = () => curDayOf((myAtt && myAtt.days) || {});
+const openSession = days => { const t = days && days[curDayOf(days)]; return t && t.length && !t[t.length - 1].out ? t[t.length - 1] : null; };
+const autoTag = x => x.auto ? (x.auto === 'day' ? ' (stopped: 8h day limit)' : x.auto === 'check' ? ' (stopped: “still working?” not answered)' : x.auto === 'closed' ? ' (stopped: portal closed while the clock ran)' : ' (stopped automatically after 16h)') : '';
 function attBlock(){
   if (!me) return 'Sign in with an employee account to use the time clock.';
   if (!db) return NO_DB;
@@ -4552,11 +4578,11 @@ function renderClock(){
   $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !(open || brk); $('clkBrk').disabled = !!block || !open; renderOtBox();
   $('clkIn').textContent = gate && !open ? 'Accept assignment first' : brk ? '▶ Resume work' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
-  const todayList = days[todayStr()] || [];
-  st.textContent = open ? 'Working since ' + fmtT(open.in) + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
+  const cd = curDayOf(days), todayList = days[cd] || [], prevDay = cd !== todayStr();
+  st.textContent = open ? 'Working since ' + fmtT(open.in) + (prevDay ? ' yesterday · counted on ' + fmtDay(cd) : '') + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
   st.className = 'clock-status' + (open ? ' on' : brk ? ' brk' : '');
   $('clockDot').hidden = !open;
-  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (extraPending() - ignMs(otReqMine, todayStr()) > 60000 ? ` <small class="pend">+${fmtH(extraPending() - ignMs(otReqMine, todayStr()))} over 8h, not counted until approved</small>` : ignMs(otReqMine, todayStr()) ? ` <small class="pend ok">✓ accepted without overtime</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
+  $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (prevDay ? ` <small class="pend ok">counted on ${fmtDay(cd)}, the day you started</small>` : '') + (extraPending() - ignMs(otReqMine, cd) > 60000 ? ` <small class="pend">+${fmtH(extraPending() - ignMs(otReqMine, cd))} over 8h, not counted until approved</small>` : ignMs(otReqMine, cd) ? ` <small class="pend ok">✓ accepted without overtime</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   renderMyMonth();
 }
@@ -4614,54 +4640,59 @@ async function enforceTeam(){
     const fixed = enforceDays(d.days, otApprAll[id]); if (!fixed) continue;
     enforcing = true; try { await db.doc('timeclock/' + id).set({...JSON.parse(JSON.stringify(d)), days: fixed, updatedAt: new Date().toISOString()}); } catch (e) {} enforcing = false; }
 }
-const todayWorked = () => { const l = ((myAtt && myAtt.days) || {})[todayStr()]; return sessMs(l); };
-const todayAllow = () => DAY_MAX + extraFor(otApprMine, todayStr());
+const todayWorked = () => { const l = ((myAtt && myAtt.days) || {})[curDay()]; return sessMs(l); };
+const todayAllow = () => DAY_MAX + extraFor(otApprMine, curDay());
 const rawMs = l => capWalk(l || [], 1e15).reduce((a, r) => a + r.d, 0);            // all time worked (each session still max 8h)
-const todayRaw = () => rawMs(((myAtt && myAtt.days) || {})[todayStr()]);
+const todayRaw = () => rawMs(((myAtt && myAtt.days) || {})[curDay()]);
 const dayList = k => ((myAtt && myAtt.days) || {})[k] || [];
-const extraPending = () => Math.max(0, todayRaw() - todayAllow() - (dayList(todayStr()).carryOut || 0));   // extra time today not yet approved or sent anywhere
+const extraPending = () => Math.max(0, todayRaw() - todayAllow() - (dayList(curDay()).carryOut || 0));   // extra time today not yet approved or sent anywhere
 const ignMs = (rq, k) => +(((rq && rq.days && rq.days[k]) || {}).ignoredMs || 0);   // over-8h time the employee chose to leave out (no overtime)
-const extraUnsent = () => { const st = myOtToday(), ot = st && st.status === 'pending' ? st.hours * 3600000 : 0; return Math.max(0, extraPending() - ot - ignMs(otReqMine, todayStr())); };
+const extraUnsent = () => { const st = myOtToday(), ot = st && st.status === 'pending' ? st.hours * 3600000 : 0; return Math.max(0, extraPending() - ot - ignMs(otReqMine, curDay())); };
 const OT_SHORT = 3600000;   // under 1 hour over 8: overtime or ignore; 1 hour or more: carry over (or overtime)
-const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(todayStr()).carryOut || 0) - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
+const otHoursNeeded = () => Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(curDay()).carryOut || 0) - 60000) / 900000) / 4;      // hours over 8, rounded up to 15 minutes
 const onBreak = days => { const t = (days || {})[todayStr()] || []; const l = t[t.length - 1]; return !!(l && l.out && l.brk); };
-const myOtToday = () => { const k = todayStr(), a = otApprMine && otApprMine.days && otApprMine.days[k], r = otReqMine && otReqMine.days && otReqMine.days[k];
+const myOtToday = () => { const k = curDay(), a = otApprMine && otApprMine.days && otApprMine.days[k], r = otReqMine && otReqMine.days && otReqMine.days[k];
   if (a && (!r || !r.hours || a.at >= r.at)) return {status: a.status, hours: a.hours}; return r && r.hours ? {status: 'pending', hours: r.hours} : null; };
 // days this month (before today) that are short of 8 hours and can receive carried-over time
 // any other day in the current month (past or future, worked or not) that is under 8 hours can receive carried-over time
-function carryTargets(){ const today = todayStr(), m = today.slice(0, 7), [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), days = (myAtt && myAtt.days) || {}, out = [];
+function carryTargets(){ const today = curDay(), m = today.slice(0, 7), [Y, M] = m.split('-').map(Number), n = new Date(Y, M, 0).getDate(), days = (myAtt && myAtt.days) || {}, out = [];
   for (let i = 1; i <= n; i++) { const k = m + '-' + pad(i); if (k === today) continue; const l = days[k] || [], got = sessMs(l), pend = myCarry().filter(x => x.to === k && x.status === 'pending').reduce((a, x) => a + x.ms, 0), short = DAY_MAX - got - pend;
     if (short >= 5 * 60000) out.push({k, got, short, fut: k > today, none: !(l.length) }); } return out; }
 const fmtMins = ms => { const m2 = Math.round(ms / 60000); return (m2 >= 60 ? Math.floor(m2 / 60) + 'h ' : '') + (m2 % 60 || m2 < 60 ? pad(m2 % 60) + 'm' : '').replace(/^0(\d)m/, '$1m'); };
 function otMode(){ return (document.querySelector('input[name="otMode"]:checked') || {}).value || 'ot'; }
-function otModeUi(){ const c = otMode() === 'carry'; $('otCarryBox').hidden = !c; $('otSend').textContent = c ? 'Send carry-over for approval' : 'Send overtime for approval'; otCarryMax(); }
+function otModeUi(){ const c = otMode() === 'carry'; $('otCarryBox').hidden = !c; $('otSplitBox').hidden = otMode() !== 'split'; otSplitInfo(); $('otSend').textContent = c ? 'Send carry-over for approval' : 'Send overtime for approval'; otCarryMax(); }
 function otCarryMax(){ const t = carryTargets().find(x => x.k === $('otTo').value); const max = Math.min(extraUnsent(), t ? t.short : 0);
   $('otCarryMax').textContent = t ? `You can move up to ${fmtH(max)} to this day (it is ${fmtH(t.short)} short of 8 hours). Time can only move within this month.` : ''; return max; }
 document.querySelectorAll('input[name="otMode"]').forEach(r => r.addEventListener('change', otModeUi));
+const OT_SPLIT = 30 * 60000;   // from 30 minutes over 8 hours, the extra time can be split: part overtime, the rest ignored
+const otSplitMs = () => ((+$('otSh').value || 0) * 60 + (+$('otSm').value || 0)) * 60000;
+function otSplitInfo(){ const ex = extraUnsent(), ot = Math.min(otSplitMs(), ex); $('otSplitInfo').innerHTML = `Of <b>${fmtH(ex)}</b> extra: <b>${fmtH(ot)}</b> sent for overtime, <b>${fmtH(Math.max(0, ex - ot))}</b> ignored.`; }
+['otSh', 'otSm'].forEach(id => $(id).addEventListener('input', otSplitInfo));
 $('otTo').addEventListener('change', () => { const mx = otCarryMax(); $('otCh').value = Math.floor(mx / 3600000); $('otCm').value = Math.round((mx % 3600000) / 60000); });
 function askOvertime(auto){
-  const k = todayStr(), extra = extraUnsent(); if (extra < 60000) return;
+  const k = curDay(), extra = extraUnsent(); if (extra < 60000) return;
   if (auto && otAsked === k) return; otAsked = k;
   $('otHrs').value = otHoursNeeded();
-  const short = extra < OT_SHORT; $('otDlg').classList.toggle('ot-short', short);
+  const short = extra < OT_SPLIT, mid = extra < OT_SHORT; $('otDlg').classList.toggle('ot-short', short);
+  { const half = Math.floor(extra / 2 / 900000) * 900000; $('otSh').value = Math.floor(half / 3600000); $('otSm').value = Math.round((half % 3600000) / 60000); $('otSh').max = Math.ceil(extra / 3600000); }
   $('otDlgT').textContent = short ? 'You worked a little over 8 hours today' : 'You worked more than 8 hours today';
   $('otDlgMsg').textContent = short ? `You worked ${fmtH(todayRaw())} today, ${fmtH(extra)} over 8 hours. Does this extra time need overtime approval? Send it to your Project Manager, or ignore it: then no overtime is recorded and your day is saved as worked.` : `You worked ${fmtH(todayRaw())} today. Carry the extra time over to another day this month, or request overtime. It counts only after your Project Manager approves it.`;
   $('otBig').innerHTML = `<b>${fmtH(extra)}</b><span>over 8 hours${dayList(k).carryOut ? ' still to assign' : ''}</span>`;
   const tg = carryTargets(), opt = t => `<option value="${t.k}">${new Date(t.k + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'})} · ${t.fut ? (t.got ? 'already ' + fmtH(t.got) + ' added' : 'upcoming day') : t.none ? 'no work recorded' : 'worked ' + fmtH(t.got)}, ${fmtH(t.short)} short</option>`;
   const past = tg.filter(t => !t.fut), fut = tg.filter(t => t.fut); $('otTo').innerHTML = (past.length ? `<optgroup label="Earlier this month">${past.map(opt).join('')}</optgroup>` : '') + (fut.length ? `<optgroup label="Later this month (e.g. to leave early)">${fut.map(opt).join('')}</optgroup>` : '');
   const can = tg.length > 0; $('otCarryOpt').classList.toggle('dis', !can); $('otCarryOpt').querySelector('input').disabled = !can; $('otCarryHint').textContent = can ? 'Add it to a shorter day this month, earlier or later, so you can make up hours or leave early another day.' : 'No other day this month can take more time.';
-  $('otChoice').hidden = short; $('otIgnore').hidden = !short; $('otLater').hidden = short;
-  document.querySelector(`input[name="otMode"][value="${!short && can ? 'carry' : 'ot'}"]`).checked = true; otModeUi(); $('otTo').dispatchEvent(new Event('change'));
+  $('otChoice').hidden = short; $('otIgnore').hidden = !mid; $('otLater').hidden = mid; $('otCarryOpt').hidden = mid;
+  document.querySelector(`input[name="otMode"][value="${!mid && can ? 'carry' : 'ot'}"]`).checked = true; otModeUi(); $('otTo').dispatchEvent(new Event('change'));
   $('otErr').hidden = true; $('otWhy').value = ''; const d = $('otDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
 }
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
-$('otIgnore').onclick = async () => { if (!me) return; const k = todayStr(), b = $('otIgnore'), add = extraUnsent(); b.disabled = true;
+$('otIgnore').onclick = async () => { if (!me) return; const k = curDay(), b = $('otIgnore'), add = extraUnsent(); b.disabled = true;
   try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + add, ignoredAt: new Date().toISOString()};
     Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
     $('otLater').click(); renderClock(); renderMyMonth(); toast('Saved: ' + fmtH(todayRaw()) + ' worked, no overtime requested'); }
   catch (x) { $('otErr').textContent = 'That couldn\'t be saved. Try again.'; $('otErr').hidden = false; } finally { b.disabled = false; } };
 $('otForm').addEventListener('submit', async e => {
-  e.preventDefault(); if (!me) return; const k = todayStr(), btn = $('otSend'), err = $('otErr'), fail = t => { err.textContent = t; err.hidden = false; };
+  e.preventDefault(); if (!me) return; const k = curDay(), btn = $('otSend'), err = $('otErr'), fail = t => { err.textContent = t; err.hidden = false; };
   const why = $('otWhy').value.trim(); if (!why) return fail('Add a short reason.');
   const mode = otMode(); btn.disabled = true; const label = btn.textContent; btn.textContent = 'Sending…';
   try {
@@ -4672,6 +4703,13 @@ $('otForm').addEventListener('submit', async e => {
       const items = [...((carryReqMine && carryReqMine.items) || []), {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), from: k, to, ms, reason: why.slice(0, 500), at: new Date().toISOString()}].slice(-120);
       await db.doc('carryReq/' + me.key).set({email: me.email, name: me.name, items}); carryReqMine = {email: me.email, name: me.name, items}; pickMyAtt();
       toast('Carry-over sent to your Project Manager for approval'); }
+    else if (mode === 'split') { const ex = extraUnsent(), want = otSplitMs();
+      if (want < 15 * 60000) { btn.disabled = false; btn.textContent = label; return fail('Send at least 15 minutes as overtime, or choose "Ignore, no overtime".'); }
+      if (want > ex + 30000) { btn.disabled = false; btn.textContent = label; return fail('You can send up to ' + fmtH(ex) + ' as overtime.'); }
+      const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})), prevIgn = ignMs(otReqMine, k), prevH = days[k] && days[k].hours ? +days[k].hours : 0;
+      days[k] = {...(days[k] || {}), hours: Math.round((prevH + Math.ceil(want / 900000) / 4) * 4) / 4, reason: why.slice(0, 500), at: new Date().toISOString(), ignoredMs: prevIgn + Math.max(0, ex - want), ignoredAt: new Date().toISOString()};
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+      toast(fmtH(want) + ' sent for overtime approval, ' + fmtH(Math.max(0, ex - want)) + ' ignored'); }
     else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] && days[k].ignoredMs ? {ignoredMs: days[k].ignoredMs, ignoredAt: days[k].ignoredAt} : {}), hours: Math.max(0.25, Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(k).carryOut || 0) - ignMs(otReqMine, k) - 60000) / 900000) / 4), reason: why.slice(0, 500), at: new Date().toISOString()};
       Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); toast('Overtime sent to your Project Manager for approval'); }
     $('otLater').click(); renderClock(); renderMyMonth();
@@ -4681,7 +4719,7 @@ $('otForm').addEventListener('submit', async e => {
 });
 // mini clock in the left menu: visible on every page for employees who use the time clock
 function renderRailClock(){ const box = $('railClock'); if (!box) return; const show = !!me && selfClock() && !attBlock(); box.hidden = !show; if (!show) return;
-  const days = (myAtt && myAtt.days) || {}, open = openSession(days), brk = onBreak(days), l = days[todayStr()] || [], gate = clockGate(), m = monthKey(new Date());
+  const days = (myAtt && myAtt.days) || {}, open = openSession(days), brk = onBreak(days), l = days[curDayOf(days)] || [], gate = clockGate(), m = monthKey(new Date());
   $('rcToday').textContent = fmtH(sessMs(l));
   const st = $('rcSt'); st.className = 'rc-st' + (open ? ' on' : brk ? ' brk' : ''); st.textContent = open ? 'Working since ' + fmtT(open.in) : brk ? '☕ On break' : l.length ? 'Clocked out' : 'Not clocked in';
   const mb = $('rcMain'); mb.textContent = open ? 'Working…' : gate ? 'Accept assignment' : brk ? '▶ Resume work' : l.length ? 'Clock in again' : 'Clock in'; mb.disabled = !!open; mb.dataset.act = gate && !open ? 'go' : 'in';
@@ -4691,7 +4729,7 @@ $('rcBrk').onclick = () => punch('break'); $('rcOut').onclick = () => go('clock'
 setInterval(() => { const t = $('rcTime'); if (t && !$('railClock').hidden) t.textContent = new Date().toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'}); }, 1000);
 function renderOtBox(){
   const box = $('otBox'); if (!me || !selfClock()) { box.hidden = true; return; }
-  const k = todayStr(), st = myOtToday(), unsent = extraUnsent(), open = openSession((myAtt && myAtt.days) || {}), fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
+  const k = curDay(), st = myOtToday(), unsent = extraUnsent(), open = openSession((myAtt && myAtt.days) || {}), fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
   const parts = [];
   myCarry().filter(x => x.from === k).forEach(x => parts.push(x.status === 'approved' ? `<div>✓ <b>${fmtH(x.ms)}</b> carried over to ${fd(x.to)}</div>` : x.status === 'rejected' ? `<div>✗ Carry-over of ${fmtH(x.ms)} to ${fd(x.to)} was not approved</div>` : `<div>⏳ <b>${fmtH(x.ms)}</b> carry-over to ${fd(x.to)} waiting for approval</div>`));
   if (st && st.status === 'pending') parts.push(`<div>⏳ Overtime of <b>${st.hours} h</b> waiting for your Project Manager's approval</div>`);
@@ -4750,7 +4788,7 @@ async function punch(kind){
   catch (x) { punching = false; err.textContent = 'Your time clock could not be loaded, so nothing was changed. Check your connection and try again.'; err.hidden = false; return; }
   punching = false;
   const mineRec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase());
-  const days = JSON.parse(JSON.stringify((mineRec && mineRec.days) || {})), k = todayStr(), now = new Date().toISOString();
+  const days = JSON.parse(JSON.stringify((mineRec && mineRec.days) || {})), k = kind === 'in' && !openSession(days) ? todayStr() : curDayOf(days), now = new Date().toISOString();
   const list = days[k] || (days[k] = []);
   if (kind === 'in') { if (openSession(days)) return; const g = clockGate(); if (g) { err.textContent = g; err.hidden = false; toast(g); return; } list.push({in: now}); }
   else if (kind === 'break') { const o = list[list.length - 1]; if (!o || o.out) return; o.out = now; o.brk = true; }
@@ -4760,7 +4798,85 @@ async function punch(kind){
   try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
-$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me)) openWorkLog(todayStr(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
+$('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me)) openWorkLog(curDay(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
+const SW_CSS = ".sw-card{font-family:\"Public Sans\",system-ui,sans-serif;color:#13221A;background:#fff;border-radius:24px;padding:20px 22px;display:grid;gap:10px;justify-items:center;text-align:center;width:min(380px,92vw);box-shadow:0 40px 90px -30px rgba(0,0,0,.55);border:2px solid #B6D441;animation:swIn .35s cubic-bezier(.2,.9,.3,1.3)}\n@keyframes swIn{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}\n.sw-top{display:flex;align-items:center;gap:8px;font:600 11px \"JetBrains Mono\",monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6B62}.sw-top img{width:22px;height:22px;border-radius:6px}\n.sw-big{font:800 25px/1.15 \"Bricolage Grotesque\",system-ui,sans-serif}.sw-card p{margin:0;color:#44564B;font-size:14.5px;line-height:1.45}.sw-card small{color:#5B6B62;font-size:12.5px}\n.sw-moods{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.sw-moods button{border:1.5px solid #DCE5C8;background:#F7FAEF;border-radius:999px;padding:6px 12px;font:600 13px inherit;cursor:pointer;color:#13221A}.sw-moods button.on{background:#E6F0C4;border-color:#9BB52A}\n.sw-row{display:flex;align-items:center;gap:22px}\n.sw-ring{--p:100;width:74px;height:74px;border-radius:50%;background:conic-gradient(#9BB52A calc(var(--p)*1%),#EDF1E6 0);display:grid;place-items:center;align-content:center;position:relative}.sw-ring::before{content:\"\";position:absolute;inset:7px;border-radius:50%;background:#fff}.sw-ring b,.sw-ring span{position:relative}.sw-ring b{font:800 22px/1 \"Bricolage Grotesque\",sans-serif}.sw-ring span{font-size:10px;color:#5B6B62}\n.sw-sensor{position:relative;width:96px;height:96px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#d6ef73,#9BB52A 70%);box-shadow:0 0 0 8px rgba(155,181,42,.18),0 12px 30px -10px rgba(60,90,10,.6);display:grid;place-items:center;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;animation:swPulse 1.6s ease-in-out infinite}\n.sw-sensor .sw-fp{font-size:40px;position:relative;z-index:1}.sw-sensor i{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(19,36,10,.28);transition:height 0s}\n.sw-sensor.hold i{height:100%;transition:height .9s linear}.sw-sensor.done{background:#2d6a14}\n@keyframes swPulse{50%{box-shadow:0 0 0 16px rgba(155,181,42,.08),0 12px 30px -10px rgba(60,90,10,.6)}}\n.sw-brk{border:0;background:none;color:#5B6B62;font:600 13px inherit;cursor:pointer;text-decoration:underline}\n.sw-card.missed{border-color:#C2412D}.sw-card.missed .sw-big{color:#9b2c1a;font-size:28px}.sw-card.missed .sw-sensor{background:radial-gradient(circle at 35% 30%,#f39b8c,#C2412D 70%);box-shadow:0 0 0 8px rgba(194,65,45,.18)}\n.sw-idle{font-family:\"Public Sans\",system-ui,sans-serif;display:grid;gap:10px;padding:16px;color:#13221A}.sw-idle img{width:32px;height:32px;border-radius:8px}.sw-idle > div{display:grid}.sw-idle b{font:800 20px \"Bricolage Grotesque\",sans-serif}.sw-idle span{color:#5B6B62}.sw-idle small{color:#5B6B62;font-size:12px}\nbody{margin:0;min-height:100vh;display:grid;place-items:center;background:#F3F5EF}";
+/* ---------- "Are you still working?" checks while the clock runs ---------- */
+// At random times (gaps of 10-28 minutes, so at least twice an hour) a check appears: on top of every window in the
+// always-on-top mini window (Chrome/Edge), as a system notification, and inside the portal. Pressing the sensor within 100 seconds
+// keeps the clock running. No answer: the clock stops at the moment the check appeared and a "Are you still working?" screen stays up.
+const SW_SECS = 100, SW_MIN = 10, SW_MAX = 28, SW_HOLD = 900;
+const SW_Q = [
+  {t: 'Still with us? 👋', s: 'Quick check that you\'re at your desk.', moods: []},
+  {t: 'Feeling tired? 😴', s: 'Be honest, it helps us plan the day.', moods: ['💪 Feeling fine', '🙂 A little tired', '😴 Quite tired']},
+  {t: 'Did you take your break today? ☕', s: 'Short breaks keep your accuracy up.', moods: ['✓ Yes, already', '⏳ Not yet']},
+  {t: 'Time for some water? 💧', s: 'Have a sip, then press the sensor.', moods: []},
+  {t: 'How\'s the work going? 📊', s: 'Tell us in one tap.', moods: ['🚀 Going well', '🧩 Some tricky ones', '🐢 Slow today']},
+  {t: 'Quick stretch? 🧘', s: 'Roll your shoulders, look away from the screen for a moment.', moods: []},
+  {t: 'Eyes OK? 👀', s: 'Look at something far away for 20 seconds.', moods: []}];
+let swSt = null, swTimer = null, swPip = null, swMood = '', swHoldT = null, swAll = {};
+const swKey = () => 'cs_sw_' + (me ? me.key : 'x');
+const swLoad = () => { try { return JSON.parse(localStorage.getItem(swKey()) || '{}'); } catch (e) { return {}; } };
+const swSave = o => { try { localStorage.setItem(swKey(), JSON.stringify(o)); } catch (e) {} };
+const swOn = () => !!me && wlRequired(me) && !acting() && selfClock();
+const swGap = () => (SW_MIN + Math.random() * (SW_MAX - SW_MIN)) * 60000;
+async function swLog(entry){ if (!me) return; const d = curDay(), cur = swAll[me.key] || {}, days = {...(cur.days || {})}; days[d] = [...(days[d] || []), entry].slice(-80);
+  Object.keys(days).sort().slice(0, -45).forEach(k => delete days[k]); swAll[me.key] = {email: me.email, name: me.name, days};
+  try { await db.doc('activityCheck/' + me.key).set({email: me.email, name: me.name, days}); } catch (e) {} }
+// stop the running session at a given moment (used when a check is not answered, or the portal was closed)
+async function swStopAt(iso, why){ try { const snap = await db.doc('timeclock/' + me.key).get(), fresh = snap.exists ? snap.data() : null;
+    const rec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase()); if (!rec) return false;
+    const days = JSON.parse(JSON.stringify(rec.days || {})), k = curDayOf(days), l = days[k] || [], o = l[l.length - 1]; if (!o || o.out) return false;
+    o.out = new Date(Math.max(+new Date(o.in), +new Date(iso))).toISOString(); o.auto = why || 'check';
+    await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: new Date().toISOString()}); return true; } catch (e) { console.error(e); return false; } }
+function swCardHtml(st){ const q = SW_Q[st.q % SW_Q.length], left = Math.max(0, Math.ceil((st.at + SW_SECS * 1000 - Date.now()) / 1000));
+  if (st.missed) return `<div class="sw-card missed"><div class="sw-big">Are you still working?</div><p>Nobody pressed the sensor, so your clock stopped at <b>${fmtT(new Date(st.at).toISOString())}</b>. That time is not counted.</p><button type="button" class="sw-sensor" data-swsensor><span class="sw-fp">👆</span><i></i></button><small>Press and hold the sensor to start your clock again</small></div>`;
+  return `<div class="sw-card"><div class="sw-top"><img src="logo.png" alt=""><span>Chrysolite · still working?</span></div><div class="sw-big">${esc(q.t)}</div><p>${esc(q.s)}</p>
+    ${q.moods.length ? `<div class="sw-moods">${q.moods.map(m => `<button type="button" class="${swMood === m ? 'on' : ''}" data-swmood="${esc(m)}">${esc(m)}</button>`).join('')}</div>` : ''}
+    <div class="sw-row"><div class="sw-ring" style="--p:${left / SW_SECS * 100}"><b>${left}</b><span>sec</span></div><button type="button" class="sw-sensor" data-swsensor aria-label="Press and hold: I am working"><span class="sw-fp">👆</span><i></i></button></div>
+    <small>Press and hold the sensor: “I'm working”</small><button type="button" class="sw-brk" data-swbreak>☕ I'm taking a break</button></div>`; }
+function swRender(){ const box = $('swOverlay'); const st = swSt; if (!st || !st.at) { box.hidden = true; if (swPip) swPipIdle(); document.title = document.title.replace(/^⚠ /, ''); return; }
+  box.hidden = false; box.innerHTML = swCardHtml(st); if (!/^⚠ /.test(document.title)) document.title = '⚠ ' + document.title;
+  if (swPip) { swPip.document.body.innerHTML = swCardHtml(st); } }
+function swPipIdle(){ if (!swPip) return; const days = (myAtt && myAtt.days) || {}, l = days[curDay()] || [], open = openSession(days);
+  swPip.document.body.innerHTML = `<div class="sw-idle"><img src="logo.png" alt=""><div><b>${open ? 'Working' : onBreak(days) ? 'On break' : 'Not clocked in'}</b><span>${fmtH(sessMs(l))} today</span></div><small>Keep this little window open. “Still working?” checks appear here, on top of your other windows.</small></div>`; }
+function swShow(){ const st = swLoad(); st.at = Date.now(); st.q = Math.floor(Math.random() * SW_Q.length); st.missed = false; delete st.next; swSt = st; swMood = ''; swSave(st); swRender();
+  try { if ('Notification' in window && Notification.permission === 'granted') { const n = new Notification(SW_Q[st.q].t + ' Are you still working?', {body: 'Press the sensor within 100 seconds, or your clock stops.', tag: 'cs-still', requireInteraction: true, icon: 'logo.png'}); n.onclick = () => { window.focus(); n.close(); }; swSt.n = n; } } catch (e) {}
+  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
+async function swOk(){ const st = swSt; if (!st) return; const sec = Math.round((Date.now() - st.at) / 1000);
+  if (st.missed) { swSt = null; swSave({next: Date.now() + swGap()}); swRender(); swLog({at: new Date().toISOString(), res: 'restart'}); punch('in'); return; }
+  try { st.n && st.n.close(); } catch (e) {} swSt = null; swSave({next: Date.now() + swGap()}); swRender(); toast('Thanks! Your clock keeps running ✓');
+  swLog({at: new Date(st.at).toISOString(), res: 'ok', sec, q: SW_Q[st.q % SW_Q.length].t, ...(swMood ? {mood: swMood} : {})}); }
+async function swMiss(){ const st = swSt; if (!st || st.missed) return; st.missed = true; swSave(st); swRender();
+  try { st.n && st.n.close(); new Notification('Are you still working?', {body: 'Your clock stopped because nobody pressed the sensor.', tag: 'cs-still', requireInteraction: true, icon: 'logo.png'}); } catch (e) {}
+  await swStopAt(new Date(st.at).toISOString(), 'check'); swLog({at: new Date(st.at).toISOString(), res: 'missed', q: SW_Q[st.q % SW_Q.length].t}); }
+// press and hold the sensor (so a stray click doesn't count)
+function swBindHold(root){ root.addEventListener('pointerdown', e => { const b = e.target.closest('[data-swsensor]'); if (!b) return; b.classList.add('hold'); clearTimeout(swHoldT); swHoldT = setTimeout(() => { b.classList.add('done'); swOk(); }, SW_HOLD); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => root.addEventListener(ev, e => { const b = e.target.closest && e.target.closest('[data-swsensor]'); clearTimeout(swHoldT); root.querySelectorAll('[data-swsensor].hold').forEach(x => x.classList.remove('hold')); }));
+  root.addEventListener('keydown', e => { const b = e.target.closest && e.target.closest('[data-swsensor]'); if (b && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); swOk(); } });
+  root.addEventListener('click', e => { const m = e.target.closest('[data-swmood]'); if (m) { swMood = m.dataset.swmood; swRender(); } if (e.target.closest('[data-swbreak]')) { const st = swSt; try { st && st.n && st.n.close(); } catch (x) {} swSt = null; swSave({}); swRender(); swLog({at: new Date(st ? st.at : Date.now()).toISOString(), res: 'break'}); punch('break'); } }); }
+swBindHold($('swOverlay'));
+// the always-on-top mini window (Chrome / Edge 116+): must be opened from a click
+async function swOpenPip(){ if (!('documentPictureInPicture' in window) || swPip) return; try { swPip = await documentPictureInPicture.requestWindow({width: 330, height: 360});
+    const st = swPip.document.createElement('style'); st.textContent = SW_CSS; swPip.document.head.appendChild(st); swPip.document.title = 'Chrysolite: still working?'; swBindHold(swPip.document);
+    swPip.addEventListener('pagehide', () => { swPip = null; swPipBtn(); }); swSt && swSt.at ? swRender() : swPipIdle(); swPipBtn(); } catch (e) { console.warn(e); } }
+function swPipBtn(){ const b = $('swPipBtn'); if (!b) return; b.hidden = !('documentPictureInPicture' in window) || !swOn() || !!swPip || !openSession((myAtt && myAtt.days) || {}); }
+$('swPipBtn').onclick = () => { swOpenPip(); try { Notification.requestPermission(); } catch (e) {} };
+// the clock: every few seconds decide whether a check is due
+function swTick(){ if (!swOn()) { if (swSt) { swSt = null; swRender(); } return; } if (!myClockRaw) return;
+  const days = (myAtt && myAtt.days) || {}, open = openSession(days), st = swLoad(), now = Date.now();
+  const last = +localStorage.getItem('cs_sw_seen_' + me.key) || 0; try { localStorage.setItem('cs_sw_seen_' + me.key, String(now)); } catch (e) {}
+  if (swSt && swSt.missed) return;   // keep the "are you still working?" screen until the sensor is pressed
+  if (!open) { if (swSt) { swSt = null; swRender(); } if (st.next || st.at) swSave({}); swPipBtn(); if (swPip) swPipIdle(); return; }
+  // the portal was closed while the clock ran: stop the clock where the portal was last open (if a check would have been due)
+  if (last && now - last > (SW_MAX + 7) * 60000 && last > +new Date(open.in) && !st.at && !swClosedDone) { swClosedDone = true; swStopAt(new Date(last).toISOString(), 'closed').then(okk => { if (okk) { swLog({at: new Date(last).toISOString(), res: 'closed'}); toast('Your clock stopped at ' + fmtT(new Date(last).toISOString()) + ': the portal was closed while it ran.'); } }); return; }
+  if (st.at && !swSt) { swSt = st; swRender(); }
+  if (swSt && swSt.at) { if (now - swSt.at >= SW_SECS * 1000) swMiss(); else swRender(); return; }
+  if (!st.next || st.next < +new Date(open.in)) { st.next = Math.max(now, +new Date(open.in)) + swGap(); swSave(st); }
+  if (now >= st.next) swShow(); else if (swPip) swPipIdle(); swPipBtn(); }
+let swClosedDone = false; setInterval(swTick, 5000);
+document.addEventListener('visibilitychange', swTick);
+// clock in: ask for notifications and open the mini window (needs this click)
+$('clkIn').onclick = () => { if (swOn()) { try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {} swOpenPip(); } punch('in'); };
 function tick(){ const n = new Date(); $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
   if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {}) && n.getSeconds() === 0) { renderClock(); renderHome(); } }
 setInterval(tick, 1000); tick();
@@ -4806,6 +4922,7 @@ $('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data
   const lv = decisions.find(d => d.email === p.email && d.status === 'Approved' && d.from <= k && d.to >= k), h = holOn(k);
   $('edayT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
   $('edaySub').textContent = p.name + (lv ? ' · ' + lv.type + ' leave' : '') + (h ? ' · ' + h.name : '');
+  const swL = (((swAll[p.key] || {}).days || {})[k]) || [];
   const sess = l.length ? `<table class="att eday-tab"><thead><tr><th>#</th><th>Clock in</th><th>Clock out</th><th>Duration</th><th>Note</th></tr></thead><tbody>${l.map((x, i) => `<tr><td>${i + 1}</td><td class="mono">${fmtT(x.in)}</td><td class="mono">${x.out ? fmtT(x.out) : '<span class="pill ok">Working now</span>'}</td><td class="mono"><b>${fmtH(dur(x))}</b></td><td>${[x.brk ? 'Ended for a break' : '', x.auto ? autoTag(x).replace(/[()]/g, '').trim() : '', x.ot ? 'Overtime session' : '', x.edit ? 'Added or corrected by admin' : ''].filter(Boolean).join(' · ') || '—'}</td></tr>`).join('')}</tbody></table>` : '<p class="empty">No sessions on this day.</p>';
   const tiles = `<div class="eday-tiles"><div><span>Total clocked</span><b>${fmtH(raw)}</b></div><div><span>Counted for pay</span><b>${fmtH(counted)}</b></div><div class="${extra > 60000 ? 'warn' : ''}"><span>Over 8 hours</span><b>${extra > 60000 ? fmtH(extra) : 'No'}</b></div><div><span>Sessions</span><b>${l.length}</b></div></div>`;
   let ex = '';
@@ -4818,7 +4935,9 @@ $('ecalGrid').addEventListener('click', e => { const b = e.target.closest('[data
       ${left > 60000 ? `<div class="ign"><b>✗ Not used:</b> ${fmtH(left)} over 8 hours was neither sent as overtime nor carried to another day, so it is <b>not counted</b> for pay.</div>` : ''}
       ${!ot && !cOut.length && left <= 60000 ? '<div>All time is within 8 hours.</div>' : ''}</div>`; }
   const cin = cIn.length ? `<h4 class="eday-h">Time added from other days</h4><div class="eday-x">${cIn.map(x => `<div><b>↩ From ${fdd(x.from)}:</b> +${fmtH(x.ms)} ${stP(x.status)}${x.reason ? `<small>Reason: ${esc(x.reason)}</small>` : ''}</div>`).join('')}</div>` : '';
-  $('edayBody').innerHTML = tiles + '<h4 class="eday-h">Sessions</h4>' + sess + ex + cin;
+  const swRes = x => x.res === 'ok' ? `<span class="pill ok">✓ Answered in ${x.sec}s</span>` : x.res === 'missed' ? '<span class="pill off">✗ No answer: clock stopped</span>' : x.res === 'closed' ? '<span class="pill off">Portal closed: clock stopped</span>' : x.res === 'break' ? '<span class="pill info">Took a break</span>' : '<span class="pill info">Clock started again</span>';
+  const swH = swL.length ? `<h4 class="eday-h">“Still working?” checks · ${swL.filter(x => x.res === 'ok').length} answered, ${swL.filter(x => x.res === 'missed' || x.res === 'closed').length} missed</h4><div class="eday-x">${swL.map(x => `<div>${fmtT(x.at)} · ${esc(x.q || '')} ${swRes(x)}${x.mood ? ` <small>Said: ${esc(x.mood)}</small>` : ''}</div>`).join('')}</div>` : '';
+  $('edayBody').innerHTML = tiles + '<h4 class="eday-h">Sessions</h4>' + sess + ex + cin + swH;
   const d = $('edayDlg'); try { d.showModal(); } catch (er) { d.setAttribute('open', ''); } });
 $('edayX').onclick = () => $('edayDlg').close();
 function renderTeamAtt(){
