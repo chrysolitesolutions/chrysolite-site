@@ -264,7 +264,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       // ---- Job title checker: normalise both titles with the abbreviation dictionary, then compare ----
       let jtHtml = '';
       if (kind === 'jt' && tA.trim() && tB.trim()) {
-        const ROMAN = {ii: '2', iii: '3', iv: '4'}, ROMAN_END = {i: '1', v: '5', vi: '6'};
+        const ROMAN = {ii: '2', iii: '3', iv: '4'}, ROMAN_END = {i: '1', v: '5', vi: '6'}, BACK = {2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI'};
         const prep = t => { t = t.toLowerCase().replace(/\b(?:[a-z]\.){2,}/g, m => m.replace(/\./g, ''));
           [[/\bfront[\s-]?end\b/g, 'frontend'], [/\bback[\s-]?end\b/g, 'backend'], [/\bfull[\s-]?stack\b/g, 'full stack'], [/\bco[\s-]?founder\b/g, 'cofounder'], [/\bco-ord\b/g, 'coord'], [/\bint'l\b/g, 'intl'], [/\bnat'l\b/g, 'natl'],
            [/\bs\/w\b/g, 'sw'], [/\bf\/e\b/g, 'fe'], [/\bb\/e\b/g, 'be'], [/\bt\/l\b/g, 'tl'], [/\bui\/ux\b/g, 'ui and ux'], [/\bco-pi\b/g, 'co pi'], [/\bcomp\s*&\s*ben\b/g, 'c&b'], [/\bvice-president\b/g, 'vice president']].forEach(([r, v]) => t = t.replace(r, v));
@@ -289,10 +289,10 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
               tryAt(k + 1, side === 'A' ? rep2(xa) : xa, side === 'B' ? rep2(xb) : xb, [...used, [a.tok, o]]); });
             tryAt(k + 1, xa, xb, used); };
           tryAt(0, NA.out, NB.out, []); }
-        const show2 = x => x.replace(/^§(.*)$/, (m, y) => y.toUpperCase() + ' (?)'), fa2 = fold(NA.out, NB.out).map(show2), fb2 = fold(NB.out, NA.out).map(show2), extra = fb2.filter(x => !fa2.includes(x)), miss = fa2.filter(x => !fb2.includes(x));
+        const show2 = x => BACK[x] && !/\d/.test(tA + tB) ? BACK[x] + ' (level)' : x.replace(/^§(.*)$/, (m, y) => y.toUpperCase() + ' (?)'), fa2 = fold(NA.out, NB.out).map(show2), fb2 = fold(NB.out, NA.out).map(show2), extra = fb2.filter(x => !fa2.includes(x)), miss = fa2.filter(x => !fb2.includes(x));
         const RELATED = [['developer', 'engineer'], ['manager', 'lead'], ['manager', 'director'], ['analyst', 'scientist'], ['specialist', 'analyst'], ['consultant', 'advisor'], ['administrator', 'engineer'], ['architect', 'engineer'], ['executive', 'manager'], ['associate', 'assistant']];
         const rel = RELATED.find(([x, y]) => (miss.includes(x) && extra.includes(y)) || (miss.includes(y) && extra.includes(x)));
-        if (res === 'eq') { ans = 'm'; why = wl(tA).join(' ') === wl(tB).join(' ') ? 'The same job title: only capitals or punctuation differ.' : 'The same job title once the short forms are written in full.'; }
+        if (res === 'eq') { pct = 100; ans = 'm'; why = wl(tA).join(' ') === wl(tB).join(' ') ? 'The same job title: only capitals or punctuation differ.' : 'The same job title once the short forms are written in full.'; }
         else if (res === 'likely') { ans = 'x'; why = 'It matches only if ' + via.map(([k, o]) => '“' + esc(k.toUpperCase()) + '” means “' + esc(o) + '”').join(' and ') + ' here. Check the context, then decide.'; }
         else { ans = 'n'; why = 'Job title must be exactly the same. ' + (extra.length ? 'Extra on the public profile: <b>' + esc(extra.join(', ')) + '</b>. ' : '') + (miss.length ? 'Missing from the public profile: <b>' + esc(miss.join(', ')) + '</b>. ' : '') + (!extra.length && !miss.length ? 'The words are in a different order.' : '') + (rel ? ' “' + rel[0] + '” and “' + rel[1] + '” are related titles, not the same title.' : ''); }
         const chip = ([k, f, c]) => `<span class="jt-chip${c ? ' chk' : ''}" title="${c ? 'Context-dependent: check it fits this title' : 'High confidence'}"><b>${esc(k.toUpperCase())}</b> → ${esc(f)}${c ? ' <i>check</i>' : ''}</span>`;

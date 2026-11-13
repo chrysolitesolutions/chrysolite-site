@@ -115,7 +115,12 @@ html,body{overflow-x:hidden}
 .jt-res{margin-top:12px;padding:10px 14px;border-radius:10px;font-weight:800;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.jt-res span{font-weight:500;font-size:13.5px}
 .jt-res.m{background:#e3f4dc;color:#1f6a2a}.jt-res.n{background:#fbe3df;color:#a5281c}.jt-res.x{background:#fff4dc;color:#7a5200}
 .lc-tab .near{color:#8a5a00;font-weight:700}
-</style></head><body>
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>.lc-mapbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}.lc-maphead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 12px;font-size:13px}.lc-maphead b{font-size:14px}
+.lc-key{display:inline-flex;align-items:center;gap:6px}.lc-key i{width:14px;height:14px;border-radius:4px;display:inline-block}.lc-map{height:380px}.lc-inside{padding:8px 12px;font-size:13.5px;border-top:1px solid var(--line)}.lc-inside.ok{background:#eaf6e3;color:#2d5a14}.lc-inside.no{background:#fff6db;color:#5a4500}</style>
+</head><body>
 <style>
 .lc-in .sc-side input{width:100%;font:16px/1.4 var(--body);padding:14px 14px;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-top:3px solid var(--sc);border-radius:0 0 12px 12px;color:var(--ink);position:relative}
 .lc-in .sc-wm::before{background-size:auto 70%!important;opacity:.1}
@@ -160,13 +165,13 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   async function geocodeAny(c, cc){ const bare = s2 => s2.replace(/\s+(city|county|parish|borough)$/i, '').trim(), rest = c.parts.slice(1).join(', ');
     const tries = [c.q, bare(c.parts[0]) + (rest ? ', ' + rest : ''), c.parts.slice(0, 2).join(', '), bare(c.parts[0]) + (c.parts[1] ? ', ' + c.parts[1] : ''), c.parts[0], bare(c.parts[0])].filter((x, i, a) => x && a.indexOf(x) === i);
     for (const t of tries) { const h = await geocode(t, cc); if (h) return h; } return null; }
-  const cache = {}; try { Object.assign(cache, JSON.parse(localStorage.getItem('cs_geo2') || '{}')); } catch (e) {}
+  const cache = {};   // kept for this visit only (outlines are too big to store)
   async function geocode(q, cc){ const key = q.toLowerCase() + '|' + (cc || ''); if (cache[key]) return cache[key];
-    const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8&accept-language=en&q=' + encodeURIComponent(q) + (cc ? '&countrycodes=' + cc : '');
+    const u = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8&polygon_geojson=1&polygon_threshold=0.003&accept-language=en&q=' + encodeURIComponent(q) + (cc ? '&countrycodes=' + cc : '');
     const r = await fetch(u, {headers: {'Accept': 'application/json'}}); if (!r.ok) throw new Error('lookup ' + r.status); const j = await r.json();
     const PLACE = /^(city|town|village|municipality|hamlet|suburb|borough|county|state_district|district|state|region|province|country|census|metropolitan_area|administrative)$/;
     const hit = j.find(h => (h.category === 'place' || h.category === 'boundary' || h.class === 'place' || h.class === 'boundary') && (PLACE.test(h.addresstype || '') || PLACE.test(h.type || ''))) || j.find(h => h.category === 'place' || h.category === 'boundary' || h.class === 'place' || h.class === 'boundary') || null;
-    cache[key] = hit; try { localStorage.setItem('cs_geo2', JSON.stringify(cache)); } catch (e) {} return hit; }
+    cache[key] = hit; return hit; }
   const levels = h => { const a = (h && h.address) || {};
     return {country: a.country, cc: a.country_code, state: a.state || a.region || a.province, district: a.state_district, county: a.county,
       city: a.city || a.town || a.village || a.municipality || a.hamlet, hood: a.neighbourhood || a.suburb || a.quarter || a.city_district, type: h && (h.addresstype || h.type)}; };
@@ -188,6 +193,10 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     lmCache[key] = best; try { localStorage.setItem('cs_lm', JSON.stringify(lmCache)); } catch (e) {} return best; }
   const lmSame = (a, b) => a && b ? ((a.code && b.code ? a.code === b.code : norm(a.name) === norm(b.name)) ? 1 : 0) : null;
   const lmTxt = x => x ? esc(x.name) + (x.code ? ' (' + esc(x.code) + ')' : '') + ` · ${x.km < 1 ? '<1' : Math.round(x.km)} km` : '—';
+  const inRing = (pt, ring) => { let ins = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+      if ((yi > pt.lat) !== (yj > pt.lat) && pt.lon < (xj - xi) * (pt.lat - yi) / (yj - yi) + xi) ins = !ins; } return ins; };
+  const inShape = (pt, g) => { if (!g || !pt) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; return polys.some(pl => inRing(pt, pl[0]) && !pl.slice(1).some(h => inRing(pt, h))); };
+  const isArea = h => !!(h && h.geojson && /Polygon/.test(h.geojson.type));
   const stat = (k, t) => { const el = $('lcStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
   async function run(){ const ra = $('lcA').value.trim(), rb = $('lcB').value.trim(), out = $('lcOut');
     if (!ra || !rb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.n}<p style="margin:0">${!ra && !rb ? 'Enter both locations.' : 'One side is empty and the other is not.'}</p></div>`; stat('', ''); return; }
@@ -210,7 +219,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       ['County / district', [LA.county, LA.district].filter(Boolean).join(' · '), [LB.county, LB.district].filter(Boolean).join(' · '), sameDist, 30],
       ['City / town', LA.city, LB.city, eq(LA.city, LB.city) === 0 && sameDist === 1 ? 'near' : eq(LA.city, LB.city), 20],
       ['Neighbourhood / suburb', LA.hood, LB.hood, eq(LA.hood, LB.hood), 10]];
-    let metroRow = ['Metro area', ca.metro || LA.city || '—', cb.metro || LB.city || '—', eq(LA.cc, LB.cc) === 0 ? 0 : (eq(LA.city, LB.city) === 1 || d <= 40 || sameDist === 1 && eq(LA.state, LB.state) !== 0 ? 1 : 0), 0];
+    let metroRow = ['Metro area', ca.metro || LA.city || '—', cb.metro || LB.city || '—', eq(LA.cc, LB.cc) === 0 ? 0 : ((eq(LA.city, LB.city) === 1 && eq(LA.state, LB.state) !== 0 && d <= 60) || d <= 40 || sameDist === 1 && eq(LA.state, LB.state) !== 0 ? 1 : 0), 0];
     let got = 0, tot = 0; rows.forEach(([, , , s, w]) => { if (s !== null && w) { tot += w; got += (s === 'near' ? .8 : s) * w; } });
     let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 40) pct = Math.min(pct, 45); else if (d <= 40) pct = Math.max(pct, 75); if (sameDist === 1 && eq(LA.state, LB.state) !== 0) pct = Math.max(pct, 85); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
     stat('busy', '<span class="sc-bar"><i style="width:85%"></i></span><span>Checking the nearest airport, railway station and university for both places…</span>');
@@ -222,18 +231,28 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     const lmRows = [...(apA && apB ? [['Nearest airport', apTxt(apA.air), apTxt(apB.air), sAir], ...(apA.intl || apB.intl ? [['Nearest large airport', apTxt(apA.intl || apA.air), apTxt(apB.intl || apB.air), sIntl]] : [])] : []),
       ...(la2 && lb2 ? [['Nearest railway station', lmTxt(la2.rail), lmTxt(lb2.rail), sRail], ['Nearest university', lmTxt(la2.uni), lmTxt(lb2.uni), sUni]] : [])];
     // close places that share a station or a university, or an airport when they are near, are treated as the same area
-    const lmNear = d > 40 && d <= 70 && (sRail === 1 || sUni === 1 || sAir === 1 && d <= 60);
+    const lmNear = d > 40 && d <= 60 && (sRail === 1 || sUni === 1);   // a shared airport alone is not enough: it is shown for the reviewer
     if (lmNear) pct = Math.max(pct, 72);
     // suggested answer: same metro area = Match (a suburb and its main city are the same); a different metro area, even in the same state, is Not a match
-    const METRO_KM = 40, sameMetro = eq(LA.cc, LB.cc) !== 0 && (eq(LA.city, LB.city) === 1 || sameDist === 1 && d <= METRO_KM || d <= METRO_KM);
-    if (lmNear) metroRow = [...metroRow.slice(0, 3), 1, 0];
+    // "San Francisco Bay Area", "Dallas-Fort Worth Metroplex": a metro area is much bigger than one city, so it allows a wider distance,
+    // and every city named in it counts (Dallas, Fort Worth)
+    const mName = String(ca.metro || cb.metro || ''), metroSide = !!mName, wide = /bay area|region|metroplex|-/i.test(mName) ? 80 : /metropolitan|metro\b|^greater/i.test(mName) ? 60 : metroSide ? 45 : 40;   // a region with several cities (Bay Area, Metroplex, "A-B Area") is wider than "Greater X"
+    const named = c => c.metro ? c.metro.split(',')[0].replace(/^greater\s+/i, '').replace(/\s+(metropolitan|metro|metroplex|bay|region|urban)?\s*(area|region|metroplex|metro)$/i, '').split(/\s*-\s*/).map(norm) : [];
+    const namedHit = d <= 120 && named(ca).some(x => x && (norm(LB.city) === x || norm(LB.county) === x)) || named(cb).some(x => x && (norm(LA.city) === x || norm(LA.county) === x));
+    const inB = isArea(hb) && inShape(pa, hb.geojson), inA = isArea(ha) && inShape(pb, ha.geojson);
+    const METRO_KM = 40, sameMetro = eq(LA.cc, LB.cc) !== 0 && ((eq(LA.city, LB.city) === 1 && eq(LA.state, LB.state) !== 0 && d <= 60) || sameDist === 1 && d <= METRO_KM || d <= METRO_KM);
+    if (lmNear || inA || inB || namedHit || metroSide && d <= wide && eq(LA.cc, LB.cc) !== 0) metroRow = [...metroRow.slice(0, 3), 1, 0];
     let ans, why;
     if (eq(LA.cc, LB.cc) === 0) { ans = 'n'; why = 'Different countries.'; }
     else if (!LA.city && !LA.county && !LA.district || !LB.city && !LB.county && !LB.district) { ans = 'c'; why = 'One side is only a state or country, so the metro area can\'t be worked out.'; }
-    else if (eq(LA.city, LB.city) === 1) { ans = 'm'; why = 'Same city, so the same metro area.'; }
+    else if (eq(LA.city, LB.city) === 1 && eq(LA.state, LB.state) !== 0 && d <= 60) { ans = 'm'; why = 'Same city, so the same metro area.'; }
+    else if (eq(LA.city, LB.city) === 1) { ans = 'n'; why = 'Same city name, but a different place: ' + esc(LA.city) + ', ' + esc(LA.state || '') + ' and ' + esc(LB.city) + ', ' + esc(LB.state || '') + ' are ' + Math.round(d) + ' km apart.'; }
     else if (sameDist === 1 && eq(LA.state, LB.state) !== 0) { ans = 'm'; why = 'Different town, but the same county and state (' + esc([LA.county, LA.district].filter(Boolean)[0] || '') + '), so the same area' + (d > 40 ? ' even though they are ' + Math.round(d) + ' km apart.' : '.'); }
+    else if (inA || inB) { ans = 'm'; why = (inB ? '“' + esc(ra) + '” lies inside the boundary of ' + esc(LB.city || LB.county || 'the other place') : '“' + esc(rb) + '” lies inside the boundary of ' + esc(LA.city || LA.county || 'the other place')) + ', so it is the same area (see the map).'; }
+    else if (namedHit) { ans = 'm'; why = 'The metro area name includes ' + esc(LA.city && named(cb).includes(norm(LA.city)) ? LA.city : LB.city) + ', so it is the same metro area.'; }
+    else if (metroSide && d <= wide && eq(LA.cc, LB.cc) !== 0) { ans = 'm'; why = 'One side is a whole metro area (“' + esc(ca.metro || cb.metro) + '”) and the other place is ' + Math.round(d) + ' km from its centre, inside the usual size of a metro area.'; }
     else if (sameMetro) { ans = 'm'; why = 'Same metro area: ' + Math.round(d) + ' km apart (a suburb and its main city count as the same).'; }
-    else if (lmNear) { ans = 'm'; why = Math.round(d) + ' km apart, but they share the same ' + [sRail === 1 ? 'nearest railway station' : '', sUni === 1 ? 'nearest university' : '', sAir === 1 ? 'nearest airport' : ''].filter(Boolean).join(', ') + ', so they are the same area.'; }
+    else if (lmNear) { ans = 'm'; why = Math.round(d) + ' km apart, but they share the same ' + [sRail === 1 ? 'nearest railway station' : '', sUni === 1 ? 'nearest university' : ''].filter(Boolean).join(' and ') + ', so they are the same area.'; }
     else { ans = 'n'; why = 'Different metro areas (' + Math.round(d) + ' km apart)' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
     if (ca.metro || cb.metro) why += ` “${esc(ca.metro || cb.metro)}” is read as the city it is named after.`;
     const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 'near' ? '<span class="near">≈ Different town, same county</span>' : s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
@@ -242,13 +261,23 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     out.innerHTML = `<div class="lc-res"><div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
         <div class="sc-verdict"><span class="bf-l">Suggested answer for Location</span>${A[ans]}<p>${why}</p><p class="hint">A helper using OpenStreetMap: you make the final decision using the location rule.</p></div></div>
       <div class="lc-cards">${card('so', 'THE FILE SAYS (SeekOut)', ra, ha, pa, ca)}${card('li', 'PUBLIC PROFILE SAYS (ZIPLabs / LinkedIn)', rb, hb, pb, cb)}</div>
+      <div class="lc-mapbox"><div class="lc-maphead"><b>Map</b><span class="lc-key"><i style="background:#7a3e9d"></i>THE FILE SAYS${isArea(ha) ? ' (area outlined)' : ''}</span><span class="lc-key"><i style="background:#1f6fd1"></i>PUBLIC PROFILE SAYS${isArea(hb) ? ' (area outlined)' : ''}</span><span class="hint">Click an outline to see its name. Scroll to zoom.</span></div><div class="lc-map" id="lcMap"></div>
+        <div class="lc-inside ${inA || inB ? 'ok' : 'no'}">${inB ? '✓ The file\'s location lies <b>inside</b> the public profile\'s area.' : inA ? '✓ The public profile\'s location lies <b>inside</b> the file\'s area.' : isArea(ha) || isArea(hb) ? 'Neither location lies inside the other\'s outline.' : 'No outline is available for these places (they are shown as points).'}</div></div>
       <div class="lc-dist"><div><b>${d < 1 ? '< 1 km' : Math.round(d).toLocaleString() + ' km'}</b><span>Distance (${d < 1.6 ? '< 1' : Math.round(d * 0.621).toLocaleString()} miles)</span></div><div><b>${pct}%</b><span>Location match</span></div><div><b>${rows.filter(r => r[3] === 1).length} of ${rows.filter(r => r[3] !== null).length}</b><span>Levels the same</span></div></div>
       <div class="tbl"><table class="lc-tab"><thead><tr><th>Check</th><th>THE FILE SAYS</th><th>PUBLIC PROFILE SAYS</th><th>Result</th></tr></thead><tbody>
         ${rows.concat([metroRow]).map(([n, a, b, s]) => `<tr class="${n === 'Metro area' ? 'key' : ''}"><td><b>${n}</b>${n === 'Metro area' ? '<div class="hint" style="font-size:11.5px">decides the answer</div>' : ''}</td><td>${esc(a || '—')}</td><td>${esc(b || '—')}</td><td class="st">${mark(s)}</td></tr>`).join('')}
         ${lmRows.map(([n, a, b, s2]) => `<tr><td><b>${n}</b></td><td>${a}</td><td>${b}</td><td class="st">${mark(s2)}</td></tr>`).join('')}${la2 ? '' : '<tr><td><b>Station / university</b></td><td colspan="3" class="hint">Couldn\'t load the nearest railway station and university right now (the map service was busy). The airports above still show.</td></tr>'}
         <tr><td><b>Distance</b></td><td colspan="2">${d < 1 ? 'Under 1 km apart' : Math.round(d).toLocaleString() + ' km apart'}</td><td class="st">${d <= 40 ? '<span class="ok">✓ Same metro area</span>' : lmNear ? '<span class="ok">✓ Same area (shared landmarks)</span>' : '<span class="no">✗ Different metro area</span>'}</td></tr>
       </tbody></table></div></div>`;
+    drawMap(ha, hb, pa, pb);
     stat('done', `<span class="sc-tick">✓</span>Compare complete · <b>${pct}% match</b>`); }
+  let lmap = null;
+  function drawMap(ha, hb, pa, pb){ const el = document.getElementById('lcMap'); if (!el || !window.L) { if (el) el.innerHTML = '<p class="hint" style="padding:12px">The map could not load. Check your internet connection.</p>'; return; }
+    if (lmap) { lmap.remove(); lmap = null; } lmap = L.map(el, {scrollWheelZoom: true}); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '© OpenStreetMap contributors'}).addTo(lmap);
+    const grp = L.featureGroup().addTo(lmap), add = (h, p, col, lab) => { if (isArea(h)) L.geoJSON(h.geojson, {style: {color: col, weight: 2, fillColor: col, fillOpacity: .12}}).bindTooltip(lab + ': ' + (h.display_name || ''), {sticky: true}).addTo(grp);
+      L.circleMarker([p.lat, p.lon], {radius: 9, color: '#fff', weight: 3, fillColor: col, fillOpacity: 1}).bindTooltip(lab, {permanent: true, direction: lab === 'THE FILE SAYS' ? 'left' : 'right', offset: lab === 'THE FILE SAYS' ? [-10, 0] : [10, 0]}).addTo(grp); };
+    add(ha, pa, '#7a3e9d', 'THE FILE SAYS'); add(hb, pb, '#1f6fd1', 'PUBLIC PROFILE SAYS'); L.polyline([[pa.lat, pa.lon], [pb.lat, pb.lon]], {color: '#5b6b62', weight: 2, dashArray: '6 6'}).addTo(grp);
+    setTimeout(() => { lmap.invalidateSize(); lmap.fitBounds(grp.getBounds().pad(0.15), {maxZoom: 12}); }, 30); }
   $('lcGo').onclick = run; ['lcA', 'lcB'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
   $('lcSwap').onclick = () => { const t = $('lcA').value; $('lcA').value = $('lcB').value; $('lcB').value = t; run(); };
   $('lcClear').onclick = () => { $('lcA').value = $('lcB').value = ''; $('lcOut').hidden = true; stat('', ''); };
