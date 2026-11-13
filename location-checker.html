@@ -114,6 +114,7 @@ html,body{overflow-x:hidden}
 .jt-amb{margin-top:8px;font-size:13px;padding:6px 10px;border-radius:8px;background:#fdecea;border:1px solid #f3b8ae;color:#8a2416}.jt-amb span{font-weight:600}.jt-amb em{font-style:normal;font-weight:800;margin-left:6px}
 .jt-res{margin-top:12px;padding:10px 14px;border-radius:10px;font-weight:800;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.jt-res span{font-weight:500;font-size:13.5px}
 .jt-res.m{background:#e3f4dc;color:#1f6a2a}.jt-res.n{background:#fbe3df;color:#a5281c}.jt-res.x{background:#fff4dc;color:#7a5200}
+.lc-tab .near{color:#8a5a00;font-weight:700}
 </style></head><body>
 <style>
 .lc-in .sc-side input{width:100%;font:16px/1.4 var(--body);padding:14px 14px;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-top:3px solid var(--sc);border-radius:0 0 12px 12px;color:var(--ink);position:relative}
@@ -168,10 +169,14 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   const norm = s => String(s || '').toLowerCase().replace(/\b(county|district|parish|borough|municipality|division)\b/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
   const km = (a, b) => { const R = 6371, t = x => x * Math.PI / 180, dLa = t(b.lat - a.lat), dLo = t(b.lon - a.lon); const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
   // nearest airport, railway station and university around a point (OpenStreetMap, via the Overpass API)
+  let AIR = null; const loadAir = async () => { if (AIR) return AIR; const r = await fetch('airports.json'); AIR = await r.json(); return AIR; };
+  async function nearestAirports(p){ const L = await loadAir(); let n = null, big = null;
+    for (const a of L) { const dd = km(p, {lat: a[4], lon: a[5]}); if (!n || dd < n.km) n = {code: a[0], name: a[1], city: a[2], cc: a[3], km: dd, big: !!a[6]}; if (a[6] && (!big || dd < big.km)) big = {code: a[0], name: a[1], city: a[2], cc: a[3], km: dd, big: true}; }
+    return {air: n, intl: big && n && big.code !== n.code && big.km <= 250 ? big : null}; }
   const lmCache = {}; try { Object.assign(lmCache, JSON.parse(localStorage.getItem('cs_lm') || '{}')); } catch (e) {}
   async function landmarks(p){ const key = p.lat.toFixed(2) + ',' + p.lon.toFixed(2); if (lmCache[key]) return lmCache[key];
-    const q = `[out:json][timeout:25];(nwr(around:150000,${p.lat},${p.lon})["aeroway"="aerodrome"]["iata"];nwr(around:25000,${p.lat},${p.lon})["railway"="station"]["name"];nwr(around:25000,${p.lat},${p.lon})["amenity"~"^(university|college)$"]["name"];);out center tags 400;`;
-    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 15000);
+    const q = `[out:json][timeout:12];(node(around:20000,${p.lat},${p.lon})["railway"="station"]["name"];nwr(around:15000,${p.lat},${p.lon})["amenity"="university"]["name"];);out center tags 300;`;
+    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 12000);
     const r = await fetch('https://overpass-api.de/api/interpreter', {method: 'POST', body: 'data=' + encodeURIComponent(q), headers: {'Content-Type': 'application/x-www-form-urlencoded'}, signal: ac.signal}).finally(() => clearTimeout(to)); if (!r.ok) throw new Error('landmarks ' + r.status);
     const j = await r.json(), best = {}; (j.elements || []).forEach(e => { const t = e.tags || {}, c = e.center || e, la = +c.lat, lo = +c.lon; if (!la || !lo) return;
       const kind = t.aeroway === 'aerodrome' ? 'air' : t.railway === 'station' ? 'rail' : 'uni', dist = km(p, {lat: la, lon: lo}), name = t['name:en'] || t.name || t.iata;
@@ -199,15 +204,19 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       ['Country', LA.country, LB.country, eq(LA.cc, LB.cc), 20],
       ['State / region', LA.state, LB.state, eq(LA.state, LB.state), 20],
       ['County / district', [LA.county, LA.district].filter(Boolean).join(' · '), [LB.county, LB.district].filter(Boolean).join(' · '), sameDist, 30],
-      ['City / town', LA.city, LB.city, eq(LA.city, LB.city), 20],
+      ['City / town', LA.city, LB.city, eq(LA.city, LB.city) === 0 && sameDist === 1 ? 'near' : eq(LA.city, LB.city), 20],
       ['Neighbourhood / suburb', LA.hood, LB.hood, eq(LA.hood, LB.hood), 10]];
-    let metroRow = ['Metro area', ca.metro || LA.city || '—', cb.metro || LB.city || '—', eq(LA.cc, LB.cc) === 0 ? 0 : (eq(LA.city, LB.city) === 1 || d <= 40 ? 1 : 0), 0];
-    let got = 0, tot = 0; rows.forEach(([, , , s, w]) => { if (s !== null && w) { tot += w; got += s * w; } });
-    let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 40) pct = Math.min(pct, 45); else if (d <= 40) pct = Math.max(pct, 75); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
+    let metroRow = ['Metro area', ca.metro || LA.city || '—', cb.metro || LB.city || '—', eq(LA.cc, LB.cc) === 0 ? 0 : (eq(LA.city, LB.city) === 1 || d <= 40 || sameDist === 1 && eq(LA.state, LB.state) !== 0 ? 1 : 0), 0];
+    let got = 0, tot = 0; rows.forEach(([, , , s, w]) => { if (s !== null && w) { tot += w; got += (s === 'near' ? .8 : s) * w; } });
+    let pct = tot ? Math.round(got / tot * 100) : 0; if (d > 40) pct = Math.min(pct, 45); else if (d <= 40) pct = Math.max(pct, 75); if (sameDist === 1 && eq(LA.state, LB.state) !== 0) pct = Math.max(pct, 85); if (eq(LA.cc, LB.cc) === 0) pct = Math.min(pct, 10);
     stat('busy', '<span class="sc-bar"><i style="width:85%"></i></span><span>Checking the nearest airport, railway station and university for both places…</span>');
-    let la2 = null, lb2 = null; try { [la2, lb2] = await Promise.all([landmarks(pa), landmarks(pb)]); } catch (e) { la2 = lb2 = null; }
-    const sAir = la2 && lb2 ? lmSame(la2.air, lb2.air) : null, sRail = la2 && lb2 ? lmSame(la2.rail, lb2.rail) : null, sUni = la2 && lb2 ? lmSame(la2.uni, lb2.uni) : null;
-    const lmRows = la2 && lb2 ? [['Nearest airport', lmTxt(la2.air), lmTxt(lb2.air), sAir], ['Nearest railway station', lmTxt(la2.rail), lmTxt(lb2.rail), sRail], ['Nearest university / college', lmTxt(la2.uni), lmTxt(lb2.uni), sUni]] : [];
+    let la2 = null, lb2 = null, apA = null, apB = null; try { [apA, apB] = await Promise.all([nearestAirports(pa), nearestAirports(pb)]); } catch (e) {}
+    try { [la2, lb2] = await Promise.all([landmarks(pa), landmarks(pb)]); } catch (e) { la2 = lb2 = null; }
+    const apTxt = x => x ? `<b>${esc(x.code)}</b> · ${esc(x.name)}${x.city ? ', ' + esc(x.city) : ''} · ${x.km < 1 ? '<1' : Math.round(x.km)} km` : '—';
+    const sAir = apA && apB ? (apA.air.code === apB.air.code ? 1 : 0) : null, sIntl = apA && apB ? ((apA.intl || apA.air).code === (apB.intl || apB.air).code ? 1 : 0) : null;
+    const sRail = la2 && lb2 ? lmSame(la2.rail, lb2.rail) : null, sUni = la2 && lb2 ? lmSame(la2.uni, lb2.uni) : null;
+    const lmRows = [...(apA && apB ? [['Nearest airport', apTxt(apA.air), apTxt(apB.air), sAir], ...(apA.intl || apB.intl ? [['Nearest large airport', apTxt(apA.intl || apA.air), apTxt(apB.intl || apB.air), sIntl]] : [])] : []),
+      ...(la2 && lb2 ? [['Nearest railway station', lmTxt(la2.rail), lmTxt(lb2.rail), sRail], ['Nearest university', lmTxt(la2.uni), lmTxt(lb2.uni), sUni]] : [])];
     // close places that share a station or a university, or an airport when they are near, are treated as the same area
     const lmNear = d > 40 && d <= 70 && (sRail === 1 || sUni === 1 || sAir === 1 && d <= 60);
     if (lmNear) pct = Math.max(pct, 72);
@@ -218,11 +227,12 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     if (eq(LA.cc, LB.cc) === 0) { ans = 'n'; why = 'Different countries.'; }
     else if (!LA.city && !LA.county && !LA.district || !LB.city && !LB.county && !LB.district) { ans = 'c'; why = 'One side is only a state or country, so the metro area can\'t be worked out.'; }
     else if (eq(LA.city, LB.city) === 1) { ans = 'm'; why = 'Same city, so the same metro area.'; }
+    else if (sameDist === 1 && eq(LA.state, LB.state) !== 0) { ans = 'm'; why = 'Different town, but the same county and state (' + esc([LA.county, LA.district].filter(Boolean)[0] || '') + '), so the same area' + (d > 40 ? ' even though they are ' + Math.round(d) + ' km apart.' : '.'); }
     else if (sameMetro) { ans = 'm'; why = 'Same metro area: ' + Math.round(d) + ' km apart (a suburb and its main city count as the same).'; }
     else if (lmNear) { ans = 'm'; why = Math.round(d) + ' km apart, but they share the same ' + [sRail === 1 ? 'nearest railway station' : '', sUni === 1 ? 'nearest university' : '', sAir === 1 ? 'nearest airport' : ''].filter(Boolean).join(', ') + ', so they are the same area.'; }
     else { ans = 'n'; why = 'Different metro areas (' + Math.round(d) + ' km apart)' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
     if (ca.metro || cb.metro) why += ` “${esc(ca.metro || cb.metro)}” is read as the city it is named after.`;
-    const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
+    const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 'near' ? '<span class="near">≈ Different town, same county</span>' : s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
     const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
     out.hidden = false;
     out.innerHTML = `<div class="lc-res"><div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
@@ -231,7 +241,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       <div class="lc-dist"><div><b>${d < 1 ? '< 1 km' : Math.round(d).toLocaleString() + ' km'}</b><span>Distance (${d < 1.6 ? '< 1' : Math.round(d * 0.621).toLocaleString()} miles)</span></div><div><b>${pct}%</b><span>Location match</span></div><div><b>${rows.filter(r => r[3] === 1).length} of ${rows.filter(r => r[3] !== null).length}</b><span>Levels the same</span></div></div>
       <div class="tbl"><table class="lc-tab"><thead><tr><th>Check</th><th>THE FILE SAYS</th><th>PUBLIC PROFILE SAYS</th><th>Result</th></tr></thead><tbody>
         ${rows.concat([metroRow]).map(([n, a, b, s]) => `<tr class="${n === 'Metro area' ? 'key' : ''}"><td><b>${n}</b>${n === 'Metro area' ? '<div class="hint" style="font-size:11.5px">decides the answer</div>' : ''}</td><td>${esc(a || '—')}</td><td>${esc(b || '—')}</td><td class="st">${mark(s)}</td></tr>`).join('')}
-        ${lmRows.map(([n, a, b, s2]) => `<tr><td><b>${n}</b></td><td>${a}</td><td>${b}</td><td class="st">${mark(s2)}</td></tr>`).join('')}${la2 ? '' : '<tr><td><b>Nearby landmarks</b></td><td colspan="3" class="hint">Couldn\'t load the nearest airport / station right now. The answer uses the distance only.</td></tr>'}
+        ${lmRows.map(([n, a, b, s2]) => `<tr><td><b>${n}</b></td><td>${a}</td><td>${b}</td><td class="st">${mark(s2)}</td></tr>`).join('')}${la2 ? '' : '<tr><td><b>Station / university</b></td><td colspan="3" class="hint">Couldn\'t load the nearest railway station and university right now (the map service was busy). The airports above still show.</td></tr>'}
         <tr><td><b>Distance</b></td><td colspan="2">${d < 1 ? 'Under 1 km apart' : Math.round(d).toLocaleString() + ' km apart'}</td><td class="st">${d <= 40 ? '<span class="ok">✓ Same metro area</span>' : lmNear ? '<span class="ok">✓ Same area (shared landmarks)</span>' : '<span class="no">✗ Different metro area</span>'}</td></tr>
       </tbody></table></div></div>`;
     stat('done', `<span class="sc-tick">✓</span>Compare complete · <b>${pct}% match</b>`); }
