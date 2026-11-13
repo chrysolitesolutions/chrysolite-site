@@ -4817,7 +4817,8 @@ let swSt = null, swTimer = null, swPip = null, swMood = '', swHoldT = null, swAl
 const swKey = () => 'cs_sw_' + (me ? me.key : 'x');
 const swLoad = () => { try { return JSON.parse(localStorage.getItem(swKey()) || '{}'); } catch (e) { return {}; } };
 const swSave = o => { try { localStorage.setItem(swKey(), JSON.stringify(o)); } catch (e) {} };
-const swOn = () => !!me && wlRequired(me) && !acting() && selfClock();
+const SW_ENABLED = false;   // "still working?" checks are on standby: set to true to switch them on
+const swOn = () => SW_ENABLED && !!me && wlRequired(me) && !acting() && selfClock();
 const swGap = () => (SW_MIN + Math.random() * (SW_MAX - SW_MIN)) * 60000;
 async function swLog(entry){ if (!me) return; const d = curDay(), cur = swAll[me.key] || {}, days = {...(cur.days || {})}; days[d] = [...(days[d] || []), entry].slice(-80);
   Object.keys(days).sort().slice(0, -45).forEach(k => delete days[k]); swAll[me.key] = {email: me.email, name: me.name, days};
