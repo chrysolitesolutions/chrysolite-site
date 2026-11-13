@@ -2026,9 +2026,11 @@ const VIEW_ONLY = 'Your access to this portal is view-only, so the time clock an
 const NO_DB = 'The portal couldn\'t reach its server. Check your internet connection and reload the page.';
 
 /* ---------- live data ---------- */
-function watch(name, ref, onData) {
+// optional: a feature that can be switched off or still waiting for its Firestore rule never shows the error banner
+function watch(name, ref, onData, optional) {
   if (unsub[name]) unsub[name]();
-  unsub[name] = ref.onSnapshot(onData, () => { const m = $('dbMsg'); m.textContent = 'Some portal data could not load. Reload the page to try again.'; m.hidden = false; });
+  unsub[name] = ref.onSnapshot(onData, err => { console.warn('Portal data "' + name + '" could not load:', err && (err.code || err.message)); if (optional) return;
+    const m = $('dbMsg'); m.textContent = 'Some portal data could not load. Reload the page to try again.' + (isAdmin ? ' (Part: ' + name + (err && err.code === 'permission-denied' ? ' · the Firestore rules for it may not be published yet' : '') + ')' : ''); m.hidden = false; });
 }
 function startData() {
   if (!db || unsub.accounts) return;
@@ -2065,7 +2067,7 @@ function watchMine(){
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
   watch('empInfoMine', db.doc('empInfo/' + me.key), s => { empInfoMine = s.exists ? s.data() : {}; renderProfile(); });
   watch('empDocsMine', db.doc('empDocs/' + me.key), s => { empDocsMine = s.exists ? s.data() : {}; renderProfile(); });
-  watch('swMine', db.doc('activityCheck/' + me.key), s => { if (s.exists) swAll[me.key] = s.data(); });
+  if (SW_ENABLED) watch('swMine', db.doc('activityCheck/' + me.key), s => { if (s.exists) swAll[me.key] = s.data(); }, true);
   watch('slipAckMine', db.doc('slipAck/' + me.key), s => { slipAckMine = s.exists ? s.data() : null; try { drawMySlips(); } catch (e) {} });
   watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
@@ -2095,7 +2097,7 @@ function startAdminData() {
   watch('carryReqAll', db.collection('carryReq'), s => { carryReqAll = {}; s.docs.forEach(d => carryReqAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('carryApprAll', db.collection('carryAppr'), s => { carryApprAll = {}; s.docs.forEach(d => carryApprAll[d.id] = d.data()); setAtt(); renderOt(); });
   watch('otReqAll', db.collection('otRequests'), s => { otReqAll = s.docs.map(d => ({key: d.id, ...d.data()})); renderOt(); });
-  watch('swAllW', db.collection('activityCheck'), s => { s.docs.forEach(d => swAll[d.id] = d.data()); try { renderPstat(); } catch (e) {} });
+  if (SW_ENABLED) watch('swAllW', db.collection('activityCheck'), s => { s.docs.forEach(d => swAll[d.id] = d.data()); try { renderPstat(); } catch (e) {} }, true);
   watch('otApprAll', db.collection('otApprovals'), s => { otApprAll = {}; s.docs.forEach(d => otApprAll[d.id] = d.data()); setAtt(); renderOt(); enforceTeam(); });
 }
 // Admin UI needs both: the portal role on the account (or the owner's admin entry) and Editor access to the database
