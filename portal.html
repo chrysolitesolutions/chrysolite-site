@@ -1093,6 +1093,10 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 .ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .wl-dlg{width:min(480px,calc(100vw - 24px))}.wl-dlg form{display:grid;gap:12px}.wl-rows{display:grid;gap:8px}
 .wl-row{display:grid;grid-template-columns:auto 1fr 110px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px}.wl-row input{text-align:right;font:700 16px var(--mono);padding:8px 10px}
+.wl-prof{display:grid;gap:6px;border:1px solid var(--line);border-radius:14px;padding:10px 12px}.wl-prof h4{margin:0;font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+.wlp-row{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:baseline;padding:6px 10px;border-radius:10px;font-size:14px}.wlp-row b{font-size:16px}.wlp-row small{grid-column:1/-1;color:var(--ink-soft);font-size:12px}
+.wlp-row.ok{background:color-mix(in srgb,var(--ok) 10%,transparent)}.wlp-row.ok b{color:var(--ok)}.wlp-row.bad{background:color-mix(in srgb,var(--off) 9%,transparent)}.wlp-row.bad b{color:var(--off)}
+.pr-k{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.pr-k div{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.pr-k b{display:block;font:800 22px var(--display)}.pr-k span{font-size:12px;color:var(--ink-soft)}
 .wl-tot{text-align:right;font-size:14px;color:var(--ink-soft)}.wl-tot b{font:800 20px var(--display);color:var(--ink)}.wl-remind{margin-bottom:16px}
 .ps-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-bottom:14px}@media(max-width:1000px){.ps-top{grid-template-columns:1fr}}
 .ps-hero{display:flex;gap:20px;align-items:center;margin:0}.ps-hero:empty{display:none}
@@ -1899,6 +1903,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 </dialog>
 <div class="act-bar" id="actBar" hidden role="status"><span>👁 Acting as <b id="actName"></b> <span class="hint" id="actSince"></span></span><span class="hint">Full admin rights: you can edit, apply and accept anything on their pages. Saves count as theirs.</span><button type="button" id="actStop">Stop acting</button></div>
 <div class="sw-ov" id="swOverlay" hidden></div>
+<dialog class="pw-dlg cf-dlg" id="prDlg" aria-labelledby="prT"><div style="display:grid;gap:12px"><h3 id="prT" style="margin:0">Today: Profile review</h3><div id="prBody"></div><div class="row" style="justify-content:flex-end"><button class="btn btn-gem" type="button" id="prOk">OK, let's start</button></div></div></dialog>
 <dialog class="pw-dlg cf-dlg" id="escDlg" aria-labelledby="escT"><form id="escForm" novalidate style="display:grid;gap:12px">
   <h3 id="escT" style="margin:0">Escalations pending this morning</h3><p class="hint" id="escSub" style="margin:0"></p>
   <div class="f" style="max-width:240px"><label for="escN">Escalations pending now</label><input id="escN" type="number" min="0" max="20000" inputmode="numeric" placeholder="e.g. 120"></div>
@@ -1906,7 +1911,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 <dialog class="pw-dlg wl-dlg" id="wlDlg" aria-labelledby="wlT"><form id="wlForm" novalidate>
   <h3 id="wlT" style="margin:0">What did you do today?</h3><p class="hint" id="wlSub" style="margin:0">Enter how many items you finished in each check. You can change it until the end of the day.</p>
   <div class="f" style="max-width:220px"><label for="wlDate">Day</label><input type="date" id="wlDate"></div>
-  <div class="wl-rows" id="wlRows"></div><div class="wl-tot" id="wlTot"></div><div class="msg err" id="wlErr" hidden></div>
+  <div class="wl-rows" id="wlRows"></div><div class="wl-tot" id="wlTot"></div><div class="wl-prof" id="wlProf" hidden></div><div class="msg err" id="wlErr" hidden></div>
   <div class="row" style="justify-content:flex-end;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" type="button" id="wlLater">I'll add it later</button><button class="btn btn-gem" type="submit" id="wlSave">Save my numbers</button></div>
 </form></dialog>
 <dialog class="pw-dlg cf-dlg" id="hxDlg" aria-labelledby="hxT"><form id="hxForm" novalidate style="display:grid;gap:12px">
@@ -1970,7 +1975,7 @@ $('backLink').href = SITE;
 const store = { get(k){ try{ return sessionStorage.getItem(k) || localStorage.getItem(k); }catch(e){ return null; } },
   set(k,v,keep){ try{ (keep?localStorage:sessionStorage).setItem(k,v); }catch(e){} },
   del(k){ try{ sessionStorage.removeItem(k); localStorage.removeItem(k); }catch(e){} } };
-function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2800); }
+function toast(t, ms){ const el=$('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),ms||2800); }
 const initials = s => String(s||'').split(/[\s.@_-]+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('') || '?';
 const hue = s => [...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0)%360;
 function esc(s){ return String(s ?? '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -4274,7 +4279,7 @@ $('hmHoliday').addEventListener('click', e => { const b = e.target.closest('[dat
 /* ---------- daily work numbers and the Project Status dashboard ---------- */
 // pend: counts against the files waiting; L2 reviews are work done but do not reduce the queue
 // the project's tasks (tpf: required minutes per file, unless the month plan sets another)
-const CHECKS = [{k: 'prof', n: 'Profile review', pend: 1, c: '#2a78d6', tpf: 2}, {k: 'email', n: 'Email review', pend: 1, c: '#eb6834', tpf: 3},
+const CHECKS = [{k: 'prof', n: 'Profile review', pend: 1, c: '#2a78d6', tpf: 2, min: 200}, {k: 'email', n: 'Email review', pend: 1, c: '#eb6834', tpf: 3},
   {k: 'phone', n: 'Phone number review', pend: 1, c: '#0f8fa8'}, {k: 'l2', n: 'Escalations', pend: 0, c: '#7b5bd6'}];
 const tpfMood = () => '';
 let workAll = {}, projPlans = {}, wlAfter = null, wlClockOut = false;
@@ -4292,7 +4297,21 @@ function drawWl(){ const d = $('wlDate').value || todayStr(), cur = wlDay(me.key
   const row = c => `<label class="wl-row"><span class="wl-dot" style="background:${c.c}"></span><span>${c.k === 'l2' ? 'Escalations completed today' : c.n}</span><input type="number" min="0" max="5000" inputmode="numeric" data-wl="${c.k}" value="${cur[c.k] != null ? +cur[c.k] : ''}" placeholder="0"></label>`;
   $('wlRows').innerHTML = escMe() ? row(CHECKS.find(c => c.k === 'l2')) + `<label class="wl-row l2p"><span class="wl-dot" style="background:#7b5bd6"></span><span>Escalations still pending now <small>${cur.l2start != null ? 'this morning: ' + cur.l2start + ' pending · ' : ''}count them again now: new ones may have come in during the day</small></span><input type="number" min="0" max="20000" inputmode="numeric" data-wlp="1" value="${cur.l2pend != null ? +cur.l2pend : ''}" placeholder="e.g. 130"></label><p class="hint" style="margin:2px 0 4px">Other reviews, if you worked on them:</p>` + CHECKS.filter(c => c.k !== 'l2').map(row).join('') : CHECKS.filter(c => c.k !== 'l2').map(row).join('');
   $('wlSub').textContent = cur.at ? 'Saved ' + new Date(cur.at).toLocaleString(undefined, {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) + '. Change anything and save again (today only).' : 'Enter how many items you finished in each check today. Numbers are entered on the same day: they can\'t be added for another day later.'; wlSum(); }
-const wlSum = () => { const t = [...$('wlRows').querySelectorAll('[data-wl]')].reduce((a, i) => a + (+i.value || 0), 0); $('wlTot').innerHTML = `Total today: <b>${t}</b>`; };
+const wlSum = () => { const t = [...$('wlRows').querySelectorAll('[data-wl]')].reduce((a, i) => a + (+i.value || 0), 0); $('wlTot').innerHTML = `Total today: <b>${t}</b>`; wlProfFb(); };
+// Profile review at clock-out: time per file from today's hours, against the required time, and the daily minimum
+function wlProfFb(){ const box = $('wlProf'); if (!box || !me) return; const inp = $('wlRows').querySelector('[data-wl="prof"]'), n = inp ? +inp.value || 0 : 0;
+  if (!profMe() && !n) { box.hidden = true; return; } box.hidden = false;
+  const req = reqTpf('prof'), min = (CHECKS.find(c => c.k === 'prof') || {}).min || 0, d = $('wlDate').value || curDay(), msT = sessMs(((myAtt && myAtt.days) || {})[d] || []);
+  // hours shared over the tasks entered today by their required times
+  const vals = [...$('wlRows').querySelectorAll('[data-wl]')].map(i => ({k: i.dataset.wl, n: +i.value || 0})), w = v => v.n * (reqTpf(v.k) || 1), sw = vals.reduce((a, v) => a + w(v), 0);
+  const profMin = sw ? msT / 60000 * (w({k: 'prof', n}) / sw) : msT / 60000, per = n ? profMin / n : null;
+  const lines = [];
+  if (!n) lines.push(`<div class="wlp-row bad"><b>No Profile review files entered.</b> Enter how many you completed today.</div>`);
+  else { const slow = req && per > req, diff = slow ? per - req : 0;
+    lines.push(`<div class="wlp-row ${slow ? 'bad' : 'ok'}"><span>Your time per file today</span><b>${per.toFixed(1)} min</b><small>${fmtH(profMin * 60000)} on ${n} file${n === 1 ? '' : 's'} · required ${req} min per file</small></div>`);
+    lines.push(slow ? `<div class="wlp-row bad"><span>Slower than required</span><b>${diff.toFixed(1)} min per file</b><small>${Math.round(diff * n)} min more than ${n} files should take at ${req} min each</small></div>` : `<div class="wlp-row ok"><span>Speed</span><b>On target</b><small>${req ? (req - per).toFixed(1) + ' min per file faster than required' : ''}</small></div>`); }
+  if (min) lines.push(n >= min ? `<div class="wlp-row ok"><span>Daily target</span><b>✓ Met: ${n} of ${min}</b></div>` : `<div class="wlp-row bad"><span>Daily target</span><b>⚠ Not met: ${n} of ${min}</b><small>${min - n} file${min - n === 1 ? '' : 's'} short of the daily minimum of ${min}</small></div>`);
+  box.innerHTML = `<h4>Profile review today</h4>` + lines.join(''); }
 $('wlRows').addEventListener('input', wlSum); $('wlDate').addEventListener('change', drawWl);
 const wlClose = () => { $('wlDlg').close(); const f = wlAfter; wlAfter = null; f && f(); };
 $('wlLater').onclick = () => { wlAfter = null; $('wlDlg').close(); };
@@ -4305,12 +4324,20 @@ $('wlForm').addEventListener('submit', async e => { e.preventDefault(); if (!me)
   { const pv = wlDay(me.key, d) || {}; if (pv.l2start != null) { x.l2start = pv.l2start; x.l2startAt = pv.l2startAt; } }
   x.at = new Date().toISOString(); try { const tl = ((myAtt && myAtt.days) || {})[d]; if (tl) x.ms = Math.round(sessMs(tl)); } catch (z) {} const days = {...((workAll[me.key] || {}).days || {}), [d]: x}; Object.keys(days).sort().slice(0, -400).forEach(k => delete days[k]);
   $('wlSave').disabled = true;
-  try { await db.doc('workLog/' + me.key).set({email: me.email, name: me.name, days, updatedAt: x.at}); workAll[me.key] = {...(workAll[me.key] || {}), email: me.email, name: me.name, days}; toast('Saved: ' + wlTot(x) + ' items for ' + fmtDay(d)); renderPstat(); renderWlRemind(); wlClose(); }
+  try { await db.doc('workLog/' + me.key).set({email: me.email, name: me.name, days, updatedAt: x.at}); workAll[me.key] = {...(workAll[me.key] || {}), email: me.email, name: me.name, days}; { const mn = (CHECKS.find(c => c.k === 'prof') || {}).min || 0, pn = +x.prof || 0; if ((profMe() || pn) && mn && pn < mn) { window.__wlWarn = '⚠ Daily target not met: ' + pn + ' of ' + mn + ' Profile review files today.'; toast(window.__wlWarn, 7000); } else toast('Saved: ' + wlTot(x) + ' items for ' + fmtDay(d)); } renderPstat(); renderWlRemind(); wlClose(); }
   catch (x2) { err.textContent = 'Your numbers couldn\'t be saved. Try again.'; err.hidden = false; } finally { $('wlSave').disabled = false; } });
 document.addEventListener('click', e => { if (e.target.closest('[data-wlopen]')) openWorkLog(todayStr(), false); });
 $('psLog').onclick = () => openWorkLog(todayStr(), false);
 // escalations: the first clock-in of the day asks how many are pending this morning (needed to see how many come in during the day)
 let wlLoaded = false;
+// Profile review: at the first clock-in of the day, show the files pending at the start of the day, the required time and the daily minimum
+function profInfo(){ if (!me || !profMe() || acting()) return; if ($('escDlg').open) { $('escDlg').addEventListener('close', () => setTimeout(profInfo, 200), {once: true}); return; }
+  const S = stat(monthKey(new Date())), x = S.per.find(q => q.k === 'prof') || {}, req = reqTpf('prof'), min = (CHECKS.find(c => c.k === 'prof') || {}).min || 0;
+  const startDay = x.remaining == null ? null : x.remaining + (x.doneToday || 0);
+  $('prBody').innerHTML = `<div class="pr-k"><div><b>${startDay == null ? '—' : fmtN(startDay)}</b><span>files pending at the start of today</span></div><div><b>${req || '—'} min</b><span>per file, maximum</span></div><div><b>${min}</b><span>files minimum today</span></div></div>
+    <p class="hint" style="margin:0">${min && req ? `${min} files at ${req} min each is about ${fmtH(min * req * 60000)} of work. ` : ''}${x.dl ? 'Profile review deadline: ' + fdW(x.dl) + (x.need ? ' · the team needs ' + fmtN(x.need) + ' a day' : '') + '.' : ''} At clock-out you'll enter how many you completed and see your time per file.</p>`;
+  const dl = $('prDlg'); if (dl.open) return; try { dl.showModal(); } catch (e) { dl.setAttribute('open', ''); } }
+$('prOk').onclick = () => $('prDlg').close();
 function escAsk(){ if (!me || !wlLoaded || !escMe() || acting()) return; const d = curDay(), l = ((myAtt && myAtt.days) || {})[d] || []; if (!l.length) return;
   const x = wlDay(me.key, d); if (x && x.l2start != null) return; const dl = $('escDlg'); if (dl.open) return;
   $('escN').value = ''; $('escErr').hidden = true; $('escSub').textContent = 'You are on Escalations today. Before you start, count the escalations waiting in the queue right now. At clock-out you\'ll enter how many you completed and how many are still pending.';
@@ -4354,6 +4381,10 @@ const hoursOf = (email, from, to) => { const rec = (isAdmin ? teamAtt : [myAtt])
 // ----- the maths -----
 const WL_L2 = ['divya@chrysolite.in'];   // L2 reviewers: escalations first, checks when there is time; not counted in "who has filled in"
 const escOn = (email, day) => { if ((day || todayStr()) !== todayStr() || !weekLoadedToday()) return false; return parseCell(cellOf(email, (new Date().getDay() + 6) % 7) || '').includes('esc'); };
+const taskOn = (email, k) => weekLoadedToday() && parseCell(cellOf(email, (new Date().getDay() + 6) % 7) || '').includes(k);
+const profMe = () => !!me && taskOn(me.email, 'prof');
+// required minutes per file for a task this month (month plan, else the default)
+const reqTpf = k => { const p = projPlans[monthKey(new Date())], t = p && p.tasks && p.tasks[k]; return +(t && t.tpf) || (CHECKS.find(c => c.k === k) || {}).tpf || null; };
 const escMe = () => !!me && (escOn(me.email) || isL2(me));
 const isL2 = a => !!a && (WL_L2.includes(String(a.key || a.email || '').toLowerCase()) || /^divya jacob$/i.test(String(a.name || '').trim()));
 // waiting numbers saved again without a change (e.g. when only the task dates were edited) are ignored, so they never undo the work done since
@@ -5046,7 +5077,7 @@ async function punch(kind){
   else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).filter(x => (days[x] || []).length).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in') setTimeout(escAsk, 300); toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in' && !(days[k] || []).slice(0, -1).length) setTimeout(() => { escAsk(); profInfo(); }, 300); if (kind === 'out' && window.__wlWarn) { toast('Clocked out. ' + window.__wlWarn, 8000); window.__wlWarn = ''; } else toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me) || escMe()) openWorkLog(curDay(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
@@ -5133,7 +5164,9 @@ let tickMin = '';
 function tick(){ const n = new Date(); try { railTick(); } catch (e) {} $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
   // full refresh whenever the minute changes (not only at second 0: a browser that slows timers in the background can skip that second, which left the totals stuck)
   const mk = n.getHours() + ':' + n.getMinutes(); if (mk === tickMin) return; tickMin = mk;
-  if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {})) { try { renderClock(); } catch (e) { console.warn(e); } try { renderHome(); } catch (e) { console.warn(e); } } }
+  if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {})) { try { renderClock(); } catch (e) { console.warn(e); } try { renderHome(); } catch (e) { console.warn(e); } }
+  // Project Status open: refresh its numbers every minute (hours keep adding up while people work)
+  if (!$('appView').hidden && document.querySelector('.view[data-view="pstat"]:not([hidden])')) { try { renderPstat(); } catch (e) { console.warn(e); } } }
 setInterval(tick, 1000); tick();
 // coming back to the tab, window or a sleeping laptop: bring both clocks up to date at once
 const tickNow = () => { if (document.visibilityState === 'hidden') return; tickMin = ''; tick(); try { renderRailClock(); } catch (e) {} };
