@@ -157,13 +157,18 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   const AREA = /\s+(metropolitan|metro|metroplex|bay|region|urban)?\s*(area|region|metroplex|metro)$/i;
   function clean(raw){ const parts = raw.split(',').map(x => x.trim()).filter(Boolean); let metro = null;
     parts.forEach((pt, i) => { let x = pt, hit = false; if (/^greater\s+/i.test(x)) { x = x.replace(/^greater\s+/i, ''); hit = true; } if (AREA.test(x)) { x = x.replace(AREA, '').trim(); hit = true; }
-      if (/^(san francisco|sf)$/i.test(x) && /bay/i.test(pt)) x = 'San Francisco'; if (i === 0 && /-/.test(x) && hit) x = x.split('-')[0].trim();   // "Dallas-Fort Worth Metroplex" -> Dallas
+      if (/^(san francisco|sf)$/i.test(x) && /bay/i.test(pt)) x = 'San Francisco'; 
       if (/\bcity\s+county$/i.test(x)) x = x.replace(/\s+county$/i, '');   // "Baltimore City County" (a city that is its own county) -> "Baltimore City"
       if (hit && x) metro = raw.trim(); if (x) parts[i] = x; });
-    const ps = parts.filter(Boolean); return {q: ps.join(', '), metro, parts: ps}; }
+    const ps = parts.filter(Boolean);
+    // a metro named after several cities ("Raleigh-Durham, North Carolina Area", "Dallas-Fort Worth Metroplex", "Greensboro--Winston-Salem"):
+    // the metro wording can be on any part, so look at the first part whenever the text is a metro; try the full name first (Winston-Salem is one city), then each city in it
+    let alts = null; if (metro && ps[0] && /-/.test(ps[0])) { const dbl = ps[0].split(/\s*--+\s*/), one = ps[0].split(/\s*-\s*/);
+      alts = [ps[0]].concat(dbl.length > 1 ? dbl : [], one).map(x => x.trim()).filter((x, i, a) => x && a.indexOf(x) === i); }
+    return {q: ps.join(', '), metro, parts: ps, alts}; }
   // try the full text first, then shorter versions (city and state, then the city alone)
   async function geocodeAny(c, cc){ const bare = s2 => s2.replace(/\s+(city|county|parish|borough)$/i, '').trim(), rest = c.parts.slice(1).join(', ');
-    const tries = [c.q, bare(c.parts[0]) + (rest ? ', ' + rest : ''), c.parts.slice(0, 2).join(', '), bare(c.parts[0]) + (c.parts[1] ? ', ' + c.parts[1] : ''), c.parts[0], bare(c.parts[0])].filter((x, i, a) => x && a.indexOf(x) === i);
+    const tries = (c.alts ? c.alts.map(x => x + (rest ? ', ' + rest : '')).concat(c.alts.slice(1)) : []).concat([c.q, bare(c.parts[0]) + (rest ? ', ' + rest : ''), c.parts.slice(0, 2).join(', '), bare(c.parts[0]) + (c.parts[1] ? ', ' + c.parts[1] : ''), c.parts[0], bare(c.parts[0])]).filter((x, i, a) => x && a.indexOf(x) === i);
     for (const t of tries) { const h = await geocode(t, cc); if (h) return h; } return null; }
   const cache = {};   // kept for this visit only (outlines are too big to store)
   async function geocode(q, cc){ const key = q.toLowerCase() + '|' + (cc || ''); if (cache[key]) return cache[key];
