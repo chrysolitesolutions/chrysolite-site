@@ -619,6 +619,12 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .attn-l{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:800px){.attn-l{grid-template-columns:1fr}}.attn{padding:9px 12px;border-radius:12px;font-size:13.5px;border-left:4px solid;background:var(--surface-2)}
 .attn.bad{border-color:var(--off);background:color-mix(in srgb,var(--off) 7%,var(--surface))}.attn.warn{border-color:#e0a400;background:color-mix(in srgb,#e0a400 9%,var(--surface))}.attn.info{border-color:#2a78d6}.attn.good{border-color:var(--ok)}.attn-l:not(.all) .attn.x{display:none}
 .ps-checks{grid-template-columns:repeat(2,minmax(0,1fr))!important}@media(max-width:760px){.ps-checks{grid-template-columns:1fr!important}}
+.dc-cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:0 0 12px}.dc-h{font:600 10.5px var(--mono);text-transform:uppercase;color:var(--ink-soft);text-align:center}
+.dc-d{border:1px solid var(--line);border-radius:9px;background:var(--surface);min-height:42px;padding:3px 5px;display:grid;align-content:space-between;text-align:left;font:inherit;color:inherit;cursor:pointer}.dc-d span{font-size:11px;color:var(--ink-soft)}.dc-d b{font:700 13px var(--display)}
+.dc-d.off{background:var(--surface-2);opacity:.55;cursor:default}.dc-d.fut{opacity:.45;cursor:default}.dc-d.today{border-color:var(--gem)}.dc-d.sel{outline:2px solid var(--ink);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+.dc-day{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:10px}.dc-dh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}.dc-dh span{font-size:12.5px;color:var(--ink-soft)}
+.dc-tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.dc-tasks div{border:1px solid var(--line);border-radius:10px;padding:6px 10px;display:flex;justify-content:space-between;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:13px}.dc-tasks i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}.dc-tasks b{font:800 16px var(--display)}.dc-tasks small{width:100%;font-size:11.5px;color:var(--ink-soft)}.dc-tasks .w{grid-column:1/-1}
+.dc-tab{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}.dc-tab th{font:600 10.5px var(--mono);text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:4px}.dc-tab td{padding:5px 4px;border-top:1px solid var(--line)}.dc-tab tr.none td{color:var(--ink-soft)}.dc-tab th:first-child{width:24%}
 .ps-ckdt{font-size:12.5px;color:var(--ink-soft);margin:2px 0 6px}.ps-ckg small{display:block;font-size:11px;color:var(--ink-soft);font-weight:500}
 .pc-d.out{opacity:.38}.pc-d.st{box-shadow:inset 3px 0 0 var(--ok)}.pc-d.dl{box-shadow:inset -3px 0 0 var(--off)}.pc-d.st.dl{box-shadow:inset 3px 0 0 var(--ok),inset -3px 0 0 var(--off)}
 .rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-tab.emp .rp-by{display:none}
@@ -1436,7 +1442,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <div class="panel"><div class="vhead" style="margin:0 0 8px"><h3 style="margin:0">Progress by check</h3><span class="hint">Dark: done before today · light: done today · grey: waiting · <em class="pg-key"></em> where we should be today</span></div><div class="pg-list" id="psProg"></div></div>
       <div class="two">
         <div class="panel" id="psMePanel"><h3>My stats</h3><div id="psMe"></div></div>
-        <div class="panel"><h3>Who has filled in today</h3><div id="psToday"></div></div>
+        <div class="panel"><h3>Daily stats <span class="hint" style="font-weight:400">· click a day</span></h3><div id="psToday"></div></div>
       </div>
       <div class="panel admin-only" hidden style="padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Speed of each person</h3><span class="hint">Files per working day they logged · this month</span></div><div class="tbl"><table class="att"><thead id="psPeopleH"></thead><tbody id="psPeople"></tbody></table></div></div>
       <div class="panel admin-only" hidden id="psAdmin"><h3>Month plan <span class="hint" style="font-weight:400">· admins</span></h3>
@@ -4499,7 +4505,8 @@ const fdW = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 
 const psState = x => !x.pend ? 'rev' : x.remaining === 0 ? 'done' : x.remaining == null ? 'none' : x.late ? 'late' : x.notStarted ? 'planned' : x.finishLate ? 'risk' : x.behind > 0 ? 'behind' : 'ok';
 const psPill = x => ({rev: ['info', 'Review work'], done: ['ok', '✓ Done'], none: ['', 'No plan'], late: ['off', 'Past deadline'], planned: ['', 'Starts ' + fdS(x.start)], risk: ['off', 'Behind deadline'], behind: ['off', 'Behind ' + fmtN(x.behind)], ok: ['ok', 'On track']})[psState(x)];
 const tmF = v => v == null ? '—' : (v < 10 ? v.toFixed(1) : Math.round(v)) + ' min';
-let psSel = null, psAttnAll = false;
+let psSel = null, psAttnAll = false, psDay = null;
+document.addEventListener('click', e => { const b = e.target.closest('[data-psday]'); if (!b) return; psDay = b.dataset.psday; renderPstat(); });
 function renderPstat(){ const v = document.querySelector('.view[data-view="pstat"]'); try { renderTeamPerf(); } catch (e) {} if (!v || !$('psMonth')) return; if (!$('psMonth').value) $('psMonth').value = monthKey(new Date());
   const S = stat($('psMonth').value), T = S.team, late = T.finish && T.finish !== 'done' && T.finish > S.deadline, lateDays = late ? workdaysBetween(addDays(S.deadline, 1), T.finish) : 0;
   $('psNoPlan').hidden = !!S.plan; $('psNoPlan').innerHTML = isAdmin ? '<b>No month plan yet.</b> Add the deadline and the waiting numbers in <b>Month plan</b> at the bottom of this page.' : 'Your Project Manager hasn\'t added this month\'s plan yet. Your numbers are still saved.';
@@ -4574,9 +4581,22 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
       <button class="btn btn-ghost" type="button" data-wlopen style="margin-top:10px">${td ? '✎ Change today\'s numbers' : '+ Add today\'s numbers'}</button>`; }
   $('psMePanel').hidden = !wlRequired(me); $('psLog').hidden = !wlRequired(me);
   // who has filled in today: specialists; L2 shown on its own
-  const today = todayStr(), sp = people().filter(p2 => wlRequired(p2) && !isL2(p2)), l2 = people().filter(p2 => wlRequired(p2) && isL2(p2)), filled = sp.filter(p2 => wlDay(p2.key, today));
-  const chip = p2 => { const x = wlDay(p2.key, today), h = isAdmin ? hoursOf(p2.email, today, today) : 0; return `<span class="${x ? 'ok' : ''}">${x ? '✓' : '·'} ${esc(String(p2.name).split(' ')[0])}${isL2(p2) || escOn(p2.email, today) ? ' <em>Esc</em>' : ''}${isAdmin && x ? ' <b>' + wlTot(x) + '</b>' : ''}${isAdmin && h ? ' <small>' + fmtH(h) + '</small>' : ''}</span>`; };
-  $('psToday').innerHTML = `<div class="ps-fill"><b>${filled.length}</b> of ${sp.length} specialists have entered today's numbers</div><div class="ps-who">${sp.map(chip).join('')}${l2.map(chip).join('')}</div>`;
+  // daily stats: the month as a calendar (weekends and holidays are days off); click a day for its numbers by task and by person
+  const today = todayStr(), sp = people().filter(p2 => wlRequired(p2));
+  { const [Y, M] = S.m.split('-').map(Number), nD = new Date(Y, M, 0).getDate(), lead = (new Date(Y, M - 1, 1).getDay() + 6) % 7;
+    if (!psDay || psDay.slice(0, 7) !== S.m) { let d0 = S.m === today.slice(0, 7) ? today : S.m + '-' + pad(nD); while (d0 >= S.mStart && !isWorkday(d0)) d0 = addDays(d0, -1); psDay = d0 >= S.mStart ? d0 : S.mStart; }
+    const dayTot = d => CHECKS.filter(c => c.k !== 'l2').reduce((a, c) => a + teamDone(d, c.k), 0);
+    let cal = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `<div class="dc-h">${d}</div>`).join('') + '<div></div>'.repeat(lead);
+    for (let i = 1; i <= nD; i++) { const d = S.m + '-' + pad(i), wd = isWorkday(d), fut = d > today, t = dayTot(d), h = holidays.find(q => q.date === d && !q.tba);
+      cal += wd ? `<button type="button" class="dc-d${d === psDay ? ' sel' : ''}${d === today ? ' today' : ''}${fut ? ' fut' : ''}" data-psday="${d}"${fut ? ' disabled' : ''}><span>${i}</span>${t ? `<b>${fmtN(t)}</b>` : ''}</button>` : `<div class="dc-d off" title="${h ? esc(h.name) : 'Weekend'}"><span>${i}</span>${h ? '<small>🎉</small>' : ''}</div>`; }
+    const d = psDay, filled = sp.filter(p2 => wlDay(p2.key, d)), L = (S.team.l2.days || []).find(q => q.d === d);
+    const tasks = CHECKS.map(c => ({c, n: teamDone(d, c.k)})), rows = sp.map(p2 => ({p: p2, x: wlDay(p2.key, d)})).sort((a, b) => wlTot(b.x) - wlTot(a.x));
+    const ms = k => { const x = wlDay(k, d); return x && x.ms ? +x.ms : 0; };
+    $('psToday').innerHTML = `<div class="dc-cal">${cal}</div>
+      <div class="dc-day"><div class="dc-dh"><b>${fdW(d)}</b><span>${filled.length} of ${sp.length} entered their numbers</span></div>
+        <div class="dc-tasks">${tasks.map(({c, n}) => `<div><span><i style="background:${c.c}"></i>${c.n}</span><b>${fmtN(n)}</b></div>`).join('')}${L ? `<div class="w"><span>Escalations pending</span><b>${L.start != null ? fmtN(L.start) + ' → ' : ''}${fmtN(L.pend)}</b><small>${L.added != null ? '+' + fmtN(L.added) + ' came in' : ''}</small></div>` : ''}</div>
+        <table class="dc-tab"><thead><tr><th>Who</th>${CHECKS.map(c => `<th title="${c.n}">${c.k === 'l2' ? 'Esc' : c.n.replace(' review', '').replace('Phone number', 'Phone')}</th>`).join('')}<th>Total</th>${isAdmin ? '<th>Hours</th>' : ''}</tr></thead><tbody>
+        ${rows.map(({p: p2, x}) => `<tr class="${x ? '' : 'none'}"><td>${x ? '✓' : '·'} ${esc(String(p2.name).split(' ')[0])}</td>${isAdmin || (me && p2.key === me.key) ? CHECKS.map(c => `<td>${x ? (+x[c.k] || 0) : '—'}</td>`).join('') + `<td><b>${x ? wlTot(x) : '—'}</b></td>` : `<td colspan="${CHECKS.length + 1}" class="hint">${x ? 'entered' : 'not entered'}</td>`}${isAdmin ? `<td>${ms(p2.key) ? fmtH(ms(p2.key)) : '—'}</td>` : ''}</tr>`).join('')}</tbody></table></div>`; }
   // admin: per person
   if (isAdmin) { $('psPeopleH').innerHTML = '<tr><th>Employee</th><th>Today</th><th>Checks today</th><th>Hours today</th><th>Days logged</th><th>Month total</th><th>Hours (month)</th><th>Speed / day</th><th>Min / file</th>' + CHECKS.map(c => `<th title="${c.n}">${c.n.replace(' check', '').replace(' Review', '')}</th>`).join('') + '</tr>';
     const rows = people().filter(wlRequired).map(p2 => { const dd = Object.entries((workAll[p2.key] || {}).days || {}).filter(([d]) => d >= S.mStart && d <= S.until), tot = dd.reduce((a, [, x]) => a + wlTot(x), 0), t = wlDay(p2.key, today);
