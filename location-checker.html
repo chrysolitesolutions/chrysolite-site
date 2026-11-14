@@ -141,7 +141,7 @@ html,body{overflow-x:hidden}
   <div class="panel sc-in lc-in">
     <div class="sc-grid"><div class="f sc-side so"><label for="lcA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><input id="lcA" placeholder="e.g. Charlotte, North Carolina, United States" autocomplete="off"></div></div>
       <div class="f sc-side li"><label for="lcB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><input id="lcB" placeholder="e.g. Charlotte Metro" autocomplete="off"></div></div></div>
-    <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-gem" type="button" id="lcGo">Compare</button><button class="btn btn-ghost" type="button" id="lcSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="lcClear">Clear</button><span class="sc-status" id="lcStatus" role="status" aria-live="polite"></span></div>
+    <div class="row" id="lcRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-gem" type="button" id="lcGo">Compare</button><button class="btn btn-ghost" type="button" id="lcSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="lcClear">Clear</button><span class="sc-status" id="lcStatus" role="status" aria-live="polite"></span></div>
     <p class="lc-rule" style="margin:14px 0 0"><b>Rule:</b> same metro area = Match. A suburb and its main city are the same. “Greater X Area” or “X Metro” = city X. A different metro area, even in the same state, is Not a match. A different country = Not a match.</p>
   </div>
   <div class="panel" id="lcOut" hidden></div>
@@ -169,10 +169,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   // try the full text first, then shorter versions (city and state, then the city alone)
   async function geocodeAny(c, cc){ const bare = s2 => s2.replace(/\s+(city|county|parish|borough)$/i, '').trim(), rest = c.parts.slice(1).join(', ');
     const tries = (c.alts ? c.alts.map(x => x + (rest ? ', ' + rest : '')).concat(c.alts.slice(1)) : []).concat([c.q, bare(c.parts[0]) + (rest ? ', ' + rest : ''), c.parts.slice(0, 2).join(', '), bare(c.parts[0]) + (c.parts[1] ? ', ' + c.parts[1] : ''), c.parts[0], bare(c.parts[0])]).filter((x, i, a) => x && a.indexOf(x) === i);
-    for (const t of tries) { const h = await geocode(t, cc); if (h) return h; }
+    const log = c.tried || (c.tried = []), tryQ = async t => { const h = await geocode(t, cc); log.push({q: t, country: cc || '', found: h ? h.display_name : null}); return h; };
+    for (const t of tries) { const h = await tryQ(t); if (h) return h; }
     // a metro written without hyphens ("Dallas Fort Worth Area", "Minneapolis St Paul Area"): drop words from the end until a real place is found (Dallas Fort Worth -> Dallas)
     if (c.metro && c.parts[0]) { const w = c.parts[0].split(/[\s-]+/).filter(Boolean);
-      for (let n = w.length - 1; n >= 1; n--) { const nm = w.slice(0, n).join(' '); if (nm.length < 3) break; for (const t of [nm + (rest ? ', ' + rest : ''), nm]) { const h = await geocode(t, cc); if (h) return h; } } }
+      for (let n = w.length - 1; n >= 1; n--) { const nm = w.slice(0, n).join(' '); if (nm.length < 3) break; for (const t of [nm + (rest ? ', ' + rest : ''), nm]) { const h = await tryQ(t); if (h) return h; } } }
     return null; }
   const cache = {};   // kept for this visit only (outlines are too big to store)
   async function geocode(q, cc){ const key = q.toLowerCase() + '|' + (cc || ''); if (cache[key]) return cache[key];
@@ -207,7 +208,12 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   const inShape = (pt, g) => { if (!g || !pt) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; return polys.some(pl => inRing(pt, pl[0]) && !pl.slice(1).some(h => inRing(pt, h))); };
   const isArea = h => !!(h && h.geojson && /Polygon/.test(h.geojson.type));
   const stat = (k, t) => { const el = $('lcStatus'); el.className = 'sc-status ' + k; el.innerHTML = t; };
-  async function run(){ const ra = $('lcA').value.trim(), rb = $('lcB').value.trim(), out = $('lcOut');
+  // the last compare, in full, for "Report to admin"
+  const sumHit = h => h ? {name: h.display_name, lat: +h.lat, lon: +h.lon, class: h.category || h.class, type: h.type, addresstype: h.addresstype, osm: (h.osm_type || '') + ' ' + (h.osm_id || ''), address: h.address, outline: isArea(h)} : null;
+  const plain = s => String(s || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  const ANS_TXT = {m: 'Match', n: 'Not a match', c: "Can't decide"};
+  window.__lcLast = null;
+  async function run(){ const ra = $('lcA').value.trim(), rb = $('lcB').value.trim(), out = $('lcOut'); window.__lcLast = {a: ra, b: rb, stage: 'started'};
     if (!ra || !rb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.n}<p style="margin:0">${!ra && !rb ? 'Enter both locations.' : 'One side is empty and the other is not.'}</p></div>`; stat('', ''); return; }
     stat('busy', '<span class="sc-bar"><i style="width:60%"></i></span><span>Looking up both places on the map…</span>');
     const ca = clean(ra), cb = clean(rb); let ha, hb;
@@ -216,9 +222,9 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       // a short public location ("Charlotte Metro", "Kochi") is looked up in the file's country first; a full one (city, state, country) as written
       hb = cb.parts.length >= 3 || !ccA ? await geocodeAny(cb) : (await geocodeAny(cb, ccA)) || await geocodeAny(cb);
       if (!hb && ccA) hb = await geocodeAny(cb, ccA); }
-    catch (e) { stat('err', '⚠ The map lookup didn\'t answer. Check your internet connection and try again in a few seconds.'); return; }
+    catch (e) { window.__lcLast = {a: ra, b: rb, stage: 'lookup failed', error: String(e && e.message || e), tried: {a: ca.tried, b: cb.tried}}; stat('err', '⚠ The map lookup didn\'t answer. Check your internet connection and try again in a few seconds.'); return; }
     const LA = levels(ha), LB = levels(hb), pa = ha && {lat: +ha.lat, lon: +ha.lon}, pb = hb && {lat: +hb.lat, lon: +hb.lon};
-    if (!ha || !hb) { out.hidden = false; out.innerHTML = `<div class="lc-top">${A.c}<p style="margin:0">${!ha && !hb ? 'Neither place' : !ha ? 'The SeekOut location' : 'The public profile location'} could not be found on the map. Check the spelling, or use a quick map search.</p></div>`; stat('done', '<span class="sc-tick">!</span>Compare complete'); return; }
+    if (!ha || !hb) { window.__lcLast = {a: ra, b: rb, stage: 'not found', answer: 'c', answerText: "Can't decide", why: (!ha && !hb ? 'Neither place' : !ha ? 'The SeekOut location' : 'The public profile location') + ' could not be found on the map', read: {a: ca, b: cb}, found: {a: sumHit(ha), b: sumHit(hb)}}; out.hidden = false; out.innerHTML = `<div class="lc-top">${A.c}<p style="margin:0">${!ha && !hb ? 'Neither place' : !ha ? 'The SeekOut location' : 'The public profile location'} could not be found on the map. Check the spelling, or use a quick map search.</p></div>`; stat('done', '<span class="sc-tick">!</span>Compare complete'); return; }
     const d = km(pa, pb), eq = (x, y) => x && y ? (norm(x) === norm(y) ? 1 : 0) : null;
     const distKey = (L) => [L.county, L.district].filter(Boolean).map(norm);
     const sameDist = (() => { const a = distKey(LA), b = distKey(LB); if (!a.length || !b.length) return null; return a.some(x => b.includes(x)) ? 1 : 0; })();
@@ -264,6 +270,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     else if (lmNear) { ans = 'm'; why = Math.round(d) + ' km apart, but they share the same ' + [sRail === 1 ? 'nearest railway station' : '', sUni === 1 ? 'nearest university' : ''].filter(Boolean).join(' and ') + ', so they are the same area.'; }
     else { ans = 'n'; why = 'Different metro areas (' + Math.round(d) + ' km apart)' + (eq(LA.state, LB.state) === 1 ? ', even though the state is the same.' : '.'); }
     if (ca.metro || cb.metro) why += ` “${esc(ca.metro || cb.metro)}” is read as the city it is named after.`;
+    window.__lcLast = {a: ra, b: rb, stage: 'done', answer: ans, answerText: ANS_TXT[ans], pct, why: plain(why), distanceKm: Math.round(d * 10) / 10,
+      read: {a: ca, b: cb}, found: {a: sumHit(ha), b: sumHit(hb)}, levels: {a: LA, b: LB},
+      checks: rows.concat([metroRow]).map(([n, x, y, st]) => ({check: n, file: x || null, profile: y || null, result: st})),
+      airports: {a: apA, b: apB}, landmarks: {a: la2, b: lb2}, landmarkResults: {airport: sAir, largeAirport: sIntl, rail: sRail, university: sUni},
+      rules: {metroName: mName || null, metroRadiusKm: wide, nameInMetro: namedHit, insideOutline: {fileInsideProfile: inB, profileInsideFile: inA}, sameCountyState: sameDist === 1 && eq(LA.state, LB.state) !== 0, sharedLandmarks: lmNear, sameMetroByDistance: sameMetro}};
     const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 'near' ? '<span class="near">≈ Different town, same county</span>' : s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
     const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
     out.hidden = false;
@@ -293,4 +304,8 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   window.__lcRun = run;
 })();
 </script>
+<script>window.CK_REPORT = {checker: 'location', label: 'Location checker', inputs: ['lcA', 'lcB'], go: 'lcGo', row: 'lcRow',
+  collect: () => { const L = window.__lcLast; if (!L) return {answerText: 'Not compared yet'}; const now = [document.getElementById('lcA').value.trim(), document.getElementById('lcB').value.trim()];
+    return Object.assign({}, L, (L.a !== now[0] || L.b !== now[1]) ? {note: 'The boxes were changed after the last compare: this result is for the earlier text', comparedA: L.a, comparedB: L.b} : {}); }};</script>
+<script src="checker-report.js"></script>
 </body></html>

@@ -130,7 +130,7 @@ html,body{overflow-x:hidden}
           <div class="sc-opts"><label class="sc-tg"><input type="checkbox" id="scCase"> Case sensitive</label><div class="sc-seg" id="scMode"><span>Compare by</span><button type="button" data-m="word" class="on">Word</button><button type="button" data-m="char">Character</button></div></div></div>
           <p class="hint" style="margin:6px 0 10px">Paste THE FILE SAYS on the left and PUBLIC PROFILE SAYS on the right, then click Compare. Differences are highlighted and you get a % match, 20 automatic checks and a suggested answer. If a side ends in “…”, only the part both sides show is compared.</p>
           <div class="sc-grid"><div class="f sc-side so"><label for="scA" class="sc-lab"><span class="sc-badge">1</span><span>THE FILE SAYS <em>(SeekOut)</em></span></label><div class="sc-wm"><textarea id="scA" rows="7" placeholder="Paste the SeekOut text here (THE FILE SAYS)"></textarea></div></div><div class="f sc-side li"><label for="scB" class="sc-lab"><span class="sc-badge">2</span><span>PUBLIC PROFILE SAYS <em>(ZIPLabs or from LinkedIn)</em></span></label><div class="sc-wm"><textarea id="scB" rows="7" placeholder="Paste the public profile text here (ZIPLabs or LinkedIn)"></textarea></div></div></div>
-          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button><span class="sc-status" id="scStatus" role="status" aria-live="polite"></span></div></div>
+          <div class="row" id="scRow" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gem" type="button" id="scGo">Compare</button><button class="btn btn-ghost" type="button" id="scSwap">⇄ Swap</button><button class="btn btn-ghost" type="button" id="scClear">Clear</button><span class="sc-status" id="scStatus" role="status" aria-live="polite"></span></div></div>
         <div class="panel" id="scOut"></div>
       
 </main>
@@ -372,4 +372,13 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
     $('scClear').onclick = () => { $('scA').value = ''; $('scB').value = ''; go(); };
     run();
   })();
-</script></body></html>
+</script><script>window.CK_REPORT = {checker: 'text', label: 'Text checker', inputs: ['scA', 'scB'], go: 'scGo', row: 'scRow',
+  collect: () => { const q = (sel, r) => (r || document).querySelector(sel), tx = e => e ? e.innerText.trim() : null, v = q('#scOut .sc-verdict');
+    if (!v) return {answerText: 'Not compared yet'};
+    const ps = v ? [...v.querySelectorAll('p')].map(p => p.innerText.trim()) : [];
+    return {answerText: tx(q('.bf-a', v)), pct: (tx(q('#scOut .sc-ring b')) || '').replace('%', ''), why: ps[0] || null, notes: ps.slice(1),
+      options: {caseSensitive: !!(q('#scCase') || {}).checked, compareBy: tx(q('#scMode button.on'))},
+      differences: tx(q('#scOut .sc-diffbox')), checks: [...document.querySelectorAll('#scOut .sc-ck')].map(c => ({n: +c.dataset.ck + 1, status: ['ok', 'warn', 'info'].find(k => c.classList.contains(k)) || c.className, check: tx(q('strong', c)), detail: tx(q('small', c))})),
+      status: tx(q('#scStatus'))}; }};</script>
+<script src="checker-report.js"></script>
+</body></html>

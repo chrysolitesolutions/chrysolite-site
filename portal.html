@@ -594,6 +594,26 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .pf-it b{font-size:14px}.pf-it span{font-size:12px;color:var(--ink-soft)}.pf-it code{font:11px var(--mono);color:var(--ink-soft);word-break:break-all}
 .fq{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.fq i{width:8px;height:8px;border-radius:2px;background:var(--c)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px}
+/* reported issues (checker tickets) */
+.rp-kpis{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}.rp-kpis button{flex:1 1 130px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;cursor:pointer;color:inherit;font:inherit}.rp-kpis button.on{outline:2px solid var(--gem)}
+.rp-kpis b{display:block;font:800 24px var(--display)}.rp-kpis span{font-size:12.5px;color:var(--ink-soft)}.rp-kpis .k-new b{color:var(--warn)}.rp-kpis .k-fixed b{color:var(--ok)}.rp-kpis .k-fixed{background:color-mix(in srgb,var(--ok) 7%,var(--surface))}
+.rp-tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.rp-tools select,.rp-tools input{width:auto;flex:0 1 auto;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}.rp-tools input{flex:1 1 220px}
+.rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-tab.emp .rp-by{display:none}
+.rp-tab tr.rp-solved td{background:color-mix(in srgb,var(--ok) 9%,transparent);opacity:.55}.rp-tab tr.rp-solved:hover td{opacity:.85}.rp-tab tr.rp-closed td{opacity:.5}
+.rp-sbtn{margin-top:6px;border:1px solid color-mix(in srgb,var(--ok) 45%,var(--line));background:color-mix(in srgb,var(--ok) 10%,transparent);color:var(--ok);border-radius:999px;padding:4px 10px;font:600 12px var(--body);cursor:pointer;white-space:nowrap}
+.rp-reply{font-size:14px;padding:10px 12px;border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 8%,transparent);border-radius:0 10px 10px 0;white-space:pre-wrap}
+.rp-tab td{white-space:normal!important;word-break:normal;overflow-wrap:anywhere}.rp-tab td.rp-n,.rp-tab td:nth-child(2),.rp-tab td.rp-by,.rp-tab td:nth-child(4){white-space:nowrap!important;overflow-wrap:normal}.rp-tab td:last-child{min-width:150px}.rp-tab td:last-child .pill{white-space:nowrap}.rp-tab .rp-io{max-width:none}.rp-tab tbody tr{cursor:pointer}.rp-tab tbody tr:hover td{background:color-mix(in srgb,var(--gem) 6%,transparent)}.rp-tab td{vertical-align:top}.rp-tab .rp-n{font:700 13px var(--mono);white-space:nowrap}.rp-tab .rp-io{max-width:340px;font-size:13px;color:var(--ink-soft)}.rp-tab .rp-io b{color:var(--ink)}
+.pill.rp-new{color:#a45a00;background:#fff1d6}.pill.rp-progress{color:#1f5fa8;background:#e3eefb}.pill.rp-sent{color:#6b3fa0;background:#efe6fa}.pill.rp-fixed{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}.pill.rp-wontfix{color:var(--ink-soft);background:var(--surface-2)}
+.pw-dlg.rp-dlg{width:min(880px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto}.rp-dh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}
+.rp-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--ink-soft);margin:0 0 12px}.rp-meta b{color:var(--ink)}
+.rp-sec{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 12px}.rp-sec h5{margin:0 0 8px;font:700 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.rp-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media(max-width:700px){.rp-two{grid-template-columns:minmax(0,1fr)}}.rp-two > div{border-radius:10px;padding:10px 12px;background:var(--surface-2);font-size:14px;white-space:pre-wrap;word-break:break-word;max-height:220px;overflow:auto}
+.rp-two small{display:block;font:700 11px var(--mono);color:var(--ink-soft);margin-bottom:4px;white-space:normal}.rp-note{font-size:14.5px;padding:10px 12px;border-left:3px solid var(--gem);background:var(--surface-2);border-radius:0 10px 10px 0;white-space:pre-wrap}
+.rp-mini{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}.rp-mini td,.rp-mini th{white-space:normal!important;word-break:break-word}.rp-mini tr > th:first-child{width:28%}.rp-mini thead th{width:auto!important}.rp-mini td,.rp-mini th{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.rp-mini th{font:600 11px var(--mono);color:var(--ink-soft);text-transform:uppercase}
+.rp-json{max-height:300px;overflow:auto;font:12px/1.45 var(--mono);background:var(--surface-2);padding:10px;border-radius:10px;white-space:pre-wrap;word-break:break-all}
+.rp-act{display:grid;gap:8px}.rp-act textarea{width:100%;min-height:64px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--surface);color:var(--ink);box-sizing:border-box}.rp-act .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.rp-act select{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.rp-picks{display:grid;gap:4px;max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:0 0 10px}.rp-picks label,.rp-prow label{display:flex;gap:8px;align-items:baseline;font-size:13.5px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink)}.rp-picks input,.rp-prow input{width:auto;flex:none;margin:0}.rp-picks .hint{font-size:12.5px}
+.rp-prow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:13.5px}#rpPackTxt{width:100%;height:220px;font:12px/1.45 var(--mono);padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);box-sizing:border-box;margin:0 0 10px}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .ws-det{display:flex;flex-wrap:wrap;gap:4px 12px;margin:4px 0 2px;font-size:12.5px;max-width:220px}.ws-det span{white-space:nowrap}.ws-det span{display:grid;line-height:1.2}.ws-det small{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}.ws-det b{font-weight:700;color:var(--ink)}
 .pill.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
@@ -1185,6 +1205,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
       <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
       <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans</button>
+      <button class="tab" role="tab" data-v="reports" id="rpTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 17.5V3"/><path d="M4.5 3.5h10l-2 3.5 2 3.5h-10"/></svg>Reported issues<span class="badge" id="rpBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
     </nav>
     <div class="rc" id="railClock" hidden>
@@ -1695,6 +1716,13 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 
 
     <!-- ADMIN -->
+    <section class="view" data-view="reports" hidden>
+      <div class="vhead"><div><h1 id="rpH">Reported issues</h1><p id="rpLead"></p></div><div class="rp-hbtn"><button class="btn btn-ghost" type="button" id="rpSolveAll" hidden>✓ Mark all “Sent to Claude” as solved</button><button class="btn btn-gem" type="button" id="rpPack">📦 Package for Claude</button></div></div>
+      <div class="rp-kpis" id="rpKpis"></div>
+      <div class="rp-tools"><select id="rpFSt" aria-label="Status"><option value="">All statuses</option><option value="open">Open (not solved)</option><option value="new">New</option><option value="progress">Looking into</option><option value="sent">Sent to Claude</option><option value="fixed">Solved</option><option value="wontfix">Won't fix</option></select>
+        <select id="rpFCk" aria-label="Checker"><option value="">All checkers</option><option value="location">Location checker</option><option value="text">Text checker</option></select><input id="rpFQ" type="search" placeholder="Search ticket number, name or text"></div>
+      <div class="panel"><div class="tbl"><table class="rp-tab" id="rpTable"><thead><tr><th>Ticket</th><th>Reported</th><th class="rp-by">By</th><th>Checker</th><th>Problem</th><th>Checker said → should be</th><th>Status</th></tr></thead><tbody id="rpList"></tbody></table></div><p class="hint" id="rpEmpty" hidden></p></div>
+    </section>
     <section class="view" data-view="admin" hidden>
       <div class="msg" id="setupMsg" hidden style="margin-bottom:16px"><b>First-time setup.</b> Create your own account with Admin rights now. After that, the admin area is locked and opens only for people who sign in with an Admin account. When you're done, sign out and sign back in with your new admin email and password.</div>
       <div class="vhead"><div><h1>Admin</h1><p>Manage employee logins and profiles, and post announcements. Edit shifts on the Schedule page and approve leave on Leave plans.</p></div><span class="pill ok" id="accCount">0 accounts</span></div>
@@ -1784,6 +1812,15 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
   </main>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<dialog class="pw-dlg rp-dlg" id="rpDlg" aria-labelledby="rpDlgT"><div class="rp-dh"><h3 id="rpDlgT" style="margin:0"></h3><button class="btn btn-ghost" type="button" id="rpDlgX" aria-label="Close">✕</button></div><div id="rpDlgBody"></div></dialog>
+<dialog class="pw-dlg rp-dlg" id="rpPackDlg" aria-labelledby="rpPackT"><div class="rp-dh"><h3 id="rpPackT" style="margin:0">📦 Package for Claude</h3><button class="btn btn-ghost" type="button" id="rpPackX" aria-label="Close">✕</button></div>
+  <p class="hint" style="margin:0 0 10px">Choose the tickets, then <b>Copy package</b> and paste it into your Claude Code chat. Claude recreates each case, corrects the checker, adds it to the test set and answers ticket by ticket.</p>
+  <div class="rp-picks" id="rpPicks"></div>
+  <div class="rp-prow"><label><input type="checkbox" id="rpPackFull" checked> Include the full working of each case (recommended)</label><span class="hint" id="rpPackSize"></span></div>
+  <textarea id="rpPackTxt" readonly aria-label="Package text"></textarea>
+  <div class="rp-prow" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" id="rpPackDl">Download .txt</button><button class="btn btn-ghost" type="button" id="rpPackMark">Mark as “Sent to Claude”</button><button class="btn btn-gem" type="button" id="rpPackCopy">Copy package</button></div>
+  <p class="hint" id="rpPackMsg" style="margin:8px 0 0"></p>
+</dialog>
 <dialog class="pw-dlg pf-dlg" id="pfDlg" aria-labelledby="pfDlgT">
   <div class="pf-dh"><div><h3 id="pfDlgT"></h3><code id="pfDlgId"></code></div><button class="btn btn-ghost" type="button" id="pfDlgX" aria-label="Close">✕</button></div>
   <div class="pf-dmeta" id="pfDlgMeta"></div>
@@ -2060,6 +2097,8 @@ const allowOf = a => ({...DEF_ALLOW, ...(a && a.allow || {})});
 const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
+  // each employee sees their own checker reports and where they stand (optional: no banner if the rule is missing)
+  try { watch('reportsMine', db.collection('checkerReports').where('by', '==', me.key), s => { reportsMine = s.docs.map(d => ({id: d.id, ...d.data()})); renderReports(); }, true); } catch (e) { console.warn(e); }
   watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
   watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
@@ -2081,6 +2120,8 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id && d.status !== 'Pending')).map(q => { const d = decisions.find(x => x.key === r.uid + '~' + q.id); return {...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name, _reply: d && d.reply}; }));
 
 function startAdminData() {
+  // reported checker issues: optional so a missing Firestore rule never shows the error banner
+  watch('reports', db.collection('checkerReports'), s => { reportsAll = s.docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (b.n || 0) - (a.n || 0)); renderReports(); }, true);
   watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
   watch('moodAll', db.collection('mood'), s => { moodAll = {}; s.docs.forEach(d => moodAll[d.id] = d.data()); renderMood(); });
   watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
@@ -2105,6 +2146,7 @@ function applyRole() {
   const wantsAdmin = me ? ((me.access === 'admin' && !!me.active) || me.key === OWNER) : false;
   const was = isAdmin; isAdmin = wantsAdmin && canEditDb;
   $('adminTab').hidden = !isAdmin;
+  $('rpTab').hidden = !me && !isAdmin; try { renderReports(); } catch (e) {}
   document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"]').forEach(e => e.hidden = !isAdmin); document.querySelectorAll('.tab[data-v="leave"]').forEach(e => e.hidden = true);
   if (document.querySelector('.view[data-view="leave"]:not([hidden])')) setTimeout(() => go('timeoff'));
   if (!isAdmin && document.querySelector('.view[data-view="roster"]:not([hidden])')) setTimeout(() => go('home'));
@@ -2171,13 +2213,119 @@ $('adminEntry').onclick = async () => {
 };
 $('signOut').onclick = () => { try { localStorage.removeItem('cs_was_in'); } catch (e) {} Object.keys(unsub).forEach(k => { try { unsub[k](); } catch (e) {} delete unsub[k]; }); if (fbAuth) fbAuth.signOut().catch(() => {}); me = null; myAtt = null; isAdmin = false; setupMode = false; $('setupMsg').hidden = true;  $('appView').hidden=true; $('loginView').hidden=false; history.replaceState(null,'',location.pathname); toast('Signed out'); };
 
+/* ---------- reported issues: tickets sent from the checkers with "Report to admin" ---------- */
+let reportsAll = [], reportsMine = [], rpCur = null, rpKpi = '';
+const RP_ST = {new: 'New', progress: 'Looking into', sent: 'Sent to Claude', fixed: 'Solved', wontfix: "Won't fix"};
+// what an employee sees for their own ticket
+const RP_ST_EMP = {new: 'Recorded · pending', progress: 'Being looked into', sent: 'Being fixed', fixed: 'Solved', wontfix: 'Closed (no change needed)'};
+const rpStT = st => (isAdmin ? RP_ST : RP_ST_EMP)[st || 'new'] || st;
+const rpList = () => (isAdmin ? reportsAll : reportsMine).slice().sort((a, b) => (rpOpen(b) - rpOpen(a)) || (b.n || 0) - (a.n || 0));
+async function rpSolve(ids){ const now = new Date().toISOString(); let ok = 0;
+  for (const id of ids) { try { await db.doc('checkerReports/' + id).set({status: 'fixed', solvedAt: now, solvedBy: me && me.key, updatedAt: now, updatedBy: me && me.key}, {merge: true}); ok++; } catch (e) {} }
+  toast(ok + ' ticket' + (ok === 1 ? '' : 's') + ' marked solved'); return ok; }
+const RP_CK = {location: 'Location checker', text: 'Text checker'}, RP_PAGE = {location: 'location-checker.html', text: 'text-checker.html'};
+const RP_ANS = {m: 'Match', n: 'Not a match', c: "Can't tell"};
+const rpNo = n => '#' + String(n || 0).padStart(4, '0');
+const rpWho = e => { const p = (accounts || []).find(a => String(a.email || a.key).toLowerCase() === String(e || '').toLowerCase()); return p ? p.name : (e || '—'); };
+const rpWhen = t => { if (!t) return '—'; const d = new Date(t); return d.toLocaleDateString(undefined, {day: 'numeric', month: 'short'}) + ' ' + d.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'}); };
+const rpSaid = r => { const x = r.result || {}; return (x.answerText || '—') + (x.pct != null && x.pct !== '' ? ' (' + x.pct + '%)' : ''); };
+const rpShould = r => r.kind === 'broken' ? 'Page problem' : r.kind === 'idea' ? 'Suggestion' : r.expected ? RP_ANS[r.expected] : 'Not sure';
+const rpOpen = r => !['fixed', 'wontfix'].includes(r.status || 'new');
+function renderReports(){
+  const all = rpList(), nNew = isAdmin ? all.filter(r => (r.status || 'new') === 'new').length : 0, b = $('rpBadge'); if (b) { b.textContent = nNew; b.hidden = !nNew; }
+  if (!$('rpList')) return;
+  $('rpH').textContent = isAdmin ? 'Reported issues' : 'My reported issues';
+  $('rpLead').innerHTML = isAdmin ? 'Problems employees sent with <b>⚑ Report to admin</b> on the Text checker and the Location checker. Each report is a numbered ticket with everything needed to recreate it. Package the open tickets for Claude, then mark them solved once the correction is live.'
+    : 'The problems you sent with <b>⚑ Report to admin</b> on the Text checker and the Location checker, and where each one stands. Solved tickets turn green.';
+  $('rpPack').hidden = !isAdmin; $('rpSolveAll').hidden = !isAdmin || !all.some(r => r.status === 'sent'); $('rpTable').classList.toggle('emp', !isAdmin);
+  const cnt = k => all.filter(r => (r.status || 'new') === k).length;
+  $('rpKpis').innerHTML = (isAdmin ? [['open', 'Open', all.filter(rpOpen).length], ['new', 'New', cnt('new')], ['progress', 'Looking into', cnt('progress')], ['sent', 'Sent to Claude', cnt('sent')], ['fixed', 'Solved', cnt('fixed')]]
+    : [['', 'Reported', all.length], ['open', 'Pending', all.filter(rpOpen).length], ['fixed', 'Solved', cnt('fixed')]])
+    .map(([k, t, n]) => `<button type="button" class="k-${k}${$('rpFSt').value === k ? ' on' : ''}" data-rpk="${k}"><b>${n}</b><span>${t}</span></button>`).join('');
+  const st = $('rpFSt').value, ck = $('rpFCk').value, q = $('rpFQ').value.trim().toLowerCase();
+  const list = all.filter(r => (st === 'open' ? rpOpen(r) : !st || (r.status || 'new') === st) && (!ck || r.checker === ck)
+    && (!q || [rpNo(r.n), String(r.n), rpWho(r.by), r.by, r.input && r.input.a, r.input && r.input.b, r.note, r.kindText].join(' ').toLowerCase().includes(q)));
+  $('rpList').innerHTML = list.map(r => `<tr data-rp="${esc(r.id)}" class="${r.status === 'fixed' ? 'rp-solved' : r.status === 'wontfix' ? 'rp-closed' : ''}"><td class="rp-n">${rpNo(r.n)}</td><td>${rpWhen(r.at)}</td><td class="rp-by">${esc(rpWho(r.by))}</td><td>${esc(RP_CK[r.checker] || r.checker)}</td>
+    <td class="rp-io"><b>${esc(r.kindText || r.kind)}</b><div>${esc(String((r.input && r.input.a) || '').slice(0, 60))} <span aria-hidden="true">⇄</span> ${esc(String((r.input && r.input.b) || '').slice(0, 60))}</div>${r.note ? `<div>“${esc(String(r.note).slice(0, 90))}${String(r.note).length > 90 ? '…' : ''}”</div>` : ''}</td>
+    <td>${esc(rpSaid(r))} → <b>${esc(rpShould(r))}</b></td><td><span class="pill rp-${esc(r.status || 'new')}">${r.status === 'fixed' ? '✓ ' : ''}${esc(rpStT(r.status))}</span>${r.status === 'fixed' && r.solvedAt ? `<div class="hint" style="font-size:12px;margin-top:3px">${rpWhen(r.solvedAt)}</div>` : ''}${isAdmin && rpOpen(r) ? `<div><button type="button" class="rp-sbtn" data-rpsolve="${esc(r.id)}">✓ Mark solved</button></div>` : ''}</td></tr>`).join('');
+  const em = $('rpEmpty'); em.hidden = !!list.length; em.textContent = all.length ? 'No tickets match these filters.' : isAdmin ? 'No reports yet. When an employee presses “⚑ Report to admin” on the Text checker or the Location checker, the ticket appears here.' : 'You haven\'t reported anything yet. If a checker gives a wrong answer, press “⚑ Report to admin” on the checker page.';
+  if (rpCur && $('rpDlg').open) { const r = all.find(x => x.id === rpCur); if (r && !document.activeElement.closest('#rpDlg .rp-act')) rpDetail(r); }
+}
+['rpFSt', 'rpFCk'].forEach(id => $(id).addEventListener('change', renderReports)); $('rpFQ').addEventListener('input', renderReports);
+$('rpKpis').addEventListener('click', e => { const b = e.target.closest('[data-rpk]'); if (!b) return; $('rpFSt').value = b.dataset.rpk; renderReports(); });
+$('rpSolveAll').onclick = async () => { const ids = reportsAll.filter(r => r.status === 'sent').map(r => r.id); if (!ids.length || !confirm('Mark ' + ids.length + ' ticket' + (ids.length === 1 ? '' : 's') + ' “Sent to Claude” as solved? Do this once the correction is live.')) return; await rpSolve(ids); };
+$('rpList').addEventListener('click', e => { const sb = e.target.closest('[data-rpsolve]'); if (sb) { e.stopPropagation(); if (isAdmin) rpSolve([sb.dataset.rpsolve]); return; }
+  const tr = e.target.closest('tr[data-rp]'); if (!tr) return; const r = rpList().find(x => x.id === tr.dataset.rp); if (!r) return; rpCur = r.id; rpDetail(r); const d = $('rpDlg'); if (!d.open) { try { d.showModal(); } catch (x) { d.setAttribute('open', ''); } } });
+$('rpDlgX').onclick = () => { $('rpDlg').close(); rpCur = null; };
+const rpLink = r => RP_PAGE[r.checker] ? RP_PAGE[r.checker] + '#rep=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({a: (r.input || {}).a || '', b: (r.input || {}).b || ''}))))) : null;
+function rpWorking(r){ const x = r.result || {};
+  if (r.checker === 'location') { const f = x.found || {}, row = (t, v) => v ? `<tr><th>${t}</th><td>${v}</td></tr>` : '';
+    const tried = side => ((x.read && x.read[side] && x.read[side].tried) || []).map(t => `${esc(t.q)} → ${t.found ? esc(t.found) : '<i>nothing</i>'}`).join('<br>');
+    return `<table class="rp-mini">${row('Stage', esc(x.stage || ''))}${row('Why', esc(x.why || ''))}${row('File found as', f.a ? esc(f.a.name) + ` <span class="hint">(${esc(f.a.addresstype || f.a.type || '')})</span>` : '<b>not found</b>')}${row('Profile found as', f.b ? esc(f.b.name) + ` <span class="hint">(${esc(f.b.addresstype || f.b.type || '')})</span>` : '<b>not found</b>')}
+      ${row('Distance', x.distanceKm != null ? esc(x.distanceKm) + ' km' : '')}${row('Metro read as', x.read ? esc([x.read.a && x.read.a.metro ? '“' + x.read.a.metro + '” → ' + x.read.a.q : '', x.read.b && x.read.b.metro ? '“' + x.read.b.metro + '” → ' + x.read.b.q : ''].filter(Boolean).join(' · ')) : '')}
+      ${row('Map searches (file)', tried('a'))}${row('Map searches (profile)', tried('b'))}</table>
+      ${(x.checks || []).length ? `<table class="rp-mini" style="margin-top:8px"><thead><tr><th>Check</th><th>File</th><th>Profile</th><th>Result</th></tr></thead><tbody>${x.checks.map(c => `<tr><td>${esc(c.check)}</td><td>${esc(c.file || '—')}</td><td>${esc(c.profile || '—')}</td><td>${c.result === 1 ? '✓' : c.result === 0 ? '✗' : c.result === 'near' ? '≈' : '–'}</td></tr>`).join('')}</tbody></table>` : ''}`; }
+  const warn = (x.checks || []).filter(c => c.status === 'warn');
+  return `<table class="rp-mini">${x.why ? `<tr><th>Why</th><td>${esc(x.why)}</td></tr>` : ''}${(x.notes || []).length ? `<tr><th>Notes</th><td>${x.notes.map(esc).join('<br>')}</td></tr>` : ''}${x.options ? `<tr><th>Options</th><td>Compare by ${esc(x.options.compareBy || '')}, case ${x.options.caseSensitive ? 'sensitive' : 'ignored'}</td></tr>` : ''}
+    ${x.differences ? `<tr><th>Differences</th><td style="white-space:pre-wrap">${esc(x.differences)}</td></tr>` : ''}${warn.length ? `<tr><th>Checks flagged</th><td>${warn.map(c => `${c.n}. <b>${esc(c.check)}</b>: ${esc(c.detail || '')}`).join('<br>')}</td></tr>` : ''}</table>`; }
+function rpDetail(r){ const x = r.result || {}, link = rpLink(r), solved = r.status === 'fixed';
+  $('rpDlgT').textContent = 'Ticket ' + rpNo(r.n) + ' · ' + (RP_CK[r.checker] || r.checker);
+  $('rpDlgBody').innerHTML = `<div class="rp-meta"><span>Reported by <b>${esc(rpWho(r.by))}</b> (${esc(r.by || '')})</span><span>${rpWhen(r.at)}</span><span>Status <span class="pill rp-${esc(r.status || 'new')}">${esc(rpStT(r.status))}</span></span>${r.sentAt && isAdmin ? `<span>Sent to Claude ${rpWhen(r.sentAt)}</span>` : ''}${r.solvedAt ? `<span>Solved ${rpWhen(r.solvedAt)}</span>` : ''}</div>
+    ${solved ? `<div class="rp-reply" style="margin:0 0 12px">✓ <b>Solved.</b> ${r.adminNote ? esc(r.adminNote) : 'The checker has been corrected for this case.'}</div>` : !isAdmin && r.adminNote ? `<div class="rp-reply" style="margin:0 0 12px"><b>Admin:</b> ${esc(r.adminNote)}</div>` : ''}
+    <div class="rp-sec"><h5>The problem</h5><p style="margin:0 0 6px"><b>${esc(r.kindText || r.kind)}</b> · Checker said <b>${esc(rpSaid(r))}</b> → should be <b>${esc(rpShould(r))}</b></p>${r.note ? `<div class="rp-note">${esc(r.note)}</div>` : '<p class="hint" style="margin:0">No explanation given.</p>'}</div>
+    <div class="rp-sec"><h5>The case (exactly as entered)</h5><div class="rp-two"><div><small>THE FILE SAYS (SeekOut)</small>${esc((r.input || {}).a || '') || '<i>(empty)</i>'}</div><div><small>PUBLIC PROFILE SAYS</small>${esc((r.input || {}).b || '') || '<i>(empty)</i>'}</div></div>${x.note ? `<p class="hint" style="margin:8px 0 0">⚠ ${esc(x.note)}</p>` : ''}</div>
+    <div class="rp-sec"><h5>How the checker worked it out</h5>${rpWorking(r)}</div>
+    ${isAdmin ? `<details class="rp-sec"><summary><b>Full report data</b> <span class="hint">(page version ${esc(r.pageVersion || '')}, browser, errors${(r.errors || []).length ? ': ' + r.errors.length : ''})</span></summary><pre class="rp-json">${esc(JSON.stringify(r, null, 1))}</pre></details>
+    <div class="rp-sec rp-act"><h5>Admin</h5><div class="row"><label for="rpSt">Status</label><select id="rpSt">${Object.entries(RP_ST).map(([k, t]) => `<option value="${k}"${(r.status || 'new') === k ? ' selected' : ''}>${t}</option>`).join('')}</select>
+      ${link ? `<a class="btn btn-ghost" href="${link}" target="_blank" rel="noopener">Open in ${esc(RP_CK[r.checker])} ↗</a>` : ''}<button class="btn btn-ghost" type="button" id="rpOne">Copy for Claude</button></div>
+      <textarea id="rpNoteA" placeholder="Note to the employee (what was found or fixed). They see it on their Reported issues page.">${esc(r.adminNote || '')}</textarea>
+      <div class="row"><button class="btn btn-gem" type="button" id="rpSave">Save</button>${solved ? '' : '<button class="btn btn-ghost" type="button" id="rpSolve1" style="color:var(--ok)">✓ Mark as solved</button>'}<button class="btn btn-ghost" type="button" id="rpDel" style="margin-left:auto;color:var(--off)">Delete ticket</button><span class="hint" id="rpMsgA"></span></div></div>` : (link ? `<p style="margin:0"><a class="btn btn-ghost" href="${link}" target="_blank" rel="noopener">Open this case in the ${esc(RP_CK[r.checker])} ↗</a></p>` : '')}`;
+  if (!isAdmin) return;
+  if ($('rpSolve1')) $('rpSolve1').onclick = async () => { await db.doc('checkerReports/' + r.id).set({adminNote: $('rpNoteA').value.trim()}, {merge: true}).catch(() => {}); await rpSolve([r.id]); };
+  $('rpSave').onclick = async () => { try { const ns = $('rpSt').value; await db.doc('checkerReports/' + r.id).set({status: ns, ...(ns === 'fixed' && !r.solvedAt ? {solvedAt: new Date().toISOString(), solvedBy: me && me.key} : {}), adminNote: $('rpNoteA').value.trim(), updatedAt: new Date().toISOString(), updatedBy: me && me.key}, {merge: true}); $('rpMsgA').textContent = 'Saved'; toast('Ticket ' + rpNo(r.n) + ' saved'); } catch (e) { $('rpMsgA').textContent = 'Couldn\'t save (' + ((e && e.code) || 'error') + ')'; } };
+  $('rpDel').onclick = async () => { if (!confirm('Delete ticket ' + rpNo(r.n) + '? This can\'t be undone.')) return; try { await db.doc('checkerReports/' + r.id).delete(); $('rpDlg').close(); rpCur = null; toast('Ticket ' + rpNo(r.n) + ' deleted'); } catch (e) { $('rpMsgA').textContent = 'Couldn\'t delete (' + ((e && e.code) || 'error') + ')'; } };
+  $('rpOne').onclick = async () => { try { await navigator.clipboard.writeText(rpPackage([r], true)); toast('Ticket ' + rpNo(r.n) + ' copied: paste it into Claude'); } catch (e) { toast('Copy was blocked by the browser'); } };
+}
+// the package: plain text a Claude Code session can act on directly
+function rpPackage(list, full){
+  const nums = list.map(r => r.n).sort((a, b) => a - b), head = [
+    'CHRYSOLITE CHECKER REPORTS: package for Claude',
+    'Created ' + new Date().toLocaleString(undefined, {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'}) + ' by ' + ((me && me.name) || 'admin') + ' · ' + list.length + ' ticket' + (list.length === 1 ? '' : 's') + (nums.length ? ' (' + nums.map(rpNo).join(', ') + ')' : ''),
+    'Website repository: chrysolitesolutions/chrysolite-site · pages: location-checker.html, text-checker.html (shared report code: checker-report.js)',
+    'TASK FOR CLAUDE: for each ticket, recreate the case on the named checker with the exact inputs below, find why the checker answered as it did,',
+    'correct the checker so it gives the expected answer without breaking the earlier test cases, add the case to the permanent test set,',
+    'and reply ticket by ticket: cause, fix, new answer. "Idea / suggestion" tickets are feature requests: propose the change first.',
+    'Show a trial before publishing anything that changes how answers are given.', ''];
+  const body = list.slice().sort((a, b) => a.n - b.n).map(r => { const x = r.result || {};
+    const lines = ['=== Ticket ' + rpNo(r.n) + ' · ' + (RP_CK[r.checker] || r.checker) + ' · ' + (r.kindText || r.kind) + ' ===',
+      'Reported: ' + (r.at || '') + ' by ' + rpWho(r.by) + ' · status: ' + (RP_ST[r.status || 'new'] || r.status),
+      'THE FILE SAYS: ' + JSON.stringify((r.input || {}).a || ''), 'PUBLIC PROFILE SAYS: ' + JSON.stringify((r.input || {}).b || ''),
+      'Checker said: ' + rpSaid(r) + (x.why ? ' · why: ' + x.why : ''), 'Should be: ' + rpShould(r), 'Employee\'s note: ' + (r.note || '(none)')];
+    if (r.adminNote) lines.push('Admin note: ' + r.adminNote);
+    if (full) { const {input, ...rest} = r; lines.push('Full data (JSON): ' + JSON.stringify(rest)); }
+    return lines.join('\n'); });
+  return head.join('\n') + '\n' + body.join('\n\n') + '\n\n=== End of package ===\n'; }
+let rpSel = new Set();
+function rpPackRender(){ const list = reportsAll.filter(r => rpSel.has(r.id)), txt = rpPackage(list, $('rpPackFull').checked);
+  $('rpPackTxt').value = list.length ? txt : ''; $('rpPackSize').textContent = list.length + ' ticket' + (list.length === 1 ? '' : 's') + ' · ' + Math.max(1, Math.round(txt.length / 1024)) + ' KB';
+  ['rpPackCopy', 'rpPackDl', 'rpPackMark'].forEach(id => $(id).disabled = !list.length); }
+$('rpPack').onclick = () => { const open = reportsAll.filter(rpOpen); rpSel = new Set(open.filter(r => ['new', 'progress'].includes(r.status || 'new')).map(r => r.id)); if (!rpSel.size) open.forEach(r => rpSel.add(r.id));
+  $('rpPicks').innerHTML = reportsAll.length ? reportsAll.map(r => `<label><input type="checkbox" data-rps="${esc(r.id)}"${rpSel.has(r.id) ? ' checked' : ''}><span><b>${rpNo(r.n)}</b> ${esc(RP_CK[r.checker] || r.checker)} · ${esc(r.kindText || '')} · ${esc(String((r.input || {}).a || '').slice(0, 40))} ⇄ ${esc(String((r.input || {}).b || '').slice(0, 40))} <span class="pill rp-${esc(r.status || 'new')}">${RP_ST[r.status || 'new']}</span></span></label>`).join('') : '<p class="hint" style="margin:0">No tickets yet.</p>';
+  $('rpPackMsg').textContent = ''; rpPackRender(); const d = $('rpPackDlg'); try { d.showModal(); } catch (x) { d.setAttribute('open', ''); } };
+$('rpPicks').addEventListener('change', e => { const c = e.target.closest('[data-rps]'); if (!c) return; c.checked ? rpSel.add(c.dataset.rps) : rpSel.delete(c.dataset.rps); rpPackRender(); });
+$('rpPackFull').onchange = rpPackRender; $('rpPackX').onclick = () => $('rpPackDlg').close();
+$('rpPackCopy').onclick = async () => { try { await navigator.clipboard.writeText($('rpPackTxt').value); $('rpPackMsg').textContent = '✓ Copied. Paste it into your Claude Code chat. Then press “Mark as Sent to Claude”.'; } catch (e) { $('rpPackTxt').select(); $('rpPackMsg').textContent = 'The browser blocked copying: the text is selected, press Ctrl+C.'; } };
+$('rpPackDl').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('rpPackTxt').value], {type: 'text/plain'})); a.download = 'checker-reports-' + todayStr() + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+$('rpPackMark').onclick = async () => { const now = new Date().toISOString(); let ok = 0; for (const id of rpSel) { const r = reportsAll.find(x => x.id === id); if (!r || !rpOpen(r)) continue; try { await db.doc('checkerReports/' + id).set({status: 'sent', sentAt: now, updatedAt: now, updatedBy: me && me.key}, {merge: true}); ok++; } catch (e) {} }
+  $('rpPackMsg').textContent = '✓ ' + ok + ' ticket' + (ok === 1 ? '' : 's') + ' marked “Sent to Claude”. Once the correction is live, press “Mark all Sent to Claude as solved”.'; };
+
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
-  if (!['home','pstat','roster','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','pstat','roster','reports','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
