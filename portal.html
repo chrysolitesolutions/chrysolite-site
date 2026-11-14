@@ -4576,7 +4576,8 @@ function renderClock(){
   const block = attBlock(), days = (myAtt && myAtt.days) || {}, open = openSession(days);
   $('clkBlock').hidden = !block; $('clkBlock').textContent = block;
   const brk = onBreak(days);
-  const gate = clockGate(); renderMyAssign(); syncPresence(); try { renderRailClock(); } catch (e) {}
+  try { renderRailClock(); } catch (e) {}
+  const gate = clockGate(); renderMyAssign(); syncPresence();
   $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !(open || brk); $('clkBrk').disabled = !!block || !open; renderOtBox();
   $('clkIn').textContent = gate && !open ? 'Accept assignment first' : brk ? '▶ Resume work' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
@@ -4728,7 +4729,9 @@ function renderRailClock(){ const box = $('railClock'); if (!box) return; const 
   $('rcBrk').hidden = !open; $('rcOut').hidden = !(open || brk); }
 $('rcMain').onclick = () => { if ($('rcMain').dataset.act === 'go') { go('clock'); return; } punch('in'); };
 $('rcBrk').onclick = () => punch('break'); $('rcOut').onclick = () => go('clock');
-setInterval(() => { const t = $('rcTime'); if (t && !$('railClock').hidden) t.textContent = new Date().toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'}); }, 1000);
+// the left-menu clock updates itself every second (time and worked today), on its own, so it never waits for the My Workday page
+function railTick(){ const box = $('railClock'); if (!box || box.hidden) return; $('rcTime').textContent = new Date().toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'});
+  const days = (myAtt && myAtt.days) || {}; if (openSession(days)) $('rcToday').textContent = fmtH(sessMs(days[curDayOf(days)] || [])); }
 function renderOtBox(){
   const box = $('otBox'); if (!me || !selfClock()) { box.hidden = true; return; }
   const k = curDay(), st = myOtToday(), unsent = extraUnsent(), open = openSession((myAtt && myAtt.days) || {}), fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
@@ -4880,9 +4883,15 @@ let swClosedDone = false; setInterval(swTick, 5000);
 document.addEventListener('visibilitychange', swTick);
 // clock in: ask for notifications and open the mini window (needs this click)
 $('clkIn').onclick = () => { if (swOn()) { try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {} swOpenPip(); } punch('in'); };
-function tick(){ const n = new Date(); $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
-  if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {}) && n.getSeconds() === 0) { renderClock(); renderHome(); } }
+let tickMin = '';
+function tick(){ const n = new Date(); try { railTick(); } catch (e) {} $('clkTime').textContent = n.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', second: '2-digit'}); $('clkDate').textContent = n.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
+  // full refresh whenever the minute changes (not only at second 0: a browser that slows timers in the background can skip that second, which left the totals stuck)
+  const mk = n.getHours() + ':' + n.getMinutes(); if (mk === tickMin) return; tickMin = mk;
+  if (!$('appView').hidden && openSession((myAtt && myAtt.days) || {})) { try { renderClock(); } catch (e) { console.warn(e); } try { renderHome(); } catch (e) { console.warn(e); } } }
 setInterval(tick, 1000); tick();
+// coming back to the tab, window or a sleeping laptop: bring both clocks up to date at once
+const tickNow = () => { if (document.visibilityState === 'hidden') return; tickMin = ''; tick(); try { renderRailClock(); } catch (e) {} };
+document.addEventListener('visibilitychange', tickNow); window.addEventListener('focus', tickNow); window.addEventListener('pageshow', tickNow);
 setInterval(() => { if (!$('appView').hidden) { enforceMine(); enforceTeam(); } }, 30000);
 $('attDate').value = todayStr(); $('attMonth').value = monthKey(new Date());
 let attMode = 'day';
