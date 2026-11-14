@@ -602,6 +602,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .tk-plan{width:100%;border-collapse:collapse;margin:4px 0 12px}.tk-plan th{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);text-align:left;padding:6px 6px}.tk-plan td{padding:5px 6px;vertical-align:middle}.tk-plan input{width:100%;min-width:0;box-sizing:border-box}.tk-plan td:first-child{font-weight:600;white-space:nowrap}
 @media(max-width:760px){.tk-plan thead{display:none}.tk-plan tr{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}.tk-plan td:first-child{grid-column:1/-1}.tk-plan td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--ink-soft)}}
 .ps-ck.st-risk{background:color-mix(in srgb,var(--off) 7%,var(--surface));border-color:color-mix(in srgb,var(--off) 35%,var(--line))}.ps-ck.st-late{background:color-mix(in srgb,var(--off) 10%,var(--surface));border-color:color-mix(in srgb,var(--off) 45%,var(--line))}.ps-ck.st-planned{opacity:.85}
+.ps-ckg .tk-t{grid-column:span 2!important;border-top:0!important;padding-top:0!important;display:block!important}.ps-ckg .tk-t b{display:block}.tk-mood{font-size:1.25em;line-height:1;vertical-align:-1px;margin-left:2px}
 .ps-ckdt{font-size:12.5px;color:var(--ink-soft);margin:2px 0 6px}.ps-ckg small{display:block;font-size:11px;color:var(--ink-soft);font-weight:500}
 .pc-d.out{opacity:.38}.pc-d.st{box-shadow:inset 3px 0 0 var(--ok)}.pc-d.dl{box-shadow:inset -3px 0 0 var(--off)}.pc-d.st.dl{box-shadow:inset 3px 0 0 var(--ok),inset -3px 0 0 var(--off)}
 .rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-tab.emp .rp-by{display:none}
@@ -1407,7 +1408,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <div class="msg warn" id="psNoPlan" hidden></div>
       <div class="ps-top"><div class="panel ps-hero" id="psHero"></div><div class="ps-alerts" id="psAlerts" hidden></div></div>
       <div class="ps-kpis" id="psKpis"></div>
-      <div class="panel ps-tasks" style="padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Tasks</h3><span class="hint">Start, deadline and speed for each check · <span class="tk-good">green</span> on target · <span class="tk-bad">red</span> needs attention</span></div><div class="tbl"><table class="att tk-tab"><thead><tr><th>Task</th><th>Start</th><th>Deadline</th><th>Days left</th><th>Waiting</th><th>Target time / file</th><th>Actual time / file</th><th>Needed / day</th><th>Done today</th><th>Projected finish</th><th>Status</th></tr></thead><tbody id="psTasks"></tbody></table></div><p class="hint" style="margin:0;padding:8px 16px 14px">Actual time per file = hours from My Workday ÷ files done this month (when someone does several tasks in a day, their hours are shared by the target times). “Needed / day” counts working days from the task's start (or today) to its deadline. Projected finish: the team's daily hours go to the running tasks, earliest deadline first, at each task's actual time per file.</p></div>
+      <div class="panel ps-tasks" style="padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Tasks</h3><span class="hint">Start, deadline and speed for each check · <span class="tk-good">green</span> on target · <span class="tk-bad">red</span> needs attention · 😊 on time · 😟 slower than required · 😠 much slower</span></div><div class="tbl"><table class="att tk-tab"><thead><tr><th>Task</th><th>Start</th><th>Deadline</th><th>Days left</th><th>Waiting</th><th>Time / file<br><small style="font-weight:400;text-transform:none">from daily reports</small></th><th>Required time / file</th><th>Needed / day</th><th>Done today</th><th>Projected finish</th><th>Status</th></tr></thead><tbody id="psTasks"></tbody></table></div><p class="hint" style="margin:0;padding:8px 16px 14px">Actual time per file = hours from My Workday ÷ files done this month (when someone does several tasks in a day, their hours are shared by the required times). “Needed / day” counts working days from the task's start (or today) to its deadline. Projected finish: the team's daily hours go to the running tasks, earliest deadline first, at each task's actual time per file.</p></div>
       <div class="panel ps-ckpanel"><div class="vhead" style="margin:0 0 8px"><h3 style="margin:0">Each check <span class="hint" style="font-weight:400">· click a check for details</span></h3><span class="hint" id="psDl"></span></div><div class="ps-checks" id="psChecks"></div>
         <p class="hint" id="psCkNote" hidden style="margin:8px 0 0"><sup>*</sup> At its own speed this check would finish much later; the date assumes the team moves to it as other checks finish.</p>
         <div class="ps-detail" id="psDetail" hidden></div></div>
@@ -1418,9 +1419,9 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       </div>
       <div class="panel admin-only" hidden style="padding:0"><div class="vhead" style="padding:16px 16px 0;margin:0"><h3 style="margin:0">Speed of each person</h3><span class="hint">Files per working day they logged · this month</span></div><div class="tbl"><table class="att"><thead id="psPeopleH"></thead><tbody id="psPeople"></tbody></table></div></div>
       <div class="panel admin-only" hidden id="psAdmin"><h3>Month plan <span class="hint" style="font-weight:400">· admins</span></h3>
-        <p class="hint" style="margin:-4px 0 12px">For each task, set its start, its deadline and the target time per file (minutes), and enter how many files are waiting (from the "Checks you can do" screen). Leave a start or deadline empty to use the month start and the project deadline. Update the waiting numbers whenever you like: the dashboard always counts from the latest numbers.</p>
+        <p class="hint" style="margin:-4px 0 12px">For each task, set its start, its deadline and the required time per file (minutes), and enter how many files are waiting (from the "Checks you can do" screen). Leave a start or deadline empty to use the month start and the project deadline. Update the waiting numbers whenever you like: the dashboard always counts from the latest numbers.</p>
         <form id="psPlanForm" class="adm-form" novalidate><div class="g2"><div class="f"><label for="psDeadline">Project deadline <span class="hint" style="font-weight:400">(used by tasks without their own)</span></label><input type="date" id="psDeadline"></div><div class="f"><label for="psSnapDate">Waiting numbers at the start of</label><input type="date" id="psSnapDate"></div></div>
-          <table class="tk-plan"><thead><tr><th>Task</th><th>Start</th><th>Deadline</th><th>Target min / file</th><th>Waiting</th></tr></thead><tbody id="psPlanInputs"></tbody></table><div class="msg err" id="psPlanErr" hidden></div>
+          <table class="tk-plan"><thead><tr><th>Task</th><th>Start</th><th>Deadline</th><th>Required min / file</th><th>Waiting</th></tr></thead><tbody id="psPlanInputs"></tbody></table><div class="msg err" id="psPlanErr" hidden></div>
           <div class="row" style="gap:10px"><button class="btn btn-gem" type="submit">Save month plan</button><span class="hint" id="psPlanInfo"></span></div></form></div>
     </section>
     <section class="view" data-view="org" hidden>
@@ -2089,7 +2090,7 @@ function startData() {
   watch('assignAck', db.collection('assignAck'), s => { asgAcks = {}; s.docs.forEach(d => asgAcks[d.id] = d.data()); renderHome(); renderClock(); });
   watch('presence', db.collection('presence'), s => { presence = {}; s.docs.forEach(d => presence[d.id] = d.data()); renderHome(); });
   watch('workLog', db.collection('workLog'), s => { workAll = {}; s.docs.forEach(d => workAll[d.id] = d.data()); renderPstat(); renderWlRemind(); if (isAdmin) seedWorkLog(); });
-  watch('projPlan', db.collection('projPlan'), s => { projPlans = {}; s.docs.forEach(d => projPlans[d.id] = d.data()); renderPstat(); });
+  watch('projPlan', db.collection('projPlan'), s => { projPlans = {}; s.docs.forEach(d => projPlans[d.id] = d.data()); renderPstat(); if (isAdmin) seedTaskTargets(); });
   watch('links', db.collection('links'), s => { links = s.docs.map(d => ({key: d.id, ...d.data()})); renderLinks(); });
   if (uid) watch('myReq', db.doc('leaveReq/' + uid), s => { myReqRaw = s.exists ? s.data() : null; renderProfile(); });
   watchMine();
@@ -4268,8 +4269,11 @@ function renderHolidayWish(){ const box = $('hmHoliday'); if (!box) return; cons
 $('hmHoliday').addEventListener('click', e => { const b = e.target.closest('[data-hwx]'); if (!b) return; const c = b.closest('[data-hw]'); try { localStorage.setItem('cs_hw_x', c.dataset.hw); } catch (x) {} c.style.transition = 'opacity .3s, transform .3s'; c.style.opacity = 0; c.style.transform = 'scale(.97)'; setTimeout(() => { $('hmHoliday').dataset.sig = ''; renderHolidayWish(); }, 300); });
 /* ---------- daily work numbers and the Project Status dashboard ---------- */
 // pend: counts against the files waiting; L2 reviews are work done but do not reduce the queue
-const CHECKS = [{k: 'prof', n: 'Profile check', pend: 1, c: '#2a78d6'}, {k: 'li', n: 'LinkedIn check', pend: 1, c: '#0f8fa8'}, {k: 'ng', n: 'Name groups check', pend: 1, c: '#8b5e34'},
-  {k: 'email', n: 'Email check', pend: 1, c: '#eb6834'}, {k: 'company', n: 'Company list check', pend: 1, c: '#65a30d'}, {k: 'l2', n: 'L2 Review', pend: 0, c: '#7b5bd6'}];
+// the project's tasks (tpf: required minutes per file, unless the month plan sets another)
+const CHECKS = [{k: 'prof', n: 'Profile review', pend: 1, c: '#2a78d6', tpf: 2}, {k: 'email', n: 'Email review', pend: 1, c: '#eb6834', tpf: 3},
+  {k: 'phone', n: 'Phone number review', pend: 1, c: '#0f8fa8'}, {k: 'l2', n: 'L2 Review', pend: 0, c: '#7b5bd6'}];
+// how the time per file feels against the required time: on target, a bit slow (worried), far too slow (upset)
+const tpfMood = (a, r) => !a || !r ? '' : a <= r * 1.05 ? '<span class="tk-mood" title="On target">😊</span>' : a <= r * 1.5 ? '<span class="tk-mood" title="Slower than required: worried">😟</span>' : '<span class="tk-mood" title="Much slower than required: upset">😠</span>';
 let workAll = {}, projPlans = {}, wlAfter = null, wlClockOut = false;
 // who must enter daily numbers: everyone who uses the time clock, except admins and the people listed here
 const WL_EXEMPT = ['anisha@chrysolite.in'];
@@ -4313,6 +4317,12 @@ const WL_SEED_V = 'wl-2026-11-11b', WL_SEED = {
   'nusrath@chrysolite.in': {name: 'Nusrath Ep', '2026-11-10': {prof: 4, li: 20, ng: 4}, '2026-11-11': {li: 50}},
   'shygi@chrysolite.in': {name: 'Shygi Hana Reji', '2026-11-10': {prof: 2, li: 17}, '2026-11-11': {li: 82}},
   'divya@chrysolite.in': {name: 'Divya Jacob', '2026-11-11': {ng: 110}}};
+const TK_SEED_V = 'tk-2026-11-14', TK_SEED = {prof: 2, email: 3};
+async function seedTaskTargets(){ if (!isAdmin || acting() || window.__tksDone) return; window.__tksDone = 1;
+  try { const f = await db.doc('adminSettings/taskSeed').get(); if (f.exists && (f.data() || {}).v === TK_SEED_V) return;
+    const m = monthKey(new Date()), ref = db.doc('projPlan/' + m), sn = await ref.get();
+    if (sn.exists) { const cur = sn.data(), tasks = {...(cur.tasks || {})}; Object.entries(TK_SEED).forEach(([k, v]) => tasks[k] = {...(tasks[k] || {}), tpf: v}); await ref.set({...cur, tasks}); }
+    await db.doc('adminSettings/taskSeed').set({v: TK_SEED_V, at: new Date().toISOString()}); } catch (e) { console.warn(e); window.__tksDone = 0; } }
 async function seedWorkLog(){ if (!isAdmin || acting() || window.__wlsBusy || window.__wlsDone) return; window.__wlsBusy = 1;
   try { const f = await db.doc('adminSettings/workSeed').get(); if (f.exists && (f.data() || {}).v === WL_SEED_V) { window.__wlsDone = 1; return; }
     for (const [email, sd] of Object.entries(WL_SEED)) { const ref = db.doc('workLog/' + email), snap = await ref.get(), cur = snap.exists ? snap.data() : {}, days = {...(cur.days || {})};
@@ -4353,11 +4363,11 @@ function stat(m){ const plan = planFor(m), today = todayStr(), mStart = m + '-01
   // actual time per file for each task: a person's hours that day shared over the tasks they did (weighted by each task's target time, or by count)
   const act = {}; CHECKS.forEach(c => act[c.k] = {ms: 0, files: 0, msT: 0, filesT: 0});
   Object.entries(workAll).forEach(([key, w]) => Object.entries(w.days || {}).forEach(([d, x]) => { if (d < mStart || d > until) return; const h = msOfDay(key, d); if (!h) return;
-    const wt = CHECKS.map(c => (+x[c.k] || 0) * (+(TK[c.k] || {}).tpf || 1)), sw = wt.reduce((a, v) => a + v, 0); if (!sw) return;
+    const wt = CHECKS.map(c => (+x[c.k] || 0) * (+(TK[c.k] || {}).tpf || c.tpf || 1)), sw = wt.reduce((a, v) => a + v, 0); if (!sw) return;
     CHECKS.forEach((c, i) => { if (!(+x[c.k])) return; const a = act[c.k]; a.ms += h * wt[i] / sw; a.files += +x[c.k]; if (d === today) { a.msT += h * wt[i] / sw; a.filesT += +x[c.k]; } }); }));
-  const per = CHECKS.map(c => { const base = last ? {d: baseD, n: +last[1][c.k] || 0} : null;
+  const per = CHECKS.map(c => { const base = last && last[1][c.k] != null ? {d: baseD, n: +last[1][c.k] || 0} : null;
     const tk = TK[c.k] || {}, start = tk.start || mStart, dl = tk.deadline || (plan && plan.deadline) || mEnd, sFrom = s0 ? (s0 > start ? s0 : start) : null, daysLeftC = sFrom ? workdaysBetween(sFrom, dl) : 0;
-    const tpf = +tk.tpf || null, ac = act[c.k], actTpf = ac.files ? ac.ms / 60000 / ac.files : null, actTpfToday = ac.filesT ? ac.msT / 60000 / ac.filesT : null;
+    const tpf = +tk.tpf || c.tpf || null, ac = act[c.k], actTpf = ac.files ? ac.ms / 60000 / ac.files : null, actTpfToday = ac.filesT ? ac.msT / 60000 / ac.filesT : null;
     const done = doneBetween(c.k, mStart, until), doneToday = teamDone(today, c.k), sinceBase = base ? doneBetween(c.k, base.d, until) : 0;
     const remaining = c.pend && base ? Math.max(0, base.n - sinceBase) : null, total = base ? base.n + (base.d > mStart ? doneBetween(c.k, mStart, addDays(base.d, -1)) : 0) : null;
     const spd = withData.length ? withData.reduce((a, d) => a + teamDone(d, c.k), 0) / withData.length : 0;
@@ -4371,7 +4381,7 @@ function stat(m){ const plan = planFor(m), today = todayStr(), mStart = m + '-01
     const win = workdaysBetween(start, dl), used = start > until ? 0 : workdaysBetween(start, until < dl ? until : dl), expPct = win ? Math.min(1, used / win) : (until >= dl ? 1 : 0);
     const late = remaining > 0 && dl < today, finishLate = remaining > 0 && own && own > dl;
     return {...c, base, total, done, doneToday, remaining, spd, need, own, behind, start, dl, daysLeftC, tpf, actTpf, actTpfToday, ppl, notStarted, expPct, late, finishLate, win, hasTask: !!(tk.start || tk.deadline || tk.tpf)}; });
-  const P = per.filter(x => x.pend), tot = k => P.reduce((a, x) => a + (x[k] || 0), 0), hasBase = !!last;
+  const P = per.filter(x => x.pend && x.base), tot = k => P.reduce((a, x) => a + (x[k] || 0), 0), hasBase = !!last;
   // needed per day = the tasks running now (a task that starts later is not counted yet)
   const run = P.filter(x => !x.notStarted);
   const team = {remaining: hasBase ? tot('remaining') : null, total: hasBase ? tot('total') : null, done: per.reduce((a, x) => a + x.done, 0), donePend: tot('done'), today: doneTodayAll, spd: tot('spd'), behind: 0,
@@ -4425,12 +4435,12 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
   const al = []; if (S.plan) { T.lateTasks.filter(x => !x.late && x.finish).forEach(x => al.push(['bad', `⚠ <b>${x.n}</b> is due ${fdW(x.dl)} but at the team's pace finishes <b>${fdW(x.finish)}</b> (${workdaysBetween(addDays(x.dl, 1), x.finish)} working day${workdaysBetween(addDays(x.dl, 1), x.finish) === 1 ? '' : 's'} late).`]));
     if (late) al.push(['bad', `⚠ At today's speed the project finishes on <b>${fdW(T.finish)}</b>, <b>${lateDays} working day${lateDays === 1 ? '' : 's'} after</b> the deadline (${fdW(S.deadline)}).`]);
     else if (T.finish && T.finish !== 'done') al.push(['good', `✓ At today's speed everything is finished by <b>${fdW(T.finish)}</b>, before the deadline (${fdW(S.deadline)}).`]);
-    const pp = x => x.ppl ? ` (≈ ${x.ppl < 10 ? x.ppl.toFixed(1) : Math.round(x.ppl)} people at ${tmF(x.tpf)}/file)` : '';
+    const pp = x => x.ppl ? ` (≈ ${x.ppl < 10 ? x.ppl.toFixed(1) : Math.round(x.ppl)} people at the required ${tmF(x.tpf)}/file)` : '';
     S.per.filter(x => x.pend && x.late).forEach(x => al.push(['bad', `⛔ <b>${x.n}</b> passed its deadline (${fdW(x.dl)}) with ${fmtN(x.remaining)} files still waiting.`]));
     S.per.filter(x => x.pend && !x.late && x.remaining > 0 && !x.notStarted && !x.spd).forEach(x => al.push(['warn', `⏳ <b>${x.n}</b> should have started on ${fdW(x.start)}: ${fmtN(x.remaining)} waiting, needs <b>${fmtN(x.need)}/day</b> until ${fdW(x.dl)}${pp(x)}.`]));
     S.per.filter(x => psState(x) === 'behind' && x.spd).forEach(x => al.push(['warn', `🐢 <b>${x.n}</b> does ${fmtN(x.spd)}/day but needs <b>${fmtN(x.need)}/day</b> to finish by ${fdW(x.dl)}${pp(x)}.`]));
     S.per.filter(x => x.pend && x.notStarted && x.remaining > 0 && workdaysBetween(addDays(S.today, 1), x.start) <= 3).forEach(x => al.push(['info', `📅 <b>${x.n}</b> starts ${fdW(x.start)}: ${fmtN(x.remaining)} files by ${fdW(x.dl)} = <b>${fmtN(x.need)}/day</b>${pp(x)}.`]));
-    S.per.filter(x => x.pend && x.remaining > 0 && x.tpf && x.actTpf && x.actTpf > x.tpf * 1.15).forEach(x => al.push(['warn', `⏱ <b>${x.n}</b> takes ${tmF(x.actTpf)} per file, the target is ${tmF(x.tpf)}.`]));
+    S.per.filter(x => x.pend && x.remaining > 0 && x.tpf && x.actTpf && x.actTpf > x.tpf * 1.05).forEach(x => al.push(['warn', `${x.actTpf > x.tpf * 1.5 ? '😠' : '😟'} <b>${x.n}</b> takes ${tmF(x.actTpf)} per file; required is ${tmF(x.tpf)}.`]));
     if (T.l2.net < 0) al.push(['warn', `📈 <b>L2 backlog is growing</b>: about ${fmtN(T.l2.avgAdded)} files added and ${fmtN(T.l2.avgDone)} done per day · ${fmtN(T.l2.waiting)} waiting.`]); }
   $('psAlerts').innerHTML = al.map(([c, t]) => `<div class="ps-al ${c}">${t}</div>`).join(''); $('psAlerts').hidden = !al.length;
   const pc = T.total ? Math.round((T.total - T.remaining) / T.total * 100) : 0, tp = Math.round(T.expPct || 0);
@@ -4444,7 +4454,7 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
     ['Done today', fmtN(T.today), fmtN(T.done) + ' this month', ''],
     ['Team speed', T.spd ? fmtN(T.spd) + '<small>/day</small>' : '—', S.recent.length ? 'average of ' + S.recent.length + ' working day' + (S.recent.length === 1 ? '' : 's') : 'no numbers yet', T.need && T.spd ? (T.spd >= T.need ? 'good' : 'bad') : ''],
     ['Needed per day', T.need == null ? '—' : fmtN(T.need) + '<small>/day</small>', 'tasks running now' + (T.needLater ? ' · +' + fmtN(T.needLater) + '/day when later tasks start' : ''), T.need && T.spd ? (T.spd >= T.need ? 'good' : 'bad') : ''],
-    ['Time per file', T.actTpfT ? tmF(T.actTpfT) : tpf ? tmF(tpf) : '—', T.tgtTpf ? 'target ' + tmF(T.tgtTpf) + ' (tasks with a target)' : 'set targets in Month plan', T.tgtTpf && T.actTpfT ? (T.actTpfT <= T.tgtTpf * 1.05 ? 'good' : 'bad') : ''],
+    ['Time per file', T.actTpfT ? tmF(T.actTpfT) + ' ' + tpfMood(T.actTpfT, T.tgtTpf) : tpf ? tmF(tpf) : '—', T.tgtTpf ? 'required ' + tmF(T.tgtTpf) + ' · from daily reports' : 'set required times in Month plan', T.tgtTpf && T.actTpfT ? (T.actTpfT <= T.tgtTpf * 1.05 ? 'good' : 'bad') : ''],
     ['Projected finish', T.finish === 'done' ? 'Done' : T.finish ? fdS(T.finish) : '—', T.finish && T.finish !== 'done' ? (late ? lateDays + ' working day' + (lateDays === 1 ? '' : 's') + ' after the last deadline' : T.lateTasks.length ? T.lateTasks.length + ' task' + (T.lateTasks.length === 1 ? '' : 's') + ' late on its own deadline' : 'every task on time') : 'needs the month plan and numbers', late || T.lateTasks.length ? 'bad' : T.finish ? 'good' : ''],
     ['Status', `<span class="pill ${status[0]}">${status[1]}</span>`, T.lateTasks.length ? T.lateTasks.map(x => x.n.replace(' check', '')).join(', ') : T.behind > 0 && T.spd ? 'need ' + fmtN(T.need - T.spd) + ' more files a day' : '', T.lateTasks.length || T.behind > 0 ? 'bad' : '']
   ].map(([a, b, c, k]) => `<div class="ps-kpi ${k}"><span>${a}</span><b>${b}</b><small>${c}</small></div>`).join('');
@@ -4459,15 +4469,15 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
       ${x.pend ? `<div class="ps-bar" title="${fmtN(tot - x.remaining)} of ${fmtN(tot)} done"><i style="width:${pcd - pct}%;background:${x.c}"></i><i class="td" style="width:${pct}%;background:${x.c}"></i></div><div class="ps-barl"><span><b>${fmtN(tot - (x.remaining || 0))}</b> of ${fmtN(tot)} done</span><span>${Math.round(pcd)}%</span></div>` : `<div class="ps-barl"><span><b>${fmtN(x.done)}</b> reviews this month · ${fmtN(x.doneToday)} today</span></div>`}
       ${x.pend ? `<div class="ps-ckdt">📅 ${fdS(x.start)} → <b>${fdW(x.dl)}</b> · ${x.daysLeftC} working day${x.daysLeftC === 1 ? '' : 's'} left</div>` : ''}
       <div class="ps-ckg"><div><span>Waiting</span><b>${x.pend ? fmtN(x.remaining) : '—'}</b></div><div><span>Speed / day</span><b>${x.spd ? fmtN(x.spd) : '0'}</b></div><div><span>Needed / day</span><b class="${x.pend && !x.notStarted && x.need > x.spd ? 'neg' : ''}">${x.pend ? fmtN(x.need) : '—'}</b></div>
-        <div><span>Done today</span><b class="${x.pend && !x.notStarted && x.need && x.doneToday < x.need ? 'neg' : ''}">${fmtN(x.doneToday)}</b></div><div><span>Time / file</span><b class="${x.tpf && x.actTpf && x.actTpf > x.tpf * 1.05 ? 'neg' : ''}">${tmF(x.actTpf)}</b><small>${x.tpf ? 'target ' + tmF(x.tpf) : 'no target'}</small></div><div class="w2"><span>Projected finish</span><b class="${x.finishLate || x.late ? 'neg' : ''}">${x.finish === 'done' ? 'Done' : x.finish ? fdW(x.finish) : x.notStarted ? 'Starts ' + fdS(x.start) : x.pend ? '—' : 'Ongoing'}</b></div></div></button>`; }).join('');
+        <div><span>Done today</span><b class="${x.pend && !x.notStarted && x.need && x.doneToday < x.need ? 'neg' : ''}">${fmtN(x.doneToday)}</b></div><div class="w2 tk-t"><span>Time / file</span><b class="${x.tpf && x.actTpf && x.actTpf > x.tpf * 1.05 ? 'neg' : ''}">${tmF(x.actTpf)} ${tpfMood(x.actTpf, x.tpf)}</b><small>from daily reports</small></div><div class="w2 tk-t"><span>Required / file</span><b>${tmF(x.tpf)}</b><small>${x.tpf ? '≈ ' + fmtN(480 / x.tpf) + ' files a day each' : 'not set'}</small></div><div class="w2"><span>Projected finish</span><b class="${x.finishLate || x.late ? 'neg' : ''}">${x.finish === 'done' ? 'Done' : x.finish ? fdW(x.finish) : x.notStarted ? 'Starts ' + fdS(x.start) : x.pend ? '—' : 'Ongoing'}</b></div></div></button>`; }).join('');
   $('psCkNote').hidden = !S.per.some(x => x.pooled);
   // tasks table: start, deadline, target vs actual time per file, needed vs done today
   const tm = v => v == null ? '—' : (v < 10 ? v.toFixed(1) : Math.round(v)) + ' min';
   $('psTasks').innerHTML = S.per.map(x => { const late = x.pend && x.remaining > 0 && x.dl < S.today, actCls = x.tpf && x.actTpf ? (x.actTpf <= x.tpf * 1.05 ? 'tk-good' : 'tk-bad') : '', dCls = x.pend && x.need && !x.notStarted ? (x.doneToday >= x.need ? 'tk-good' : 'tk-bad') : '';
     const st = !x.pend ? ['info', 'Review'] : x.remaining === 0 ? ['ok', '✓ Done'] : x.remaining == null ? ['', 'No plan'] : late ? ['off', 'Past deadline'] : x.notStarted ? ['', 'Starts ' + fdS(x.start)] : psPill(x);
     return `<tr class="${x.notStarted ? 'tk-wait' : ''}"><td><span class="wl-dot" style="background:${x.c}"></span> <b>${x.n}</b></td><td>${x.pend ? fdS(x.start) : '—'}</td><td class="${late ? 'tk-bad' : ''}">${x.pend ? fdW(x.dl) : '—'}</td><td>${x.pend ? x.daysLeftC : '—'}</td><td>${x.pend ? fmtN(x.remaining) : '—'}</td>
-      <td>${tm(x.tpf)}${x.tpf ? `<small>≈ ${fmtN(480 / x.tpf)} files per person-day</small>` : ''}</td><td class="${actCls}">${tm(x.actTpf)}${x.actTpfToday != null ? `<small>today ${tm(x.actTpfToday)}</small>` : ''}</td>
-      <td>${x.pend ? fmtN(x.need) : '—'}${x.ppl ? `<small>≈ ${x.ppl < 10 ? x.ppl.toFixed(1) : Math.round(x.ppl)} people at target</small>` : ''}</td><td class="${dCls}">${fmtN(x.doneToday)}${x.pend && x.need && !x.notStarted ? `<small>${x.doneToday >= x.need ? '✓ needed reached' : fmtN(x.need - x.doneToday) + ' short'}</small>` : ''}</td><td class="${x.finishLate || late ? 'tk-bad' : x.finish && x.finish !== 'done' ? 'tk-good' : ''}">${!x.pend ? '—' : x.finish === 'done' ? 'Done' : x.finish ? fdW(x.finish) : '—'}${x.finishLate && x.finish ? `<small>${(n => n + ' working day' + (n === 1 ? '' : 's'))(workdaysBetween(addDays(x.dl, 1), x.finish))} late</small>` : ''}</td><td><span class="pill ${st[0]}">${st[1]}</span></td></tr>`; }).join('');
+      <td class="${actCls}">${tm(x.actTpf)} ${tpfMood(x.actTpf, x.tpf)}${x.actTpfToday != null ? `<small>today ${tm(x.actTpfToday)}</small>` : ''}</td><td>${tm(x.tpf)}${x.tpf ? `<small>≈ ${fmtN(480 / x.tpf)} files per person-day</small>` : ''}</td>
+      <td>${x.pend ? fmtN(x.need) : '—'}${x.ppl ? `<small>≈ ${x.ppl < 10 ? x.ppl.toFixed(1) : Math.round(x.ppl)} people at required time</small>` : ''}</td><td class="${dCls}">${fmtN(x.doneToday)}${x.pend && x.need && !x.notStarted ? `<small>${x.doneToday >= x.need ? '✓ needed reached' : fmtN(x.need - x.doneToday) + ' short'}</small>` : ''}</td><td class="${x.finishLate || late ? 'tk-bad' : x.finish && x.finish !== 'done' ? 'tk-good' : ''}">${!x.pend ? '—' : x.finish === 'done' ? 'Done' : x.finish ? fdW(x.finish) : '—'}${x.finishLate && x.finish ? `<small>${(n => n + ' working day' + (n === 1 ? '' : 's'))(workdaysBetween(addDays(x.dl, 1), x.finish))} late</small>` : ''}</td><td><span class="pill ${st[0]}">${st[1]}</span></td></tr>`; }).join('');
   drawPsDetail(S);
   // progress by check
   $('psProg').innerHTML = S.per.filter(x => x.pend && x.total).map(x => { const tot = x.total, dn = tot - x.remaining, pcd = dn / tot * 100, pt = Math.min(pcd, x.doneToday / tot * 100), exp = x.expPct * 100;
@@ -4494,7 +4504,7 @@ function renderPstat(){ const v = document.querySelector('.view[data-view="pstat
       $('psDeadline').value = p && p.deadline || ''; $('psSnapDate').value = todayStr().slice(0, 7) === S.m ? todayStr() : S.mStart;
       const tk = (p && p.tasks) || {};
       $('psPlanInputs').innerHTML = CHECKS.map(c => { const t = tk[c.k] || {}; return `<tr><td><span class="wl-dot" style="background:${c.c}"></span> ${c.n}</td>${c.pend ? `<td data-l="Start"><input type="date" data-tks="${c.k}" value="${t.start || ''}" aria-label="${c.n} start"></td><td data-l="Deadline"><input type="date" data-tkd="${c.k}" value="${t.deadline || ''}" aria-label="${c.n} deadline"></td>` : '<td colspan="2" class="hint">Ongoing review work</td>'}
-        <td data-l="Target min / file"><input type="number" min="0" max="240" step="0.1" inputmode="decimal" data-tkt="${c.k}" value="${t.tpf || ''}" placeholder="e.g. 2.5" aria-label="${c.n} target minutes per file"></td><td data-l="Waiting">${c.pend ? `<input type="number" min="0" data-ps="${c.k}" value="${lastS ? +lastS[1][c.k] || 0 : ''}" placeholder="e.g. 2779" aria-label="${c.n} waiting">` : '<span class="hint">—</span>'}</td></tr>`; }).join('');
+        <td data-l="Required min / file"><input type="number" min="0" max="240" step="0.1" inputmode="decimal" data-tkt="${c.k}" value="${t.tpf || c.tpf || ''}" placeholder="e.g. 2.5" aria-label="${c.n} required minutes per file"></td><td data-l="Waiting">${c.pend ? `<input type="number" min="0" data-ps="${c.k}" value="${lastS && lastS[1][c.k] != null ? +lastS[1][c.k] : ''}" placeholder="e.g. 2779" aria-label="${c.n} waiting">` : '<span class="hint">—</span>'}</td></tr>`; }).join('');
       $('psPlanInfo').textContent = p ? 'Latest waiting numbers: start of ' + (lastS ? fdW(lastS[0]) : '—') + (p.by ? ' · by ' + p.by : '') : 'No plan for this month yet.'; } } }
 // details of one check: who did it, and the last working days
 function drawPsDetail(S){ const box = $('psDetail'); if (!psSel) { box.hidden = true; return; } const x = S.per.find(q => q.k === psSel); if (!x) { box.hidden = true; return; } box.hidden = false;
@@ -4521,11 +4531,12 @@ function renderTeamPerf(){ const box = $('myTeamPerf'); if (!box) return; if (!m
 $('psMonth').addEventListener('change', renderPstat);
 $('psPlanForm').addEventListener('submit', async e => { e.preventDefault(); if (!isAdmin) return; const m = $('psMonth').value || monthKey(new Date()), err = $('psPlanErr'), dl = $('psDeadline').value, sd = $('psSnapDate').value;
   if (!dl) { err.textContent = 'Pick the deadline.'; err.hidden = false; return; } if (!sd || sd.slice(0, 7) !== m) { err.textContent = 'The "as of" date must be in ' + m + '.'; err.hidden = false; return; }
-  const snap = {}; for (const i of $('psPlanInputs').querySelectorAll('[data-ps]')) { if (i.value === '' || !/^\d+$/.test(i.value)) { err.textContent = 'Enter the waiting number for every check (0 if none).'; err.hidden = false; i.focus(); return; } snap[i.dataset.ps] = +i.value; }
+  const snap = {}; for (const i of $('psPlanInputs').querySelectorAll('[data-ps]')) { if (i.value === '') continue; if (!/^\d+$/.test(i.value)) { err.textContent = 'Waiting numbers must be whole numbers (leave empty if a task has no files yet).'; err.hidden = false; i.focus(); return; } snap[i.dataset.ps] = +i.value; }
+  if (!Object.keys(snap).length) { err.textContent = 'Enter the waiting number for at least one task.'; err.hidden = false; return; }
   // tasks: start, deadline, target minutes per file (all optional)
   const tasks = {}; for (const c of CHECKS) { const s1 = ($('psPlanInputs').querySelector(`[data-tks="${c.k}"]`) || {}).value || '', d1 = ($('psPlanInputs').querySelector(`[data-tkd="${c.k}"]`) || {}).value || '', tEl = $('psPlanInputs').querySelector(`[data-tkt="${c.k}"]`), t1 = tEl ? tEl.value.trim() : '';
     if (s1 && d1 && d1 < s1) { err.textContent = c.n + ': the deadline is before the start.'; err.hidden = false; return; }
-    if (t1 !== '' && !(+t1 > 0 && +t1 <= 240)) { err.textContent = c.n + ': target time per file must be between 0.1 and 240 minutes.'; err.hidden = false; tEl.focus(); return; }
+    if (t1 !== '' && !(+t1 > 0 && +t1 <= 240)) { err.textContent = c.n + ': required time per file must be between 0.1 and 240 minutes.'; err.hidden = false; tEl.focus(); return; }
     const o = {}; if (s1) o.start = s1; if (d1) o.deadline = d1; if (t1 !== '') o.tpf = Math.round(+t1 * 10) / 10; if (Object.keys(o).length) tasks[c.k] = o; }
   err.hidden = true; const cur = projPlans[m] || {};
   // the waiting numbers are only stored again when they changed (editing task dates must not undo the work done since the last numbers)
