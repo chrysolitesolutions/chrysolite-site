@@ -1300,8 +1300,6 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <div class="hm-fun">
         <div class="panel hm-factp"><span class="hm-fl">✨ Fun fact of the day</span><p id="hmFact"></p><button type="button" class="linkbtn" id="hmFactNext">Tell me another ↻</button>
 </div>
-        <div class="panel admin-only hm-moodteam" hidden><div class="vhead" style="margin:0 0 10px;align-items:baseline"><h3 style="margin:0">Team mood today</h3><span class="hint" id="moodTeam"></span></div>
-          <div class="mt-sum" id="moodSum"></div><div class="mt-list" id="moodList"></div><p class="hint" style="margin:10px 0 0">Shared by employees when they accept their assignment. Only admins see this list.</p></div>
       </div>
       <div class="panel"><h3>Announcements</h3><div class="timeline" id="annList"></div></div>
       <div class="two">
@@ -1896,14 +1894,6 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
   <div class="ep-top"><div id="epDlgPh"></div><div><h2 id="epDlgT">Employee details</h2><div class="hint" id="epDlgSub"></div></div><button class="btn btn-ghost" type="button" id="epDlgX" style="margin-left:auto">Close</button></div>
   <div class="ep" id="epAdm"></div>
 </dialog>
-<dialog class="pw-dlg mood-dlg" id="moodDlg" aria-labelledby="moodDlgT">
-  <form method="dialog" style="display:grid;gap:14px">
-    <h3 id="moodDlgT">How are you feeling today?</h3>
-    <p class="hint" style="margin:0">Tap one. Only you and your admin can see it.</p>
-    <div class="mood-row" id="moodRow"></div><p class="mood-msg" id="moodMsg"></p>
-    <div class="row" style="justify-content:center"><button class="btn btn-gem" type="button" id="moodGo">Let's start my day →</button></div>
-  </form>
-</dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
     <h3 id="otDlgT">You worked more than 8 hours today</h3>
@@ -2142,7 +2132,6 @@ function watchMine(){
   // each employee sees their own checker reports and where they stand (optional: no banner if the rule is missing)
   try { watch('reportsMine', db.collection('checkerReports').where('by', '==', me.key), s => { reportsMine = s.docs.map(d => ({id: d.id, ...d.data()})); renderReports(); }, true); } catch (e) { console.warn(e); }
   watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
-  watch('moodMine', db.doc('mood/' + me.key), s => { moodMine = s.exists ? s.data() : null; renderMood(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); try { renderHomeAmend(); } catch (e) {} });
   watch('myPay', db.doc('payroll/' + me.key), s => { payMine = s.exists ? s.data() : null; renderPay(); renderProfile(); });
@@ -2165,7 +2154,6 @@ function startAdminData() {
   // reported checker issues: optional so a missing Firestore rule never shows the error banner
   watch('reports', db.collection('checkerReports'), s => { reportsAll = s.docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (b.n || 0) - (a.n || 0)); renderReports(); }, true);
   watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
-  watch('moodAll', db.collection('mood'), s => { moodAll = {}; s.docs.forEach(d => moodAll[d.id] = d.data()); renderMood(); });
   watch('annAckAll', db.collection('annAck'), s => { annAckAll = {}; s.docs.forEach(d => annAckAll[d.id] = d.data()); renderAnnAdmin(); });
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
   watch('profReqAll', db.collection('profileReq'), s => { profReqAll = {}; s.docs.forEach(d => profReqAll[d.id] = d.data()); renderProfReqs(); renderAccounts(); });
@@ -2866,21 +2854,9 @@ setInterval(skyClass, 60000);
 const MOODS = [['great', '🤩', 'Great'], ['good', '😊', 'Good'], ['okay', '😐', 'Okay'], ['tired', '😴', 'Tired'], ['low', '😟', 'Low']];
 const MOOD_MSG = {great: 'Love that energy! Go make today amazing. 🚀', good: 'Nice! Have a smooth and productive day. 🌿', okay: 'Thanks for sharing. One task at a time, you\'ve got this. 💪', tired: 'Take a short stretch and some water. Small breaks help. 💧', low: 'Sorry you\'re feeling low. Be kind to yourself today, and reach out to your Team Lead if you need anything. 💚'};
 let moodMine = null, moodAll = {};
-function renderMood(){ const row = $('moodRow'); if (!row) return; const today = todayStr(), cur = moodMine && moodMine.days && moodMine.days[today];
-  row.innerHTML = MOODS.map(([k, e, l]) => `<button type="button" data-mood="${k}" class="${cur === k ? 'on' : ''}" aria-pressed="${cur === k}"><i>${e}</i>${l}</button>`).join('');
-  $('moodMsg').textContent = cur ? MOOD_MSG[cur] : ''; renderForecast();
-  if (isAdmin) { const cnt = {}; Object.values(moodAll).forEach(r => { const m = r.days && r.days[today]; if (m) cnt[m] = (cnt[m] || 0) + 1; }); const n = Object.values(cnt).reduce((a, b) => a + b, 0);
-    const ps = people(), done = ps.filter(pp => moodAll[pp.key] && moodAll[pp.key].days && moodAll[pp.key].days[today]);
-    $('moodTeam').textContent = done.length + ' of ' + ps.length + ' shared';
-    $('moodSum').innerHTML = MOODS.map(([k, e, l]) => `<div class="mt-c mood-${k}"><i>${e}</i><b>${cnt[k] || 0}</b><span>${l}</span></div>`).join('');
-    const rank = {low: 0, tired: 1, okay: 2, good: 3, great: 4}, rows = ps.map(pp => ({pp, m: moodAll[pp.key] && moodAll[pp.key].days && moodAll[pp.key].days[today]})).sort((a, b) => (a.m ? rank[a.m] : 9) - (b.m ? rank[b.m] : 9) || String(a.pp.name).localeCompare(String(b.pp.name)));
-    $('moodList').innerHTML = rows.map(({pp, m}) => { const mm = MOODS.find(x => x[0] === m); return `<div class="mt-r${m ? ' mood-' + m : ' none'}"><div class="person">${av(pp.name)}<span>${esc(pp.name)}<small>${esc(pp.role || '')}</small></span></div>${mm ? `<span class="mt-m"><i>${mm[1]}</i>${mm[2]}</span>` : '<span class="mt-m">Not shared yet</span>'}</div>`; }).join('') || '<p class="empty">No employees yet.</p>'; } }
-const closeMood = () => { const d = $('moodDlg'); if (d.open) d.close(); clearTimeout(moodT); };
-let moodT = 0; $('moodGo').onclick = closeMood;
-function askMood(){ if (!me) return; const cur = moodMine && moodMine.days && moodMine.days[todayStr()]; if (cur) return; renderMood(); const d = $('moodDlg'); try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
-$('moodRow').addEventListener('click', async e => { const b = e.target.closest('[data-mood]'); if (!b || !me) return; clearTimeout(moodT); moodT = setTimeout(closeMood, 2600); const today = todayStr(), days = {...((moodMine && moodMine.days) || {}), [today]: b.dataset.mood}, keep = {};
-  Object.keys(days).sort().slice(-60).forEach(k => keep[k] = days[k]); moodMine = {email: me.email, name: me.name, days: keep}; renderMood();
-  try { await db.doc('mood/' + me.key).set(moodMine); } catch (x) { toast('Your mood couldn\'t be saved. Try again.'); } });
+// the daily mood check-in was removed
+function renderMood(){}
+function askMood(){}
 // catch-the-gems mini game; best time is remembered on this device only
 const GEMS = ['💎', '💚', '🔷', '✨', '🟢'];
 let gm = null;
