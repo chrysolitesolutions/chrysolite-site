@@ -629,6 +629,21 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .dc-tab{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}.dc-tab th{font:600 10.5px var(--mono);text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:4px}.dc-tab td{padding:5px 4px;border-top:1px solid var(--line)}.dc-tab tr.none td{color:var(--ink-soft)}.dc-tab th:first-child{width:24%}
 .ps-ckdt{font-size:12.5px;color:var(--ink-soft);margin:2px 0 6px}.ps-ckg small{display:block;font-size:11px;color:var(--ink-soft);font-weight:500}
 .pc-d.out{opacity:.38}.pc-d.st{box-shadow:inset 3px 0 0 var(--ok)}.pc-d.dl{box-shadow:inset -3px 0 0 var(--off)}.pc-d.st.dl{box-shadow:inset 3px 0 0 var(--ok),inset -3px 0 0 var(--off)}
+.ac-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.ac-tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font:600 14px var(--body);cursor:pointer;color:inherit}.ac-tabs button small{font-weight:400;color:var(--ink-soft);margin-left:3px}.ac-tabs button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}.ac-tabs button.on small{color:inherit;opacity:.7}#acAllM.on{background:var(--ink);color:var(--surface)}
+.ac-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 14px}@media(max-width:1100px){.ac-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}.ac-k{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:4px}.ac-k span{font-size:12.5px;color:var(--ink-soft)}.ac-k b{font:800 24px/1.15 var(--display)}.ac-k small{font-size:12px;color:var(--ink-soft)}
+.ac-k.in{box-shadow:inset 0 3px 0 #2f8f4e}.ac-k.out{box-shadow:inset 0 3px 0 #c2412d}.ac-k.good b{color:var(--ok)}.ac-k.bad{box-shadow:inset 0 3px 0 var(--off)}.ac-k.bad small{color:var(--off)}
+.ac-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 14px}@media(max-width:900px){.ac-two{grid-template-columns:1fr}}.ac-two .panel{margin:0}.ac-two h3{margin:0 0 12px}
+.ac-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;height:170px;align-items:end}.ac-fm{display:grid;gap:6px;height:100%;grid-template-rows:1fr auto;text-align:center;font-size:12px;color:var(--ink-soft)}.ac-fm.cur span{font-weight:700;color:var(--ink)}.ac-bars{display:flex;gap:4px;align-items:flex-end;justify-content:center;height:100%}.ac-bars i{width:16px;border-radius:5px 5px 0 0;min-height:2px}.ac-bars i.in,.ac-leg i.in{background:#2f8f4e}.ac-bars i.out,.ac-leg i.out{background:#d4643f}
+.ac-leg{display:flex;gap:14px;font-size:12.5px;color:var(--ink-soft);margin-top:8px}.ac-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+.ac-due{display:grid;gap:6px}.ac-due > div{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;font-size:13.5px;border-bottom:1px solid var(--line);padding-bottom:6px}.ac-due small{display:block;color:var(--ink-soft);font-size:12px}.ac-dir{font:700 11px var(--mono);padding:2px 7px;border-radius:6px}.ac-dir.in{background:#e3f3e7;color:#1f6a35}.ac-dir.out{background:#fbe6df;color:#9a3a1c}
+.ac-tab{width:100%;border-collapse:collapse;font-size:13.5px}.ac-tab th{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}.ac-tab td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}.ac-tab .r{text-align:right;white-space:nowrap}.ac-tab td small{display:block;color:var(--ink-soft);font-size:12px}.ac-tab .neg{color:var(--off);font-weight:600}.ac-tab tr.void td{opacity:.45;text-decoration:line-through}.ac-tab tr.void td:last-child{text-decoration:none}
+.ac-list td:first-child,.ac-list th:first-child{padding-left:16px}.ac-act{white-space:nowrap;text-align:right}.ac-act .mini{margin-left:4px}.ac-type{font:700 11px var(--mono);padding:2px 8px;border-radius:6px;background:var(--surface-2)}.ac-type.salary{background:#e9e2fb;color:#4c2fa0}.ac-type.bill{background:#e3eefb;color:#1f5fa8}.ac-type.expense{background:#fff1d6;color:#8a5a00}
+.ac-cat{display:grid;grid-template-columns:150px 1fr auto;gap:10px;align-items:center;font-size:13.5px;margin:0 0 8px}.ac-cat div{height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden}.ac-cat i{display:block;height:100%;background:#d4643f;border-radius:6px}
+.ac-bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 10px}.ac-filt,.ac-btns{display:flex;gap:8px;flex-wrap:wrap}.ac-filt select,.ac-filt input{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;width:auto}.ac-filt input{min-width:240px}
+.ac-sum{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13.5px;color:var(--ink-soft);margin:0 0 10px}.ac-sum b{color:var(--ink)}.ac-sum b.neg{color:var(--off)}
+.pw-dlg.ac-dlg{width:min(860px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto}.ac-db{display:grid;gap:10px}.ac-db .g2{gap:10px}.ac-chk{display:flex;gap:8px;align-items:center;font-size:14px}.ac-chk input{width:auto}.ac-psum{display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--ink-soft)}.ac-psum b{color:var(--ink)}
+.ac-items input{width:100%;box-sizing:border-box;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}.ac-items td{padding:5px 4px}.ac-items th:nth-child(2),.ac-items th:nth-child(3){width:90px}.ac-items th:nth-child(4){width:120px}.ac-items th:last-child{width:40px}
+.ac-itot{display:grid;gap:4px;align-content:end;font-size:14px}.ac-itot div{display:flex;justify-content:space-between}.ac-itot .t{font-size:17px;border-top:1px solid var(--line);padding-top:6px}
 .rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-tab.emp .rp-by{display:none}
 .rp-tab tr.rp-solved td{background:color-mix(in srgb,var(--ok) 9%,transparent);opacity:.55}.rp-tab tr.rp-solved:hover td{opacity:.85}.rp-tab tr.rp-closed td{opacity:.5}
 .rp-sbtn{margin-top:6px;border:1px solid color-mix(in srgb,var(--ok) 45%,var(--line));background:color-mix(in srgb,var(--ok) 10%,transparent);color:var(--ok);border-radius:999px;padding:4px 10px;font:600 12px var(--body);cursor:pointer;white-space:nowrap}
@@ -1240,6 +1255,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <button class="tab" role="tab" data-v="pay"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="15" height="10" rx="2"/><circle cx="10" cy="10" r="2.3"/><path d="M5.5 8v4M14.5 8v4"/></svg>Timesheet &amp; Payroll</button>
       <button class="tab" role="tab" data-v="roster"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="3"/><circle cx="14.5" cy="8" r="2.2"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5M13 12.5c2.5 0 5 1.6 5 4.5"/></svg>Roster</button>
       <button class="tab" role="tab" data-v="leave"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3c4 2 6 5 6 9H4c0-4 2-7 6-9zM10 12v6M7 18h6"/></svg>Leave plans</button>
+      <button class="tab" role="tab" data-v="acct" id="acTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="2.5" width="14" height="15" rx="2"/><path d="M6.5 6h7M6.5 9.5h2M11.5 9.5h2M6.5 13h2M11.5 13h2"/></svg>Accounts</button>
       <button class="tab" role="tab" data-v="reports" id="rpTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 17.5V3"/><path d="M4.5 3.5h10l-2 3.5 2 3.5h-10"/></svg>Reported issues<span class="badge" id="rpBadge" hidden>0</span></button>
       <button class="tab" role="tab" data-v="admin" id="adminTab" hidden><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z"/><path d="M7 10l2 2 4-4"/></svg>Admin</button>
     </nav>
@@ -1751,6 +1767,11 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 
 
     <!-- ADMIN -->
+    <section class="view" data-view="acct" hidden>
+      <div class="vhead"><div><h1>Accounts</h1><p>What we owe (salaries, bills, expenses) and what clients owe us (invoices), paid or not. Only admins can see this page.</p></div><div class="row" style="gap:8px;align-items:center"><input type="month" id="acMonth" aria-label="Month"><button class="btn btn-ghost" type="button" id="acAllM">All months</button></div></div>
+      <div class="ac-tabs" id="acTabs"><button type="button" data-act="ov" class="on">Overview</button><button type="button" data-act="ap">Payables <small>we owe</small></button><button type="button" data-act="ar">Receivables <small>invoices</small></button><button type="button" data-act="ct">Contacts</button><button type="button" data-act="st">Settings</button></div>
+      <div id="acBody"></div>
+    </section>
     <section class="view" data-view="reports" hidden>
       <div class="vhead"><div><h1 id="rpH">Reported issues</h1><p id="rpLead"></p></div><div class="rp-hbtn"><button class="btn btn-ghost" type="button" id="rpSolveAll" hidden>✓ Mark all “Sent to Claude” as solved</button><button class="btn btn-gem" type="button" id="rpPack">📦 Package for Claude</button></div></div>
       <div class="rp-kpis" id="rpKpis"></div>
@@ -1847,6 +1868,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
   </main>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<dialog class="pw-dlg ac-dlg" id="acDlg" aria-labelledby="acDlgT"><form id="acForm" novalidate><div class="rp-dh"><h3 id="acDlgT" style="margin:0"></h3><button class="btn btn-ghost" type="button" id="acDlgX" aria-label="Close">✕</button></div><div id="acDlgBody" class="ac-db"></div><div class="msg err" id="acErr" hidden></div><div class="row" id="acDlgAct" style="justify-content:flex-end;gap:8px;margin-top:12px"></div></form></dialog>
 <dialog class="pw-dlg rp-dlg" id="rpDlg" aria-labelledby="rpDlgT"><div class="rp-dh"><h3 id="rpDlgT" style="margin:0"></h3><button class="btn btn-ghost" type="button" id="rpDlgX" aria-label="Close">✕</button></div><div id="rpDlgBody"></div></dialog>
 <dialog class="pw-dlg rp-dlg" id="rpPackDlg" aria-labelledby="rpPackT"><div class="rp-dh"><h3 id="rpPackT" style="margin:0">📦 Package for Claude</h3><button class="btn btn-ghost" type="button" id="rpPackX" aria-label="Close">✕</button></div>
   <p class="hint" style="margin:0 0 10px">Choose the tickets, then <b>Copy package</b> and paste it into your Claude Code chat. Claude recreates each case, corrects the checker, adds it to the test set and answers ticket by ticket.</p>
@@ -2151,6 +2173,11 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id && d.status !== 'Pending')).map(q => { const d = decisions.find(x => x.key === r.uid + '~' + q.id); return {...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name, _reply: d && d.reply}; }));
 
 function startAdminData() {
+  // accounts (admins only; optional so a missing Firestore rule never shows the error banner)
+  watch('acBills', db.collection('acctBills'), s => { acBills = {}; s.docs.forEach(d => acBills[d.id] = d.data()); renderAcct(); }, true);
+  watch('acInv', db.collection('acctInvoices'), s => { acInv = {}; s.docs.forEach(d => acInv[d.id] = d.data()); renderAcct(); }, true);
+  watch('acCt', db.collection('acctContacts'), s => { acCt = {}; s.docs.forEach(d => acCt[d.id] = d.data()); renderAcct(); }, true);
+  watch('acSet', db.doc('acctSettings/main'), s => { acSet = s.exists ? s.data() : {}; renderAcct(); }, true);
   // reported checker issues: optional so a missing Firestore rule never shows the error banner
   watch('reports', db.collection('checkerReports'), s => { reportsAll = s.docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (b.n || 0) - (a.n || 0)); renderReports(); }, true);
   watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
@@ -2158,7 +2185,7 @@ function startAdminData() {
   watch('ackAll', db.collection('guideAck'), s => { ackAll = {}; s.docs.forEach(d => ackAll[d.id] = d.data()); renderAckCards(); });
   watch('profReqAll', db.collection('profileReq'), s => { profReqAll = {}; s.docs.forEach(d => profReqAll[d.id] = d.data()); renderProfReqs(); renderAccounts(); });
   watch('slipAckAll', db.collection('slipAck'), s => { slipAckAll = {}; s.docs.forEach(d => slipAckAll[d.id] = d.data()); if (!document.querySelector('.slip-ed input:focus, .slip-ed select:focus')) renderPay(); });
-  watch('slipsAll', db.collection('payslips'), s => { slipsAll = {}; s.docs.forEach(d => slipsAll[d.id] = d.data()); if (!document.querySelector('.slip-ed input:focus, .slip-ed select:focus')) renderPay(); });
+  watch('slipsAll', db.collection('payslips'), s => { slipsAll = {}; s.docs.forEach(d => slipsAll[d.id] = d.data()); try { renderAcct(); } catch (e) {} if (!document.querySelector('.slip-ed input:focus, .slip-ed select:focus')) renderPay(); });
   watch('payAll', db.collection('payroll'), s => { payAll = {}; s.docs.forEach(d => payAll[d.id] = d.data()); renderPay(); });
   if (!db || !isAdmin || unsub.requests) return;
   const setReqs = () => { requests = [...reqLegacy, ...reqNew]; renderLeave(); renderHome(); };
@@ -2176,6 +2203,7 @@ function applyRole() {
   const wantsAdmin = me ? ((me.access === 'admin' && !!me.active) || me.key === OWNER) : false;
   const was = isAdmin; isAdmin = wantsAdmin && canEditDb;
   $('adminTab').hidden = !isAdmin;
+  $('acTab').hidden = !isAdmin; if (!isAdmin && document.querySelector('.view[data-view="acct"]:not([hidden])')) setTimeout(() => go('home'));
   $('rpTab').hidden = !me && !isAdmin; try { renderReports(); } catch (e) {}
   document.querySelectorAll('.tab[data-v="roster"], [data-go="roster"]').forEach(e => e.hidden = !isAdmin); document.querySelectorAll('.tab[data-v="leave"]').forEach(e => e.hidden = true);
   if (document.querySelector('.view[data-view="leave"]:not([hidden])')) setTimeout(() => go('timeoff'));
@@ -2349,13 +2377,223 @@ $('rpPackDl').onclick = () => { const a = document.createElement('a'); a.href = 
 $('rpPackMark').onclick = async () => { const now = new Date().toISOString(); let ok = 0; for (const id of rpSel) { const r = reportsAll.find(x => x.id === id); if (!r || !rpOpen(r)) continue; try { await db.doc('checkerReports/' + id).set({status: 'sent', sentAt: now, updatedAt: now, updatedBy: me && me.key}, {merge: true}); ok++; } catch (e) {} }
   $('rpPackMsg').textContent = '✓ ' + ok + ' ticket' + (ok === 1 ? '' : 's') + ' marked “Sent to Claude”. Once the correction is live, press “Mark all Sent to Claude as solved”.'; };
 
+/* ---------- Accounts (admins only): payables = salaries, bills and expenses we owe; receivables = invoices clients owe us ---------- */
+let acBills = {}, acInv = {}, acCt = {}, acSet = {}, acTab = 'ov', acAll = false, acQ = '', acKind = '', acSt = '';
+const AC_DEF = {company: 'Chrysolite Solutions', currency: 'INR', taxPct: 18, terms: 15, salaryDay: 7, prefix: 'CS-INV-'};
+const AC_CATS = ['Salaries', 'Rent', 'Utilities', 'Internet & phone', 'Software & subscriptions', 'Equipment', 'Office supplies', 'Travel', 'Professional fees', 'Taxes & government fees', 'Bank charges', 'Marketing', 'Other'];
+const AC_METHODS = ['Bank transfer', 'UPI', 'Cash', 'Card', 'Cheque', 'Other'];
+const acS = () => ({...AC_DEF, ...acSet});
+const acR = n => Math.round((+n || 0) * 100) / 100;
+const acMoney = (n, cur) => { try { return new Intl.NumberFormat('en-IN', {style: 'currency', currency: cur || acS().currency, maximumFractionDigits: 2}).format(+n || 0); } catch (e) { return (cur || '') + ' ' + (+n || 0).toFixed(2); } };
+const acLong = d => new Date(d + 'T00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'});
+const acMonthName = m => new Date(m + '-01T00:00').toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
+const acPaid = x => acR((x.payments || []).reduce((a, p) => a + (+p.amount || 0), 0));
+const acInvSub = v => (v.items || []).reduce((a, it) => a + (+it.qty || 0) * (+it.rate || 0), 0);
+const acInvTotal = v => { const sub = acInvSub(v) - (+v.discount || 0); return acR(sub + sub * (+v.taxPct || 0) / 100); };
+const acDays = (a, b) => Math.round((new Date(b + 'T00:00') - new Date(a + 'T00:00')) / 864e5);
+function acStatus(total, paid, due, draft, voided){ if (voided) return ['', 'Void']; if (draft) return ['', 'Draft']; const bal = acR(total - paid);
+  if (bal <= 0.005) return ['ok', 'Paid']; if (due && due < todayStr()) return ['off', 'Overdue']; if (paid > 0) return ['warn', 'Part paid']; return ['warn', 'Unpaid']; }
+// salaries: every published payslip is owed to the employee until it is marked paid (payments are kept in acctBills/sal_<payslip>)
+function acSalaries(){ const S = acS(); return Object.entries(slipsAll || {}).filter(([, v]) => v && v.status === 'published' && v.month).map(([id, v]) => {
+  const bid = 'sal_' + id.replace(/[^a-zA-Z0-9_~@.-]/g, '_'), rec = acBills[bid] || {}, [y, mo] = String(v.month).split('-').map(Number);
+  return {id: bid, kind: 'salary', party: v.name || v.email, category: 'Salaries', desc: 'Salary · ' + acMonthName(v.month), date: v.month + '-' + pad(new Date(y, mo, 0).getDate()),
+    due: ymd(new Date(y, mo, Math.min(28, +S.salaryDay || 7))), amount: +v.net || 0, tax: 0, currency: (v.basis && v.basis.currency) || S.currency, payments: rec.payments || [], slip: id, email: v.email}; }); }
+// every payable and receivable with its totals and status
+function acAP(){ const own = Object.entries(acBills).filter(([id, b]) => !id.startsWith('sal_') && b).map(([id, b]) => ({id, ...b}));
+  return [...acSalaries(), ...own].map(b => { const total = acR((+b.amount || 0) + (+b.tax || 0)), paid = acPaid(b), st = acStatus(total, paid, b.due || b.date, false, b.void); return {...b, total, paid, bal: b.void ? 0 : acR(total - paid), st}; }); }
+function acAR(){ return Object.entries(acInv).map(([id, v]) => { const total = acInvTotal(v), paid = acPaid(v), st = acStatus(total, paid, v.due, v.status === 'draft', v.status === 'void');
+  return {id, ...v, total, paid, bal: v.status === 'draft' || v.status === 'void' ? 0 : acR(total - paid), st}; }); }
+const acInMonth = (d, m) => String(d || '').slice(0, 7) === m;
+const acPill = st => `<span class="pill ${st[0]}">${st[1]}</span>`;
+const acKindName = k => ({salary: 'Salary', bill: 'Bill', expense: 'Expense'})[k] || k;
+
+function renderAcct(){ const box = $('acBody'); if (!box || !isAdmin) return; if (!$('acMonth').value) $('acMonth').value = monthKey(new Date());
+  document.querySelectorAll('#acTabs [data-act]').forEach(b => b.classList.toggle('on', b.dataset.act === acTab)); $('acAllM').classList.toggle('on', acAll);
+  const m = $('acMonth').value; if (acTab === 'ov') acOverview(box, m); else if (acTab === 'ap') acPayables(box, m); else if (acTab === 'ar') acReceivables(box, m); else if (acTab === 'ct') acContacts(box); else acSettings(box); }
+
+// ----- overview -----
+function acOverview(box, m){ const AP = acAP(), AR = acAR(), today = todayStr(), sumPay = (L, mm) => acR(L.reduce((a, x) => a + (x.payments || []).filter(p => acInMonth(p.date, mm)).reduce((s, p) => s + (+p.amount || 0), 0), 0));
+  const live = AR.filter(v => v.status !== 'draft' && v.status !== 'void'), inv = acR(live.filter(v => acInMonth(v.date, m)).reduce((a, v) => a + v.total, 0)), recv = sumPay(AR, m);
+  const billed = acR(AP.filter(b => !b.void && acInMonth(b.date, m)).reduce((a, b) => a + b.total, 0)), out = sumPay(AP, m), net = acR(recv - out);
+  const arOut = acR(live.reduce((a, v) => a + v.bal, 0)), arOver = acR(live.filter(v => v.bal > 0 && v.due < today).reduce((a, v) => a + v.bal, 0));
+  const apOut = acR(AP.reduce((a, b) => a + b.bal, 0)), apOver = acR(AP.filter(b => b.bal > 0 && (b.due || b.date) < today).reduce((a, b) => a + b.bal, 0));
+  // six months of money in and out
+  const months = []; for (let i = 5; i >= 0; i--) { const d = new Date(m + '-01T00:00'); d.setMonth(d.getMonth() - i); months.push(monthKey(d)); }
+  const flow = months.map(mm => ({mm, i: sumPay(AR, mm), o: sumPay(AP, mm)})), top = Math.max(1, ...flow.map(f => Math.max(f.i, f.o)));
+  // ageing: how long unpaid amounts are past their due date
+  const bucket = (L, dueOf) => { const b = [0, 0, 0, 0, 0]; L.filter(x => x.bal > 0).forEach(x => { const d = acDays(dueOf(x), today); b[d <= 0 ? 0 : d <= 30 ? 1 : d <= 60 ? 2 : d <= 90 ? 3 : 4] += x.bal; }); return b.map(acR); };
+  const agAR = bucket(live, x => x.due || x.date), agAP = bucket(AP, x => x.due || x.date), agH = ['Not due yet', '1–30 days late', '31–60', '61–90', '90+'];
+  // what is due soon or overdue
+  const soon = addDays(today, 14), dueL = [...live.filter(v => v.bal > 0 && v.due <= soon).map(v => ({d: v.due, t: 'in', n: (v.no || 'Invoice') + ' · ' + v.client, a: v.bal, st: v.st})),
+    ...AP.filter(b => b.bal > 0 && (b.due || b.date) <= soon).map(b => ({d: b.due || b.date, t: 'out', n: acKindName(b.kind) + ' · ' + b.party, a: b.bal, st: b.st}))].sort((a, b) => a.d.localeCompare(b.d));
+  const cats = {}; AP.filter(b => !b.void && acInMonth(b.date, m)).forEach(b => cats[b.category || 'Other'] = (cats[b.category || 'Other'] || 0) + b.total); const catL = Object.entries(cats).sort((a, b) => b[1] - a[1]), ctop = Math.max(1, ...catL.map(c => c[1]));
+  const k = (t, v, s, c) => `<div class="ac-k ${c || ''}"><span>${t}</span><b>${v}</b><small>${s}</small></div>`;
+  box.innerHTML = `<div class="ac-kpis">${k('Money in · ' + acMonthName(m), acMoney(recv), 'received on invoices · ' + acMoney(inv) + ' invoiced', 'in')}${k('Money out · ' + acMonthName(m), acMoney(out), 'paid · ' + acMoney(billed) + ' of salaries, bills and expenses', 'out')}${k('Net cash this month', acMoney(net), net >= 0 ? 'more came in than went out' : 'more went out than came in', net >= 0 ? 'good' : 'bad')}
+      ${k('Clients owe us', acMoney(arOut), arOver ? acMoney(arOver) + ' overdue' : 'nothing overdue', arOver ? 'bad' : '')}${k('We owe', acMoney(apOut), apOver ? acMoney(apOver) + ' overdue' : 'nothing overdue', apOver ? 'bad' : '')}</div>
+    <div class="ac-two"><div class="panel"><h3>Money in and out · last 6 months</h3><div class="ac-flow">${flow.map(f => `<div class="ac-fm${f.mm === m ? ' cur' : ''}"><div class="ac-bars"><i class="in" style="height:${f.i / top * 100}%" title="In ${acMoney(f.i)}"></i><i class="out" style="height:${f.o / top * 100}%" title="Out ${acMoney(f.o)}"></i></div><span>${new Date(f.mm + '-01T00:00').toLocaleDateString(undefined, {month: 'short'})}</span></div>`).join('')}</div>
+        <div class="ac-leg"><span><i class="in"></i>Money in</span><span><i class="out"></i>Money out</span></div></div>
+      <div class="panel"><h3>Due in the next 14 days, and overdue</h3>${dueL.length ? `<div class="ac-due">${dueL.slice(0, 12).map(x => `<div><span class="ac-dir ${x.t}">${x.t === 'in' ? '↓ in' : '↑ out'}</span><span>${esc(x.n)}<small>${x.d < today ? 'was due ' + fdS(x.d) : 'due ' + fdW(x.d)}</small></span><b>${acMoney(x.a)}</b>${acPill(x.st)}</div>`).join('')}</div>` : '<p class="empty">Nothing due in the next two weeks.</p>'}</div></div>
+    <div class="ac-two"><div class="panel"><h3>Unpaid by age</h3><table class="ac-tab"><thead><tr><th></th>${agH.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>
+        <tr><td><b>Clients owe us</b></td>${agAR.map((v, i) => `<td class="${i && v ? 'neg' : ''}">${v ? acMoney(v) : '—'}</td>`).join('')}</tr><tr><td><b>We owe</b></td>${agAP.map((v, i) => `<td class="${i && v ? 'neg' : ''}">${v ? acMoney(v) : '—'}</td>`).join('')}</tr></tbody></table></div>
+      <div class="panel"><h3>Spending by category · ${acMonthName(m)}</h3>${catL.length ? catL.map(([c, v]) => `<div class="ac-cat"><span>${esc(c)}</span><div><i style="width:${v / ctop * 100}%"></i></div><b>${acMoney(v)}</b></div>`).join('') : '<p class="empty">No salaries, bills or expenses this month.</p>'}</div></div>`; }
+
+// ----- payables -----
+function acPayables(box, m){ const L = acAP().filter(b => (acAll || acInMonth(b.date, m)) && (!acKind || b.kind === acKind) && (!acSt || b.st[1] === acSt) && (!acQ || [b.party, b.desc, b.ref, b.category].join(' ').toLowerCase().includes(acQ)))
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '')), tot = k => acR(L.reduce((a, b) => a + (b[k] || 0), 0));
+  box.innerHTML = `<div class="ac-bar"><div class="ac-filt"><select id="acKind"><option value="">All types</option><option value="salary">Salaries</option><option value="bill">Bills</option><option value="expense">Expenses</option></select>
+      <select id="acSt"><option value="">Any status</option>${['Unpaid', 'Part paid', 'Overdue', 'Paid', 'Void'].map(x => `<option>${x}</option>`).join('')}</select><input type="search" id="acQ" placeholder="Search name, description, bill no"></div>
+      <div class="ac-btns"><button class="btn btn-ghost" type="button" data-acnew="expense">+ Expense</button><button class="btn btn-gem" type="button" data-acnew="bill">+ Bill</button><button class="btn btn-ghost" type="button" id="acCsv">Export CSV</button></div></div>
+    <div class="ac-sum"><span>${L.length} item${L.length === 1 ? '' : 's'} ${acAll ? '(all months)' : 'in ' + acMonthName(m)}</span><span>Total <b>${acMoney(tot('total'))}</b></span><span>Paid <b>${acMoney(tot('paid'))}</b></span><span>Still to pay <b class="${tot('bal') ? 'neg' : ''}">${acMoney(tot('bal'))}</b></span></div>
+    <div class="panel" style="padding:0"><table class="ac-tab ac-list"><thead><tr><th>Date</th><th>Type</th><th>Paid to</th><th>What</th><th>Due</th><th class="r">Amount</th><th class="r">Balance</th><th>Status</th><th></th></tr></thead><tbody>
+      ${L.map(b => `<tr class="${b.void ? 'void' : ''}"><td>${fdS(b.date)}</td><td><span class="ac-type ${b.kind}">${acKindName(b.kind)}</span></td><td><b>${esc(b.party)}</b></td><td>${esc(b.desc || '')}${b.ref ? `<small>No. ${esc(b.ref)}</small>` : ''}<small>${esc(b.category || '')}</small></td><td>${b.due ? fdS(b.due) : '—'}</td>
+        <td class="r">${acMoney(b.total, b.currency)}</td><td class="r ${b.bal ? 'neg' : ''}">${acMoney(b.bal, b.currency)}</td><td>${acPill(b.st)}</td>
+        <td class="ac-act">${b.bal > 0 ? `<button class="mini" type="button" data-acpay="ap:${esc(b.id)}">Record payment</button>` : b.paid ? `<button class="mini" type="button" data-acpay="ap:${esc(b.id)}">Payments</button>` : ''}${b.kind !== 'salary' ? `<button class="mini" type="button" data-acedit="${esc(b.id)}">Edit</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="9" class="empty">Nothing here yet. Salaries appear by themselves when payslips are published on Timesheet &amp; Payroll; add bills and expenses with the buttons above.</td></tr>`}</tbody></table></div>`;
+  $('acKind').value = acKind; $('acSt').value = acSt; $('acQ').value = acQ;
+  $('acCsv').onclick = () => acCsv('payables', [['Date', 'Type', 'Paid to', 'Description', 'Bill no', 'Category', 'Due', 'Currency', 'Amount', 'Tax', 'Total', 'Paid', 'Balance', 'Status'], ...L.map(b => [b.date, acKindName(b.kind), b.party, b.desc, b.ref, b.category, b.due, b.currency, b.amount, b.tax, b.total, b.paid, b.bal, b.st[1]])]); }
+
+// ----- receivables -----
+function acReceivables(box, m){ const L = acAR().filter(v => (acAll || acInMonth(v.date, m)) && (!acSt || v.st[1] === acSt) && (!acQ || [v.no, v.client, v.notes].join(' ').toLowerCase().includes(acQ))).sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.seq || 0) - (a.seq || 0)), tot = k => acR(L.reduce((a, v) => a + (v[k] || 0), 0));
+  box.innerHTML = `<div class="ac-bar"><div class="ac-filt"><select id="acSt"><option value="">Any status</option>${['Draft', 'Unpaid', 'Part paid', 'Overdue', 'Paid', 'Void'].map(x => `<option>${x}</option>`).join('')}</select><input type="search" id="acQ" placeholder="Search invoice no or client"></div>
+      <div class="ac-btns"><button class="btn btn-gem" type="button" id="acNewInv">+ New invoice</button><button class="btn btn-ghost" type="button" id="acCsv">Export CSV</button></div></div>
+    <div class="ac-sum"><span>${L.length} invoice${L.length === 1 ? '' : 's'} ${acAll ? '(all months)' : 'in ' + acMonthName(m)}</span><span>Invoiced <b>${acMoney(tot('total'))}</b></span><span>Received <b>${acMoney(tot('paid'))}</b></span><span>Still owed <b class="${tot('bal') ? 'neg' : ''}">${acMoney(tot('bal'))}</b></span></div>
+    <div class="panel" style="padding:0"><table class="ac-tab ac-list"><thead><tr><th>Invoice</th><th>Client</th><th>Date</th><th>Due</th><th class="r">Total</th><th class="r">Balance</th><th>Status</th><th></th></tr></thead><tbody>
+      ${L.map(v => `<tr class="${v.status === 'void' ? 'void' : ''}"><td><b>${esc(v.no || '—')}</b></td><td>${esc(v.client || '')}${v.clientEmail ? `<small>${esc(v.clientEmail)}</small>` : ''}</td><td>${fdS(v.date)}</td><td>${v.due ? fdS(v.due) : '—'}</td><td class="r">${acMoney(v.total, v.currency)}</td><td class="r ${v.bal ? 'neg' : ''}">${acMoney(v.bal, v.currency)}</td><td>${acPill(v.st)}</td>
+        <td class="ac-act"><button class="mini" type="button" data-acview="${esc(v.id)}">View / PDF</button>${v.status === 'draft' ? `<button class="mini" type="button" data-acsent="${esc(v.id)}">Mark sent</button>` : v.bal > 0 ? `<button class="mini" type="button" data-acpay="ar:${esc(v.id)}">Record payment</button>` : v.paid ? `<button class="mini" type="button" data-acpay="ar:${esc(v.id)}">Payments</button>` : ''}<button class="mini" type="button" data-acinv="${esc(v.id)}">Edit</button></td></tr>`).join('') || '<tr><td colspan="8" class="empty">No invoices here yet. Create one with “+ New invoice”.</td></tr>'}</tbody></table></div>`;
+  $('acSt').value = acSt; $('acQ').value = acQ; $('acNewInv').onclick = () => acInvForm(null);
+  $('acCsv').onclick = () => acCsv('invoices', [['Invoice', 'Client', 'Client email', 'Date', 'Due', 'Currency', 'Subtotal', 'Discount', 'Tax %', 'Total', 'Received', 'Balance', 'Status'], ...L.map(v => [v.no, v.client, v.clientEmail, v.date, v.due, v.currency, acR(acInvSub(v)), v.discount || 0, v.taxPct || 0, v.total, v.paid, v.bal, v.st[1]])]); }
+
+// ----- contacts -----
+function acContacts(box){ const AP = acAP(), AR = acAR(), owe = n => acR(AP.filter(b => b.party === n).reduce((a, b) => a + b.bal, 0)), owed = n => acR(AR.filter(v => v.client === n).reduce((a, v) => a + v.bal, 0));
+  const L = Object.entries(acCt).map(([id, c]) => ({id, ...c})).sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  box.innerHTML = `<div class="ac-bar"><div class="hint">Clients you invoice and vendors you pay. They fill in automatically when you create invoices and bills.</div><div class="ac-btns"><button class="btn btn-gem" type="button" id="acNewCt">+ Contact</button></div></div>
+    <div class="panel" style="padding:0"><table class="ac-tab ac-list"><thead><tr><th>Name</th><th>Type</th><th>Email / phone</th><th>Tax ID</th><th class="r">They owe us</th><th class="r">We owe them</th><th></th></tr></thead><tbody>
+    ${L.map(c => `<tr><td><b>${esc(c.name)}</b>${c.address ? `<small>${esc(c.address)}</small>` : ''}</td><td>${c.kind === 'client' ? 'Client' : 'Vendor'}</td><td>${esc(c.email || '')}${c.phone ? `<small>${esc(c.phone)}</small>` : ''}</td><td>${esc(c.taxId || '—')}</td><td class="r">${owed(c.name) ? acMoney(owed(c.name)) : '—'}</td><td class="r">${owe(c.name) ? acMoney(owe(c.name)) : '—'}</td><td class="ac-act"><button class="mini" type="button" data-acct="${esc(c.id)}">Edit</button></td></tr>`).join('') || '<tr><td colspan="7" class="empty">No contacts yet.</td></tr>'}</tbody></table></div>`;
+  $('acNewCt').onclick = () => acCtForm(null); }
+
+// ----- settings -----
+function acSettings(box){ const S = acS(), f = (id, l, v, t, ph) => `<div class="f"><label for="${id}">${l}</label><input id="${id}" type="${t || 'text'}" value="${esc(v == null ? '' : v)}" placeholder="${ph || ''}"></div>`;
+  box.innerHTML = `<div class="panel"><h3>Company details on invoices</h3><form id="acSetF" class="adm-form" novalidate><div class="g2">${f('asCo', 'Company name', S.company)}${f('asTax', 'GSTIN / tax ID', S.taxId)}${f('asEm', 'Email', S.email, 'email')}${f('asPh', 'Phone', S.phone)}</div>
+    <div class="f"><label for="asAd">Address</label><textarea id="asAd" rows="2">${esc(S.address || '')}</textarea></div><div class="f"><label for="asBank">Bank details for payment (shown on invoices)</label><textarea id="asBank" rows="3" placeholder="Account name, number, IFSC, bank, UPI ID">${esc(S.bank || '')}</textarea></div>
+    <div class="g2">${f('asCur', 'Currency (3 letters)', S.currency, 'text', 'INR')}${f('asPre', 'Invoice number prefix', S.prefix)}${f('asVat', 'Default tax % on invoices', S.taxPct, 'number')}${f('asTerms', 'Payment terms (days)', S.terms, 'number')}${f('asSal', 'Salaries are paid by day of the next month', S.salaryDay, 'number')}</div>
+    <div class="msg err" id="asErr" hidden></div><div class="row"><button class="btn btn-gem" type="submit">Save settings</button></div></form></div>`;
+  $('acSetF').onsubmit = async e => { e.preventDefault(); const cur = $('asCur').value.trim().toUpperCase() || 'INR'; if (!/^[A-Z]{3}$/.test(cur)) { $('asErr').textContent = 'Currency must be a 3-letter code, like INR or USD.'; $('asErr').hidden = false; return; }
+    const d = {company: $('asCo').value.trim(), taxId: $('asTax').value.trim(), email: $('asEm').value.trim(), phone: $('asPh').value.trim(), address: $('asAd').value.trim(), bank: $('asBank').value.trim(), currency: cur, prefix: $('asPre').value.trim() || 'CS-INV-',
+      taxPct: Math.max(0, +$('asVat').value || 0), terms: Math.max(0, Math.round(+$('asTerms').value || 0)), salaryDay: Math.min(28, Math.max(1, Math.round(+$('asSal').value || 7))), updatedAt: new Date().toISOString()};
+    try { await db.doc('acctSettings/main').set(d); acSet = d; toast('Settings saved'); } catch (x) { $('asErr').textContent = 'Couldn\'t save (' + ((x && x.code) || 'error') + '). Check the Firestore rules are published.'; $('asErr').hidden = false; } }; }
+
+// ----- dialogs -----
+function acOpen(title, body, actions){ $('acDlgBody').oninput = null; $('acDlgT').textContent = title; $('acDlgBody').innerHTML = body; $('acDlgAct').innerHTML = actions; $('acErr').hidden = true; const d = $('acDlg'); if (!d.open) { try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } } }
+const acErr = t => { $('acErr').textContent = t; $('acErr').hidden = false; };
+$('acDlgX').onclick = () => $('acDlg').close();
+const acList = (id, vals) => `<datalist id="${id}">${vals.map(v => `<option value="${esc(v)}">`).join('')}</datalist>`;
+const acNames = kind => Object.values(acCt).filter(c => c.kind === kind).map(c => c.name);
+async function acSaveContact(name, kind, extra){ if (!name) return; const ex = Object.entries(acCt).find(([, c]) => c.name === name); if (ex && !extra) return;
+  const id = ex ? ex[0] : 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); const doc = {...(ex ? ex[1] : {}), name, kind: (ex && ex[1].kind) || kind, ...(extra || {}), updatedAt: new Date().toISOString()};
+  try { await db.doc('acctContacts/' + id).set(doc); acCt[id] = doc; } catch (e) {} }
+function acBillForm(id, kind){ const b = id ? acBills[id] : null, k = b ? b.kind : kind, today = todayStr(), S = acS();
+  acOpen((b ? 'Edit ' : 'New ') + (k === 'expense' ? 'expense' : 'bill'), `<div class="g2"><div class="f"><label for="abParty">${k === 'expense' ? 'Paid to' : 'Vendor'}</label><input id="abParty" list="abVend" value="${esc(b ? b.party : '')}" placeholder="e.g. Airtel, landlord, AWS">${acList('abVend', acNames('vendor'))}</div>
+      <div class="f"><label for="abCat">Category</label><input id="abCat" list="abCats" value="${esc(b ? b.category : '')}" placeholder="Choose or type">${acList('abCats', AC_CATS.filter(c => c !== 'Salaries'))}</div></div>
+    <div class="f"><label for="abDesc">Description</label><input id="abDesc" value="${esc(b ? b.desc : '')}" placeholder="e.g. Office rent November"></div>
+    <div class="g2"><div class="f"><label for="abRef">${k === 'expense' ? 'Receipt no (optional)' : 'Bill no'}</label><input id="abRef" value="${esc(b ? b.ref || '' : '')}"></div><div class="f"><label for="abCur">Currency</label><input id="abCur" value="${esc(b ? b.currency : S.currency)}" maxlength="3"></div>
+      <div class="f"><label for="abDate">${k === 'expense' ? 'Date' : 'Bill date'}</label><input id="abDate" type="date" value="${b ? b.date : today}"></div>${k === 'bill' ? `<div class="f"><label for="abDue">Due date</label><input id="abDue" type="date" value="${b ? b.due || '' : addDays(today, 30)}"></div>` : '<div></div>'}
+      <div class="f"><label for="abAmt">Amount (before tax)</label><input id="abAmt" type="number" step="0.01" min="0" value="${b ? b.amount : ''}"></div><div class="f"><label for="abTax">Tax amount</label><input id="abTax" type="number" step="0.01" min="0" value="${b ? b.tax || 0 : 0}"></div></div>
+    ${b ? '' : `<label class="ac-chk"><input type="checkbox" id="abPaid"${k === 'expense' ? ' checked' : ''}> Already paid in full</label><div class="g2" id="abPayW"${k === 'expense' ? '' : ' hidden'}><div class="f"><label for="abMeth">Paid by</label><select id="abMeth">${AC_METHODS.map(x => `<option>${x}</option>`).join('')}</select></div><div class="f"><label for="abPref">Payment reference</label><input id="abPref" placeholder="UTR / UPI ref (optional)"></div></div>`}
+    ${b ? `<label class="ac-chk"><input type="checkbox" id="abVoid"${b.void ? ' checked' : ''}> Void (cancelled: not counted)</label>` : ''}`,
+    `${b ? '<button class="btn btn-ghost" type="button" id="abDel" style="margin-right:auto;color:var(--off)">Delete</button>' : ''}<button class="btn btn-gem" type="submit">${b ? 'Save' : 'Add'}</button>`);
+  if ($('abPaid')) $('abPaid').onchange = () => $('abPayW').hidden = !$('abPaid').checked;
+  if ($('abDel')) $('abDel').onclick = async () => { if (!confirm('Delete this ' + k + '? This can\'t be undone.')) return; try { await db.doc('acctBills/' + id).delete(); delete acBills[id]; $('acDlg').close(); renderAcct(); toast('Deleted'); } catch (e) { acErr('Couldn\'t delete.'); } };
+  $('acForm').onsubmit = async e => { e.preventDefault(); const party = $('abParty').value.trim(), amt = +$('abAmt').value, tax = +$('abTax').value || 0, date = $('abDate').value, cur = ($('abCur').value.trim() || S.currency).toUpperCase();
+    if (!party) return acErr('Enter who it is paid to.'); if (!date) return acErr('Pick the date.'); if (!(amt > 0)) return acErr('Enter the amount.'); if (!/^[A-Z]{3}$/.test(cur)) return acErr('Currency must be a 3-letter code.');
+    const due = k === 'bill' ? ($('abDue').value || date) : date; if (due < date) return acErr('The due date is before the bill date.');
+    const nid = id || 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), doc = {...(b || {}), kind: k, party, category: $('abCat').value.trim() || 'Other', desc: $('abDesc').value.trim(), ref: $('abRef').value.trim(), date, due, amount: acR(amt), tax: acR(tax), currency: cur, updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'};
+    if (!b) { doc.payments = $('abPaid').checked ? [{date, amount: acR(amt + tax), method: $('abMeth').value, ref: $('abPref').value.trim(), at: new Date().toISOString()}] : []; doc.createdAt = doc.updatedAt; } else doc.void = $('abVoid').checked;
+    try { await db.doc('acctBills/' + nid).set(doc); acBills[nid] = doc; acSaveContact(party, 'vendor'); $('acDlg').close(); renderAcct(); toast(b ? 'Saved' : (k === 'expense' ? 'Expense added' : 'Bill added')); } catch (x) { acErr('Couldn\'t save (' + ((x && x.code) || 'error') + ').'); } }; }
+// payments on a payable (ap:<id>) or an invoice (ar:<id>)
+function acPayForm(ref){ const [side, id] = [ref.slice(0, 2), ref.slice(3)], item = side === 'ap' ? acAP().find(b => b.id === id) : acAR().find(v => v.id === id); if (!item) return;
+  const col = side === 'ap' ? 'acctBills' : 'acctInvoices', pays = item.payments || [];
+  acOpen((side === 'ap' ? 'Payment to ' + item.party : 'Payment from ' + item.client), `<div class="ac-psum"><span>Total <b>${acMoney(item.total, item.currency)}</b></span><span>Paid <b>${acMoney(item.paid, item.currency)}</b></span><span>Balance <b class="${item.bal ? 'neg' : ''}">${acMoney(item.bal, item.currency)}</b></span></div>
+    ${pays.length ? `<table class="ac-tab"><thead><tr><th>Date</th><th>Method</th><th>Reference</th><th class="r">Amount</th><th></th></tr></thead><tbody>${pays.map((p, i) => `<tr><td>${fdS(p.date)}</td><td>${esc(p.method || '')}</td><td>${esc(p.ref || '')}</td><td class="r">${acMoney(p.amount, item.currency)}</td><td><button class="mini" type="button" data-acpdel="${i}">Remove</button></td></tr>`).join('')}</tbody></table>` : ''}
+    ${item.bal > 0 ? `<h4 style="margin:6px 0 0">Record a payment</h4><div class="g2"><div class="f"><label for="apDate">Date</label><input id="apDate" type="date" value="${todayStr()}"></div><div class="f"><label for="apAmt">Amount</label><input id="apAmt" type="number" step="0.01" min="0" value="${item.bal}"></div>
+      <div class="f"><label for="apMeth">Method</label><select id="apMeth">${AC_METHODS.map(x => `<option>${x}</option>`).join('')}</select></div><div class="f"><label for="apRef">Reference</label><input id="apRef" placeholder="UTR / UPI ref (optional)"></div></div>` : '<p class="hint">Fully paid.</p>'}`,
+    item.bal > 0 ? '<button class="btn btn-gem" type="submit">Save payment</button>' : '');
+  const save = async list => { const base = side === 'ap' ? (acBills[id] || {kind: 'salary', party: item.party, category: 'Salaries', desc: item.desc, slip: item.slip, email: item.email, amount: item.amount, date: item.date, due: item.due, currency: item.currency}) : acInv[id];
+    const doc = {...base, payments: list, updatedAt: new Date().toISOString()}; await db.doc(col + '/' + id).set(doc); if (side === 'ap') acBills[id] = doc; else acInv[id] = doc; };
+  $('acDlgBody').querySelectorAll('[data-acpdel]').forEach(b => b.onclick = async () => { if (!confirm('Remove this payment?')) return; const l = pays.filter((_, i) => i !== +b.dataset.acpdel); try { await save(l); renderAcct(); acPayForm(ref); } catch (e) { acErr('Couldn\'t save.'); } });
+  $('acForm').onsubmit = async e => { e.preventDefault(); const a = +$('apAmt').value, d = $('apDate').value; if (!d) return acErr('Pick the payment date.'); if (!(a > 0)) return acErr('Enter the amount paid.'); if (a > item.bal + 0.005) return acErr('That is more than the balance (' + acMoney(item.bal, item.currency) + ').');
+    try { await save([...pays, {date: d, amount: acR(a), method: $('apMeth').value, ref: $('apRef').value.trim(), at: new Date().toISOString(), by: me ? me.name : 'Admin'}]); $('acDlg').close(); renderAcct(); toast('Payment recorded'); } catch (x) { acErr('Couldn\'t save (' + ((x && x.code) || 'error') + ').'); } }; }
+// invoices
+function acInvForm(id){ const v = id ? acInv[id] : null, S = acS(), today = todayStr(), items = v ? v.items : [{desc: '', qty: 1, rate: ''}];
+  acOpen(v ? 'Edit invoice ' + (v.no || '') : 'New invoice', `<div class="g2"><div class="f"><label for="aiCl">Client</label><input id="aiCl" list="aiCls" value="${esc(v ? v.client : '')}" placeholder="Client or company name">${acList('aiCls', acNames('client'))}</div><div class="f"><label for="aiEm">Client email</label><input id="aiEm" type="email" value="${esc(v ? v.clientEmail || '' : '')}"></div></div>
+    <div class="g2"><div class="f"><label for="aiAd">Client address</label><textarea id="aiAd" rows="2">${esc(v ? v.clientAddr || '' : '')}</textarea></div><div class="f"><label for="aiTx">Client GSTIN / tax ID</label><input id="aiTx" value="${esc(v ? v.clientTax || '' : '')}"></div></div>
+    <div class="g2"><div class="f"><label for="aiDate">Invoice date</label><input id="aiDate" type="date" value="${v ? v.date : today}"></div><div class="f"><label for="aiDue">Due date</label><input id="aiDue" type="date" value="${v ? v.due : addDays(today, +S.terms || 15)}"></div><div class="f"><label for="aiCur">Currency</label><input id="aiCur" maxlength="3" value="${esc(v ? v.currency : S.currency)}"></div><div class="f"><label for="aiTaxP">Tax %</label><input id="aiTaxP" type="number" step="0.01" min="0" value="${v ? v.taxPct : S.taxPct}"></div></div>
+    <table class="ac-tab ac-items"><thead><tr><th>Description</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th><th></th></tr></thead><tbody id="aiRows"></tbody></table><button class="mini" type="button" id="aiAdd">+ Add line</button>
+    <div class="g2"><div class="f"><label for="aiDisc">Discount (amount)</label><input id="aiDisc" type="number" step="0.01" min="0" value="${v ? v.discount || 0 : 0}"></div><div class="ac-itot" id="aiTot"></div></div>
+    <div class="f"><label for="aiNotes">Notes on the invoice</label><textarea id="aiNotes" rows="2" placeholder="e.g. Thank you for your business">${esc(v ? v.notes || '' : '')}</textarea></div>
+    ${v ? `<label class="ac-chk"><input type="checkbox" id="aiVoid"${v.status === 'void' ? ' checked' : ''}> Void this invoice (cancelled: not counted)</label>` : ''}`,
+    `${v ? '<button class="btn btn-ghost" type="button" id="aiDel" style="margin-right:auto;color:var(--off)">Delete</button>' : ''}${!v || v.status === 'draft' ? '<button class="btn btn-ghost" type="button" id="aiDraft">Save as draft</button>' : ''}<button class="btn btn-gem" type="submit">${v && v.status !== 'draft' ? 'Save' : 'Save and mark sent'}</button>`);
+  const row = it => `<tr><td><input data-ai="desc" value="${esc(it.desc || '')}" placeholder="Service or item"></td><td><input data-ai="qty" type="number" step="0.01" min="0" value="${it.qty == null ? 1 : it.qty}"></td><td><input data-ai="rate" type="number" step="0.01" min="0" value="${it.rate == null ? '' : it.rate}"></td><td class="r" data-ai-amt></td><td><button class="mini" type="button" data-aidel>✕</button></td></tr>`;
+  const read = () => [...$('aiRows').querySelectorAll('tr')].map(tr => ({desc: tr.querySelector('[data-ai="desc"]').value.trim(), qty: +tr.querySelector('[data-ai="qty"]').value || 0, rate: +tr.querySelector('[data-ai="rate"]').value || 0}));
+  const calc = () => { const cur = ($('aiCur').value.trim() || S.currency).toUpperCase(); [...$('aiRows').querySelectorAll('tr')].forEach(tr => tr.querySelector('[data-ai-amt]').textContent = acMoney((+tr.querySelector('[data-ai="qty"]').value || 0) * (+tr.querySelector('[data-ai="rate"]').value || 0), cur));
+    const x = {items: read(), discount: +$('aiDisc').value || 0, taxPct: +$('aiTaxP').value || 0}, sub = acInvSub(x) - x.discount; $('aiTot').innerHTML = `<div>Subtotal <b>${acMoney(acInvSub(x), cur)}</b></div>${x.discount ? `<div>Discount <b>− ${acMoney(x.discount, cur)}</b></div>` : ''}<div>Tax ${x.taxPct}% <b>${acMoney(sub * x.taxPct / 100, cur)}</b></div><div class="t">Total <b>${acMoney(acInvTotal(x), cur)}</b></div>`; };
+  $('aiRows').innerHTML = items.map(row).join(''); calc();
+  $('aiAdd').onclick = () => { $('aiRows').insertAdjacentHTML('beforeend', row({desc: '', qty: 1, rate: ''})); calc(); };
+  $('acDlgBody').oninput = calc; $('aiRows').addEventListener('click', e => { if (e.target.closest('[data-aidel]')) { if ($('aiRows').children.length > 1) e.target.closest('tr').remove(); calc(); } });
+  $('aiCl').addEventListener('change', () => { const c = Object.values(acCt).find(q => q.name === $('aiCl').value.trim()); if (c) { if (!$('aiEm').value) $('aiEm').value = c.email || ''; if (!$('aiAd').value) $('aiAd').value = c.address || ''; if (!$('aiTx').value) $('aiTx').value = c.taxId || ''; } });
+  if ($('aiDel')) $('aiDel').onclick = async () => { if (!confirm('Delete invoice ' + (v.no || '') + '? It can\'t be undone. (To keep a record, void it instead.)')) return; try { await db.doc('acctInvoices/' + id).delete(); delete acInv[id]; $('acDlg').close(); renderAcct(); toast('Invoice deleted'); } catch (e) { acErr('Couldn\'t delete.'); } };
+  const save = async status => { const client = $('aiCl').value.trim(), date = $('aiDate').value, due = $('aiDue').value, cur = ($('aiCur').value.trim() || S.currency).toUpperCase(), its = read().filter(it => it.desc || it.rate);
+    if (!client) return acErr('Enter the client.'); if (!date || !due) return acErr('Pick the invoice date and due date.'); if (due < date) return acErr('The due date is before the invoice date.'); if (!/^[A-Z]{3}$/.test(cur)) return acErr('Currency must be a 3-letter code.');
+    if (!its.length || its.some(it => !it.desc || !(it.qty > 0))) return acErr('Every line needs a description and a quantity.');
+    let no = v && v.no, seq = v && v.seq; if (!no) { seq = Math.max(0, ...Object.values(acInv).map(x => +x.seq || 0)) + 1; no = (S.prefix || 'CS-INV-') + date.slice(0, 4) + '-' + String(seq).padStart(4, '0'); }
+    const nid = id || 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), st = $('aiVoid') && $('aiVoid').checked ? 'void' : status;
+    const doc = {...(v || {}), no, seq, client, clientEmail: $('aiEm').value.trim(), clientAddr: $('aiAd').value.trim(), clientTax: $('aiTx').value.trim(), date, due, currency: cur, items: its, discount: acR(+$('aiDisc').value || 0), taxPct: +$('aiTaxP').value || 0, notes: $('aiNotes').value.trim(), status: st, payments: v ? v.payments || [] : [], updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin', ...(v ? {} : {createdAt: new Date().toISOString()}), ...(st === 'sent' && !(v && v.sentAt) ? {sentAt: new Date().toISOString()} : {})};
+    try { await db.doc('acctInvoices/' + nid).set(doc); acInv[nid] = doc; acSaveContact(client, 'client', {email: doc.clientEmail, address: doc.clientAddr, taxId: doc.clientTax}); $('acDlg').close(); renderAcct(); toast((st === 'draft' ? 'Draft saved: ' : 'Invoice saved: ') + no); } catch (x) { acErr('Couldn\'t save (' + ((x && x.code) || 'error') + ').'); } };
+  if ($('aiDraft')) $('aiDraft').onclick = () => save('draft');
+  $('acForm').onsubmit = e => { e.preventDefault(); save(v && v.status !== 'draft' ? (v.status === 'void' ? 'sent' : v.status) : 'sent'); }; }
+function acCtForm(id){ const c = id ? acCt[id] : null;
+  acOpen(c ? 'Edit contact' : 'New contact', `<div class="g2"><div class="f"><label for="acN">Name</label><input id="acN" value="${esc(c ? c.name : '')}"></div><div class="f"><label for="acK">Type</label><select id="acK"><option value="client">Client (we invoice them)</option><option value="vendor">Vendor (we pay them)</option></select></div>
+    <div class="f"><label for="acE">Email</label><input id="acE" type="email" value="${esc(c ? c.email || '' : '')}"></div><div class="f"><label for="acP">Phone</label><input id="acP" value="${esc(c ? c.phone || '' : '')}"></div></div>
+    <div class="f"><label for="acA">Address</label><textarea id="acA" rows="2">${esc(c ? c.address || '' : '')}</textarea></div><div class="f"><label for="acT">GSTIN / tax ID</label><input id="acT" value="${esc(c ? c.taxId || '' : '')}"></div>`,
+    `${c ? '<button class="btn btn-ghost" type="button" id="acDelC" style="margin-right:auto;color:var(--off)">Delete</button>' : ''}<button class="btn btn-gem" type="submit">Save</button>`);
+  if (c) $('acK').value = c.kind || 'client';
+  if ($('acDelC')) $('acDelC').onclick = async () => { if (!confirm('Delete this contact? Bills and invoices keep the name.')) return; try { await db.doc('acctContacts/' + id).delete(); delete acCt[id]; $('acDlg').close(); renderAcct(); } catch (e) { acErr('Couldn\'t delete.'); } };
+  $('acForm').onsubmit = async e => { e.preventDefault(); const name = $('acN').value.trim(); if (!name) return acErr('Enter the name.'); if (!c && Object.values(acCt).some(q => q.name.toLowerCase() === name.toLowerCase())) return acErr('A contact with this name already exists.');
+    const nid = id || 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), doc = {...(c || {}), name, kind: $('acK').value, email: $('acE').value.trim(), phone: $('acP').value.trim(), address: $('acA').value.trim(), taxId: $('acT').value.trim(), updatedAt: new Date().toISOString()};
+    try { await db.doc('acctContacts/' + nid).set(doc); acCt[nid] = doc; $('acDlg').close(); renderAcct(); toast('Contact saved'); } catch (x) { acErr('Couldn\'t save.'); } }; }
+// the invoice as a printable page (Print, or Save as PDF)
+function acInvHtml(v){ const S = acS(), cur = v.currency || S.currency, sub = acInvSub(v), disc = +v.discount || 0, tax = (sub - disc) * (+v.taxPct || 0) / 100, total = acInvTotal(v), paid = acPaid(v), e = s => esc(s).replace(/\n/g, '<br>');
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(v.no)} · ${esc(v.client)}</title><style>
+  body{font-family:"Public Sans",Arial,sans-serif;color:#13221a;margin:0;padding:40px;font-size:14px}.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.co img{height:46px}.co b{display:block;font-size:20px;margin:6px 0 2px}.co div,.to div{color:#4b5a52;line-height:1.5}
+  h1{font-size:30px;margin:0;color:#4d6b0f;letter-spacing:.02em;text-align:right}.meta{text-align:right;line-height:1.7}.meta b{display:inline-block;min-width:90px}.to{margin:28px 0 18px}.to small{text-transform:uppercase;letter-spacing:.08em;color:#7b8a82;font-size:11px}.to b{display:block;font-size:16px}
+  table{width:100%;border-collapse:collapse;margin-top:8px}th{background:#f1f5ea;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;padding:10px}td{padding:10px;border-bottom:1px solid #e3e8e0}.r{text-align:right}
+  .tot{margin-left:auto;width:320px;margin-top:14px}.tot div{display:flex;justify-content:space-between;padding:6px 10px}.tot .g{font-size:18px;font-weight:700;border-top:2px solid #13221a;margin-top:4px;padding-top:10px}.st{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:12px;background:${v.status === 'void' ? '#eee' : acR(total - paid) <= 0 ? '#e5f4dd' : '#fff1d6'}}
+  .foot{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:24px;color:#4b5a52;line-height:1.55}.foot b{color:#13221a;display:block;margin-bottom:4px}.bar{position:fixed;top:0;left:0;right:0;background:#13221a;color:#fff;padding:10px 20px;display:flex;gap:10px;justify-content:flex-end}.bar button{font:600 14px Arial;padding:8px 16px;border-radius:999px;border:0;cursor:pointer;background:#9cbf24}
+  @media print{.bar{display:none}body{padding:24px}}</style></head><body><div class="bar"><button onclick="print()">Print / Save as PDF</button></div><div style="height:30px"></div>
+  <div class="top"><div class="co"><img src="${location.origin}/logo.png" alt=""><b>${esc(S.company)}</b><div>${e(S.address || '')}${S.taxId ? '<br>GSTIN: ' + esc(S.taxId) : ''}${S.email ? '<br>' + esc(S.email) : ''}${S.phone ? ' · ' + esc(S.phone) : ''}</div></div>
+    <div><h1>${v.status === 'draft' ? 'DRAFT INVOICE' : 'INVOICE'}</h1><div class="meta"><div><b>Invoice no</b> ${esc(v.no)}</div><div><b>Date</b> ${acLong(v.date)}</div><div><b>Due</b> ${acLong(v.due)}</div><div><span class="st">${v.status === 'void' ? 'VOID' : acR(total - paid) <= 0 ? 'PAID' : paid > 0 ? 'PART PAID' : 'DUE'}</span></div></div></div></div>
+  <div class="to"><small>Bill to</small><b>${esc(v.client)}</b><div>${e(v.clientAddr || '')}${v.clientTax ? '<br>GSTIN: ' + esc(v.clientTax) : ''}${v.clientEmail ? '<br>' + esc(v.clientEmail) : ''}</div></div>
+  <table><thead><tr><th>#</th><th>Description</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead><tbody>${(v.items || []).map((it, i) => `<tr><td>${i + 1}</td><td>${esc(it.desc)}</td><td class="r">${it.qty}</td><td class="r">${acMoney(it.rate, cur)}</td><td class="r">${acMoney(it.qty * it.rate, cur)}</td></tr>`).join('')}</tbody></table>
+  <div class="tot"><div><span>Subtotal</span><span>${acMoney(sub, cur)}</span></div>${disc ? `<div><span>Discount</span><span>− ${acMoney(disc, cur)}</span></div>` : ''}<div><span>Tax (${+v.taxPct || 0}%)</span><span>${acMoney(tax, cur)}</span></div><div class="g"><span>Total</span><span>${acMoney(total, cur)}</span></div>${paid ? `<div><span>Paid</span><span>− ${acMoney(paid, cur)}</span></div><div class="g"><span>Balance due</span><span>${acMoney(Math.max(0, total - paid), cur)}</span></div>` : ''}</div>
+  <div class="foot"><div>${S.bank ? `<b>Payment details</b>${e(S.bank)}` : ''}</div><div>${v.notes ? `<b>Notes</b>${e(v.notes)}` : ''}</div></div></body></html>`; }
+function acCsv(name, rows){ const csv = rows.map(r => r.map(c => { const s = c == null ? '' : String(c); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], {type: 'text/csv'})); a.download = 'chrysolite-' + name + '-' + ($('acMonth').value || todayStr()) + '.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
+// events
+$('acTabs').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; acTab = b.dataset.act; acSt = ''; acQ = ''; acKind = ''; renderAcct(); });
+$('acMonth').addEventListener('change', () => { acAll = false; renderAcct(); }); $('acAllM').onclick = () => { acAll = !acAll; renderAcct(); };
+$('acBody').addEventListener('change', e => { if (e.target.id === 'acKind') { acKind = e.target.value; renderAcct(); } if (e.target.id === 'acSt') { acSt = e.target.value; renderAcct(); } });
+$('acBody').addEventListener('input', e => { if (e.target.id === 'acQ') { acQ = e.target.value.trim().toLowerCase(); clearTimeout(renderAcct.t); renderAcct.t = setTimeout(() => { renderAcct(); const q = $('acQ'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }, 250); } });
+$('acBody').addEventListener('click', async e => { const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.acnew) acBillForm(null, t.dataset.acnew); else if (t.dataset.acedit) acBillForm(t.dataset.acedit); else if (t.dataset.acpay) acPayForm(t.dataset.acpay); else if (t.dataset.acinv) acInvForm(t.dataset.acinv); else if (t.dataset.acct) acCtForm(t.dataset.acct);
+  else if (t.dataset.acview) { const v = acInv[t.dataset.acview]; if (v) openHtml(acInvHtml(v)); }
+  else if (t.dataset.acsent) { const id = t.dataset.acsent, v = acInv[id]; if (!v) return; const doc = {...v, status: 'sent', sentAt: new Date().toISOString()}; try { await db.doc('acctInvoices/' + id).set(doc); acInv[id] = doc; renderAcct(); toast(v.no + ' marked as sent'); } catch (x) { toast('Couldn\'t save'); } } });
+document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="acct"]')) setTimeout(renderAcct, 30); });
+
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
-  if (!['home','pstat','roster','reports','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
+  if (!['home','pstat','roster','reports','acct','schedule','leave','timeoff','org','clock','pay','links','profile','guides','pf','pfsrc','eto','roi','csm','benchhub','bprof','bemail','bphone','bintro','bemailbrief','bphonebrief','bzipbrief','bzipsteps','bnamebrief','bnamesteps','brief','admin'].includes(v) || (v==='admin' && !isAdmin) || (v==='roster' && !isAdmin) || (v==='acct' && !isAdmin) || (v==='clock' && me && !selfClock() && !isAdmin)) v='home';
   const vv = GDOCS[v] ? 'gdoc' : v === 'links' ? 'guides' : v; if (GDOCS[v]) { gdKey = v; renderGdoc(); }
   document.querySelectorAll('.view').forEach(s => s.hidden = s.dataset.view !== vv);
   tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.v === (['pf', 'pfsrc', 'links', 'benchhub', 'brief'].includes(v) || GDOCS[v] ? 'guides' : v)));
