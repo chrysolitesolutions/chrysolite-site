@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chrysolite · Client portal</title><meta name="robots" content="noindex">
+<link rel="icon" href="logo.png"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1f3a6e;--navy2:#2c5aa0;--ink:#16211c;--soft:#5f6d66;--line:#e3e8ef;--tint:#f5f8fc;--bg:#eef2f7;--ok:#2f8f4e;--warn:#c98a00;--bad:#c2412d;--grad:linear-gradient(90deg,#1aa3a3,#8cc63f 35%,#f39a2b 70%,#e2523b)}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 Manrope,Arial,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh}
+button{font:inherit;cursor:pointer}input,textarea,select{font:inherit;color:inherit}
+.stripe{height:5px;background:var(--grad)}
+.top{background:#fff;border-bottom:1px solid var(--line)}.top .in{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;gap:12px;align-items:center}.brand img{height:44px}.brand b{display:block;font:700 20px/1.1 Fraunces,Georgia,serif;color:var(--navy)}.brand span{display:block;font-size:12px;color:var(--soft)}
+.who{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--soft)}.who b{color:var(--ink)}
+.btn{border:0;border-radius:999px;padding:10px 18px;font-weight:700;background:var(--navy);color:#fff}.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}.btn.ok{background:var(--ok)}.btn:disabled{opacity:.6;cursor:wait}.btn.sm{padding:7px 13px;font-size:13px}
+main{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
+/* login */
+.login{min-height:calc(100vh - 5px);display:grid;place-items:center;padding:20px}.lcard{background:#fff;border-radius:22px;box-shadow:0 30px 70px -30px rgba(20,40,70,.35);width:min(420px,100%);overflow:hidden}.lcard .hd{padding:26px 28px 6px;text-align:center}.lcard .hd img{height:58px}.lcard h1{font:700 24px Fraunces,Georgia,serif;color:var(--navy);margin:8px 0 2px}.lcard p{color:var(--soft);margin:0}
+.lcard form{padding:18px 28px 26px;display:grid;gap:12px}.f label{display:block;font-weight:700;font-size:13px;margin-bottom:4px}.f input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;background:#fff}.f input:focus{outline:none;border-color:var(--navy2)}
+.msg{padding:10px 12px;border-radius:12px;font-size:13.5px}.msg.err{background:#fdecea;color:#7a2416}.msg.ok{background:#eaf6e3;color:#2d5a14}.link{background:none;border:0;color:var(--navy2);text-decoration:underline;padding:0;font-size:13px}
+/* dashboard */
+.hello h2{font:700 26px Fraunces,Georgia,serif;color:var(--navy);margin:0}.hello p{margin:2px 0 18px;color:var(--soft)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}@media(max-width:800px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.k{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}.k span{display:block;font-size:12.5px;color:var(--soft)}.k b{display:block;font:800 22px/1.2 Manrope;margin-top:2px}.k small{font-size:12px;color:var(--soft)}.k.ok b{color:var(--ok)}.k.warn b{color:var(--warn)}.k.bad b{color:var(--bad)}.k.navy{background:var(--navy);border-color:var(--navy);color:#fff}.k.navy span,.k.navy small{color:#c8d4ea}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px}.bar h3{margin:0;font-size:16px}.bar select{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.month{margin:0 0 16px}.month h4{margin:0 0 8px;font:800 11px Manrope;letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.inv{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:14px;align-items:center;margin-bottom:10px;border-left:5px solid var(--line)}.inv.paid{border-left-color:var(--ok)}.inv.due{border-left-color:var(--navy2)}.inv.part{border-left-color:var(--warn)}.inv.over{border-left-color:var(--bad)}.inv.void{opacity:.55}
+@media(max-width:800px){.inv{grid-template-columns:1fr 1fr}.inv .acts{grid-column:1/-1}}
+.inv .no b{display:block;font-size:15px}.inv small{display:block;color:var(--soft);font-size:12px}.inv .amt b{font-size:17px}.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--tint);color:var(--navy)}.pill.ok{background:#e5f4dd;color:#2d6a14}.pill.warn{background:#fff1d6;color:#8a5a00}.pill.bad{background:#fdecea;color:#9a2a17}.pill.acc{background:#e7eefb;color:var(--navy)}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--soft)}
+.pays{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.pays table{width:100%;border-collapse:collapse;font-size:13.5px}.pays th{font:800 10.5px Manrope;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);text-align:left;padding:10px 14px;background:var(--tint)}.pays td{padding:10px 14px;border-top:1px solid var(--line)}.r{text-align:right}
+dialog{border:0;border-radius:18px;padding:22px;width:min(480px,calc(100vw - 32px));box-shadow:0 30px 80px -20px rgba(0,0,0,.4)}dialog::backdrop{background:rgba(15,25,40,.45)}dialog h3{margin:0 0 6px}dialog textarea{width:100%;min-height:110px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0}
+.foot{text-align:center;color:var(--soft);font-size:12px;margin-top:30px}
+[hidden]{display:none!important}
+</style></head><body><div class="stripe"></div>
+<section class="login" id="loginV"><div class="lcard"><div class="hd"><img src="logo.png" alt=""><h1>Client portal</h1><p>Chrysolite Solutions · your invoices and payments</p></div>
+  <form id="lf" novalidate><div class="f"><label for="em">Email</label><input id="em" type="email" autocomplete="username" required></div><div class="f"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" required></div>
+    <div class="msg err" id="lerr" hidden></div><button class="btn" type="submit" id="lbtn">Sign in</button><button type="button" class="link" id="forgot">Forgot your password?</button></form></div></section>
+<section id="appV" hidden><div class="top"><div class="in"><div class="brand"><img src="logo.png" alt=""><div><b>Chrysolite Solutions</b><span>Client portal</span></div></div><div class="who"><span>Signed in as <b id="whoN"></b></span><button class="btn ghost sm" id="out">Sign out</button></div></div></div>
+  <main><div class="hello"><h2 id="hiC"></h2><p>Your invoices from Chrysolite Solutions: view and accept each invoice, and see what is paid and what is pending.</p></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="bar"><h3>Invoices</h3><select id="yr" aria-label="Year"></select></div><div id="list"></div>
+    <div class="bar" style="margin-top:22px"><h3>Payments received</h3></div><div id="pays"></div>
+    <p class="foot">Questions about an invoice? Use “Ask a question” on the invoice, or write to <a id="mail" href="#"></a>.</p></main></section>
+<dialog id="qD"><form id="qF" method="dialog"><h3 id="qT">Ask a question</h3><p style="margin:0;color:var(--soft);font-size:13px">Chrysolite will see this with the invoice and get back to you.</p><textarea id="qX" maxlength="1500" placeholder="Your question or the change you need"></textarea><div class="msg err" id="qE" hidden></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn ghost" id="qC">Cancel</button><button type="submit" class="btn">Send</button></div></form></dialog>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="invoice-render.js"></script>
+<script>
+// Client portal: a client signs in with the login their Chrysolite admin created (Firebase Authentication),
+// sees only their own shared invoices (Firestore rules check clients/<email>.client), can accept an invoice or ask a question.
+const FB_CONFIG = {apiKey: "AIzaSyDJ8u4jCNp9c8nKu_tvAge_p-jZWLlezNQ", authDomain: "chrysolite-portal.firebaseapp.com", projectId: "chrysolite-portal", storageBucket: "chrysolite-portal.firebasestorage.app", messagingSenderId: "118431634869", appId: "1:118431634869:web:57f25f0e8af78e5aa275fc"};
+const AC_DEF = {company: 'Chrysolite Solutions', currency: 'INR', taxPct: 18, terms: 15, prefix: 'CS-INV-'};
+const $ = id => document.getElementById(id), esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const pad = n => String(n).padStart(2, '0'), today = (d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()))(new Date());
+let auth, db, me = null, cl = null, S = {...AC_DEF}, invs = [], unsub = null, qFor = null;
+firebase.initializeApp(FB_CONFIG); auth = firebase.auth(); db = firebase.firestore();
+const M = (n, c) => CSInvoice.money(n, c || S.currency), L = d => d ? CSInvoice.long(d) : '—', monthOf = v => (v.period || new Date(v.date + 'T00:00').toLocaleDateString('en-GB', {month: 'long', year: 'numeric'}));
+const lerr = t => { $('lerr').textContent = t; $('lerr').className = 'msg err'; $('lerr').hidden = !t; };
+$('lf').onsubmit = async e => { e.preventDefault(); const em = $('em').value.trim().toLowerCase(), pw = $('pw').value; if (!em || !pw) return lerr('Enter your email and password.');
+  $('lbtn').disabled = true; lerr(''); try { await auth.signInWithEmailAndPassword(em, pw); } catch (x) { lerr(x && (x.code === 'auth/invalid-credential' || x.code === 'auth/wrong-password' || x.code === 'auth/user-not-found') ? 'That email and password don\'t match. Check both, or use “Forgot your password?”.' : 'Sign-in failed (' + ((x && x.code) || 'error') + '). Try again.'); } finally { $('lbtn').disabled = false; } };
+$('forgot').onclick = async () => { const em = $('em').value.trim(); if (!em) return lerr('Enter your email above first.'); try { await auth.sendPasswordResetEmail(em); } catch (x) {} $('lerr').hidden = false; $('lerr').className = 'msg ok'; $('lerr').textContent = 'If this email has a client login, a link to set a new password is on its way.'; };
+$('out').onclick = () => auth.signOut();
+auth.onAuthStateChanged(async u => { if (unsub) { unsub(); unsub = null; }
+  if (!u) { me = null; $('appV').hidden = true; $('loginV').hidden = false; return; }
+  me = String(u.email || '').toLowerCase();
+  try { const c = await db.doc('clients/' + me).get(); cl = c.exists ? c.data() : null; } catch (x) { cl = null; }
+  if (!cl || cl.active === false) { await auth.signOut(); lerr(cl ? 'Your client portal access is switched off. Please contact Chrysolite Solutions.' : 'This login is not set up for the client portal. Please contact Chrysolite Solutions.'); return; }
+  try { const s = await db.doc('acctSettings/main').get(); S = {...AC_DEF, ...(s.exists ? s.data() : {})}; } catch (x) {}
+  $('loginV').hidden = true; $('appV').hidden = false; $('whoN').textContent = cl.name || me; $('hiC').textContent = cl.client;
+  if (S.email) { $('mail').textContent = S.email; $('mail').href = 'mailto:' + S.email; } else $('mail').closest('p').hidden = true;
+  unsub = db.collection('acctInvoices').where('client', '==', cl.client).where('shared', '==', true).onSnapshot(s => { invs = s.docs.map(d => ({id: d.id, ...d.data()})).filter(v => v.status !== 'void' || true); draw(); }, err => { $('list').innerHTML = '<div class="empty">Your invoices couldn\'t be loaded. Reload the page, or contact Chrysolite Solutions.</div>'; }); });
+function stOf(v){ const total = CSInvoice.total(v), paid = CSInvoice.paid(v), bal = CSInvoice.round(total - paid);
+  if (v.status === 'void') return {k: 'void', t: 'Cancelled', c: '', total, paid, bal: 0};
+  if (bal <= 0.005) return {k: 'paid', t: 'Paid', c: 'ok', total, paid, bal: 0}; if (v.due < today) return {k: 'over', t: 'Overdue', c: 'bad', total, paid, bal}; if (paid > 0) return {k: 'part', t: 'Part paid', c: 'warn', total, paid, bal}; return {k: 'due', t: 'Due ' + L(v.due), c: '', total, paid, bal}; }
+function draw(){ const years = [...new Set(invs.map(v => v.date.slice(0, 4)))].sort().reverse(), y = $('yr').value || 'all';
+  $('yr').innerHTML = '<option value="all">All years</option>' + years.map(x => `<option${x === y ? ' selected' : ''}>${x}</option>`).join('');
+  const L2 = invs.filter(v => y === 'all' || v.date.slice(0, 4) === y).map(v => ({v, s: stOf(v)})).sort((a, b) => b.v.date.localeCompare(a.v.date)), live = L2.filter(x => x.s.k !== 'void');
+  const sum = f => live.reduce((a, x) => a + f(x), 0), cur = (live[0] && live[0].v.currency) || S.currency, over = live.filter(x => x.s.k === 'over'), toAcc = live.filter(x => !x.v.accept && x.s.k !== 'paid').length;
+  $('kpis').innerHTML = `<div class="k"><span>Invoiced</span><b>${M(sum(x => x.s.total), cur)}</b><small>${live.length} invoice${live.length === 1 ? '' : 's'}${y === 'all' ? '' : ' in ' + y}</small></div><div class="k ok"><span>Paid</span><b>${M(sum(x => x.s.paid), cur)}</b><small>received by Chrysolite</small></div>
+    <div class="k ${sum(x => x.s.bal) ? 'warn' : 'ok'}"><span>Pending</span><b>${M(sum(x => x.s.bal), cur)}</b><small>${over.length ? over.length + ' overdue · ' + M(over.reduce((a, x) => a + x.s.bal, 0), cur) : 'nothing overdue'}</small></div><div class="k navy"><span>To review</span><b>${toAcc}</b><small>invoice${toAcc === 1 ? '' : 's'} waiting for your acceptance</small></div>`;
+  const groups = {}; L2.forEach(x => { const g = monthOf(x.v); (groups[g] = groups[g] || []).push(x); });
+  $('list').innerHTML = L2.length ? Object.entries(groups).map(([g, l]) => `<div class="month"><h4>${esc(g)}</h4>${l.map(({v, s}) => `<div class="inv ${s.k}"><div class="no"><b>${esc(v.no)}</b><small>Issued ${L(v.date)} · due ${L(v.due)}</small></div>
+      <div class="amt"><b>${M(s.total, v.currency)}</b><small>${s.k === 'paid' ? 'paid in full' : s.paid ? M(s.paid, v.currency) + ' paid · ' + M(s.bal, v.currency) + ' pending' : 'nothing paid yet'}</small></div>
+      <div><span class="pill ${s.c}">${s.t}</span> ${v.accept ? `<span class="pill acc">✓ Accepted ${L(String(v.accept.at).slice(0, 10))}</span>` : s.k === 'void' || s.k === 'paid' ? '' : '<span class="pill">Awaiting your acceptance</span>'}${v.clientQuery && !v.clientQuery.resolved ? '<small>❓ Your question has been sent</small>' : ''}</div>
+      <div class="acts"><button class="btn ghost sm" data-view="${esc(v.id)}">View invoice</button>${!v.accept && s.k !== 'void' && s.k !== 'paid' ? `<button class="btn ok sm" data-acc="${esc(v.id)}">Accept</button>` : ''}${s.k !== 'void' ? `<button class="btn ghost sm" data-q="${esc(v.id)}">Ask a question</button>` : ''}</div></div>`).join('')}</div>`).join('')
+    : '<div class="empty">No invoices yet. When Chrysolite Solutions sends you an invoice it appears here.</div>';
+  const pays = []; invs.forEach(v => (v.payments || []).forEach(p => pays.push({...p, no: v.no, cur: v.currency}))); pays.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  $('pays').innerHTML = pays.length ? `<div class="pays"><table><thead><tr><th>Date</th><th>Invoice</th><th>Method</th><th>Reference</th><th class="r">Amount</th></tr></thead><tbody>${pays.map(p => `<tr><td>${L(p.date)}</td><td>${esc(p.no)}</td><td>${esc(p.method || '')}</td><td>${esc(p.ref || '')}</td><td class="r"><b>${M(p.amount, p.cur)}</b></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">No payments recorded yet.</div>'; }
+$('yr').onchange = draw;
+document.addEventListener('click', async e => { const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.view) { const v = invs.find(x => x.id === b.dataset.view); if (!v) return; const w = window.open('', '_blank'); if (!w) return alert('Allow pop-ups for this site to open the invoice.'); w.document.write('<p style="font-family:sans-serif;padding:30px">Preparing invoice…</p>');
+    const qr = await CSInvoice.qr(CSInvoice.upi(v, S)); w.document.open(); w.document.write(CSInvoice.html(v, S, 'classic', qr)); w.document.close(); }
+  if (b.dataset.acc) { const v = invs.find(x => x.id === b.dataset.acc); if (!v || !confirm('Accept invoice ' + v.no + ' for ' + M(CSInvoice.total(v), v.currency) + '?')) return; b.disabled = true;
+    try { await db.doc('acctInvoices/' + v.id).update({accept: {at: new Date().toISOString(), by: me, name: cl.name || me}}); } catch (x) { alert('It couldn\'t be saved (' + ((x && x.code) || 'error') + '). Try again.'); b.disabled = false; } }
+  if (b.dataset.q) { qFor = invs.find(x => x.id === b.dataset.q); if (!qFor) return; $('qT').textContent = 'Question about ' + qFor.no; $('qX').value = ''; $('qE').hidden = true; $('qD').showModal(); } });
+$('qC').onclick = () => $('qD').close();
+$('qF').onsubmit = async e => { e.preventDefault(); const t = $('qX').value.trim(); if (!t) { $('qE').textContent = 'Write your question first.'; $('qE').hidden = false; return; }
+  try { await db.doc('acctInvoices/' + qFor.id).update({clientQuery: {text: t, at: new Date().toISOString(), by: me, name: cl.name || me}}); $('qD').close(); } catch (x) { $('qE').textContent = 'It couldn\'t be sent (' + ((x && x.code) || 'error') + ').'; $('qE').hidden = false; } };
+</script></body></html>
