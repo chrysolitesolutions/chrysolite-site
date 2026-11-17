@@ -2287,7 +2287,7 @@ const rpList = () => (isAdmin ? reportsAll : reportsMine).slice().sort((a, b) =>
 async function rpSolve(ids){ const now = new Date().toISOString(); let ok = 0;
   for (const id of ids) { try { await db.doc('checkerReports/' + id).set({status: 'fixed', solvedAt: now, solvedBy: me && me.key, updatedAt: now, updatedBy: me && me.key}, {merge: true}); ok++; } catch (e) {} }
   toast(ok + ' ticket' + (ok === 1 ? '' : 's') + ' marked solved'); return ok; }
-const RP_CK = {location: 'Location checker', text: 'Text checker'}, RP_PAGE = {location: 'location-checker.html', text: 'text-checker.html'};
+const RP_CK = {location: 'Location checker', text: 'Text checker', email: 'Email checker'}, RP_PAGE = {location: 'location-checker.html', text: 'text-checker.html', email: 'email-checker.html'};
 const RP_ANS = {m: 'Match', n: 'Not a match', c: "Can't tell"};
 const rpNo = n => '#' + String(n || 0).padStart(4, '0');
 const rpWho = e => { const p = (accounts || []).find(a => String(a.email || a.key).toLowerCase() === String(e || '').toLowerCase()); return p ? p.name : (e || '—'); };
@@ -4041,6 +4041,7 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 <ul><li>the person’s own website, portfolio or online CV showing the email</li>
 <li>a GitHub profile or project page with this name and this email</li>
 <li>a conference, speaker, author or company team page listing the person with this email</li></ul>
+<p><a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Check an email in the Email checker ↗</a> It looks the email up in public sources that can prove it (GitHub, PGP keys, Gravatar), checks the domain, and gives one-click searches.</p>
 <h3>Not enough on its own</h3>
 <ul><li>The email only <em>looks</em> like the name (e.g. narothamrc ≈ Narotham Reddy Chilkuri). That is a hint, not proof.</li>
 <li>A page about a <strong>different person</strong> with a similar name.</li>
@@ -5194,7 +5195,7 @@ $('annAdmin').addEventListener('click', async e => {
 const BUILTIN_LINKS = [
   {key: 'b1', name: 'SeekOut', url: 'https://seekout.com', desc: 'Talent search and candidate profiles', builtin: true},
   {key: 'b2', name: 'DataCrunch Bench', url: 'https://datacrunchd-bench.pages.dev/', desc: 'Bench and task workspace', builtin: true},
-  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Summary / Headline checker', builtin: true}, {key: 'b4', name: 'Job title checker', url: 'https://www.chrysolite.in/job-title-checker.html', desc: 'Job title checker with the abbreviation dictionary', builtin: true}, {key: 'b5', name: 'Location checker', url: 'https://www.chrysolite.in/location-checker.html', desc: 'Location checker: metro area, city, distance and % match', builtin: true},
+  {key: 'b3', name: 'Text checker', url: 'https://www.chrysolite.in/text-checker.html', desc: 'Summary / Headline checker', builtin: true}, {key: 'b4', name: 'Job title checker', url: 'https://www.chrysolite.in/job-title-checker.html', desc: 'Job title checker with the abbreviation dictionary', builtin: true}, {key: 'b5', name: 'Location checker', url: 'https://www.chrysolite.in/location-checker.html', desc: 'Location checker: metro area, city, distance and % match', builtin: true}, {key: 'b6', name: 'Email checker', url: 'https://www.chrysolite.in/email-checker.html', desc: 'Email checker: public proof that an email belongs to the person', builtin: true},
 ];
 function safeUrl(u){ try { const x = new URL(/^https?:\/\//i.test(u) ? u : 'https://' + u); return /^https?:$/.test(x.protocol) ? x.href : null; } catch (e) { return null; } }
 

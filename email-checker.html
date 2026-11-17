@@ -1,0 +1,275 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Email Checker · Chrysolite</title><link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=JetBrains+Mono:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5EF;--surface:#FFFFFF;--surface-2:#E6ECE2;--ink:#0F2620;--ink-soft:#4A5E56;--line:#CBD6CC;
+  --gem:#9BB52A;--gem-ink:#4C5F0C;--band:#0F2620;--band-fg:#E7EFE4;--band-soft:#A9BDB2;
+  --ok:#2F7D5B;--warn:#B07A12;--off:#B4513A;--info:#2D6E9E;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#7b5bd6;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
+  --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
+  --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(16px,4vw);background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font:800 18px var(--display)}.brand img{width:34px;height:34px;border-radius:8px}.brand small{display:block;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+main{max-width:1180px;margin:0 auto;padding:24px max(16px,4vw) 60px;display:grid;gap:16px}
+h1{font:800 clamp(28px,4vw,40px)/1.1 var(--display);margin:0}h3{margin:0;font:700 17px var(--display)}.lead{margin:6px 0 0;color:var(--ink-soft)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}.hint{color:var(--ink-soft);font-size:13px}.empty{color:var(--ink-soft);text-align:center;padding:20px}
+.vhead{display:flex;justify-content:space-between;gap:12px}.f{display:grid;gap:6px}label{font-size:13px;font-weight:600}
+.btn{border:1px solid transparent;border-radius:999px;padding:10px 20px;font:700 14.5px var(--body);cursor:pointer}.btn-gem{background:var(--gem);color:#13240a}.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.bf-h{margin:18px 0 10px}.bf-l{font:600 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gem-ink)}
+.bf-a{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;white-space:nowrap}.bf-a.m{background:#dff3d6;color:#1f6a2a}.bf-a.n{background:#fbe0dc;color:#a5281c}.bf-a.c{background:#fdf0cf;color:#8a5a00}.bf-a.o{background:#e3edf8;color:#1f4f86;white-space:normal}
+.back{font-size:13px;color:var(--gem-ink);font-weight:700;text-decoration:none}
+.sc-in{display:grid;gap:12px}.sc-opts{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sc-tg{display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600}.sc-tg input{all:revert;accent-color:var(--gem)}
+.sc-seg{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px}.sc-seg span{font-size:12.5px;color:var(--ink-soft);padding:0 6px}.sc-seg button{border:0;background:none;border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer;color:var(--ink)}.sc-seg button.on{background:var(--gem);color:#13240a}
+.sc-exr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-exr > span{font-size:12.5px;color:var(--ink-soft)}#scEx{display:flex;flex-wrap:wrap;gap:6px}#scEx button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:600 12.5px var(--body);cursor:pointer;color:var(--ink)}#scEx button.on{border-color:var(--gem);background:color-mix(in srgb,var(--gem) 14%,var(--surface))}
+.sc-grid,.sc-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:1fr}}.sc-grid textarea{width:100%;font:14px/1.55 var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);resize:vertical}
+.sc-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.sc-ring{position:relative;width:120px;height:120px;flex:none}.sc-ring svg{width:100%;height:100%}.sc-ring circle{transition:stroke-dashoffset .6s}.sc-ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 24px var(--display);margin-top:-8px}.sc-ring span{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:600 11px var(--mono);color:var(--ink-soft);text-transform:uppercase}
+.sc-verdict{flex:1;min-width:240px;display:grid;gap:6px;justify-items:start}.sc-verdict .bf-a{font-size:17px;padding:5px 14px}.sc-verdict p{margin:0}
+.sc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12.5px}.sc-legend span{padding:2px 8px;border-radius:6px}.sc-legend .del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-legend .add{background:#d6f0c6;color:#1f6a2a}.sc-legend .mod{background:#fdeba8;color:#7a5200}.sc-legend .spk{color:var(--ink-soft)}
+.sc-cols > div{display:grid;gap:4px}.sc-cols small{font:600 11px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}.sc-text{white-space:pre-wrap;font-size:15px;line-height:1.7;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:80px}
+.sc-text mark{border-radius:4px;padding:1px 2px}.sc-text mark.del{background:#fbd5cd;color:#a5281c;text-decoration:line-through}.sc-text mark.add{background:#d6f0c6;color:#1f6a2a}.sc-text mark.mod{background:#fdeba8;color:#7a5200;font-weight:600}.sc-text mark.gap{background:none}.sc-text .sc-cut{color:var(--ink-soft);opacity:.55}.sc-text .sp{color:#c06a00;font-weight:800}
+.sc-ck{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}.sc-ck:hover{transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(0,0,0,.3)}
+.sc-what{display:none;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--surface-2);font-style:normal;font-size:13px;line-height:1.5;color:var(--ink)}.sc-what > span:first-child{font-weight:700}.sc-see{display:block;margin-top:4px;color:#7a5200;font-weight:600}
+.sc-ck.open{outline:2px solid var(--gem);outline-offset:-1px}.sc-ck.open .sc-what{display:block}
+.sc-cols.focus mark{opacity:.25}.sc-cols.f-add mark.add,.sc-cols.f-del mark.del,.sc-cols.f-mod mark.mod,.sc-cols.f-all mark{opacity:1;outline:2px solid currentColor;outline-offset:1px}
+.sc-cols.f-sp mark{opacity:.25}.sc-cols.f-sp .sp{background:#ffd36b;border-radius:3px;padding:0 2px}.sc-cols.f-sp mark:has(.sp),.sc-cols.f-sp mark.gap{opacity:1}.sc-cols.f-sp mark.gap{background:#ffd36b}.sc-checks{align-items:start}
+.sc-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:760px){.sc-checks{grid-template-columns:1fr}}.sc-checks > .sc-ck{display:grid;grid-template-columns:26px 1fr 22px;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.sc-checks > .sc-ck > b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);font:700 11px var(--mono)}.sc-checks span{display:grid;gap:2px;min-width:0}.sc-checks small{font-size:12.5px;color:var(--ink-soft);overflow-wrap:anywhere}.sc-checks i{font-style:normal;font-weight:800;text-align:center;border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.sc-checks .ok i{background:#dff3d6;color:#1f6a2a}.sc-checks .warn{border-color:#f0d9a0;background:#fffaf0}.sc-checks .warn i{background:#fdeba8;color:#7a5200}.sc-checks .info i{background:#e3edf8;color:#1f4f86}
+
+
+/* keep every box a fixed size: long text scrolls inside its box instead of stretching the page */
+.sc-grid > *,.sc-cols > *,.sc-in,.sc-checks > .sc-ck{min-width:0}
+.sc-grid textarea{height:190px;min-height:120px;max-height:480px;overflow:auto;resize:vertical}
+.sc-text{height:320px;min-height:0;overflow:auto;overflow-wrap:anywhere;word-break:break-word;overscroll-behavior:contain;resize:vertical}
+.sc-checks small,.sc-what{overflow-wrap:anywhere;word-break:break-word}
+html,body{overflow-x:hidden}
+.sc-grid,.sc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:760px){.sc-grid,.sc-cols{grid-template-columns:minmax(0,1fr)}}
+.sc-verdict{min-width:0}.sc-verdict p{overflow-wrap:anywhere}
+.sc-text > i{color:var(--ink-soft)}
+.sc-checks > .sc-ck small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sc-checks > .sc-ck.open small{display:block;-webkit-line-clamp:unset;max-height:160px;overflow:auto;overscroll-behavior:contain}
+.sc-what{max-height:200px;overflow:auto;overscroll-behavior:contain}
+
+/* clearer difference colours */
+.sc-text mark{padding:1px 3px;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone;word-break:normal;overflow-wrap:anywhere}
+.sc-text mark.del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;text-decoration-thickness:2px;box-shadow:inset 0 -2px 0 #e2513b}
+.sc-text mark.add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}
+.sc-text mark.mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-legend .del{background:#ffd3cb;color:#9b1c10;text-decoration:line-through;box-shadow:inset 0 -2px 0 #e2513b}.sc-legend .add{background:#c8efb2;color:#13541c;font-weight:700;box-shadow:inset 0 -2px 0 #3d9a2c}.sc-legend .mod{background:#ffe48a;color:#5e3c00;font-weight:700;box-shadow:inset 0 -2px 0 #c98a00}
+.sc-status{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);margin-left:6px;min-height:40px}
+.sc-status small{font-weight:400;color:var(--ink-soft)}
+.sc-status.done{color:#1f6a2a;animation:scPop .35s ease-out}.sc-status.err{color:#a5281c}.sc-status.wait,.sc-status.busy{color:var(--ink-soft)}
+.sc-tick{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3d9a2c;color:#fff;font-weight:800}
+.sc-spin{width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:scRot .7s linear infinite}
+@keyframes scRot{to{transform:rotate(360deg)}}@keyframes scPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+
+.sc-status{flex:1 1 320px}
+.sc-bar{position:relative;flex:1 1 180px;max-width:320px;height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.sc-bar i{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:linear-gradient(90deg,#8dc63f,#21b3c4);transition:width .6s ease-out}
+.sc-bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:200% 100%;animation:scShine 1s linear infinite}
+@keyframes scShine{from{background-position:200% 0}to{background-position:-200% 0}}
+.sc-status.done{color:#14501d;font-size:15px;padding:6px 12px 6px 6px;border-radius:999px;background:#e9f7e1;border:1px solid #b7e09c}
+.sc-status.done small{margin-left:8px}
+.sc-see-res{border:0;background:#1f6a2a;color:#fff;font:600 13px var(--body);border-radius:999px;padding:7px 12px;cursor:pointer;margin-left:6px}
+#scOut{transition:opacity .25s}#scOut.sc-loading{opacity:.25;pointer-events:none;filter:grayscale(.6)}
+
+/* which side is which: coloured headings and a faint source logo inside each box */
+.sc-side{--sc:#5b2a86;--sc2:#f7821b}.sc-side.li{--sc:#0a66c2;--sc2:#0a66c2}
+.sc-lab{display:flex!important;align-items:center;gap:10px;font:800 15px var(--body)!important;letter-spacing:.02em;color:var(--sc)!important;padding:8px 12px;border-radius:12px 12px 0 0;background:color-mix(in srgb,var(--sc) 10%,var(--surface));border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line));border-bottom:0;margin:0!important}
+.sc-lab em{font-style:normal;font-weight:600;opacity:.85}
+.sc-badge{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sc);color:#fff;font:800 12px var(--mono);flex:none}
+.sc-side.so .sc-badge{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc2) 45%,transparent)}
+.sc-wm{position:relative;border-radius:0 0 12px 12px}
+.sc-wm::before{content:"";position:absolute;inset:0;pointer-events:none;background:center/58% auto no-repeat;opacity:.09;transition:opacity .2s;border-radius:inherit}
+.sc-side.so .sc-wm::before{background-image:url(seekout-logo.png)}.sc-side.li .sc-wm::before{background-image:url(linkedin-logo.png)}
+.sc-wm:has(textarea:placeholder-shown)::before{opacity:.16}
+.sc-side .sc-wm textarea{position:relative;background:transparent!important;border:1.5px solid color-mix(in srgb,var(--sc) 40%,var(--line))!important;border-top:3px solid var(--sc)!important;border-radius:0 0 12px 12px!important}
+.sc-side .sc-wm textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 22%,transparent)!important}
+.sc-side .sc-wm textarea::placeholder{color:color-mix(in srgb,var(--sc) 55%,var(--ink-soft));font-weight:600}
+.sc-cols > .so small,.sc-cols > .li small{font-weight:800;font-size:12px}.sc-cols > .so small{color:#5b2a86}.sc-cols > .li small{color:#0a66c2}
+.sc-cols > .so .sc-text{border-top:3px solid #5b2a86}.sc-cols > .li .sc-text{border-top:3px solid #0a66c2}
+.sc-for{font-size:13px;font-weight:600;color:var(--ink-soft);padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+
+.sc-kind button{font-size:14px;padding:7px 14px}.sc-kind{background:var(--surface)}
+.jt-mode .sc-grid textarea{height:110px}
+.jt-box{border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 16px;background:var(--surface)}
+.jt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(max-width:760px){.jt-grid{grid-template-columns:minmax(0,1fr)}}
+.jt-side{min-width:0;border-radius:12px;padding:10px 12px;background:var(--surface-2);border-top:3px solid #5b2a86}.jt-side.li{border-top-color:#0a66c2}
+.jt-side small{font:800 11.5px var(--mono);color:#5b2a86}.jt-side.li small{color:#0a66c2}
+.jt-raw{font-size:16px;font-weight:700;margin:4px 0;overflow-wrap:anywhere}.jt-norm{font-size:13.5px;overflow-wrap:anywhere}.jt-norm span{color:var(--ink-soft)}
+.jt-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.jt-chip{font-size:12.5px;padding:3px 9px;border-radius:999px;background:#e6f2fb;border:1px solid #b9d6ee;color:#0b4a80}.jt-chip.chk{background:#fff4dc;border-color:#f0c97a;color:#7a5200}.jt-chip i{font-style:normal;font-weight:700}
+.jt-amb{margin-top:8px;font-size:13px;padding:6px 10px;border-radius:8px;background:#fdecea;border:1px solid #f3b8ae;color:#8a2416}.jt-amb span{font-weight:600}.jt-amb em{font-style:normal;font-weight:800;margin-left:6px}
+.jt-res{margin-top:12px;padding:10px 14px;border-radius:10px;font-weight:800;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.jt-res span{font-weight:500;font-size:13.5px}
+.jt-res.m{background:#e3f4dc;color:#1f6a2a}.jt-res.n{background:#fbe3df;color:#a5281c}.jt-res.x{background:#fff4dc;color:#7a5200}
+.lc-tab .near{color:#8a5a00;font-weight:700}
+</style>
+</head><body>
+<style>
+.ec-in{display:grid;gap:14px}.ec-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:860px){.ec-g{grid-template-columns:minmax(0,1fr)}}
+.ec-in input,.ec-in textarea{width:100%;font:15px/1.45 var(--body);padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}.ec-in textarea{min-height:84px;resize:vertical}
+.ec-in input:focus,.ec-in textarea:focus{outline:none;border-color:var(--gem)}#ecEmail{font:600 16px var(--mono)}
+.ec-in details{border:1px dashed var(--line);border-radius:12px;padding:10px 14px}.ec-in summary{cursor:pointer;font-weight:700;font-size:14px}
+.ec-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.ec-st{font-size:14px;color:var(--ink-soft);display:inline-flex;gap:8px;align-items:center}
+.ec-card{display:grid;gap:14px}.ec-hd{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}.ec-hd h2{margin:0;font:700 22px var(--mono);word-break:break-all}.ec-hd p{margin:2px 0 0;color:var(--ink-soft);font-size:13.5px}
+.ec-v{border-radius:16px;padding:14px 18px;display:grid;gap:6px;border:1px solid}.ec-v.m{background:#eaf6e3;border-color:#b9dfa6}.ec-v.n{background:#fdecea;border-color:#f3b8ae}.ec-v.c{background:#fff6db;border-color:#f0d68a}.ec-v b.t{font:800 19px var(--display)}.ec-v p{margin:0}
+.ec-ev{display:grid;gap:8px}.ec-e{border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--surface)}.ec-e.ok{border-left:5px solid var(--ok)}.ec-e.bad{border-left:5px solid var(--off)}.ec-e.mid{border-left:5px solid var(--warn)}
+.ec-e .src{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);width:86px}.ec-e b{display:block}.ec-e small{display:block;color:var(--ink-soft);font-size:12.5px;overflow-wrap:anywhere}.ec-e a{color:var(--info)}.ec-e .act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.mini{font:600 12.5px var(--body);padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;white-space:nowrap}
+.ec-sec h3{margin:0 0 8px;font:700 15px var(--display)}.ec-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:860px){.ec-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ec-f{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}.ec-f span{display:block;font-size:11.5px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.05em}.ec-f b{display:block;font-size:15px;margin-top:2px;overflow-wrap:anywhere}.ec-f small{display:block;font-size:12px;color:var(--ink-soft)}.ec-f.ok b{color:var(--ok)}.ec-f.bad b{color:var(--off)}.ec-f.mid b{color:var(--warn)}
+.ec-links{display:grid;gap:10px}.ec-lg b{display:block;font-size:12.5px;margin-bottom:5px;color:var(--ink-soft)}.ec-lg div{display:flex;flex-wrap:wrap;gap:6px}.ec-lg a{font-size:13px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--info);text-decoration:none}.ec-lg a:hover{border-color:var(--info)}.ec-lg a.top{background:#e8f0fb;border-color:#b9cfee;font-weight:700}
+.ec-av{width:46px;height:46px;border-radius:10px;object-fit:cover;background:var(--surface-2)}
+.ec-tip{font-size:13px;color:var(--ink-soft);background:var(--surface-2);border-radius:12px;padding:10px 14px}.ec-tip b{color:var(--ink)}
+.spin{width:14px;height:14px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:r .7s linear infinite;display:inline-block}@keyframes r{to{transform:rotate(360deg)}}
+.ec-pending{color:var(--ink-soft);font-size:13px}
+</style>
+<header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Email checker</small></span></div><a class="back" href="portal.html#bemailbrief">Email benchmarking briefing →</a></header>
+<main>
+  <div><h1>Email checker</h1><p class="lead">Is this email address real, and does it belong to this person? The checker looks the email up in public sources that can prove it (GitHub, PGP key servers, Gravatar), checks the email's domain, compares the email with the person's name and LinkedIn, and gives you one-click searches for everything else. Match only with a page that shows the email with this person.</p></div>
+  <div class="panel ec-in">
+    <div class="ec-g"><div class="f"><label for="ecEmail">Email address <span class="hint">(one per line, up to 5)</span></label><textarea id="ecEmail" rows="2" placeholder="e.g. idks16@yahoo.com" spellcheck="false" style="min-height:52px;font:600 15px var(--mono)"></textarea></div>
+      <div class="f"><label for="ecName">Person's full name</label><input id="ecName" placeholder="e.g. Stacy Tang" autocomplete="off"></div>
+      <div class="f"><label for="ecLi">LinkedIn profile link <span class="hint">(optional)</span></label><input id="ecLi" placeholder="https://www.linkedin.com/in/…" autocomplete="off"></div>
+      <div class="f"><label for="ecCo">Current company <span class="hint">(optional)</span></label><input id="ecCo" placeholder="e.g. Corp of Engineers" autocomplete="off"></div>
+      <div class="f"><label for="ecLoc">Location <span class="hint">(optional)</span></label><input id="ecLoc" placeholder="e.g. Philadelphia, Pennsylvania" autocomplete="off"></div>
+      <div class="f"><label for="ecTitle">Job title <span class="hint">(optional)</span></label><input id="ecTitle" placeholder="e.g. Mechanical Engineer" autocomplete="off"></div></div>
+    <details><summary>More data from LinkedIn (optional): paste the profile page text</summary><p class="hint" style="margin:6px 0">Open the LinkedIn profile (and its <b>Contact info</b>), press Ctrl+A then Ctrl+C, and paste here. The checker reads any emails, websites and usernames in it.</p><textarea id="ecLiText" placeholder="Paste the LinkedIn page text here"></textarea></details>
+    <div class="ec-row" id="ecRow"><button class="btn btn-gem" type="button" id="ecGo">Check email</button><button class="btn btn-ghost" type="button" id="ecClear">Clear</button><span class="ec-st" id="ecSt" role="status" aria-live="polite"></span></div>
+  </div>
+  <div id="ecOut"></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const U = encodeURIComponent;
+// ---------- reference lists ----------
+const FREE = 'gmail.com googlemail.com yahoo.com yahoo.co.in yahoo.co.uk yahoo.ca ymail.com rocketmail.com hotmail.com hotmail.co.uk outlook.com live.com msn.com aol.com icloud.com me.com mac.com protonmail.com proton.me pm.me gmx.com gmx.de gmx.net mail.com zoho.com zohomail.com yandex.com yandex.ru tutanota.com fastmail.com hushmail.com rediffmail.com qq.com 163.com 126.com sina.com naver.com hanmail.net web.de orange.fr free.fr laposte.net libero.it virgilio.it btinternet.com sky.com'.split(' ');
+const ISP = 'comcast.net verizon.net att.net sbcglobal.net bellsouth.net cox.net charter.net earthlink.net optonline.net frontier.com frontiernet.net windstream.net centurylink.net q.com roadrunner.com rr.com twc.com juno.com netzero.net shaw.ca rogers.com sympatico.ca telus.net bigpond.com optusnet.com.au'.split(' ');
+const DISPOSABLE = 'mailinator.com guerrillamail.com 10minutemail.com tempmail.com temp-mail.org yopmail.com trashmail.com sharklasers.com getnada.com dispostable.com maildrop.cc throwawaymail.com fakeinbox.com mintemail.com'.split(' ');
+const ROLE = /^(info|admin|contact|sales|support|hello|office|hr|jobs|careers|team|mail|enquiries|inquiries|billing|accounts|noreply|no-reply|webmaster|marketing)$/;
+const NICK = {robert: ['bob', 'rob', 'bobby', 'robbie'], william: ['bill', 'will', 'billy', 'liam'], richard: ['rick', 'rich', 'dick'], james: ['jim', 'jimmy', 'jamie'], john: ['jack', 'johnny', 'jon'], joseph: ['joe', 'joey'], michael: ['mike', 'mick', 'mikey'], christopher: ['chris', 'kit'], thomas: ['tom', 'tommy'], daniel: ['dan', 'danny'], matthew: ['matt'], anthony: ['tony'], elizabeth: ['liz', 'beth', 'betty', 'eliza', 'lisa'], katherine: ['kate', 'kathy', 'katie', 'kat'], catherine: ['cathy', 'kate', 'cat'], margaret: ['maggie', 'meg', 'peggy'], jennifer: ['jen', 'jenny'], patricia: ['pat', 'patty', 'trish'], stephanie: ['steph'], rebecca: ['becky', 'becca'], samantha: ['sam'], alexander: ['alex', 'sasha'], alexandra: ['alex', 'lexi'], benjamin: ['ben'], nicholas: ['nick'], jonathan: ['jon'], andrew: ['andy', 'drew'], edward: ['ed', 'eddie', 'ted'], charles: ['charlie', 'chuck'], david: ['dave'], steven: ['steve'], stephen: ['steve'], timothy: ['tim'], gregory: ['greg'], kenneth: ['ken'], ronald: ['ron'], donald: ['don'], douglas: ['doug'], susan: ['sue', 'suzy'], deborah: ['deb', 'debbie'], victoria: ['vicky', 'tori'], christina: ['chris', 'tina'], kristen: ['kris'], anastasia: ['stacy', 'stacey'], eustacia: ['stacy']};
+// ---------- helpers ----------
+const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const nameParts = n => fold(n).replace(/\b(mr|mrs|ms|dr|prof|jr|sr|ii|iii|iv|phd|mba|pe|cpa|pmp)\b\.?/g, ' ').split(/[^a-z]+/).filter(w => w.length > 0);
+const nickOf = w => { const o = new Set([w]); Object.entries(NICK).forEach(([k, l]) => { if (k === w) l.forEach(x => o.add(x)); if (l.includes(w)) { o.add(k); l.forEach(x => o.add(x)); } }); return [...o]; };
+function sameName(found, person){ const a = nameParts(found), b = nameParts(person); if (!a.length || !b.length) return 'unknown';
+  const fb = b[0], lb = b[b.length - 1], hasF = a.some(w => nickOf(fb).includes(w) || (w.length === 1 && w === fb[0])), hasL = a.includes(lb);
+  if (hasF && hasL) return 'same'; if (hasL || (hasF && a.length === 1)) return 'partial'; return 'different'; }
+async function sha256(t){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+async function getJSON(url, opt){ const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 12000); try { const r = await fetch(url, {...(opt || {}), signal: ctl.signal}); if (r.status === 403 || r.status === 429) return {limited: true}; if (!r.ok) return {status: r.status}; const ct = r.headers.get('content-type') || ''; return ct.includes('json') ? await r.json() : {text: await r.text()}; } catch (e) { return {failed: true}; } finally { clearTimeout(tm); } }
+const linkedinSlug = u => { const m = String(u || '').match(/linkedin\.com\/in\/([^/?#]+)/i); return m ? decodeURIComponent(m[1]).toLowerCase() : ''; };
+// how the part before @ relates to the name: a hint only
+function localVsName(local, person){ const L = fold(local), letters = L.replace(/[^a-z]/g, ''), digits = (L.match(/\d+/g) || []).join(' '), p = nameParts(person); if (!p.length) return {k: 'mid', t: 'No name to compare', d: ''};
+  const f = p[0], l = p[p.length - 1], fs = nickOf(f), mids = p.slice(1, -1);
+  const pats = [];
+  fs.forEach(fn => { pats.push([fn + l, 'first + last'], [l + fn, 'last + first'], [fn[0] + l, 'initial + last'], [fn + l[0], 'first + initial'], [l + fn[0], 'last + initial'], [fn + mids.map(m => m[0]).join('') + l, 'first + middle initial + last']); });
+  pats.push([f[0] + mids.map(m => m[0]).join('') + l[0], 'initials']);
+  const hit = pats.find(([x]) => x.length >= 3 && letters === x) || pats.find(([x]) => x.length >= 4 && letters.includes(x));
+  if (hit) return {k: 'ok', t: 'Looks like the name (' + hit[1] + ')', d: (digits ? 'Numbers “' + digits + '” could be a birth year or just a number. ' : '') + 'Only a hint: a look-alike email is not proof.'};
+  const part = [...fs, l].filter(x => x.length >= 3).find(x => letters.includes(x));
+  if (part) return {k: 'mid', t: 'Contains “' + part + '” from the name', d: 'Partly like the name. Only a hint, not proof.'};
+  if (letters.length <= 4 && letters.length >= 2 && [f[0] + l[0], f[0] + mids.map(m => m[0]).join('') + l[0]].some(x => letters.startsWith(x))) return {k: 'mid', t: 'May be initials', d: 'Short letters that could be initials. Only a hint.'};
+  return {k: 'bad', t: 'No visible link to the name', d: 'Nothing in “' + local + '” matches the name. Many personal emails are like this, so it does not mean it is wrong: it just needs real proof.'}; }
+function domainKind(dom, company){ const d = dom.toLowerCase(); if (DISPOSABLE.includes(d)) return {k: 'bad', t: 'Throwaway email service', d: 'Disposable inbox: almost never a real person\'s lasting email.'};
+  if (FREE.includes(d)) return {k: 'mid', t: 'Free personal email (' + d + ')', d: 'Anyone can open one: ownership must be proven by a public page.'};
+  if (ISP.includes(d)) return {k: 'mid', t: 'Internet provider email (' + d + ')', d: 'A home internet account email: personal, needs proof.'};
+  if (/\.(edu|ac\.[a-z]{2}|edu\.[a-z]{2})$/.test(d)) return {k: 'mid', t: 'University / school email', d: 'Often a student or staff address. Check the school directory or the person\'s education.'};
+  if (/\.(gov|mil)(\.[a-z]{2})?$/.test(d)) return {k: 'mid', t: 'Government / military email', d: 'Check the agency matches the person\'s employer.'};
+  const co = nameParts(company).filter(w => w.length > 2 && !['inc', 'llc', 'ltd', 'corp', 'corporation', 'company', 'group', 'the', 'and', 'of'].includes(w)), lab = d.split('.')[0];
+  if (co.length && co.some(w => lab.includes(w) || w.includes(lab))) return {k: 'ok', t: 'Work email: domain looks like ' + company, d: 'A work email at the current company. Confirm the company uses this domain.'};
+  return {k: 'mid', t: 'Own or company domain (' + d + ')', d: company ? 'Does not look like “' + company + '”: maybe a past employer or a personal domain. Open the website to check.' : 'A private or company domain. Open the website to check who it belongs to.'}; }
+// ---------- live lookups ----------
+async function mxOf(dom){ const j = await getJSON('https://dns.google/resolve?name=' + U(dom) + '&type=MX'); if (j.failed || j.status) return {unknown: true}; const mx = (j.Answer || []).filter(a => a.type === 15).map(a => String(a.data).split(' ').pop().replace(/\.$/, ''));
+  if (mx.length) return {mx}; const a = await getJSON('https://dns.google/resolve?name=' + U(dom) + '&type=A'); return {mx: [], hasA: !!(a.Answer || []).length, nx: j.Status === 3}; }
+async function ghCommits(email){ const j = await getJSON('https://api.github.com/search/commits?q=' + U('author-email:' + email) + '&per_page=20&sort=author-date', {headers: {Accept: 'application/vnd.github+json'}}); if (j.limited) return {limited: true}; if (j.failed || j.status) return {failed: true};
+  const by = {}; (j.items || []).forEach(it => { const a = it.commit && it.commit.author || {}; const k = (a.name || '') + '|' + ((it.author && it.author.login) || ''); if (!by[k]) by[k] = {name: a.name, login: it.author && it.author.login, url: it.html_url, patch: it.html_url + '.patch', repo: it.repository && it.repository.full_name, date: a.date, n: 0}; by[k].n++; });
+  return {total: j.total_count || 0, authors: Object.values(by)}; }
+async function ghUsersByEmail(email){ const j = await getJSON('https://api.github.com/search/users?q=' + U(email + ' in:email'), {headers: {Accept: 'application/vnd.github+json'}}); if (j.limited) return {limited: true}; if (j.failed || j.status) return {failed: true};
+  const out = []; for (const u of (j.items || []).slice(0, 3)) { const d = await getJSON('https://api.github.com/users/' + U(u.login)); out.push({login: u.login, url: u.html_url, name: d.name || '', email: d.email || '', company: d.company || '', location: d.location || '', avatar: u.avatar_url}); } return {users: out}; }
+async function ghUser(login){ if (!/^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$/i.test(login)) return null; const d = await getJSON('https://api.github.com/users/' + U(login)); if (!d || d.status || d.failed || d.limited || !d.login) return d && d.limited ? {limited: true} : null;
+  return {login: d.login, url: d.html_url, name: d.name || '', email: d.email || '', company: d.company || '', location: d.location || '', blog: d.blog || '', bio: d.bio || '', avatar: d.avatar_url, created: d.created_at}; }
+async function pgp(email){ const r = await getJSON('https://keys.openpgp.org/vks/v1/by-email/' + U(email)); if (r.failed) return {failed: true}; if (r.status === 404) return {none: true}; if (r.text && /BEGIN PGP PUBLIC KEY/.test(r.text)) return {found: true}; return {none: true}; }
+async function ubuntuKeys(email){ const r = await getJSON('https://keyserver.ubuntu.com/pks/lookup?search=' + U(email) + '&op=index&options=mr&exact=on'); if (r.failed) return {failed: true}; if (!r.text) return {none: true};
+  const uids = r.text.split('\n').filter(l => l.startsWith('uid:')).map(l => decodeURIComponent(l.split(':')[1] || '')).filter(u => u.toLowerCase().includes(email.toLowerCase())); return uids.length ? {uids} : {none: true}; }
+async function gravatar(email){ const h = await sha256(email.trim().toLowerCase()); const img = 'https://gravatar.com/avatar/' + h + '?d=404&s=96';
+  const has = await new Promise(ok => { const i = new Image(); i.onload = () => ok(true); i.onerror = () => ok(false); i.src = img; setTimeout(() => ok(false), 8000); });
+  let prof = null; if (has) { const j = await getJSON('https://gravatar.com/' + h + '.json'); if (j && j.entry && j.entry[0]) { const e = j.entry[0]; prof = {name: e.displayName || (e.name && e.name.formatted) || '', url: e.profileUrl || 'https://gravatar.com/' + h, accounts: (e.accounts || []).map(a => a.url), urls: (e.urls || []).map(u => u.value)}; } }
+  return {has, img, hash: h, prof, page: 'https://gravatar.com/' + h}; }
+// ---------- search links ----------
+function searches(email, P){ const [local, dom] = email.split('@'), n = P.name ? '"' + P.name + '"' : '', g = q => 'https://www.google.com/search?q=' + U(q), bg = q => 'https://www.bing.com/search?q=' + U(q), dd = q => 'https://duckduckgo.com/?q=' + U(q);
+  const q1 = '"' + email + '"';
+  return [
+    ['Best first: the exact email', [[g(q1), 'Google “' + email + '”', 1], [bg(q1), 'Bing'], [dd(q1), 'DuckDuckGo'], [g(q1 + (n ? ' ' + n : '')), 'Google: email + name', 1]]],
+    ['Where personal emails are often published', [[g(q1 + ' site:github.com'), 'GitHub'], [g(q1 + ' (resume OR cv OR "curriculum vitae")'), 'Resumes / CVs'], [g(q1 + ' filetype:pdf'), 'PDF files'], [g(q1 + ' (site:researchgate.net OR site:academia.edu OR site:orcid.org)'), 'Research profiles'], [g(q1 + ' site:linkedin.com'), 'LinkedIn'], [g(q1 + ' (site:facebook.com OR site:instagram.com OR site:x.com OR site:twitter.com)'), 'Social media'], [g(q1 + ' (site:medium.com OR site:about.me OR site:linktr.ee OR site:wordpress.com OR site:blogspot.com)'), 'Blogs / personal pages'], [g(q1 + ' (speaker OR author OR team OR contact)'), 'Speaker / author / team pages'], [g(q1 + ' (site:npmjs.com OR site:pypi.org OR site:stackoverflow.com OR site:gitlab.com)'), 'Developer sites'], [g(q1 + ' (site:usajobs.gov OR site:.gov OR site:.edu)'), '.gov / .edu pages']]],
+    ['Written differently (people hide emails from robots)', [[g('"' + local + ' at ' + dom.split('.')[0] + '"'), '“' + local + ' at ' + dom.split('.')[0] + '”'], [g('"' + local + ' [at] ' + dom + '"'), '“' + local + ' [at] ' + dom + '”'], [g('"' + local + '" ' + (n || '')), 'Username “' + local + '” + name'], [g('"' + local + '"'), 'Username “' + local + '” anywhere']]],
+    ['The same username on other sites (open and compare the person)', [['https://github.com/' + U(local), 'GitHub'], ['https://gitlab.com/' + U(local), 'GitLab'], ['https://x.com/' + U(local), 'X / Twitter'], ['https://www.instagram.com/' + U(local) + '/', 'Instagram'], ['https://www.reddit.com/user/' + U(local), 'Reddit'], ['https://medium.com/@' + U(local), 'Medium'], ['https://keybase.io/' + U(local), 'Keybase'], ['https://www.pinterest.com/' + U(local) + '/', 'Pinterest'], ['https://soundcloud.com/' + U(local), 'SoundCloud'], ['https://www.behance.net/' + U(local), 'Behance'], ['https://dribbble.com/' + U(local), 'Dribbble'], ['https://hub.docker.com/u/' + U(local), 'Docker Hub']]],
+    ['Proof sources (open the full page)', [['https://keys.openpgp.org/search?q=' + U(email), 'PGP key (openpgp.org)'], ['https://keyserver.ubuntu.com/pks/lookup?search=' + U(email) + '&op=index', 'PGP key (Ubuntu)'], ['https://github.com/search?q=' + U(email) + '&type=commits', 'GitHub commits'], ['https://github.com/search?q=' + U(email) + '&type=users', 'GitHub users'], ...(FREE.includes(dom) || ISP.includes(dom) ? [] : [['https://' + dom, 'Open ' + dom], [g('site:' + dom + ' ' + (n || '"' + local + '"')), 'Search ' + dom + ' for the person']])]],
+    ...(P.name ? [['The person (to find their own sites, then look for the email there)', [[g(n + (P.co ? ' "' + P.co + '"' : '') + ' email'), 'Name + company + email'], [g(n + (P.title ? ' "' + P.title + '"' : '') + (P.loc ? ' ' + P.loc.split(',')[0] : '')), 'Name + title + city'], [g(n + ' (resume OR portfolio OR "personal website")'), 'Their resume / website'], [g(n + ' site:github.com'), 'Their GitHub']]]] : [])]; }
+// ---------- run ----------
+let ecLast = null;
+async function run(){ const emails = [...new Set($('ecEmail').value.split(/[\s,;]+/).map(x => x.trim().replace(/^mailto:/i, '').toLowerCase()).filter(Boolean))].slice(0, 5);
+  const P = {name: $('ecName').value.trim(), li: $('ecLi').value.trim(), co: $('ecCo').value.trim(), loc: $('ecLoc').value.trim(), title: $('ecTitle').value.trim(), liText: $('ecLiText').value};
+  if (!emails.length) { $('ecOut').innerHTML = '<div class="panel empty">Enter an email address.</div>'; return; }
+  const bad = emails.filter(e => !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e)); if (bad.length) { $('ecOut').innerHTML = `<div class="panel empty">“${esc(bad[0])}” is not a valid email address.</div>`; return; }
+  $('ecSt').innerHTML = '<span class="spin"></span> Checking public sources…'; $('ecGo').disabled = true; ecLast = {P, results: []};
+  $('ecOut').innerHTML = emails.map((e, i) => `<div class="panel ec-card" id="ecC${i}"><div class="ec-hd"><div><h2>${esc(e)}</h2><p class="ec-pending"><span class="spin"></span> Looking it up…</p></div></div></div>`).join('');
+  for (let i = 0; i < emails.length; i++) { const r = await checkOne(emails[i], P); ecLast.results.push(r); draw(i, r, P); }
+  $('ecSt').innerHTML = '✓ Done · ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}); $('ecGo').disabled = false; }
+async function checkOne(email, P){ const [local, dom] = email.split('@'), slug = linkedinSlug(P.li);
+  const [mx, commits, ghu, pk, uk, gv, uname] = await Promise.all([mxOf(dom), ghCommits(email), ghUsersByEmail(email), pgp(email), ubuntuKeys(email), gravatar(email), ROLE.test(local) ? null : ghUser(local.replace(/[^a-z0-9-]/gi, ''))]);
+  const liEmails = (P.liText.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi) || []).map(x => x.toLowerCase()), liSites = [...new Set((P.liText.match(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.(?:com|net|org|io|me|dev|co|info|site|blog)(?:\/[^\s)]*)?/gi) || []).filter(u => !/linkedin\.com|licdn/i.test(u)))].slice(0, 8);
+  const ev = []; // proof pages: [kind ok|bad|mid, source, title, detail, url, extra]
+  if (commits.authors) commits.authors.forEach(a => { const s = sameName(a.name, P.name); ev.push([s === 'same' ? 'ok' : s === 'different' ? 'bad' : 'mid', 'GitHub', `Commits signed “${a.name} &lt;${esc(email)}&gt;”`, `${a.n} commit${a.n === 1 ? '' : 's'} in ${esc(a.repo || '')}${a.login ? ' · GitHub user ' + esc(a.login) : ''} · ${s === 'same' ? 'same name as the person' : s === 'different' ? 'a different name' : 'name partly matches'}`, a.patch, a.login ? 'https://github.com/' + a.login : '']); });
+  if (ghu.users) ghu.users.forEach(u => { const s = sameName(u.name, P.name); ev.push([s === 'same' ? 'ok' : s === 'different' ? 'bad' : 'mid', 'GitHub', `Profile shows this email: ${esc(u.name || u.login)}`, `${esc(u.login)}${u.company ? ' · ' + esc(u.company) : ''}${u.location ? ' · ' + esc(u.location) : ''}`, u.url, '']); });
+  if (uk.uids) uk.uids.forEach(id => { const s = sameName(id.replace(/<.*>/, ''), P.name); ev.push([s === 'same' ? 'ok' : s === 'different' ? 'bad' : 'mid', 'PGP key', 'Key owner: ' + esc(id), 'A public encryption key registered with this email and name', 'https://keyserver.ubuntu.com/pks/lookup?search=' + U(email) + '&op=index', '']); });
+  if (pk.found && !uk.uids) ev.push(['mid', 'PGP key', 'A verified PGP key exists for this email', 'keys.openpgp.org confirmed the owner controls this email. Open it to see the name.', 'https://keys.openpgp.org/search?q=' + U(email), '']);
+  if (gv.prof) { const s = sameName(gv.prof.name, P.name); ev.push([s === 'same' ? 'ok' : s === 'different' ? 'bad' : 'mid', 'Gravatar', 'Gravatar profile: ' + esc(gv.prof.name || '(no name)'), 'The profile picture account registered with this email' + (gv.prof.accounts.length ? ' · linked: ' + gv.prof.accounts.slice(0, 3).map(esc).join(', ') : ''), gv.prof.url, gv.img]); }
+  else if (gv.has) ev.push(['mid', 'Gravatar', 'This email has a Gravatar picture', 'Someone registered this email at Gravatar. Open the profile: if it shows the person, that is your proof.', gv.page, gv.img]);
+  if (liEmails.includes(email)) ev.push(['ok', 'LinkedIn', 'The email is in the LinkedIn text you pasted', 'Shown on the person\'s own LinkedIn (Contact info). Follow your team\'s rule for LinkedIn as evidence.', P.li || '', '']);
+  if (uname && uname.login && uname.email === email) ev.push([sameName(uname.name, P.name) === 'different' ? 'bad' : 'ok', 'GitHub', `GitHub user “${esc(uname.login)}” shows this email`, esc(uname.name || ''), uname.url, uname.avatar]);
+  const nm = localVsName(local, P.name), dk = domainKind(dom, P.co), slugHint = slug ? (() => { const a = fold(slug).replace(/[^a-z]/g, ''), b = fold(local).replace(/[^a-z]/g, ''); return b.length >= 3 && (a.includes(b) || b.includes(a)) ? {k: 'ok', t: 'LinkedIn link “' + slug + '” looks like the email'} : {k: 'mid', t: 'LinkedIn link “' + slug + '” differs from the email'}; })() : null;
+  const rank = {ok: 0, mid: 1, bad: 2}; ev.sort((a, b) => rank[a[0]] - rank[b[0]]);
+  const okEv = ev.filter(e => e[0] === 'ok'), badEv = ev.filter(e => e[0] === 'bad');
+  let v; if (mx.mx && !mx.mx.length && !mx.unknown) v = ['n', '✗ This domain cannot receive email', `${dom} has no mail server${mx.nx ? ' (the domain does not exist)' : ''}. The address can't be a working email.`];
+    else if (dk.k === 'bad') v = ['n', '✗ Throwaway address', 'A disposable inbox is not a real person\'s email.'];
+    else if (okEv.length) v = ['m', '✓ Proof found: Match', `${okEv.length} public page${okEv.length === 1 ? '' : 's'} show${okEv.length === 1 ? 's' : ''} this email with ${esc(P.name || 'the person')}'s name. Open it, confirm it is the same person (job, place), then paste its link as the evidence.` + (badEv.length ? ' Note: the same email also appears with another name, so check carefully.' : '')];
+    else if (badEv.length) v = ['n', '✗ Shown with someone else\'s name', `A public page shows this email with a different name (${badEv.map(e => e[2].replace(/.*: /, '')).slice(0, 1).join('')}). Check it is not a nickname or a maiden name before choosing Not theirs.`];
+    else v = ['c', '? No public proof found yet', 'Nothing in the automatic sources links this email to the person. Try the searches below (start with the blue ones). If nothing proves it, the answer is Can\'t verify.'];
+  return {email, local, dom, mx, commits, ghu, pk, uk, gv, uname, ev, nm, dk, slugHint, liEmails, liSites, v}; }
+function draw(i, r, P){ const box = $('ecC' + i); if (!box) return; const lim = r.commits.limited || r.ghu.limited || (r.uname && r.uname.limited);
+  const f = (k, t, v, s) => `<div class="ec-f ${k}"><span>${t}</span><b>${v}</b>${s ? `<small>${s}</small>` : ''}</div>`;
+  const mxT = r.mx.unknown ? ['', 'Not checked', 'The domain lookup did not answer'] : r.mx.mx.length ? ['ok', 'Receives email', r.mx.mx.slice(0, 2).map(esc).join(', ')] : ['bad', 'No mail server', r.mx.nx ? 'Domain does not exist' : 'This domain cannot receive email'];
+  const evH = r.ev.length ? r.ev.map(([k, src, t, d, url, img]) => `<div class="ec-e ${k}">${img ? `<img class="ec-av" src="${esc(img)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'src',textContent:'${src}'}))">` : `<span class="src">${src}</span>`}<div><b>${t}</b><small>${d}</small>${url ? `<small><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></small>` : ''}</div><div class="act">${url ? `<a class="mini" href="${esc(url)}" target="_blank" rel="noopener">Open ↗</a><button class="mini" type="button" data-copy="${esc(url)}">Copy link</button>` : ''}</div></div>`).join('')
+    : '<p class="hint" style="margin:0">No GitHub, PGP, Gravatar or LinkedIn record links this email to anyone.</p>';
+  const un = r.uname && r.uname.login ? (() => { const u = r.uname, s = sameName(u.name, P.name); return `<div class="ec-e ${s === 'same' ? 'mid' : ''}"><img class="ec-av" src="${esc(u.avatar)}" alt=""><div><b>GitHub user “${esc(u.login)}” (same as the email's username)${u.name ? ': ' + esc(u.name) : ''}</b><small>${[u.company, u.location, u.blog, u.bio].filter(Boolean).map(esc).join(' · ') || 'No details on the profile'}${s === 'same' ? ' · <b>same name as the person</b>' : s === 'different' ? ' · a different name' : ''}</small><small>A matching username is a lead, not proof: open it and look for the email or a link to the person.</small></div><div class="act"><a class="mini" href="${esc(u.url)}" target="_blank" rel="noopener">Open ↗</a></div></div>`; })() : '';
+  box.innerHTML = `<div class="ec-hd"><div><h2>${esc(r.email)}</h2><p>${esc(P.name || 'No name entered')}${P.co ? ' · ' + esc(P.co) : ''}${P.loc ? ' · ' + esc(P.loc) : ''}</p></div><button class="mini" type="button" data-copy="${esc(r.email)}">Copy email</button></div>
+    <div class="ec-v ${r.v[0]}"><b class="t">${r.v[1]}</b><p>${r.v[2]}</p><p class="hint">A helper: you make the final choice using the email rules. Match only with a page that shows this email with this person.</p></div>
+    <div class="ec-sec"><h3>Proof pages found automatically</h3><div class="ec-ev">${evH}${un}</div>${r.ev.some(e => e[1] === 'GitHub') ? '<p class="hint" style="margin:8px 0 0">Anyone can type any email into a code commit, so a commit alone is weaker proof: trust it when the GitHub profile is clearly the same person (name, job, place, photo).</p>' : ''}${lim ? '<p class="hint" style="margin:8px 0 0">⚠ GitHub limits free lookups to about 10 a minute. Wait a minute and check again for the full GitHub results.</p>' : ''}</div>
+    <div class="ec-sec"><h3>About this email</h3><div class="ec-facts">${f(r.dk.k, 'Email type', r.dk.t, r.dk.d)}${f(mxT[0], 'Domain', mxT[1], mxT[2])}${f(r.nm.k, 'Email vs name', r.nm.t, r.nm.d)}${r.slugHint ? f(r.slugHint.k, 'LinkedIn link', r.slugHint.t, 'Only a hint') : f('', 'LinkedIn link', 'Not given', 'Add it to compare')}
+      ${f(r.commits.total ? 'ok' : '', 'GitHub commits', r.commits.limited ? 'Limit reached' : r.commits.failed ? 'Not checked' : String(r.commits.total || 0), 'signed with this email')}${f(r.gv.has ? 'ok' : '', 'Gravatar', r.gv.has ? 'Has a picture' : 'None', r.gv.prof ? 'profile found' : '')}${f(r.uk.uids || r.pk.found ? 'ok' : '', 'PGP key', r.uk.uids || r.pk.found ? 'Found' : r.uk.failed && r.pk.failed ? 'Not checked' : 'None', '')}${f(r.liEmails.length ? (r.liEmails.includes(r.email) ? 'ok' : 'mid') : '', 'Emails in LinkedIn text', r.liEmails.length ? r.liEmails.length + ' found' : P.liText ? 'None' : 'Not pasted', r.liEmails.length ? r.liEmails.map(esc).join(', ') : '')}</div>
+      ${r.liSites.length ? `<p class="hint" style="margin:10px 0 0">Websites in the LinkedIn text: ${r.liSites.map(u => `<a href="${esc(/^https?:/.test(u) ? u : 'https://' + u)}" target="_blank" rel="noopener">${esc(u)}</a>`).join(' · ')}: open them and look for the email (a contact page or CV is good proof).</p>` : ''}</div>
+    <div class="ec-sec"><h3>Search it yourself</h3><div class="ec-links">${searches(r.email, P).map(([t, l]) => `<div class="ec-lg"><b>${t}</b><div>${l.map(([u, n, top]) => `<a class="${top ? 'top' : ''}" href="${esc(u)}" target="_blank" rel="noopener">${esc(n)} ↗</a>`).join('')}</div></div>`).join('')}</div></div>
+    <p class="ec-tip"><b>Good proof:</b> the person's own website, portfolio or CV showing the email · a GitHub profile or project page with this name and email · a conference, author or company team page listing the person with this email. <b>Not enough:</b> the email only looks like the name · a page about a different person with a similar name · people-search or email-guessing sites.</p>`; }
+document.addEventListener('click', async e => { const b = e.target.closest('[data-copy]'); if (!b) return; try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = t, 1400); } catch (x) {} });
+$('ecGo').onclick = run; ['ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
+$('ecClear').onclick = () => { ['ecEmail', 'ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle', 'ecLiText'].forEach(id => $(id).value = ''); $('ecOut').innerHTML = ''; $('ecSt').textContent = ''; };
+// a link from the portal can fill the boxes: email-checker.html#email=…&name=…&li=…
+try { const q = new URLSearchParams(location.hash.slice(1)); if (q.get('email')) { $('ecEmail').value = q.get('email'); $('ecName').value = q.get('name') || ''; $('ecLi').value = q.get('li') || ''; $('ecCo').value = q.get('co') || ''; $('ecLoc').value = q.get('loc') || ''; setTimeout(run, 100); } } catch (e) {}
+</script>
+<script>window.CK_REPORT = {checker: 'email', label: 'Email checker', inputs: ['ecEmail', 'ecName'], go: 'ecGo', row: 'ecRow',
+  collect: () => { const L = ecLast; if (!L) return {answerText: 'Not checked yet'}; const r = L.results[0] || {}; return {answerText: r.v ? r.v[1] : '', why: r.v ? String(r.v[2]).replace(/<[^>]+>/g, '') : '', person: L.P, results: L.results.map(x => ({email: x.email, verdict: x.v, evidence: x.ev, nameHint: x.nm, domain: x.dk, mx: x.mx, githubCommits: x.commits && x.commits.total, gravatar: x.gv && x.gv.has}))}; }};</script>
+<script src="checker-report.js"></script>
+</body></html>
