@@ -2088,7 +2088,10 @@ let fbAuth = null;
 const ready = (async () => {
   $('adminEntry').hidden = true;
   if (!window.firebase || !window.FB_CONFIG) return null;
-  try { if (!firebase.apps.length) firebase.initializeApp(window.FB_CONFIG); fbAuth = firebase.auth(); db = guardDb(firebase.firestore()); canEditDb = true; } catch (e) { console.error(e); return null; }
+  try { if (!firebase.apps.length) firebase.initializeApp(window.FB_CONFIG); fbAuth = firebase.auth(); const fsx = firebase.firestore();
+    // keep a copy of the data in this browser, shared by all portal tabs: a reload or a second tab only fetches what changed (saves Firebase reads)
+    try { await fsx.enablePersistence({synchronizeTabs: true}); } catch (e) { console.warn('Local data copy not available:', e && e.code); }
+    db = guardDb(fsx); canEditDb = true; } catch (e) { console.error(e); return null; }
   return db;
 })();
 async function loadAccount(key){
@@ -2123,11 +2126,21 @@ const NO_DB = 'The portal couldn\'t reach its server. Check your internet connec
 
 /* ---------- live data ---------- */
 // optional: a feature that can be switched off or still waiting for its Firestore rule never shows the error banner
+// live data listeners are remembered so they can be paused while the portal tab is hidden and resumed when it is back
+const watchReg = {}, WATCH_KEEP = /^(myClock|myOtAppr|myCarryAppr|myCarryReq|myOtReq)$/;   // your own time clock stays live (8-hour clock-out keeps working)
+let watchPaused = false, watchHideT = null;
 function watch(name, ref, onData, optional) {
+  watchReg[name] = [ref, onData, optional];
   if (unsub[name]) unsub[name]();
+  if (watchPaused && !WATCH_KEEP.test(name)) { unsub[name] = null; return; }
   unsub[name] = ref.onSnapshot(onData, err => { console.warn('Portal data "' + name + '" could not load:', err && (err.code || err.message)); if (optional) return;
     const m = $('dbMsg'); m.textContent = 'Some portal data could not load. Reload the page to try again.' + (isAdmin ? ' (Part: ' + name + (err && err.code === 'permission-denied' ? ' · the Firestore rules for it may not be published yet' : '') + ')' : ''); m.hidden = false; });
 }
+function pauseWatches(){ if (watchPaused) return; watchPaused = true; Object.keys(watchReg).forEach(n => { if (!WATCH_KEEP.test(n) && unsub[n]) { unsub[n](); unsub[n] = null; } }); }
+function resumeWatches(){ if (!watchPaused) return; watchPaused = false; Object.entries(watchReg).forEach(([n, [ref, fn, opt]]) => { if (!unsub[n]) watch(n, ref, fn, opt); }); }
+document.addEventListener('visibilitychange', () => { clearTimeout(watchHideT);
+  if (document.visibilityState === 'hidden') watchHideT = setTimeout(pauseWatches, 10 * 60000); else resumeWatches(); });
+window.addEventListener('focus', () => { clearTimeout(watchHideT); resumeWatches(); });
 function startData() {
   if (!db || unsub.accounts) return;
   watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
@@ -2178,12 +2191,14 @@ function watchMine(){
 const pendingAll = () => requests.flatMap(r => (r.requests || []).filter(q => !decisions.some(d => d.key === r.uid + '~' + q.id && d.status !== 'Pending')).map(q => { const d = decisions.find(x => x.key === r.uid + '~' + q.id); return {...q, uid: r.uid, email: q.email || r.email, name: q.name || r.name, _reply: d && d.reply}; }));
 
 function startAdminData() {
-  // accounts (admins only; optional so a missing Firestore rule never shows the error banner)
+  // accounts (admins only; optional so a missing Firestore rule never shows the error banner): loaded when Accounts is first opened
+  window.__acLoad = () => { if (window.__acOn) return; window.__acOn = 1;
   watch('acBills', db.collection('acctBills'), s => { acBills = {}; s.docs.forEach(d => acBills[d.id] = d.data()); renderAcct(); }, true);
   watch('acInv', db.collection('acctInvoices'), s => { acInv = {}; s.docs.forEach(d => acInv[d.id] = d.data()); renderAcct(); }, true);
   watch('acCt', db.collection('acctContacts'), s => { acCt = {}; s.docs.forEach(d => acCt[d.id] = d.data()); renderAcct(); }, true);
   watch('acClients', db.collection('clients'), s => { acClients = {}; s.docs.forEach(d => acClients[d.id] = d.data()); renderAcct(); }, true);
-  watch('acSet', db.doc('acctSettings/main'), s => { acSet = s.exists ? s.data() : {}; renderAcct(); }, true);
+  watch('acSet', db.doc('acctSettings/main'), s => { acSet = s.exists ? s.data() : {}; renderAcct(); }, true); };
+  if (document.querySelector('.view[data-view="acct"]:not([hidden])')) window.__acLoad();
   // reported checker issues: optional so a missing Firestore rule never shows the error banner
   watch('reports', db.collection('checkerReports'), s => { reportsAll = s.docs.map(d => ({id: d.id, ...d.data()})).sort((a, b) => (b.n || 0) - (a.n || 0)); renderReports(); }, true);
   watch('compAll', db.collection('compLeave'), s => { compAll = {}; s.docs.forEach(d => compAll[d.id] = d.data()); renderComp(); renderProfile(); });
@@ -2715,11 +2730,12 @@ $('acBody').addEventListener('click', async e => { const t = e.target.closest('b
   else if (t.dataset.acqok) { const id = t.dataset.acqok, v = acInv[id]; if (!v || !v.clientQuery) return; const doc = {...v, clientQuery: {...v.clientQuery, resolved: true, resolvedAt: new Date().toISOString(), resolvedBy: me ? me.name : 'Admin'}}; try { await db.doc('acctInvoices/' + id).set(doc); acInv[id] = doc; renderAcct(); toast('Marked as answered'); } catch (x) { toast('Couldn\'t save'); } }
   else if (t.dataset.acportal) acPortalForm(t.dataset.acportal);
   else if (t.dataset.acsent) { const id = t.dataset.acsent, v = acInv[id]; if (!v) return; const doc = {...v, status: 'sent', shared: true, sentAt: new Date().toISOString()}; try { await db.doc('acctInvoices/' + id).set(doc); acInv[id] = doc; renderAcct(); toast(v.no + ' marked as sent'); } catch (x) { toast('Couldn\'t save'); } } });
-document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="acct"]')) setTimeout(renderAcct, 30); });
+document.addEventListener('click', e => { if (e.target.closest('.tab[data-v="acct"]')) { if (window.__acLoad) window.__acLoad(); setTimeout(renderAcct, 30); } });
 
 /* ---------- navigation ---------- */
 const tabs=[...document.querySelectorAll('.tab')];
 function go(v){
+  if (v === 'acct' && window.__acLoad) window.__acLoad();
   if (v === 'pfhub') v = 'pf';
   if (v === 'bench' || v === 'benchhub') v = 'guides';
   if (v === 'leave') v = 'timeoff';
