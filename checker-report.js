@@ -85,7 +85,7 @@
       $('rpDone').onclick = () => dlg.close();
     } catch (e) { b.disabled = false; b.textContent = 'Send report';
       const code = (e && (e.code || e.message)) || 'error';
-      msg('err', (code === 'permission-denied' ? 'The report was refused (your portal account may not be active, or the admin has not switched reports on yet).' : code === 'load' ? 'Couldn\'t reach the portal server. Check your internet connection.' : 'The report couldn\'t be sent (' + esc(code) + ').') + ' Press <b>Copy report</b> and send it to your admin instead.'); } }
+      msg('err', (code === 'resource-exhausted' ? 'The portal has reached its free daily database limit on Firebase, so it can\'t save new data until the limit resets (1:30 PM India time).' : code === 'permission-denied' ? 'The report was refused (your portal account may not be active, or the admin has not switched reports on yet).' : code === 'load' ? 'Couldn\'t reach the portal server. Check your internet connection.' : 'The report couldn\'t be sent (' + esc(code) + ').') + ' Press <b>Copy report</b> and send it to your admin instead.'); } }
 
   // "Open in checker" from the admin's Reported issues page: #rep=<base64 of {a, b}> fills both boxes and runs the compare
   try { const m = location.hash.match(/^#rep=(.+)$/); if (m) { const d = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(m[1]))))); const A = $(C.inputs[0]), B = $(C.inputs[1]);
