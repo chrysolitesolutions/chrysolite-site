@@ -63,7 +63,7 @@ html.resuming .resume-splash{display:block;position:fixed;inset:0;z-index:200;ov
   --bg:#0B1512;--surface:#12201B;--surface-2:#182A24;--ink:#E6EEE4;--ink-soft:#A3B5AC;--line:#26392F;
   --gem:#B6D441;--gem-ink:#C5E05A;--band:#07100D;--band-fg:#E6EEE4;--band-soft:#93A99E;
   --ok:#5CC796;--warn:#E3B04B;--off:#E68670;--info:#6BB0E0;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#9a7cf0;--s7:#2bb5cc;color-scheme:dark}
-*{box-sizing:border-box}
+*{box-sizing:border-box;font-variant-numeric:lining-nums tabular-nums}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
 h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
 p{margin:0}
@@ -1831,7 +1831,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
               </div>
               <div class="g2">
                 <div class="f"><label for="aPayAmt" id="aPayAmtL">Monthly salary</label><input id="aPayAmt" type="number" min="0" step="0.01" placeholder="e.g. 25000"></div>
-                <div class="f"><label for="aPayOt">Overtime pay per hour</label><input id="aPayOt" type="number" min="0" step="0.01" placeholder="Optional"></div>
+                <div class="f"><label for="aPayOt">Overtime pay per hour</label><input id="aPayOt" type="number" value="100" disabled title="Fixed for every employee"><small class="hint">Fixed: ₹100 per approved hour for every employee</small></div>
               </div>
               <small class="hint">Recommended: <b>Monthly salary paid per working day</b>. Pay = agreed salary ÷ 20 × paid days (every Monday to Friday; holidays and approved leave are paid, unpaid leave is not), so a full month never pays less than the agreed salary. Allowances and deductions are added on each payslip in Timesheet &amp; Payroll.</small>
             </fieldset>
@@ -1920,6 +1920,16 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 <dialog class="pw-dlg ep-dlg" id="epDlg" aria-labelledby="epDlgT">
   <div class="ep-top"><div id="epDlgPh"></div><div><h2 id="epDlgT">Employee details</h2><div class="hint" id="epDlgSub"></div></div><button class="btn btn-ghost" type="button" id="epDlgX" style="margin-left:auto">Close</button></div>
   <div class="ep" id="epAdm"></div>
+</dialog>
+<dialog class="pw-dlg" id="wkDlg" aria-labelledby="wkDlgT">
+  <form method="dialog" id="wkForm" novalidate>
+    <h3 id="wkDlgT">🟣 Weekend work: send for overtime approval</h3>
+    <p class="hint" id="wkDlgMsg" style="margin:0"></p>
+    <div class="ot-big" id="wkBig" style="color:#5b2fb0"></div>
+    <label class="fld">What did you work on? <span class="hint">(optional)</span><textarea id="wkWhy" rows="2" maxlength="500" placeholder="e.g. Clearing pending profile reviews"></textarea></label>
+    <div class="msg err" id="wkErr" hidden></div>
+    <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn btn-ghost" type="button" id="wkLater">Later</button><button class="btn btn-gem" type="submit" id="wkSend">Send for approval</button></div>
+  </form>
 </dialog>
 <dialog class="pw-dlg" id="otDlg" aria-labelledby="otDlgT">
   <form method="dialog" id="otForm" novalidate>
@@ -2654,7 +2664,7 @@ function acInvHtml(v, style, qrImg){ const S = acS(), D = style || S.invStyle ||
   const logo = `${location.origin}/logo.png`, wm = st && st !== 'DRAFT' && D !== 'classic' ? `<div class="wm">${st}</div>` : '';
   const meta = `<div class="meta"><div><span>Invoice no</span><b>${esc(v.no)}</b></div><div><span>Invoice date</span><b>${acLong(v.date)}</b></div><div><span>Due date</span><b>${acLong(v.due)}</b></div>${st ? `<div><span>Status</span><b class="stt">${st}</b></div>` : ''}</div>`;
   const base = `:root{--navy:#1f3a6e;--navy2:#2c5aa0;--ink:#16211c;--soft:#5f6d66;--line:#e3e8ef;--tint:#f5f8fc;--g1:#1aa3a3;--g2:#8cc63f;--g3:#f39a2b;--g4:#e2523b;--grad:linear-gradient(90deg,var(--g1),var(--g2) 35%,var(--g3) 70%,var(--g4))}
-*{box-sizing:border-box}html{background:#e8ecf1}body{margin:0;font:12.5px/1.5 Manrope,Arial,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+*{box-sizing:border-box;font-variant-numeric:lining-nums tabular-nums}html{background:#e8ecf1}body{margin:0;font:12.5px/1.5 Manrope,Arial,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .bar{position:sticky;top:0;z-index:5;background:#16211c;color:#fff;padding:10px 20px;display:flex;gap:12px;justify-content:flex-end;align-items:center}.bar button{font:700 13px Manrope,Arial;padding:9px 18px;border-radius:999px;border:0;cursor:pointer;background:#a6c832;color:#13200a}
 .page{width:210mm;min-height:296mm;margin:24px auto;background:#fff;box-shadow:0 20px 60px -24px rgba(20,40,70,.4);position:relative;overflow:hidden;display:flex;flex-direction:column}
 h5{margin:0 0 5px;font:800 9.5px Manrope,Arial;letter-spacing:.16em;text-transform:uppercase;color:var(--navy)}.party{line-height:1.55}.party b{font-size:14px;display:block}.party .attn{color:var(--soft)}
@@ -3334,7 +3344,7 @@ function payMonthStats(days, m){ const keys = monthDays(days, m); let ms = 0, ot
 // paid (approved, not unpaid) leave days that fall on working days between two dates
 const paidLeaveDays = (p, a, b) => approved().filter(d => d.email === p.email && d.type !== 'Unpaid' && d.to >= a && d.from <= b).reduce((n, d) => n + workdays(d.from > a ? d.from : a, d.to < b ? d.to : b), 0);
 // overtime is paid only when an admin approved it (Time Off / overtime approvals): the approved hours of the month × the overtime rate
-const OT_RATE = 100;   // rupees per approved overtime hour (an employee's own overtime rate in Admin, if set, is used instead)
+const OT_RATE = 100;   // rupees per approved overtime hour, the same for every employee
 const isWkend = k => [0, 6].includes(new Date(k + 'T00:00').getDay());
 // Saturday and Sunday: every hour worked is overtime (paid at the overtime rate, not as a salary day)
 const otApprOf = p => me && p.key === me.key && !isAdmin ? otApprMine : (otApprAll[p.key] || (me && p.key === me.key ? otApprMine : null));
@@ -3347,7 +3357,7 @@ function otApprovedIn(p, m){ const appr = me && p.key === me.key && !isAdmin ? o
   Object.entries((appr && appr.days) || {}).forEach(([d, a]) => { if (d.slice(0, 7) === m && !isWkend(d) && a && a.status === 'approved' && +a.hours > 0) days.push([d, +a.hours]); });
   days.sort((a, b) => a[0].localeCompare(b[0])); return {hours: days.reduce((x, d) => x + d[1], 0), days}; }
 function payCalc(p, m, st, cfg){ const r = payCalc0(p, m, st, cfg); if (!r) return r;
-  const ot = otApprovedIn(p, m), base = payAll[p.key] || (me && p.key === me.key ? payMine : null) || {}, rate = +(base && base.otRate) > 0 ? +base.otRate : OT_RATE;
+  const ot = otApprovedIn(p, m), base = payAll[p.key] || (me && p.key === me.key ? payMine : null) || {}, rate = OT_RATE;   /* fixed ₹100 / hour for everyone; old per-employee overtime rates are ignored */
   const we = r.c.type === 'workday' && p.clock !== false ? wkendOtIn(p, m) : {hours: 0, days: []}, dl = n => n + ' day' + (n === 1 ? '' : 's');
   r.ot = {hours: ot.hours + we.hours, rate, days: ot.days, pay: Math.round(ot.hours * rate) + Math.round(we.hours * rate), appr: {hours: ot.hours, days: ot.days, pay: Math.round(ot.hours * rate)}, wk: {hours: we.hours, days: we.days, pay: Math.round(we.hours * rate)}};
   if (ot.hours > 0) r.lines.push(['Overtime (approved)', fmtH(ot.hours * 3600000) + ' on ' + dl(ot.days.length) + ' × ' + money(rate, r.c.currency) + ' / hour', r.ot.appr.pay]);
@@ -3472,7 +3482,7 @@ function slipHtml(D, draft){
   const cell = r => r ? `<td>${esc(r[0])}${r[1] ? `<small>${esc(r[1])}</small>` : ''}</td><td class="n">${mon(r[2])}</td>` : '<td></td><td></td>';
   const pay = slipFrom(m).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'});
   return `<!doctype html><html><head><meta charset="utf-8"><title>Payslip ${esc(mName)} · ${esc(p.name)}</title><style>
-  *{box-sizing:border-box}body{font:12.5px/1.45 "Segoe UI",-apple-system,Roboto,Arial,sans-serif;color:#1c2a25;margin:0;background:#e9eeeb}
+  *{box-sizing:border-box;font-variant-numeric:lining-nums tabular-nums}body{font:12.5px/1.45 "Segoe UI",-apple-system,Roboto,Arial,sans-serif;color:#1c2a25;margin:0;background:#e9eeeb}
   .pg{position:relative;max-width:800px;margin:22px auto;background:#fff;border-radius:6px;box-shadow:0 18px 50px rgba(15,42,34,.12);overflow:hidden}
   .wm{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font:900 120px sans-serif;color:rgba(200,60,40,.07);transform:rotate(-24deg);z-index:2}
   .top{background:linear-gradient(120deg,#f3f8f4 0%,#e8f1eb 60%,#dfece3 100%);color:#17402f;border-bottom:1px solid #d5e3d9;padding:24px 32px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;position:relative}
@@ -3673,7 +3683,7 @@ function setEdit(a){
   fillBoss(a); $('aBoss').value = a.reportsTo || '';
   $('aProject').value = 'Seekout'; $('aClock').value = a.clock === false ? '0' : '1'; $('aSkills').value = a.skills || ''; $('aLoc').value = a.location || ''; $('aPw').value = '';
   $('alA').value = al.Annual; $('alS').value = al.Sick; $('alP').value = al.Personal; $('alC').value = compGiven(a); $('alCHint').textContent = compUsed(a) + ' used so far';
-  { const py = payAll[a.key] || {}; $('aPayType').value = py.type || ''; $('aPayCur').value = py.currency || 'INR'; $('aPayAmt').value = py.amount ?? ''; $('aPayOt').value = py.otRate ?? ''; payAmtLabel(); }
+  { const py = payAll[a.key] || {}; $('aPayType').value = py.type || ''; $('aPayCur').value = py.currency || 'INR'; $('aPayAmt').value = py.amount ?? ''; $('aPayOt').value = 100; payAmtLabel(); }
   $('accErr').hidden = true; $('aName').focus(); window.scrollTo({top: 0, behavior: 'smooth'});
 }
 $('accCancel').onclick = () => setEdit(null);
@@ -5335,7 +5345,11 @@ function renderClock(){
   $('clockDot').hidden = !open;
   $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (prevDay ? ` <small class="pend ok">counted on ${fmtDay(cd)}, the day you started</small>` : '') + (extraPending() - ignMs(otReqMine, cd) > 60000 ? ` <small class="pend">+${fmtH(extraPending() - ignMs(otReqMine, cd))} over 8h, not counted until approved</small>` : ignMs(otReqMine, cd) ? ` <small class="pend ok">✓ accepted without overtime</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
   { const wk = isWkend(cd), b = $('wkBanner'); document.querySelector('.clock-card').classList.toggle('wk', wk); b.hidden = !wk;
-    if (wk) b.innerHTML = `🟣 <b>Weekend overtime day.</b> It's ${new Date(cd + 'T00:00').toLocaleDateString(undefined, {weekday: 'long'})}: every hour you work today counts as <b>overtime at ₹${OT_RATE} / hour</b> once your admin approves it` + (sessMs(todayList) ? ` · so far <b>${fmtH(sessMs(todayList))}</b> = ₹${Math.round(sessMs(todayList) / 3600000 * OT_RATE)}` : '') + '.'; }
+    if (wk) b.innerHTML = `🟣 <b>Weekend overtime day.</b> It's ${new Date(cd + 'T00:00').toLocaleDateString(undefined, {weekday: 'long'})}: every hour you work today counts as <b>overtime at ₹${OT_RATE} / hour</b> once your admin approves it` + (sessMs(todayList) ? ` · so far <b>${fmtH(sessMs(todayList))}</b> = ₹${Math.round(sessMs(todayList) / 3600000 * OT_RATE)}` : '') + '.' + (() => { const s = wkDayState(), dec = me && wkDec(me, s.k);
+      if (dec) return dec.status === 'approved' ? `<div style="margin-top:6px">✓ Approved: <b>${fmtH(dec.hours * 3600000)}</b> as overtime</div>` : '<div style="margin-top:6px">✗ Not approved by your admin</div>';
+      if (!s.done) return s.ms ? '<div style="margin-top:6px">When you clock out for the day, you\'ll be asked to send these hours for approval.</div>' : '';
+      if (wkNeedsSend(s)) return `<div style="margin-top:6px"><button class="mini" type="button" id="wkSendNow">Send ${fmtH(s.ms)} for overtime approval</button></div>`;
+      return s.sent ? `<div style="margin-top:6px">⏳ <b>${fmtH(s.sent.hours * 3600000)}</b> sent, waiting for your admin's approval</div>` : ''; })(); }
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}${isWkend(cd) ? ' wk' : ''}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   renderMyMonth();
 }
@@ -5370,7 +5384,7 @@ $('myCal').addEventListener('click', e => { const b = e.target.closest('[data-da
 $('dayDlgX').onclick = () => $('dayDlg').close();
 $('dayDlg').addEventListener('click', async e => { const b = e.target.closest('[data-ignday]'); if (!b || !me) return; const k = b.dataset.ignday; b.disabled = true;
   try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + (+b.dataset.ms || 0), ignoredAt: new Date().toISOString()};
-    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
     $('dayDlg').close(); renderMyMonth(); renderClock(); toast('Saved without overtime'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } }); $('dayDlg').addEventListener('click', e => { if (e.target === $('dayDlg')) $('dayDlg').close(); });
 $('myMonthCopy').onclick = () => {
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value, keys = monthDays(days, m);
@@ -5441,7 +5455,7 @@ function askOvertime(auto){
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
 $('otIgnore').onclick = async () => { if (!me) return; const k = curDay(), b = $('otIgnore'), add = extraUnsent(); b.disabled = true;
   try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + add, ignoredAt: new Date().toISOString()};
-    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
     $('otLater').click(); renderClock(); renderMyMonth(); toast('Saved: ' + fmtH(todayRaw()) + ' worked, no overtime requested'); }
   catch (x) { $('otErr').textContent = 'That couldn\'t be saved. Try again.'; $('otErr').hidden = false; } finally { b.disabled = false; } };
 $('otForm').addEventListener('submit', async e => {
@@ -5461,12 +5475,12 @@ $('otForm').addEventListener('submit', async e => {
       if (want > ex + 30000) { btn.disabled = false; btn.textContent = label; return fail('You can send up to ' + fmtH(ex) + ' as overtime.'); }
       const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})), prevIgn = ignMs(otReqMine, k), prevH = days[k] && days[k].hours ? +days[k].hours : 0;
       days[k] = {...(days[k] || {}), hours: Math.round((prevH + Math.ceil(want / 900000) / 4) * 4) / 4, reason: why.slice(0, 500), at: new Date().toISOString(), ignoredMs: prevIgn + Math.max(0, ex - want), ignoredAt: new Date().toISOString()};
-      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); otReqMine = {email: me.email, name: me.name, days};
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
       toast(fmtH(want) + ' sent for overtime approval, ' + fmtH(Math.max(0, ex - want)) + ' ignored'); }
     else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] && days[k].ignoredMs ? {ignoredMs: days[k].ignoredMs, ignoredAt: days[k].ignoredAt} : {}), hours: Math.max(0.25, Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(k).carryOut || 0) - ignMs(otReqMine, k) - 60000) / 900000) / 4), reason: why.slice(0, 500), at: new Date().toISOString()};
-      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days}); toast('Overtime sent to your Project Manager for approval'); }
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); toast('Overtime sent to your Project Manager for approval'); }
     $('otLater').click(); renderClock(); renderMyMonth();
-    if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500);
+    if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500); else setTimeout(askWeekend, 500);
   } catch (x) { fail('The request couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'); }
   finally { btn.disabled = false; btn.textContent = mode === 'carry' ? 'Send carry-over for approval' : 'Send overtime for approval'; }
 });
@@ -5482,6 +5496,23 @@ $('rcBrk').onclick = () => punch('break'); $('rcOut').onclick = () => go('clock'
 // the left-menu clock updates itself every second (time and worked today), on its own, so it never waits for the My Workday page
 function railTick(){ const box = $('railClock'); if (!box || box.hidden) return; $('rcTime').textContent = new Date().toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'});
   const days = (myAtt && myAtt.days) || {}; if (openSession(days)) $('rcToday').textContent = fmtH(sessMs(days[curDayOf(days)] || [])); }
+// weekend work: asked only after the employee clocks out (not on a break); the admin sees it once sent, or once the day is over
+function wkDayState(){ const days = (myAtt && myAtt.days) || {}, k = curDayOf(days), l = days[k] || [], ms = sessMs(l), done = !!l.length && !openSession(days) && !onBreak(days);
+  return {k, ms, done, wk: isWkend(k), sent: (otReqMine && otReqMine.wk && otReqMine.wk[k]) || null}; }
+const wkNeedsSend = s => s.wk && s.done && s.ms >= 60000 && !(s.sent && +s.sent.hours >= Math.round(s.ms / 36e3) / 100 - 0.01);
+function askWeekend(){ const s = wkDayState(); if (!wkNeedsSend(s)) return;
+  const day = new Date(s.k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'});
+  $('wkDlgMsg').textContent = `You're done for ${day}. Saturday and Sunday hours are paid as overtime at ₹${OT_RATE} / hour once your admin approves them.` + (s.sent ? ' You worked more after your last request, so this sends the new total.' : '');
+  $('wkBig').textContent = fmtH(s.ms) + ' · ₹' + Math.round(s.ms / 3600000 * OT_RATE); $('wkErr').hidden = true; $('wkWhy').value = (s.sent && s.sent.reason) || '';
+  const d = $('wkDlg'); if (d.showModal) { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
+$('wkBanner').addEventListener('click', e => { if (e.target.closest('#wkSendNow')) askWeekend(); });
+$('wkLater').onclick = () => { const d = $('wkDlg'); if (d.close) d.close(); else d.removeAttribute('open'); renderClock(); };
+$('wkForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const s = wkDayState(), btn = $('wkSend'); if (!s.wk || !s.done) return $('wkLater').click(); btn.disabled = true;
+  try { const wk = {...((otReqMine && otReqMine.wk) || {})}; wk[s.k] = {hours: Math.round(s.ms / 36e3) / 100, reason: $('wkWhy').value.trim().slice(0, 500), at: new Date().toISOString()};
+    Object.keys(wk).sort().slice(0, -30).forEach(x => delete wk[x]);
+    const doc = {email: me.email, name: me.name, days: (otReqMine && otReqMine.days) || {}, wk}; await db.doc('otRequests/' + me.key).set(doc); otReqMine = doc;
+    $('wkLater').click(); toast('Weekend hours sent to your admin for overtime approval'); }
+  catch (x) { $('wkErr').textContent = 'That couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'; $('wkErr').hidden = false; } finally { btn.disabled = false; } });
 function renderOtBox(){
   const box = $('otBox'); if (!me || !selfClock()) { box.hidden = true; return; }
   const k = curDay(), st = myOtToday(), unsent = extraUnsent(), open = openSession((myAtt && myAtt.days) || {}), fd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'});
@@ -5510,10 +5541,10 @@ function renderOt(){
 }
 function renderWkAdmin(){ const L = $('wkList'); if (!L) return; const today = todayStr(), since = ymd(new Date(Date.now() - 60 * 864e5)), pend = [], done = [];
   teamAtt.forEach(r => { const p = accounts.find(a => a.key === r.email || a.email === r.email) || {key: r.email, email: r.email, name: r.name}; if (p.clock === false) return;
-    Object.keys(r.days || {}).forEach(k => { if (k < since || k > today || !isWkend(k)) return; const l = r.days[k], h = sessMs(l) / 3600000; if (!(h > 0.01)) return; const open = l.length && !l[l.length - 1].out, d = (otApprAll[p.key] && otApprAll[p.key].wk || {})[k];
-      const it = {p, k, h: Math.round(h * 100) / 100, n: l.length, open, d};
+    Object.keys(r.days || {}).forEach(k => { if (k < since || k > today || !isWkend(k)) return; const l = r.days[k], h = sessMs(l) / 3600000; if (!(h > 0.01)) return; const open = l.length && !l[l.length - 1].out, d = (otApprAll[p.key] && otApprAll[p.key].wk || {})[k], rq = ((otReqAll.find(x => x.key === p.key) || {}).wk || {})[k]; if (k === today && !rq && !d) return;
+      const it = {p, k, h: Math.round(h * 100) / 100, n: l.length, open, d, rq};
       if (!d || (d.status === 'approved' && it.h > (+d.hours || 0) + 0.05)) pend.push(it); else done.push(it); }); });
-  const fd = k => new Date(k + 'T00:00'), row = (it, acts) => `<div class="ev"><div class="d">${fd(it.k).getDate()}<small>${fd(it.k).toLocaleDateString(undefined, {weekday: 'short'})}</small></div><div><b>${esc(it.p.name || it.p.email)} · ${fmtH(it.h * 3600000)} on ${fd(it.k).toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'})}</b><span>${it.n} session${it.n === 1 ? '' : 's'}${it.open ? ' · still clocked in' : ''} · ₹${Math.round(it.h * OT_RATE)} as overtime${it.d && it.d.status === 'approved' && it.h > (+it.d.hours || 0) + 0.05 ? ' · ' + fmtH(it.d.hours * 3600000) + ' approved earlier, more time added since' : ''}</span></div><div class="acts">${acts}</div></div>`;
+  const fd = k => new Date(k + 'T00:00'), row = (it, acts) => `<div class="ev"><div class="d">${fd(it.k).getDate()}<small>${fd(it.k).toLocaleDateString(undefined, {weekday: 'short'})}</small></div><div><b>${esc(it.p.name || it.p.email)} · ${fmtH(it.h * 3600000)} on ${fd(it.k).toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'})}</b><span>${it.rq ? 'Sent by employee' + (it.rq.reason ? ': ' + esc(it.rq.reason) : '') : 'Not sent by employee (day is over)'} · ${it.n} session${it.n === 1 ? '' : 's'}${it.open ? ' · still clocked in' : ''} · ₹${Math.round(it.h * OT_RATE)} as overtime${it.d && it.d.status === 'approved' && it.h > (+it.d.hours || 0) + 0.05 ? ' · ' + fmtH(it.d.hours * 3600000) + ' approved earlier, more time added since' : ''}</span></div><div class="acts">${acts}</div></div>`;
   pend.sort((a, b) => b.k.localeCompare(a.k)); done.sort((a, b) => b.k.localeCompare(a.k));
   L.innerHTML = pend.length ? pend.map(it => row(it, `<button class="mini ok-btn" data-wk="approved" data-e="${esc(it.p.key)}" data-k="${it.k}" data-h="${it.h}"${it.open ? ' disabled title="Wait until they clock out"' : ''}>Approve ${fmtH(it.h * 3600000)}</button><button class="mini danger" data-wk="rejected" data-e="${esc(it.p.key)}" data-k="${it.k}" data-h="${it.h}">Reject</button>`)).join('') : '<p class="empty">No weekend work waiting for approval.</p>';
   $('wkDone').innerHTML = done.length ? done.map(it => row(it, `<span class="pill ${it.d.status === 'approved' ? 'ok' : 'off'}">${it.d.status === 'approved' ? 'Approved ' + fmtH(it.d.hours * 3600000) : 'Rejected'}</span><button class="mini" data-wk="undo" data-e="${esc(it.p.key)}" data-k="${it.k}">Undo</button>`)).join('') : '<p class="empty">None yet.</p>';
@@ -5568,7 +5599,7 @@ async function punch(kind){
   else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).filter(x => (days[x] || []).length).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in' && !(days[k] || []).slice(0, -1).length) setTimeout(() => { escAsk(); profInfo(); }, 300); if (kind === 'out' && window.__wlWarn) { toast('Clocked out. ' + window.__wlWarn, 8000); window.__wlWarn = ''; } else toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); }, 400); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in' && !(days[k] || []).slice(0, -1).length) setTimeout(() => { escAsk(); profInfo(); }, 300); if (kind === 'out' && window.__wlWarn) { toast('Clocked out. ' + window.__wlWarn, 8000); window.__wlWarn = ''; } else toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); else askWeekend(); }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me) || escMe()) openWorkLog(curDay(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
@@ -5595,7 +5626,7 @@ const swOn = () => SW_ENABLED && !!me && wlRequired(me) && !acting() && selfCloc
 const swGap = () => (SW_MIN + Math.random() * (SW_MAX - SW_MIN)) * 60000;
 async function swLog(entry){ if (!me) return; const d = curDay(), cur = swAll[me.key] || {}, days = {...(cur.days || {})}; days[d] = [...(days[d] || []), entry].slice(-80);
   Object.keys(days).sort().slice(0, -45).forEach(k => delete days[k]); swAll[me.key] = {email: me.email, name: me.name, days};
-  try { await db.doc('activityCheck/' + me.key).set({email: me.email, name: me.name, days}); } catch (e) {} }
+  try { await db.doc('activityCheck/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); } catch (e) {} }
 // stop the running session at a given moment (used when a check is not answered, or the portal was closed)
 async function swStopAt(iso, why){ try { const snap = await db.doc('timeclock/' + me.key).get(), fresh = snap.exists ? snap.data() : null;
     const rec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase()); if (!rec) return false;
