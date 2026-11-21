@@ -3418,9 +3418,11 @@ function inWords(n){ n = Math.round(Math.abs(n)); if (!n) return 'Zero';
   const two = x => x < 20 ? a[x] : t[Math.floor(x / 10)] + (x % 10 ? ' ' + a[x % 10] : ''), three = x => (x >= 100 ? a[Math.floor(x / 100)] + ' Hundred' + (x % 100 ? ' ' : '') : '') + (x % 100 ? two(x % 100) : '');
   const parts = []; const cr = Math.floor(n / 1e7); n %= 1e7; const lk = Math.floor(n / 1e5); n %= 1e5; const th = Math.floor(n / 1e3); n %= 1e3;
   if (cr) parts.push(three(cr) + ' Crore'); if (lk) parts.push(two(lk) + ' Lakh'); if (th) parts.push(two(th) + ' Thousand'); if (n) parts.push(three(n)); return parts.join(' '); }
+const NET_ALLOW = 500;   // rupees: internet allowance added to every payslip by default (remove it on a payslip to leave it out)
 // the slip settings being edited: saved draft, else the employee's pay settings
 function slipCfg(p, m){ const id = slipId(p.key, m), sv = slipsAll[id] || {}, base = payAll[p.key] || {};
-  if (!slipEdit[id] || !slipEdit[id].touched) slipEdit[id] = {type: 'workday', amount: sv.basis ? sv.basis.amount : (base.type === 'workday' || base.type === 'monthly' ? (base.amount ?? '') : ''), otRate: 0, currency: (sv.basis && sv.basis.currency) || base.currency || 'INR', extras: JSON.parse(JSON.stringify(sv.extras || [])), note: sv.note || ''};
+  if (!slipEdit[id] || !slipEdit[id].touched) slipEdit[id] = {type: 'workday', amount: sv.basis ? sv.basis.amount : (base.type === 'workday' || base.type === 'monthly' ? (base.amount ?? '') : ''), otRate: 0, currency: (sv.basis && sv.basis.currency) || base.currency || 'INR', extras: JSON.parse(JSON.stringify(sv.extras || [])), note: sv.note || '', netOff: !!sv.netOff};
+  const ed = slipEdit[id]; if (sv.status !== 'published' && !ed.netOff && !ed.extras.some(x => x.kind !== 'ded' && /internet/i.test(x.label || ''))) ed.extras.unshift({label: 'Internet allowance', amount: NET_ALLOW, kind: 'earn'});
   return slipEdit[id]; }
 function slipTotals(p, m, e){ const st = payMonthStats(payDays(p), m), pc = payCalc(p, m, st, {type: e.type, amount: +e.amount || 0, otRate: +e.otRate || 0, currency: e.currency});
   const earn = (e.extras || []).filter(x => x.kind !== 'ded' && +x.amount), ded = (e.extras || []).filter(x => x.kind === 'ded' && +x.amount);
@@ -3508,7 +3510,7 @@ function openHtml(html){ const w = window.open('', '_blank'); if (!w) return toa
 async function previewSlip(p, m){ const w = window.open('', '_blank'); if (!w) return toast('Allow pop-ups for this site to open the payslip.'); w.document.write('<p style="font-family:sans-serif;padding:30px">Preparing payslip…</p>');
   const D = await slipData(p, m, slipCfg(p, m)); w.document.open(); w.document.write(slipHtml(D, true)); w.document.close(); }
 async function saveSlip(p, m, status){ const e = slipCfg(p, m), id = slipId(p.key, m), T = slipTotals(p, m, e);
-  const doc = {email: p.key, name: p.name, month: m, status, basis: {type: e.type, amount: +e.amount || 0, otRate: +e.otRate || 0, currency: e.currency || 'INR'}, extras: (e.extras || []).filter(x => x.label || +x.amount).map(x => ({label: String(x.label || '').slice(0, 80), amount: +x.amount || 0, kind: x.kind === 'ded' ? 'ded' : 'earn'})), note: String(e.note || '').slice(0, 400), net: Math.round(T.net), updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'};
+  const doc = {email: p.key, name: p.name, month: m, status, basis: {type: e.type, amount: +e.amount || 0, otRate: +e.otRate || 0, currency: e.currency || 'INR'}, extras: (e.extras || []).filter(x => x.label || +x.amount).map(x => ({label: String(x.label || '').slice(0, 80), amount: +x.amount || 0, kind: x.kind === 'ded' ? 'ded' : 'earn'})), note: String(e.note || '').slice(0, 400), netOff: !!e.netOff, net: Math.round(T.net), updatedAt: new Date().toISOString(), by: me ? me.name : 'Admin'};
   if (status === 'published') { const D = await slipData(p, m, e); doc.html = slipHtml(D, false); doc.publishedAt = new Date().toISOString(); }
   await db.doc('payslips/' + id).set(doc); slipsAll[id] = doc; }
 // admin editor shown inside each employee's row on Timesheet & Payroll
@@ -3533,7 +3535,7 @@ $('pyTeam').addEventListener('input', e => { const t = e.target, p = slipPerson(
 $('pyTeam').addEventListener('change', e => { if (e.target.matches('select[data-se], select[data-sx]')) e.target.dispatchEvent(new Event('input', {bubbles: true})); });
 $('pyTeam').addEventListener('click', async e => { const t = e.target; if (!t.closest('.slip-ed')) return; e.stopPropagation(); const p = slipPerson(t); if (!p) return; const m = $('payMonth').value, ed = slipCfg(p, m);
   ed.touched = true; if (t.closest('[data-sxadd]')) { ed.extras.push({label: '', amount: '', kind: t.closest('[data-sxadd]').dataset.sxadd}); slipRefresh(t, p, m); return; }
-  if (t.closest('[data-sxdel]')) { ed.extras.splice(+t.closest('[data-sxdel]').dataset.sxdel, 1); slipRefresh(t, p, m); return; }
+  if (t.closest('[data-sxdel]')) { const gone = ed.extras.splice(+t.closest('[data-sxdel]').dataset.sxdel, 1)[0]; if (gone && /internet/i.test(gone.label || '') && !ed.extras.some(x => /internet/i.test(x.label || ''))) ed.netOff = true; slipRefresh(t, p, m); return; }
   const a = t.closest('[data-sa]'); if (!a) return; const act = a.dataset.sa;
   if (act === 'preview') return previewSlip(p, m);
   if (act === 'viewpub') { const sv = slipsAll[slipId(p.key, m)]; return sv && sv.html ? openHtml(sv.html) : toast('No published copy yet.'); }
