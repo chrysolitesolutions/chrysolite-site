@@ -1557,7 +1557,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <div class="tiles">
         <div class="tile"><span>Hours this month</span><b id="pyHours">0h 00m</b><small id="pyHoursSub"></small></div>
         <div class="tile"><span>Days worked</span><b id="pyDays">0</b><small id="pyDaysSub"></small></div>
-        <div class="tile"><span>Overtime</span><b id="pyOt">0h 00m</b><small>hours over 8 a day</small></div>
+        <div class="tile"><span>Overtime (approved)</span><b id="pyOt">0h 00m</b><small id="pyOtSub">paid at ₹100 / hour</small></div>
         <div class="tile hl"><span>Estimated salary</span><b id="pySal">—</b><small id="pySalSub"></small></div>
       </div>
       <div class="two">
@@ -3330,7 +3330,17 @@ function payCfg(p){ if (!p) return null; if (me && p.key === me.key && !isAdmin)
 function payMonthStats(days, m){ const keys = monthDays(days, m); let ms = 0, ot = 0, worked = 0; keys.forEach(k => { const d = sessMs(days[k]); if (d > 0) { worked++; ms += d; ot += Math.max(0, d - DAY_MAX); } }); return {ms, ot, worked}; }
 // paid (approved, not unpaid) leave days that fall on working days between two dates
 const paidLeaveDays = (p, a, b) => approved().filter(d => d.email === p.email && d.type !== 'Unpaid' && d.to >= a && d.from <= b).reduce((n, d) => n + workdays(d.from > a ? d.from : a, d.to < b ? d.to : b), 0);
-function payCalc(p, m, st, cfg){
+// overtime is paid only when an admin approved it (Time Off / overtime approvals): the approved hours of the month × the overtime rate
+const OT_RATE = 100;   // rupees per approved overtime hour (an employee's own overtime rate in Admin, if set, is used instead)
+function otApprovedIn(p, m){ const appr = me && p.key === me.key && !isAdmin ? otApprMine : (otApprAll[p.key] || (me && p.key === me.key ? otApprMine : null)), days = [];
+  Object.entries((appr && appr.days) || {}).forEach(([d, a]) => { if (d.slice(0, 7) === m && a && a.status === 'approved' && +a.hours > 0) days.push([d, +a.hours]); });
+  days.sort((a, b) => a[0].localeCompare(b[0])); return {hours: days.reduce((x, d) => x + d[1], 0), days}; }
+function payCalc(p, m, st, cfg){ const r = payCalc0(p, m, st, cfg); if (!r) return r;
+  const ot = otApprovedIn(p, m), base = payAll[p.key] || (me && p.key === me.key ? payMine : null) || {}, rate = +(base && base.otRate) > 0 ? +base.otRate : OT_RATE;
+  r.ot = {hours: ot.hours, rate, days: ot.days, pay: Math.round(ot.hours * rate)};
+  if (ot.hours > 0) { r.lines.push(['Overtime (approved)', fmtH(ot.hours * 3600000) + ' on ' + ot.days.length + ' day' + (ot.days.length === 1 ? '' : 's') + ' × ' + money(rate, r.c.currency) + ' / hour', r.ot.pay]); r.total += r.ot.pay; }
+  return r; }
+function payCalc0(p, m, st, cfg){
   let c = cfg || payCfg(p); if (!c || !c.type || !(c.amount > 0)) return null; if (c.type === 'monthly') c = {...c, type: 'workday'};   /* agreed monthly salary is paid per working day */
   const [y, mo] = m.split('-').map(Number), first = m + '-01', last = m + '-' + pad(new Date(y, mo, 0).getDate()), wd = workdays(first, last);
   const unpaid = approved().filter(d => d.email === p.email && d.type === 'Unpaid' && d.to >= first && d.from <= last).reduce((a, d) => a + workdays(d.from > first ? d.from : first, d.to < last ? d.to : last), 0);
@@ -3346,15 +3356,15 @@ function payCalc(p, m, st, cfg){
     if (!tracked) { payable = Math.max(0, wk - unpaidSoFar); worked = Math.max(0, wk - hol - pl2 - unpaid); }
     const absent = Math.max(0, wk - hol - pl2 - unpaidSoFar - Math.min(worked, wk)), rate = c.amount / 20; total = payable * rate; lines.push(['Salary for working days', payable + ' day' + (payable === 1 ? '' : 's') + ' × ' + money(rate, cur) + ' (' + money(c.amount, cur) + ' ÷ 20)', total]);
     return {c, total, lines, unpaid: unpaidSoFar, wd, pl: pl2, wk, hol, payable, rate, worked, absent, tracked, partial, upto}; }
-  if (c.type === 'hourly') { const reg = regH * c.amount, otp = otH * (c.otRate || c.amount); total = reg + otp;
-    lines.push(['Regular hours', fmtH(st.ms - st.ot) + ' × ' + money(c.amount, cur), reg]); if (otH) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate || c.amount, cur), otp]); }
-  else if (c.type === 'daily') { const reg = st.worked * c.amount, lvp = pl * c.amount, otp = c.otRate ? otH * c.otRate : 0; total = reg + lvp + otp;
+  if (c.type === 'hourly') { const reg = regH * c.amount; total = reg;
+    lines.push(['Regular hours', fmtH(st.ms - st.ot) + ' × ' + money(c.amount, cur), reg]); }
+  else if (c.type === 'daily') { const reg = st.worked * c.amount, lvp = pl * c.amount, otp = 0; total = reg + lvp;
     lines.push(['Days worked', st.worked + ' day' + (st.worked === 1 ? '' : 's') + ' × ' + money(c.amount, cur), reg]); if (pl) lines.push(['Paid leave', pl + ' day' + (pl === 1 ? '' : 's') + ' × ' + money(c.amount, cur), lvp]); if (otp) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate, cur), otp]); }
   else if (c.type === 'weekly') { const days = payDays(p); total = 0;
     payWeeks(days, m).forEach((w, i) => { const a = ymd(w.from), b = ymd(w.to), hol = holidays.filter(h => h.date >= a && h.date <= b && ![0, 6].includes(new Date(h.date + 'T00:00').getDay())).length, paid = Math.min(5, w.worked + paidLeaveDays(p, a, b) + hol), v = c.amount * paid / 5; total += v;   /* holidays and paid leave count as paid days */
       lines.push(['Week ' + (i + 1), w.from.getDate() + (a !== b ? '–' + w.to.getDate() : '') + ' ' + w.from.toLocaleDateString(undefined, {month: 'short'}) + ': ' + paid + ' of 5 days paid' + (hol ? ' (incl. ' + hol + ' holiday)' : '') + ' × ' + money(c.amount, cur) + ' / week', v]); });
-    if (c.otRate && otH) { const otp = otH * c.otRate; total += otp; lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate, cur), otp]); } }
-  else { const ded = wd ? unpaid * c.amount / wd : 0, otp = c.otRate ? otH * c.otRate : 0; total = c.amount - ded + otp;
+  }
+  else { const ded = wd ? unpaid * c.amount / wd : 0, otp = 0; total = c.amount - ded;
     lines.push(['Monthly salary', wd + ' working days this month', c.amount]); if (unpaid) lines.push(['Unpaid leave', unpaid + ' day' + (unpaid === 1 ? '' : 's') + ' × ' + money(c.amount / wd, cur), -ded]); if (otp) lines.push(['Overtime', fmtH(st.ot) + ' × ' + money(c.otRate, cur), otp]); }
   return {c, total, lines, unpaid, wd, pl};
 }
@@ -3373,7 +3383,7 @@ function renderPay(){ try { renderSlipPicker(); } catch (e) {}
   $('paySub').textContent = (isAdmin && me && p.key !== me.key ? p.name + ' · ' : '') + 'Hours each week and month, and the estimated salary for ' + mName + '.';
   $('pyHours').textContent = tracked ? fmtH(st.ms) : 'Not tracked'; $('pyHoursSub').textContent = tracked ? mName : 'this employee does not use the time clock';
   $('pyDays').textContent = st.worked; $('pyDaysSub').textContent = st.worked ? 'average ' + fmtH(st.ms / st.worked) + ' a day' : '';
-  $('pyOt').textContent = fmtH(st.ot);
+  { const oa = p ? otApprovedIn(p, m) : {hours: 0}; $('pyOt').textContent = fmtH(oa.hours * 3600000); $('pyOtSub').textContent = (oa.hours ? 'paid at ₹100 / hour' : 'none approved') + (st.ot ? ' · ' + fmtH(st.ot) + ' over 8 h on the clock' : ''); }
   $('pyWeekT').textContent = 'Hours per week · ' + mName;
   const wk = payWeeks(days, m), df = d => d.toLocaleDateString(undefined, {day: 'numeric', month: 'short'});
   $('pyWeeks').innerHTML = wk.map((w, i) => `<tr><td><b>Week ${i + 1}</b><div class="mono" style="font-size:11.5px;color:var(--ink-soft)">${df(w.from)}${+w.to !== +w.from ? ' – ' + df(w.to) : ''}</div></td><td>${w.worked}</td><td class="mono">${fmtH(w.ms)}</td><td class="mono">${w.ot ? fmtH(w.ot) : '—'}</td></tr>`).join('') + `<tr><td><b>Total</b></td><td><b>${st.worked}</b></td><td class="mono"><b>${fmtH(st.ms)}</b></td><td class="mono"><b>${st.ot ? fmtH(st.ot) : '—'}</b></td></tr>`;
@@ -3439,7 +3449,7 @@ function slipHtml(D, draft){
   const v = x => x ? esc(x) : '<i>—</i>', dt = x => x ? new Date(x + 'T00:00').toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'}) : '';
   const pc = T.pc, acct = info.accountNo ? '•••• ' + String(info.accountNo).slice(-4) : '';
   const box = (title, icon, rows) => `<div class="box"><h3><span>${icon}</span>${title}</h3>${rows.map(([a, b]) => `<div class="r"><span>${a}</span><b>${b}</b></div>`).join('')}</div>`;
-  const earnRows = (pc ? [['Basic salary', pc.payable + ' paid days · ' + fmtH(T.st.ms) + ' worked', pc.total]] : []).concat(T.earn.map(x => [x.label || 'Allowance', '', +x.amount]));
+  const otp = pc && pc.ot ? pc.ot.pay : 0, earnRows = (pc ? [['Basic salary', (pc.payable != null ? pc.payable + ' paid days · ' : '') + fmtH(T.st.ms) + ' worked', pc.total - otp]] : []).concat(otp ? [['Overtime (approved)', fmtH(pc.ot.hours * 3600000) + ' × ' + mon(pc.ot.rate) + ' / hour', otp]] : []).concat(T.earn.map(x => [x.label || 'Allowance', '', +x.amount]));
   const dedRows = (pc && pc.unpaid ? [] : []).concat(T.ded.map(x => [x.label || 'Deduction', '', +x.amount]));
   const gross = earnRows.reduce((a, r) => a + r[2], 0), dsum = dedRows.reduce((a, r) => a + r[2], 0), net = gross - dsum, rows = Math.max(earnRows.length, dedRows.length, 1);
   const cell = r => r ? `<td>${esc(r[0])}${r[1] ? `<small>${esc(r[1])}</small>` : ''}</td><td class="n">${mon(r[2])}</td>` : '<td></td><td></td>';
