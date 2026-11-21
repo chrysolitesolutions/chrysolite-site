@@ -155,8 +155,12 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
   const METRO = /^(greater\s+)?(.+?)(\s+(metropolitan|metro|metroplex|bay|region|city))?(\s+area)?$/i;
   // metro wording can be on any part: "Austin, Texas Metropolitan Area", "Greater Chicago Area", "Dallas-Fort Worth Metroplex"
   const AREA = /\s+(metropolitan|metro|metroplex|bay|region|urban)?\s*(area|region|metroplex|metro)$/i;
+  const FOREIGN_SUF = /\s+(und umgebung|y alrededores|y su área|e região|e regiao|e regi[aã]o metropolitana|et périphérie|et peripherie|et environs|e dintorni|e provincia|en omgeving|i okolice|och omnejd|og omegn|og omegnen|ja ympäristö|és környéke|a okolí|şi împrejurimile|ve çevresi|metropolitan region|metropolregion)$/i;
+  const FOREIGN_PRE = /^(großraum|grossraum|metropolregion|région de|region de|région|área metropolitana de|area metropolitana di|área de|área|regione di|grande|groot|stor-|aglomeracja|região metropolitana de|regiao metropolitana de|gran)\s+/i;
   function clean(raw){ const parts = raw.split(',').map(x => x.trim()).filter(Boolean); let metro = null;
-    parts.forEach((pt, i) => { let x = pt, hit = false; if (/^greater\s+/i.test(x)) { x = x.replace(/^greater\s+/i, ''); hit = true; } if (AREA.test(x)) { x = x.replace(AREA, '').trim(); hit = true; }
+    parts.forEach((pt, i) => { let x = pt, hit = false; if (/^greater\s+/i.test(x)) { x = x.replace(/^greater\s+/i, ''); hit = true; }
+      // LinkedIn in other languages: "Harrisburg und Umgebung", "Großraum München", "Région de Paris", "Madrid y alrededores", "São Paulo e Região", "Milano e dintorni"…
+      if (FOREIGN_SUF.test(x)) { x = x.replace(FOREIGN_SUF, '').trim(); hit = true; } if (FOREIGN_PRE.test(x)) { x = x.replace(FOREIGN_PRE, '').trim(); hit = true; } if (AREA.test(x)) { x = x.replace(AREA, '').trim(); hit = true; }
       if (/^(san francisco|sf)$/i.test(x) && /bay/i.test(pt)) x = 'San Francisco'; 
       if (/\bcity\s+county$/i.test(x)) x = x.replace(/\s+county$/i, '');   // "Baltimore City County" (a city that is its own county) -> "Baltimore City"
       if (hit && x) metro = raw.trim(); if (x) parts[i] = x; });
@@ -181,6 +185,11 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       for (let n = w.length - 1; n >= 1; n--) { const nm = w.slice(0, n).join(' '); if (nm.length < 3) break; for (const t of [nm + (rest ? ', ' + rest : ''), nm]) { const h = await tryQ(t); if (h) return h; } } }
     // last resort: no town or area matched, so accept a named landmark (an airport, a base, a campus) as a point on the map
     for (const t of tries) { const h = await tryQ(t, true); if (h) return h; }
+    // the name may have changed: anything named exactly as written in the right state (e.g. the old "Lake Worth" station) gives the town it is in today
+    const nm0 = low(c.parts[0]);
+    for (const t of tries) { const j = cache[t.toLowerCase() + '|' + (cc || '')] || []; const h = j.find(x => low(String(x.display_name).split(',')[0]) === nm0 && fits(x) && x.address); if (!h) continue;
+      const a = h.address, town = a.city || a.town || a.village || a.municipality || a.suburb; if (!town || low(town) === nm0) continue;
+      const h2 = await tryQ(town + (a.county ? ', ' + a.county : '') + (a.state ? ', ' + a.state : '')); if (h2) { c.renamed = {from: c.parts[0], to: town}; return h2; } }
     return null; }
   const cache = {};   // kept for this visit only (outlines are too big to store)
   async function geocode(q, cc, land){ const key = q.toLowerCase() + '|' + (cc || ''); let j = cache[key];
@@ -285,7 +294,7 @@ const A = {m: '<span class="bf-a m">✓ Match</span>', n: '<span class="bf-a n">
       airports: {a: apA, b: apB}, landmarks: {a: la2, b: lb2}, landmarkResults: {airport: sAir, largeAirport: sIntl, rail: sRail, university: sUni},
       rules: {metroName: mName || null, metroRadiusKm: wide, nameInMetro: namedHit, insideOutline: {fileInsideProfile: inB, profileInsideFile: inA}, sameCountyState: sameDist === 1 && eq(LA.state, LB.state) !== 0, sharedLandmarks: lmNear, sameMetroByDistance: sameMetro}};
     const col = pct >= 80 ? '#5a9a1a' : pct >= 50 ? '#eda100' : '#e2513b', ring = 2 * Math.PI * 34, mark = s => s === 'near' ? '<span class="near">≈ Different town, same county</span>' : s === 1 ? '<span class="ok">✓ Same</span>' : s === 0 ? '<span class="no">✗ Different</span>' : '<span class="na">– Not shown on one side</span>';
-    const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
+    const osm = p => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`, card = (cls, lab, raw, h, p, c) => `<div class="lc-card ${cls}"><small>${lab}</small><div class="q">${esc(raw)}</div><div class="found">Found: ${esc(h.display_name)}</div>${c.metro ? `<div class="found">Read “${esc(c.metro)}” as “${esc(c.parts[0])}”</div>` : ''}${c.renamed ? `<div class="found">“${esc(c.renamed.from)}” is found today as <b>${esc(c.renamed.to)}</b> (renamed or merged)</div>` : ''}<a href="${osm(p)}" target="_blank" rel="noopener">Open on the map ↗</a></div>`;
     out.hidden = false;
     out.innerHTML = `<div class="lc-res"><div class="sc-top"><div class="sc-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - pct / 100)}" transform="rotate(-90 40 40)"/></svg><b>${pct}%</b><span>match</span></div>
         <div class="sc-verdict"><span class="bf-l">Suggested answer for Location</span>${A[ans]}<p>${why}</p><p class="hint">A helper using OpenStreetMap: you make the final decision using the location rule.</p></div></div>
