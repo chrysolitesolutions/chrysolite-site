@@ -2181,7 +2181,7 @@ function watchMine(){
   watch('slipAckMine', db.doc('slipAck/' + me.key), s => { slipAckMine = s.exists ? s.data() : null; try { drawMySlips(); } catch (e) {} });
   watch('profReqMine', db.doc('profileReq/' + me.key), s => { profReqMine = s.exists ? s.data() : null; renderProfile(); });
   if (!db || !me) return;
-  watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); try { renderPstat(); } catch (e) {} });
+  watch('myClock', db.doc('timeclock/' + me.key), s => { myClockRaw = s.exists ? s.data() : null; if (!(s.metadata && s.metadata.fromCache)) myClockServer = true; pickMyAtt(); enforceMine(); renderClock(); renderHome(); renderProfile(); try { renderPstat(); } catch (e) {} });
   watch('myReqDoc', db.doc('leaveRequests/' + me.key), s => { myReqDoc = s.exists ? s.data() : null; renderProfile(); try { renderHomeLeave(); } catch (e) {} });
   watch('myCarryReq', db.doc('carryReq/' + me.key), s => { carryReqMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
   watch('myCarryAppr', db.doc('carryAppr/' + me.key), s => { carryApprMine = s.exists ? s.data() : null; pickMyAtt(); renderClock(); renderHome(); });
@@ -2241,7 +2241,7 @@ function applyRole() {
 
 /* ---------- sign in ---------- */
 function showApp(acc) {
-  me = acc; myClockRaw = null; myReqDoc = null; pickMyAtt(); watchMine();
+  me = acc; myClockRaw = null; myClockServer = false; myReqDoc = null; pickMyAtt(); watchMine();
   $('loginView').hidden = true; $('appView').hidden = false;
   const label = acc ? acc.name : 'Setup';
   $('myEmail').textContent = label; $('myAv').textContent = initials(label);
@@ -5505,13 +5505,16 @@ async function extendForOvertime(email, k, hours){
   return sess.out ? fmtT(sess.out) : fmtT(new Date(end).toISOString()) + ' (clock running)';
 }
 let punching = false;
+let myClockServer = false;   // the time clock copy on this page has come from the server (not only from the browser's saved copy)
 async function punch(kind){
   const err = $('clkErr'); err.hidden = true; if (punching) return;
   // always start from the saved time clock, never from what this page happens to have loaded so far,
   // so a click before the history has loaded can never replace earlier days
   let fresh = null; punching = true;
   try { const snap = await db.doc('timeclock/' + me.key).get(); fresh = snap.exists ? snap.data() : null; }
-  catch (x) { punching = false; err.textContent = 'Your time clock could not be loaded, so nothing was changed. Check your connection and try again.'; err.hidden = false; return; }
+  catch (x) { // the fresh read failed (e.g. Firebase's daily read limit): use the copy this page already received from the server, or the browser's saved copy
+    if (myClockServer) fresh = myClockRaw;
+    else { try { const c = await db.doc('timeclock/' + me.key).get({source: 'cache'}); if (!c.exists) throw x; fresh = c.data(); } catch (y) { punching = false; err.textContent = 'Your time clock could not be loaded, so nothing was changed (' + ((x && x.code) || 'error') + '). ' + ((x && x.code) === 'resource-exhausted' ? 'The portal has reached Firebase\'s free daily limit: tell your admin.' : 'Check your connection and try again.'); err.hidden = false; return; } } }
   punching = false;
   const mineRec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase());
   const days = JSON.parse(JSON.stringify((mineRec && mineRec.days) || {})), k = kind === 'in' && !openSession(days) ? todayStr() : curDayOf(days), now = new Date().toISOString();
