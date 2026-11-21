@@ -1394,6 +1394,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
           <div class="clock-now"><b id="clkTime">--:--</b><span id="clkDate"></span></div>
           <div class="clock-status" id="clkStatus">Not clocked in</div>
           <div class="wk-banner" id="wkBanner" hidden></div>
+          <button class="linkbtn" type="button" id="wkPreBtn" hidden style="justify-self:start;margin:2px 0 6px">📅 Request weekend work</button>
           <p class="msg" id="clkBlock" hidden></p>
           <button class="btn btn-ghost sw-pipbtn" type="button" id="swPipBtn" hidden>📌 Keep the “still working?” check on top of all windows</button>
           <div class="msg ot-box" id="otBox" hidden></div>
@@ -1788,7 +1789,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <div class="vhead"><div><h1>Admin</h1><p>Manage employee logins and profiles, and post announcements. Edit shifts on the Schedule page and approve leave on Leave plans.</p></div><span class="pill ok" id="accCount">0 accounts</span></div>
       <div class="panel" style="margin-bottom:16px"><h3 id="cTeamT">Team hours this month</h3><div class="chart" id="cTeam"></div></div>
       <div class="panel" id="actPanel" style="margin-bottom:16px"><h3>Act as an employee</h3><p class="hint" style="margin:-4px 0 10px">See the portal exactly as an employee sees it, to fix a technical problem or make an override for them.</p><div class="act-row"><select id="actWho" aria-label="Employee to act as"></select><button class="btn btn-gem" type="button" id="actGo">Act as…</button></div></div>
-      <div class="panel" id="wkPanel" style="margin-bottom:16px"><h3>Weekend work approvals <span class="pill warn" id="wkCount" hidden></span></h3><p class="hint" style="margin:-4px 0 10px">Hours employees worked on a Saturday or Sunday. They are paid as overtime at ₹100 / hour only after you approve them here; rejected hours are not paid.</p><div class="timeline" id="wkList"></div><details style="margin-top:10px"><summary class="hint" style="cursor:pointer">Decided weekend days (last 60 days)</summary><div class="timeline" id="wkDone" style="margin-top:8px"></div></details></div>
+      <div class="panel" id="wkPanel" style="margin-bottom:16px"><h3>Weekend work approvals <span class="pill warn" id="wkCount" hidden></span></h3><p class="hint" style="margin:-4px 0 10px">Employees must ask before working on a Saturday or Sunday; they can clock in only after you approve the day. Hours worked are then paid as overtime at ₹100 / hour once you approve them here.</p><h4 style="margin:4px 0 6px">Requests to work on a weekend</h4><div class="timeline" id="wkPreList"></div><h4 style="margin:14px 0 6px">Weekend hours worked</h4><div class="timeline" id="wkList"></div><details style="margin-top:10px"><summary class="hint" style="cursor:pointer">Decided weekend days (last 60 days)</summary><div class="timeline" id="wkDone" style="margin-top:8px"></div></details></div>
       <div class="panel" id="prqPanel" style="margin-bottom:16px" hidden><h3>Profile change requests</h3><p class="hint" style="margin:-4px 0 6px">Employees asking to update locked details, and those who have finished and need locking again.</p><div id="prqList"></div></div>
       <div class="panel acc-panel" style="padding:0">
         <div class="toolbar" style="padding:16px"><input id="accQ" type="search" placeholder="Search name or email" aria-label="Search accounts"></div>
@@ -1920,6 +1921,16 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
 <dialog class="pw-dlg ep-dlg" id="epDlg" aria-labelledby="epDlgT">
   <div class="ep-top"><div id="epDlgPh"></div><div><h2 id="epDlgT">Employee details</h2><div class="hint" id="epDlgSub"></div></div><button class="btn btn-ghost" type="button" id="epDlgX" style="margin-left:auto">Close</button></div>
   <div class="ep" id="epAdm"></div>
+</dialog>
+<dialog class="pw-dlg" id="wpDlg" aria-labelledby="wpT">
+  <form method="dialog" id="wpForm" novalidate>
+    <h3 id="wpT">📅 Request weekend work</h3>
+    <p class="hint" id="wpMsg" style="margin:0"></p>
+    <div id="wpDays" style="display:grid;gap:6px;margin:12px 0"></div>
+    <label class="fld">Reason<textarea id="wpWhy" rows="2" maxlength="500" placeholder="e.g. Finish the pending profile reviews"></textarea></label>
+    <div class="msg err" id="wpErr" hidden></div>
+    <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn btn-ghost" type="button" id="wpLater">Not now</button><button class="btn btn-gem" type="submit" id="wpSend">Send request</button></div>
+  </form>
 </dialog>
 <dialog class="pw-dlg" id="wkDlg" aria-labelledby="wkDlgT">
   <form method="dialog" id="wkForm" novalidate>
@@ -3280,7 +3291,7 @@ function weekLoadedToday(){ return week.key === ymd(monday(0)); }
 // accepting is required before the first clock-in of the day; a change later in the day never stops or blocks the clock,
 // so time already worked is always kept and keeps adding up from the first login
 const workedToday = () => { const l = ((myAtt && myAtt.days) || {})[todayStr()] || []; return l.length > 0; };
-const clockGate = () => { const t = todayTask(); if (workedToday()) return ''; return t.state === 'pending' || t.state === 'changed' ? 'Accept today\'s assignment above before you clock in.' : ''; };
+const clockGate = () => { const w = wkGate(); if (w) return w; const t = todayTask(); if (workedToday()) return ''; return t.state === 'pending' || t.state === 'changed' ? 'Accept today\'s assignment above before you clock in.' : ''; };
 function renderMyAssign(){
   const box = $('myAssign'); if (!box) return; if (!me || !selfClock()) { box.hidden = true; return; } box.hidden = false;
   const t = todayTask(), today = todayStr(), when = new Date().toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long'});
@@ -5337,19 +5348,15 @@ function renderClock(){
   try { renderRailClock(); } catch (e) {}
   const gate = clockGate(); renderMyAssign(); syncPresence();
   $('clkIn').disabled = !!block || !!open || (!!gate && !open); $('clkOut').disabled = !!block || !(open || brk); $('clkBrk').disabled = !!block || !open; renderOtBox();
-  $('clkIn').textContent = gate && !open ? 'Accept assignment first' : brk ? '▶ Resume work' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
+  $('clkIn').textContent = gate && !open ? (wkGate() ? 'Weekend: approval needed' : 'Accept assignment first') : brk ? '▶ Resume work' : (days[todayStr()] || []).length && !open ? 'Clock in again' : 'Clock in';
   const st = $('clkStatus'); st.className = 'clock-status' + (open ? ' on' : '');
   const cd = curDayOf(days), todayList = days[cd] || [], prevDay = cd !== todayStr();
   st.textContent = open ? 'Working since ' + fmtT(open.in) + (prevDay ? ' yesterday · counted on ' + fmtDay(cd) : '') + ' · session ' + todayList.length : brk ? '☕ On break since ' + fmtT(todayList[todayList.length - 1].out) : todayList.length ? 'Clocked out at ' + fmtT(todayList[todayList.length - 1].out) : 'Not clocked in today';
   st.className = 'clock-status' + (open ? ' on' : brk ? ' brk' : '');
   $('clockDot').hidden = !open;
   $('clkToday').innerHTML = fmtH(sessMs(todayList)) + (prevDay ? ` <small class="pend ok">counted on ${fmtDay(cd)}, the day you started</small>` : '') + (extraPending() - ignMs(otReqMine, cd) > 60000 ? ` <small class="pend">+${fmtH(extraPending() - ignMs(otReqMine, cd))} over 8h, not counted until approved</small>` : ignMs(otReqMine, cd) ? ` <small class="pend ok">✓ accepted without overtime</small>` : '') + (dayList(todayStr()).carryIn ? ` <small class="pend ok">includes ${fmtH(dayList(todayStr()).carryIn)} carried over</small>` : '');
-  { const wk = isWkend(cd), b = $('wkBanner'); document.querySelector('.clock-card').classList.toggle('wk', wk); b.hidden = !wk;
-    if (wk) b.innerHTML = `🟣 <b>Weekend overtime day.</b> It's ${new Date(cd + 'T00:00').toLocaleDateString(undefined, {weekday: 'long'})}: every hour you work today counts as <b>overtime at ₹${OT_RATE} / hour</b> once your admin approves it` + (sessMs(todayList) ? ` · so far <b>${fmtH(sessMs(todayList))}</b> = ₹${Math.round(sessMs(todayList) / 3600000 * OT_RATE)}` : '') + '.' + (() => { const s = wkDayState(), dec = me && wkDec(me, s.k);
-      if (dec) return dec.status === 'approved' ? `<div style="margin-top:6px">✓ Approved: <b>${fmtH(dec.hours * 3600000)}</b> as overtime</div>` : '<div style="margin-top:6px">✗ Not approved by your admin</div>';
-      if (!s.done) return s.ms ? '<div style="margin-top:6px">When you clock out for the day, you\'ll be asked to send these hours for approval.</div>' : '';
-      if (wkNeedsSend(s)) return `<div style="margin-top:6px"><button class="mini" type="button" id="wkSendNow">Send ${fmtH(s.ms)} for overtime approval</button></div>`;
-      return s.sent ? `<div style="margin-top:6px">⏳ <b>${fmtH(s.sent.hours * 3600000)}</b> sent, waiting for your admin's approval</div>` : ''; })(); }
+  { const wk = isWkend(cd), b = $('wkBanner'); document.querySelector('.clock-card').classList.toggle('wk', wk); b.hidden = !wk; $('wkPreBtn').hidden = wk || wkExempt();
+    if (wk) b.innerHTML = wkBannerHtml(cd); }
   $('clkSessions').innerHTML = todayList.length ? todayList.map((x, i) => `<div class="sess${x.out ? '' : ' live'}${isWkend(cd) ? ' wk' : ''}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.auto ? '<small style="display:block;color:var(--ink-soft)">' + autoTag(x).replace(/[()]/g, '') + '</small>' : ''}</span><b>${fmtH(sessOne(todayList, x))}</b></div>`).join('') : '<p class="empty" style="padding:8px">No sessions yet today.</p>';
   renderMyMonth();
 }
@@ -5377,14 +5384,14 @@ $('myCal').addEventListener('click', e => { const b = e.target.closest('[data-da
   $('dayDlgT').textContent = new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
   const fdd = d => new Date(d + 'T00:00').toLocaleDateString(undefined, {weekday: 'short', day: 'numeric', month: 'short'}), cIn = myCarry().filter(x => x.to === k && x.status === 'approved'), cOut = myCarry().filter(x => x.from === k && x.status !== 'rejected');
   const ign = ignMs(otReqMine, k), left = raw + (l.carryIn || 0) - ms - (l.carryOut || 0) - ign;
-  $('dayDlgSub').innerHTML = (isWkend(k) && ms > 0 ? `<div class="wk-banner" style="margin:0 0 6px">🟣 Weekend: <b>${fmtH(ms)}</b> as overtime at ₹${OT_RATE} / hour = ₹${Math.round(ms / 3600000 * OT_RATE)} · ${(d => !d ? 'waiting for admin approval' : d.status === 'approved' ? '<b>approved (' + fmtH(d.hours * 3600000) + ')</b>' : '<b>not approved</b>, not paid')(me && wkDec(me, k))}</div>` : '') + `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${cIn.map(x => `<div class="cin">+${fmtH(x.ms)} carried over from ${fdd(x.from)}</div>`).join('')}${cOut.map(x => `<div class="cout">${fmtH(x.ms)} carried to ${fdd(x.to)}${x.status === 'pending' ? ' (waiting for approval)' : ''}</div>`).join('')}${left > 60000 ? ` <div style="color:#a86a00">${fmtH(left)} over 8h not approved / waiting</div>${left < OT_SHORT && k < todayStr() && !(otReqMine && otReqMine.days && otReqMine.days[k] && otReqMine.days[k].hours) ? `<button type="button" class="mini" data-ignday="${k}" data-ms="${Math.round(left)}" style="margin-top:6px">Accept without overtime</button>` : ''}` : ''}${ign > 60000 && left <= 60000 ? ` <div style="color:#3f6a12">✓ Total ${fmtH(raw)} · accepted by you without an overtime request</div>` : ''}`;
+  $('dayDlgSub').innerHTML = (isWkend(k) && ms > 0 ? `<div class="wk-banner" style="margin:0 0 6px">🟣 Weekend: <b>${fmtH(ms)}</b> as overtime · ${(d => !d ? 'waiting for admin approval' : d.status === 'approved' ? '<b>approved (' + fmtH(d.hours * 3600000) + ')</b>' : '<b>not approved</b>, not paid')(me && wkDec(me, k))}</div>` : '') + `<b>${fmtH(ms)}</b> counted · ${l.length} session${l.length === 1 ? '' : 's'}${cIn.map(x => `<div class="cin">+${fmtH(x.ms)} carried over from ${fdd(x.from)}</div>`).join('')}${cOut.map(x => `<div class="cout">${fmtH(x.ms)} carried to ${fdd(x.to)}${x.status === 'pending' ? ' (waiting for approval)' : ''}</div>`).join('')}${left > 60000 ? ` <div style="color:#a86a00">${fmtH(left)} over 8h not approved / waiting</div>${left < OT_SHORT && k < todayStr() && !(otReqMine && otReqMine.days && otReqMine.days[k] && otReqMine.days[k].hours) ? `<button type="button" class="mini" data-ignday="${k}" data-ms="${Math.round(left)}" style="margin-top:6px">Accept without overtime</button>` : ''}` : ''}${ign > 60000 && left <= 60000 ? ` <div style="color:#3f6a12">✓ Total ${fmtH(raw)} · accepted by you without an overtime request</div>` : ''}`;
   $('dayDlgList').innerHTML = l.map((x, i) => { const d = x.out ? Math.max(0, Math.min(+new Date(x.out), +new Date(x.in) + SESSION_MAX) - +new Date(x.in)) : Date.now() - +new Date(x.in);
     return `<div class="sess${x.out ? '' : ' live'}"><span class="n">${i + 1}</span><span class="t">${fmtT(x.in)} → ${x.out ? fmtT(x.out) : 'now'}${x.brk ? '<small style="display:block;color:var(--ink-soft)">then a break</small>' : ''}${x.ot ? '<small style="display:block;color:var(--ink-soft)">overtime</small>' : ''}${x.auto ? '<small style="display:block;color:var(--ink-soft)">stopped automatically</small>' : ''}${x.edit ? `<small style="display:block;color:var(--ink-soft)">edited by ${esc(x.edit.by || 'admin')}</small>` : ''}</span><span class="h mono">${fmtH(d)}</span></div>`; }).join('');
   try { dd.showModal(); } catch (x) { dd.setAttribute('open', ''); } });
 $('dayDlgX').onclick = () => $('dayDlg').close();
 $('dayDlg').addEventListener('click', async e => { const b = e.target.closest('[data-ignday]'); if (!b || !me) return; const k = b.dataset.ignday; b.disabled = true;
   try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + (+b.dataset.ms || 0), ignoredAt: new Date().toISOString()};
-    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {}), ...(otReqMine && otReqMine.wkPre ? {wkPre: otReqMine.wkPre} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
     $('dayDlg').close(); renderMyMonth(); renderClock(); toast('Saved without overtime'); } catch (x) { b.disabled = false; toast('That couldn\'t be saved. Try again.'); } }); $('dayDlg').addEventListener('click', e => { if (e.target === $('dayDlg')) $('dayDlg').close(); });
 $('myMonthCopy').onclick = () => {
   const days = (myAtt && myAtt.days) || {}, m = $('myMonth').value, keys = monthDays(days, m);
@@ -5455,7 +5462,7 @@ function askOvertime(auto){
 $('otLater').onclick = () => { const d = $('otDlg'); if (d.close) d.close(); else d.removeAttribute('open'); };
 $('otIgnore').onclick = async () => { if (!me) return; const k = curDay(), b = $('otIgnore'), add = extraUnsent(); b.disabled = true;
   try { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] || {}), ignoredMs: ignMs(otReqMine, k) + add, ignoredAt: new Date().toISOString()};
-    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
+    Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {}), ...(otReqMine && otReqMine.wkPre ? {wkPre: otReqMine.wkPre} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
     $('otLater').click(); renderClock(); renderMyMonth(); toast('Saved: ' + fmtH(todayRaw()) + ' worked, no overtime requested'); }
   catch (x) { $('otErr').textContent = 'That couldn\'t be saved. Try again.'; $('otErr').hidden = false; } finally { b.disabled = false; } };
 $('otForm').addEventListener('submit', async e => {
@@ -5475,12 +5482,12 @@ $('otForm').addEventListener('submit', async e => {
       if (want > ex + 30000) { btn.disabled = false; btn.textContent = label; return fail('You can send up to ' + fmtH(ex) + ' as overtime.'); }
       const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})), prevIgn = ignMs(otReqMine, k), prevH = days[k] && days[k].hours ? +days[k].hours : 0;
       days[k] = {...(days[k] || {}), hours: Math.round((prevH + Math.ceil(want / 900000) / 4) * 4) / 4, reason: why.slice(0, 500), at: new Date().toISOString(), ignoredMs: prevIgn + Math.max(0, ex - want), ignoredAt: new Date().toISOString()};
-      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {}), ...(otReqMine && otReqMine.wkPre ? {wkPre: otReqMine.wkPre} : {})}); otReqMine = {...(otReqMine || {}), email: me.email, name: me.name, days};
       toast(fmtH(want) + ' sent for overtime approval, ' + fmtH(Math.max(0, ex - want)) + ' ignored'); }
     else { const days = JSON.parse(JSON.stringify((otReqMine && otReqMine.days) || {})); days[k] = {...(days[k] && days[k].ignoredMs ? {ignoredMs: days[k].ignoredMs, ignoredAt: days[k].ignoredAt} : {}), hours: Math.max(0.25, Math.ceil(Math.max(0, todayRaw() - DAY_MAX - (dayList(k).carryOut || 0) - ignMs(otReqMine, k) - 60000) / 900000) / 4), reason: why.slice(0, 500), at: new Date().toISOString()};
-      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); toast('Overtime sent to your Project Manager for approval'); }
+      Object.keys(days).sort().slice(0, -60).forEach(x => delete days[x]); await db.doc('otRequests/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {}), ...(otReqMine && otReqMine.wkPre ? {wkPre: otReqMine.wkPre} : {})}); toast('Overtime sent to your Project Manager for approval'); }
     $('otLater').click(); renderClock(); renderMyMonth();
-    if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500); else setTimeout(askWeekend, 500);
+    if (extraUnsent() > 60000) setTimeout(() => askOvertime(false), 500); else setTimeout(() => { askWeekend(); if (new Date().getDay() === 5 && wkDayState().done) askWeekendPre(true); }, 500);
   } catch (x) { fail('The request couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'); }
   finally { btn.disabled = false; btn.textContent = mode === 'carry' ? 'Send carry-over for approval' : 'Send overtime for approval'; }
 });
@@ -5489,28 +5496,52 @@ function renderRailClock(){ const box = $('railClock'); if (!box) return; const 
   const days = (myAtt && myAtt.days) || {}, open = openSession(days), brk = onBreak(days), l = days[curDayOf(days)] || [], gate = clockGate(), m = monthKey(new Date());
   $('rcToday').textContent = fmtH(sessMs(l));
   const st = $('rcSt'); st.className = 'rc-st' + (open ? ' on' : brk ? ' brk' : ''); st.textContent = open ? 'Working since ' + fmtT(open.in) : brk ? '☕ On break' : l.length ? 'Clocked out' : 'Not clocked in';
-  const mb = $('rcMain'); mb.textContent = open ? 'Working…' : gate ? 'Accept assignment' : brk ? '▶ Resume work' : l.length ? 'Clock in again' : 'Clock in'; mb.disabled = !!open; mb.dataset.act = gate && !open ? 'go' : 'in';
+  const mb = $('rcMain'); mb.textContent = open ? 'Working…' : gate ? (wkGate() ? 'Weekend: approval needed' : 'Accept assignment') : brk ? '▶ Resume work' : l.length ? 'Clock in again' : 'Clock in'; mb.disabled = !!open; mb.dataset.act = gate && !open ? 'go' : 'in';
   $('rcBrk').hidden = !open; $('rcOut').hidden = !(open || brk); }
 $('rcMain').onclick = () => { if ($('rcMain').dataset.act === 'go') { go('clock'); return; } punch('in'); };
 $('rcBrk').onclick = () => punch('break'); $('rcOut').onclick = () => go('clock');
 // the left-menu clock updates itself every second (time and worked today), on its own, so it never waits for the My Workday page
 function railTick(){ const box = $('railClock'); if (!box || box.hidden) return; $('rcTime').textContent = new Date().toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'});
   const days = (myAtt && myAtt.days) || {}; if (openSession(days)) $('rcToday').textContent = fmtH(sessMs(days[curDayOf(days)] || [])); }
+// weekend work needs the admin's / manager's approval BEFORE clocking in: requests in otRequests/<email>.wkPre[YYYY-MM-DD], decisions in otApprovals/<email>.wkPre[...]
+const wkPreReq = k => (otReqMine && otReqMine.wkPre && otReqMine.wkPre[k]) || null;
+const wkPreDec = (key, k) => { const a = me && key === me.key && !isAdmin ? otApprMine : (otApprAll[key] || (me && key === me.key ? otApprMine : null)); return (a && a.wkPre && a.wkPre[k]) || null; };
+const wkExempt = () => !me || me.access === 'admin';
+function wkGate(){ const k = todayStr(); if (wkExempt() || !isWkend(k)) return ''; const d = wkPreDec(me.key, k); if (d && d.status === 'approved') return '';
+  return d && d.status === 'rejected' ? 'Weekend work today was not approved by your admin / manager.' : wkPreReq(k) ? 'Your weekend work request is waiting for approval. You can clock in once your admin / manager approves it.' : 'Please take approval from your admin / manager for weekend work before you clock in.'; }
+const fdWk = k => new Date(k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'});
+function wkBannerHtml(cd){ const pre = wkExempt() ? {status: 'approved'} : wkPreDec(me.key, cd), dv = t => `<div style="margin-top:6px">${t}</div>`;
+  if (!pre || pre.status !== 'approved') return `🟣 <b>Weekend.</b> Please take approval from your admin / manager for weekend work.` + (pre && pre.status === 'rejected' ? dv('✗ Weekend work today was not approved.') : wkPreReq(cd) ? dv('⏳ Request sent. You can clock in once it is approved.') : dv('<button class="mini" type="button" id="wkPreNow">Request approval to work today</button>'));
+  const s = wkDayState(), dec = me && wkDec(me, s.k);
+  return `🟣 <b>Weekend work approved.</b> Your hours today count as overtime once your admin / manager approves them after you clock out.` + (dec ? dv(dec.status === 'approved' ? `✓ Hours approved: <b>${fmtH(dec.hours * 3600000)}</b> as overtime` : '✗ Hours not approved') : !s.done ? (s.ms ? dv('When you clock out for the day, you\'ll be asked to send your hours for approval.') : '') : wkNeedsSend(s) ? dv(`<button class="mini" type="button" id="wkSendNow">Send ${fmtH(s.ms)} for overtime approval</button>`) : s.sent ? dv(`⏳ <b>${fmtH(s.sent.hours * 3600000)}</b> sent, waiting for approval`) : ''); }
+// upcoming weekend days the employee can ask for (today if it is a weekend day, else the coming Sat and Sun)
+function wkPreDays(){ const out = [], d = new Date(); for (let i = 0; i < 7 && out.length < 2; i++) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i), k = ymd(x); if (isWkend(k)) out.push(k); else if (out.length) break; } return out; }
+function askWeekendPre(auto){ if (wkExempt()) return; const ds = wkPreDays().filter(k => !wkPreReq(k) && !wkPreDec(me.key, k)); if (auto && !ds.length) return; const all = wkPreDays();
+  $('wpDays').innerHTML = all.map(k => { const r = wkPreReq(k), d = wkPreDec(me.key, k); return `<label><input type="checkbox" value="${k}"${r || d ? ' disabled' : ''}${!auto && !r && !d && k === all[0] ? ' checked' : ''}> ${fdWk(k)}${d ? ' · ' + (d.status === 'approved' ? 'approved' : 'not approved') : r ? ' · requested' : ''}</label>`; }).join('');
+  $('wpMsg').textContent = auto ? 'Planning to work this weekend? Ask your admin / manager now. You can clock in on Saturday or Sunday only after it is approved.' : 'Weekend work needs approval from your admin / manager before you clock in.';
+  $('wpErr').hidden = true; $('wpWhy').value = ''; const g = $('wpDlg'); if (g.showModal) { if (!g.open) g.showModal(); } else g.setAttribute('open', ''); }
+$('wpLater').onclick = () => { const g = $('wpDlg'); if (g.close) g.close(); else g.removeAttribute('open'); renderClock(); };
+$('wpForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const ks = [...document.querySelectorAll('#wpDays input:checked:not(:disabled)')].map(x => x.value), btn = $('wpSend'), why = $('wpWhy').value.trim();
+  const fail = t => { $('wpErr').textContent = t; $('wpErr').hidden = false; }; if (!ks.length) return fail('Tick the day(s) you want to work.'); if (!why) return fail('Add a short reason.');
+  btn.disabled = true; try { const wkPre = {...((otReqMine && otReqMine.wkPre) || {})}; ks.forEach(k => wkPre[k] = {reason: why.slice(0, 500), at: new Date().toISOString()}); Object.keys(wkPre).sort().slice(0, -20).forEach(x => delete wkPre[x]);
+    const doc = {...(otReqMine || {}), email: me.email, name: me.name, days: (otReqMine && otReqMine.days) || {}, wkPre}; await db.doc('otRequests/' + me.key).set(doc); otReqMine = doc; $('wpLater').click(); toast('Weekend work request sent to your admin / manager'); }
+  catch (x) { fail('That couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'); } finally { btn.disabled = false; } });
+$('wkPreBtn').onclick = () => askWeekendPre(false);
 // weekend work: asked only after the employee clocks out (not on a break); the admin sees it once sent, or once the day is over
 function wkDayState(){ const days = (myAtt && myAtt.days) || {}, k = curDayOf(days), l = days[k] || [], ms = sessMs(l), done = !!l.length && !openSession(days) && !onBreak(days);
   return {k, ms, done, wk: isWkend(k), sent: (otReqMine && otReqMine.wk && otReqMine.wk[k]) || null}; }
 const wkNeedsSend = s => s.wk && s.done && s.ms >= 60000 && !(s.sent && +s.sent.hours >= Math.round(s.ms / 36e3) / 100 - 0.01);
 function askWeekend(){ const s = wkDayState(); if (!wkNeedsSend(s)) return;
   const day = new Date(s.k + 'T00:00').toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'short'});
-  $('wkDlgMsg').textContent = `You're done for ${day}. Saturday and Sunday hours are paid as overtime at ₹${OT_RATE} / hour once your admin approves them.` + (s.sent ? ' You worked more after your last request, so this sends the new total.' : '');
-  $('wkBig').textContent = fmtH(s.ms) + ' · ₹' + Math.round(s.ms / 3600000 * OT_RATE); $('wkErr').hidden = true; $('wkWhy').value = (s.sent && s.sent.reason) || '';
+  $('wkDlgMsg').textContent = `You're done for ${day}. Send your Saturday / Sunday hours to your admin / manager. They count as overtime once approved.` + (s.sent ? ' You worked more after your last request, so this sends the new total.' : '');
+  $('wkBig').textContent = fmtH(s.ms); $('wkErr').hidden = true; $('wkWhy').value = (s.sent && s.sent.reason) || '';
   const d = $('wkDlg'); if (d.showModal) { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
-$('wkBanner').addEventListener('click', e => { if (e.target.closest('#wkSendNow')) askWeekend(); });
+$('wkBanner').addEventListener('click', e => { if (e.target.closest('#wkSendNow')) askWeekend(); if (e.target.closest('#wkPreNow')) askWeekendPre(false); });
 $('wkLater').onclick = () => { const d = $('wkDlg'); if (d.close) d.close(); else d.removeAttribute('open'); renderClock(); };
 $('wkForm').addEventListener('submit', async e => { e.preventDefault(); if (!me) return; const s = wkDayState(), btn = $('wkSend'); if (!s.wk || !s.done) return $('wkLater').click(); btn.disabled = true;
   try { const wk = {...((otReqMine && otReqMine.wk) || {})}; wk[s.k] = {hours: Math.round(s.ms / 36e3) / 100, reason: $('wkWhy').value.trim().slice(0, 500), at: new Date().toISOString()};
     Object.keys(wk).sort().slice(0, -30).forEach(x => delete wk[x]);
-    const doc = {email: me.email, name: me.name, days: (otReqMine && otReqMine.days) || {}, wk}; await db.doc('otRequests/' + me.key).set(doc); otReqMine = doc;
+    const doc = {...(otReqMine || {}), email: me.email, name: me.name, days: (otReqMine && otReqMine.days) || {}, wk}; await db.doc('otRequests/' + me.key).set(doc); otReqMine = doc;
     $('wkLater').click(); toast('Weekend hours sent to your admin for overtime approval'); }
   catch (x) { $('wkErr').textContent = 'That couldn\'t be sent (' + ((x && x.code) || 'error') + '). Try again.'; $('wkErr').hidden = false; } finally { btn.disabled = false; } });
 function renderOtBox(){
@@ -5548,17 +5579,24 @@ function renderWkAdmin(){ const L = $('wkList'); if (!L) return; const today = t
   pend.sort((a, b) => b.k.localeCompare(a.k)); done.sort((a, b) => b.k.localeCompare(a.k));
   L.innerHTML = pend.length ? pend.map(it => row(it, `<button class="mini ok-btn" data-wk="approved" data-e="${esc(it.p.key)}" data-k="${it.k}" data-h="${it.h}"${it.open ? ' disabled title="Wait until they clock out"' : ''}>Approve ${fmtH(it.h * 3600000)}</button><button class="mini danger" data-wk="rejected" data-e="${esc(it.p.key)}" data-k="${it.k}" data-h="${it.h}">Reject</button>`)).join('') : '<p class="empty">No weekend work waiting for approval.</p>';
   $('wkDone').innerHTML = done.length ? done.map(it => row(it, `<span class="pill ${it.d.status === 'approved' ? 'ok' : 'off'}">${it.d.status === 'approved' ? 'Approved ' + fmtH(it.d.hours * 3600000) : 'Rejected'}</span><button class="mini" data-wk="undo" data-e="${esc(it.p.key)}" data-k="${it.k}">Undo</button>`)).join('') : '<p class="empty">None yet.</p>';
-  const c = $('wkCount'); c.hidden = !pend.length; c.textContent = pend.length + ' waiting'; }
+  const pre = []; otReqAll.forEach(r => Object.entries(r.wkPre || {}).forEach(([k, q]) => { if (k < today) return; pre.push({k, q, key: r.key, name: r.name || r.key, d: wkPreDec(r.key, k)}); })); pre.sort((a, b) => a.k.localeCompare(b.k));
+  $('wkPreList').innerHTML = pre.length ? pre.map(x => `<div class="ev"><div class="d">${fd(x.k).getDate()}<small>${fd(x.k).toLocaleDateString(undefined, {weekday: 'short'})}</small></div><div><b>${esc(x.name)} · wants to work on ${fdWk(x.k)}</b><span>${esc(x.q.reason || '')}</span></div><div class="acts">${x.d ? `<span class="pill ${x.d.status === 'approved' ? 'ok' : 'off'}">${x.d.status === 'approved' ? 'Approved' : 'Rejected'}</span><button class="mini" data-wkp="undo" data-e="${esc(x.key)}" data-k="${x.k}">Undo</button>` : `<button class="mini ok-btn" data-wkp="approved" data-e="${esc(x.key)}" data-k="${x.k}">Approve</button><button class="mini danger" data-wkp="rejected" data-e="${esc(x.key)}" data-k="${x.k}">Reject</button>`}</div></div>`).join('') : '<p class="empty">No requests to work on a weekend.</p>';
+  const n = pend.length + pre.filter(x => !x.d).length, c = $('wkCount'); c.hidden = !n; c.textContent = n + ' waiting'; }
+document.addEventListener('click', async e => { const b = e.target.closest('[data-wkp]'); if (!b || !isAdmin) return; b.disabled = true;
+  const email = b.dataset.e, k = b.dataset.k, cur = otApprAll[email] || {}, wkPre = {...(cur.wkPre || {})};
+  if (b.dataset.wkp === 'undo') delete wkPre[k]; else wkPre[k] = {status: b.dataset.wkp, by: me ? me.name : 'Admin', at: new Date().toISOString()};
+  try { await db.doc('otApprovals/' + email).set({...cur, email, days: cur.days || {}, wkPre}); toast(b.dataset.wkp === 'approved' ? 'Weekend work approved: they can clock in that day' : b.dataset.wkp === 'rejected' ? 'Weekend work request rejected' : 'Decision undone'); }
+  catch (x) { b.disabled = false; toast('That decision couldn\'t be saved. Try again.'); } });
 document.addEventListener('click', async e => { const b = e.target.closest('[data-wk]'); if (!b || !isAdmin) return; b.disabled = true;
   const email = b.dataset.e, k = b.dataset.k, cur = otApprAll[email] || {}, wk = {...(cur.wk || {})};
   if (b.dataset.wk === 'undo') delete wk[k]; else wk[k] = {status: b.dataset.wk, hours: +b.dataset.h || 0, by: me ? me.name : 'Admin', at: new Date().toISOString()};
-  try { await db.doc('otApprovals/' + email).set({email, days: cur.days || {}, wk}); toast(b.dataset.wk === 'approved' ? 'Weekend hours approved as overtime' : b.dataset.wk === 'rejected' ? 'Weekend hours rejected' : 'Decision undone'); }
+  try { await db.doc('otApprovals/' + email).set({...cur, email, days: cur.days || {}, wk}); toast(b.dataset.wk === 'approved' ? 'Weekend hours approved as overtime' : b.dataset.wk === 'rejected' ? 'Weekend hours rejected' : 'Decision undone'); }
   catch (x) { b.disabled = false; toast('That decision couldn\'t be saved. Try again.'); } });
 $('otList').addEventListener('click', async e => {
   const b = e.target.closest('[data-ot]'); if (!b || !isAdmin) return; b.disabled = true;
   const email = b.dataset.e, k = b.dataset.k, cur = otApprAll[email] || {}, days = JSON.parse(JSON.stringify(cur.days || {}));
   days[k] = {status: b.dataset.ot, hours: +b.dataset.h, by: me ? me.name : 'Admin', at: new Date().toISOString()};
-  try { await db.doc('otApprovals/' + email).set(cur.wk ? {email, days, wk: cur.wk} : {email, days}); }
+  try { await db.doc('otApprovals/' + email).set({...cur, email, days}); }
   catch (x) { b.disabled = false; return toast('That decision couldn\'t be saved. Try again.'); }
   if (b.dataset.ot !== 'approved') return toast('Overtime rejected');
   // the clock was stopped at the 8-hour limit: continue it with the approved hours, so the clock-out moves later
@@ -5599,7 +5637,7 @@ async function punch(kind){
   else { const o = list[list.length - 1]; if (!o) return; if (o.out && o.brk) delete o.brk; else if (o.out) return; else o.out = now; }
   const keys = Object.keys(days).filter(x => (days[x] || []).length).sort().slice(-400), kept = {}; keys.forEach(x => kept[x] = days[x]);
   const btn = kind === 'in' ? $('clkIn') : kind === 'break' ? $('clkBrk') : $('clkOut'); btn.disabled = true;
-  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in' && !(days[k] || []).slice(0, -1).length) setTimeout(() => { escAsk(); profInfo(); }, 300); if (kind === 'out' && window.__wlWarn) { toast('Clocked out. ' + window.__wlWarn, 8000); window.__wlWarn = ''; } else toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); else askWeekend(); }, 400); }
+  try { await db.doc('timeclock/' + me.key).set({email: me.email, name: me.name, days: kept, ...(fresh && fresh.edits ? {edits: fresh.edits} : {}), updatedAt: now}); if (kind === 'in' && !(days[k] || []).slice(0, -1).length) setTimeout(() => { escAsk(); profInfo(); }, 300); if (kind === 'out' && window.__wlWarn) { toast('Clocked out. ' + window.__wlWarn, 8000); window.__wlWarn = ''; } else toast(kind === 'in' ? 'Clocked in at ' + fmtT(now) : kind === 'break' ? 'Break started. Your clock is paused.' : 'Clocked out. Have a great evening!'); if (kind === 'out') setTimeout(() => { if (extraUnsent() > 60000) askOvertime(false); else { askWeekend(); if (new Date().getDay() === 5 && wkDayState().done) askWeekendPre(true); } }, 400); }
   catch (x) { err.textContent = x && /permission/.test(x.code || '') ? 'Your time couldn\'t be saved: your account isn\'t allowed to use the time clock. Ask your admin to check your account in Admin.' : 'Your time couldn\'t be saved (' + ((x && x.code) || 'error') + '). Check your connection and try again.'; err.hidden = false; renderClock(); }
 }
 $('clkIn').onclick = () => punch('in'); $('clkOut').onclick = () => { if (wlRequired(me) || escMe()) openWorkLog(curDay(), true, () => punch('out')); else punch('out'); }; $('clkBrk').onclick = () => punch('break');
@@ -5626,7 +5664,7 @@ const swOn = () => SW_ENABLED && !!me && wlRequired(me) && !acting() && selfCloc
 const swGap = () => (SW_MIN + Math.random() * (SW_MAX - SW_MIN)) * 60000;
 async function swLog(entry){ if (!me) return; const d = curDay(), cur = swAll[me.key] || {}, days = {...(cur.days || {})}; days[d] = [...(days[d] || []), entry].slice(-80);
   Object.keys(days).sort().slice(0, -45).forEach(k => delete days[k]); swAll[me.key] = {email: me.email, name: me.name, days};
-  try { await db.doc('activityCheck/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {})}); } catch (e) {} }
+  try { await db.doc('activityCheck/' + me.key).set({email: me.email, name: me.name, days, ...(otReqMine && otReqMine.wk ? {wk: otReqMine.wk} : {}), ...(otReqMine && otReqMine.wkPre ? {wkPre: otReqMine.wkPre} : {})}); } catch (e) {} }
 // stop the running session at a given moment (used when a check is not answered, or the portal was closed)
 async function swStopAt(iso, why){ try { const snap = await db.doc('timeclock/' + me.key).get(), fresh = snap.exists ? snap.data() : null;
     const rec = mergeAtt([myAttRaw, fresh]).find(r => String(r.email || '').toLowerCase() === String(me.email || '').toLowerCase()); if (!rec) return false;
