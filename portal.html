@@ -647,7 +647,7 @@ button.pf-it{cursor:pointer;text-align:left;font:inherit;color:var(--ink);width:
 .ac-h4{margin:14px 0 6px;font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}.ac-img{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.ac-img img{height:56px;max-width:160px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px}.ac-img input{width:auto}
 .ac-thru{border:1px solid var(--line);border-radius:12px;padding:8px 12px}.ac-thru summary{cursor:pointer;font-weight:600;font-size:14px}.ac-thru[open] summary{margin-bottom:8px}
 .ac-itot{display:grid;gap:4px;align-content:end;font-size:14px}.ac-itot div{display:flex;justify-content:space-between}.ac-itot .t{font-size:17px;border-top:1px solid var(--line);padding-top:6px}
-.rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-tab.emp .rp-by{display:none}
+.rp-hbtn{display:flex;flex-wrap:wrap;gap:8px}.rp-mine{background:rgba(31,122,90,.05)}
 .rp-tab tr.rp-solved td{background:color-mix(in srgb,var(--ok) 9%,transparent);opacity:.55}.rp-tab tr.rp-solved:hover td{opacity:.85}.rp-tab tr.rp-closed td{opacity:.5}
 .rp-sbtn{margin-top:6px;border:1px solid color-mix(in srgb,var(--ok) 45%,var(--line));background:color-mix(in srgb,var(--ok) 10%,transparent);color:var(--ok);border-radius:999px;padding:4px 10px;font:600 12px var(--body);cursor:pointer;white-space:nowrap}
 .rp-reply{font-size:14px;padding:10px 12px;border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 8%,transparent);border-radius:0 10px 10px 0;white-space:pre-wrap}
@@ -1780,7 +1780,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
     <section class="view" data-view="reports" hidden>
       <div class="vhead"><div><h1 id="rpH">Reported issues</h1><p id="rpLead"></p></div><div class="rp-hbtn"><button class="btn btn-ghost" type="button" id="rpSolveAll" hidden>✓ Mark all “Sent to Claude” as solved</button><button class="btn btn-gem" type="button" id="rpPack">📦 Package for Claude</button></div></div>
       <div class="rp-kpis" id="rpKpis"></div>
-      <div class="rp-tools"><select id="rpFSt" aria-label="Status"><option value="">All statuses</option><option value="open">Open (not solved)</option><option value="new">New</option><option value="progress">Looking into</option><option value="sent">Sent to Claude</option><option value="fixed">Solved</option><option value="wontfix">Won't fix</option></select>
+      <div class="rp-tools"><select id="rpFSt" aria-label="Status"><option value="">All statuses</option><option value="open">Open (not solved)</option><option value="new">New</option><option value="progress">Looking into</option><option value="sent">Sent to Claude</option><option value="fixed">Solved</option><option value="wontfix">Won't fix</option><option value="mine">Reported by me</option></select>
         <select id="rpFCk" aria-label="Checker"><option value="">All checkers</option><option value="location">Location checker</option><option value="text">Text checker</option></select><input id="rpFQ" type="search" placeholder="Search ticket number, name or text"></div>
       <div class="panel"><div class="tbl"><table class="rp-tab" id="rpTable"><thead><tr><th>Ticket</th><th>Reported</th><th class="rp-by">By</th><th>Checker</th><th>Problem</th><th>Checker said → should be</th><th>Status</th></tr></thead><tbody id="rpList"></tbody></table></div><p class="hint" id="rpEmpty" hidden></p></div>
     </section>
@@ -2193,7 +2193,7 @@ const approved = () => decisions.filter(d => d.status === 'Approved');
 const onLeave = (email, date) => approved().some(d => d.email === email && d.from <= date && d.to >= date);
 function watchMine(){
   // each employee sees their own checker reports and where they stand (optional: no banner if the rule is missing)
-  try { watch('reportsMine', db.collection('checkerReports').where('by', '==', me.key), s => { reportsMine = s.docs.map(d => ({id: d.id, ...d.data()})); renderReports(); }, true); } catch (e) { console.warn(e); }
+  try { watch('reportsMine', db.collection('checkerReports'), s => { reportsMine = s.docs.map(d => ({id: d.id, ...d.data()})); renderReports(); }, true); } catch (e) { console.warn(e); }
   watch('compMine', db.doc('compLeave/' + me.key), s => { compMine = s.exists ? s.data() : null; renderProfile(); renderLeave(); });
   watch('annAckMine', db.doc('annAck/' + me.key), s => { annAckMine = s.exists ? s.data() : null; renderHome(); });
   watch('myAck', db.doc('guideAck/' + me.key), s => { ackMine = s.exists ? s.data() : null; renderAck(); renderAckCards(); renderBriefAck(); try { renderHomeAmend(); } catch (e) {} });
@@ -2336,21 +2336,21 @@ const rpOpen = r => !['fixed', 'wontfix'].includes(r.status || 'new');
 function renderReports(){
   const all = rpList(), nNew = isAdmin ? all.filter(r => (r.status || 'new') === 'new').length : 0, b = $('rpBadge'); if (b) { b.textContent = nNew; b.hidden = !nNew; }
   if (!$('rpList')) return;
-  $('rpH').textContent = isAdmin ? 'Reported issues' : 'My reported issues';
+  $('rpH').textContent = 'Reported issues';
   $('rpLead').innerHTML = isAdmin ? 'Problems employees sent with <b>⚑ Report to admin</b> on the Text checker and the Location checker. Each report is a numbered ticket with everything needed to recreate it. Package the open tickets for Claude, then mark them solved once the correction is live.'
-    : 'The problems you sent with <b>⚑ Report to admin</b> on the Text checker and the Location checker, and where each one stands. Solved tickets turn green.';
+    : 'Every problem the team sent with <b>⚑ Report to admin</b> on the Text checker and the Location checker, and where each one stands. Check here before reporting something that is already known. Solved tickets turn green; yours are marked “You”.';
   $('rpPack').hidden = !isAdmin; $('rpSolveAll').hidden = !isAdmin || !all.some(r => r.status === 'sent'); $('rpTable').classList.toggle('emp', !isAdmin);
   const cnt = k => all.filter(r => (r.status || 'new') === k).length;
   $('rpKpis').innerHTML = (isAdmin ? [['open', 'Open', all.filter(rpOpen).length], ['new', 'New', cnt('new')], ['progress', 'Looking into', cnt('progress')], ['sent', 'Sent to Claude', cnt('sent')], ['fixed', 'Solved', cnt('fixed')]]
-    : [['', 'Reported', all.length], ['open', 'Pending', all.filter(rpOpen).length], ['fixed', 'Solved', cnt('fixed')]])
+    : [['', 'All tickets', all.length], ['open', 'Pending', all.filter(rpOpen).length], ['fixed', 'Solved', cnt('fixed')], ['mine', 'Mine', all.filter(r => me && r.by === me.key).length]])
     .map(([k, t, n]) => `<button type="button" class="k-${k}${$('rpFSt').value === k ? ' on' : ''}" data-rpk="${k}"><b>${n}</b><span>${t}</span></button>`).join('');
   const st = $('rpFSt').value, ck = $('rpFCk').value, q = $('rpFQ').value.trim().toLowerCase();
-  const list = all.filter(r => (st === 'open' ? rpOpen(r) : !st || (r.status || 'new') === st) && (!ck || r.checker === ck)
+  const list = all.filter(r => (st === 'open' ? rpOpen(r) : st === 'mine' ? !!me && r.by === me.key : !st || (r.status || 'new') === st) && (!ck || r.checker === ck)
     && (!q || [rpNo(r.n), String(r.n), rpWho(r.by), r.by, r.input && r.input.a, r.input && r.input.b, r.note, r.kindText].join(' ').toLowerCase().includes(q)));
-  $('rpList').innerHTML = list.map(r => `<tr data-rp="${esc(r.id)}" class="${r.status === 'fixed' ? 'rp-solved' : r.status === 'wontfix' ? 'rp-closed' : ''}"><td class="rp-n">${rpNo(r.n)}</td><td>${rpWhen(r.at)}</td><td class="rp-by">${esc(rpWho(r.by))}</td><td>${esc(RP_CK[r.checker] || r.checker)}</td>
+  $('rpList').innerHTML = list.map(r => `<tr data-rp="${esc(r.id)}" class="${r.status === 'fixed' ? 'rp-solved' : r.status === 'wontfix' ? 'rp-closed' : !isAdmin && me && r.by === me.key ? 'rp-mine' : ''}"><td class="rp-n">${rpNo(r.n)}</td><td>${rpWhen(r.at)}</td><td class="rp-by">${esc(rpWho(r.by))}${!isAdmin && me && r.by === me.key ? ' <span class="pill" style="font-size:11px">You</span>' : ''}</td><td>${esc(RP_CK[r.checker] || r.checker)}</td>
     <td class="rp-io"><b>${esc(r.kindText || r.kind)}</b><div>${esc(String((r.input && r.input.a) || '').slice(0, 60))} <span aria-hidden="true">⇄</span> ${esc(String((r.input && r.input.b) || '').slice(0, 60))}</div>${r.note ? `<div>“${esc(String(r.note).slice(0, 90))}${String(r.note).length > 90 ? '…' : ''}”</div>` : ''}</td>
     <td>${esc(rpSaid(r))} → <b>${esc(rpShould(r))}</b></td><td><span class="pill rp-${esc(r.status || 'new')}">${r.status === 'fixed' ? '✓ ' : ''}${esc(rpStT(r.status))}</span>${r.status === 'fixed' && r.solvedAt ? `<div class="hint" style="font-size:12px;margin-top:3px">${rpWhen(r.solvedAt)}</div>` : ''}${isAdmin && rpOpen(r) ? `<div><button type="button" class="rp-sbtn" data-rpsolve="${esc(r.id)}">✓ Mark solved</button></div>` : ''}</td></tr>`).join('');
-  const em = $('rpEmpty'); em.hidden = !!list.length; em.textContent = all.length ? 'No tickets match these filters.' : isAdmin ? 'No reports yet. When an employee presses “⚑ Report to admin” on the Text checker or the Location checker, the ticket appears here.' : 'You haven\'t reported anything yet. If a checker gives a wrong answer, press “⚑ Report to admin” on the checker page.';
+  const em = $('rpEmpty'); em.hidden = !!list.length; em.textContent = all.length ? 'No tickets match these filters.' : isAdmin ? 'No reports yet. When an employee presses “⚑ Report to admin” on the Text checker or the Location checker, the ticket appears here.' : 'Nobody has reported anything yet. If a checker gives a wrong answer, press “⚑ Report to admin” on the checker page.';
   if (rpCur && $('rpDlg').open) { const r = all.find(x => x.id === rpCur); if (r && !document.activeElement.closest('#rpDlg .rp-act')) rpDetail(r); }
 }
 ['rpFSt', 'rpFCk'].forEach(id => $(id).addEventListener('change', renderReports)); $('rpFQ').addEventListener('input', renderReports);
@@ -2372,7 +2372,7 @@ function rpWorking(r){ const x = r.result || {};
     ${x.differences ? `<tr><th>Differences</th><td style="white-space:pre-wrap">${esc(x.differences)}</td></tr>` : ''}${warn.length ? `<tr><th>Checks flagged</th><td>${warn.map(c => `${c.n}. <b>${esc(c.check)}</b>: ${esc(c.detail || '')}`).join('<br>')}</td></tr>` : ''}</table>`; }
 function rpDetail(r){ const x = r.result || {}, link = rpLink(r), solved = r.status === 'fixed';
   $('rpDlgT').textContent = 'Ticket ' + rpNo(r.n) + ' · ' + (RP_CK[r.checker] || r.checker);
-  $('rpDlgBody').innerHTML = `<div class="rp-meta"><span>Reported by <b>${esc(rpWho(r.by))}</b> (${esc(r.by || '')})</span><span>${rpWhen(r.at)}</span><span>Status <span class="pill rp-${esc(r.status || 'new')}">${esc(rpStT(r.status))}</span></span>${r.sentAt && isAdmin ? `<span>Sent to Claude ${rpWhen(r.sentAt)}</span>` : ''}${r.solvedAt ? `<span>Solved ${rpWhen(r.solvedAt)}</span>` : ''}</div>
+  $('rpDlgBody').innerHTML = `<div class="rp-meta"><span>Reported by <b>${esc(rpWho(r.by))}</b>${isAdmin ? ' (' + esc(r.by || '') + ')' : ''}</span><span>${rpWhen(r.at)}</span><span>Status <span class="pill rp-${esc(r.status || 'new')}">${esc(rpStT(r.status))}</span></span>${r.sentAt && isAdmin ? `<span>Sent to Claude ${rpWhen(r.sentAt)}</span>` : ''}${r.solvedAt ? `<span>Solved ${rpWhen(r.solvedAt)}</span>` : ''}</div>
     ${solved ? `<div class="rp-reply" style="margin:0 0 12px">✓ <b>Solved.</b> ${r.adminNote ? esc(r.adminNote) : 'The checker has been corrected for this case.'}</div>` : !isAdmin && r.adminNote ? `<div class="rp-reply" style="margin:0 0 12px"><b>Admin:</b> ${esc(r.adminNote)}</div>` : ''}
     <div class="rp-sec"><h5>The problem</h5><p style="margin:0 0 6px"><b>${esc(r.kindText || r.kind)}</b> · Checker said <b>${esc(rpSaid(r))}</b> → should be <b>${esc(rpShould(r))}</b></p>${r.note ? `<div class="rp-note">${esc(r.note)}</div>` : '<p class="hint" style="margin:0">No explanation given.</p>'}</div>
     <div class="rp-sec"><h5>The case (exactly as entered)</h5><div class="rp-two"><div><small>THE FILE SAYS (SeekOut)</small>${esc((r.input || {}).a || '') || '<i>(empty)</i>'}</div><div><small>PUBLIC PROFILE SAYS</small>${esc((r.input || {}).b || '') || '<i>(empty)</i>'}</div></div>${x.note ? `<p class="hint" style="margin:8px 0 0">⚠ ${esc(x.note)}</p>` : ''}</div>
