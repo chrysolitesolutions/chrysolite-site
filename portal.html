@@ -4180,7 +4180,8 @@ const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from 
 <tr><td>Nothing found (step 8)</td><td>total 2½ minutes at most</td><td>Can’t tell</td></tr></tbody></table></div>
 <p class="note">A photo that only looks a bit similar is not proof. Choose Match from the photo only when it is clearly the same person; choose Not a match only when it is clearly a different person.</p>
 `};
-const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k); return d && d.html ? hashStr((GADD[k] || '') + d.html) : null; };
+GADD.bemailbrief = GADD.bemail;
+const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k), h = (GADD[k] || '') + ((d && d.html) || ''); return h ? hashStr(h) : null; };
 // 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
 function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k];
   if (k === 'brief') { if (!a) return 'no'; const save = ackMine; ackMine = rec; try { return briefAllOk() ? 'ok' : 'old'; } finally { ackMine = save; } }
@@ -4221,6 +4222,7 @@ function renderAckCards(){
 function renderGuideCards(){ renderHub(); try { renderAckCards(); } catch (e) {}
   const n = (k, t) => { const g = guides[k]; return g ? t(g) : null; };
   [['eto', 'gdEtoSub'], ['roi', 'gdRoiSub'], ['csm', 'gdCsmSub'], ['bprof', 'gdBprofSub'], ['bemail', 'gdBemailSub'], ['bphone', 'gdBphoneSub'], ['bintro', 'gdBintroSub'], ['bemailbrief', 'gdBemailbriefSub'], ['bphonebrief', 'gdBphonebriefSub'], ['bzipbrief', 'gdBzipbriefSub'], ['bzipsteps', 'gdBzipstepsSub'], ['bnamebrief', 'gdBnamebriefSub'], ['bnamesteps', 'gdBnamestepsSub']].forEach(([k, id]) => { const g = guides[GDOCS[k]]; if (g && g.subtitle) $(id).textContent = g.subtitle; else if (g && BENCH_SUB.includes(k)) $(id).textContent = 'Step-by-step instructions.'; });
+  $('gdBemailSub').textContent = 'Gmail photo first, then the search buttons and the Email checker. 2½ minutes per email.'; $('gdBemailbriefSub').textContent = 'New: the Gmail photo check and time limits, plus rules and examples.';
 }
 
 // Projects page tabs: Benchmarking / Other projects (remembered on this device)
@@ -4312,7 +4314,7 @@ function mountZpMap(){ const box = document.querySelector('#gdDoc .zp-map'); if 
   box.addEventListener('click', e => { const b = e.target.closest('[data-zm]'); if (b) { show(b.dataset.zm); if (b.tagName === 'TR') box.querySelector('.zm-pic').scrollIntoView({behavior: 'smooth', block: 'center'}); } });
   show(sel); }
 function renderGdoc(){
-  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey], names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '4.2 Email Benchmarking - Steps and Instructions', bphone: '5.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '4.1 Email Benchmarking - Briefing and Practice', bphonebrief: '5.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '3.1 LinkedIn Check - Briefing and Practice', bzipsteps: '3.2 LinkedIn Check - Steps and Instructions', bnamebrief: '2.1 Name Groups Check - Briefing and Practice', bnamesteps: '2.2 Name Groups Check - Steps and Instructions'};
+  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey] || (GADD[gdKey] ? {html: ''} : null), names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '4.2 Email Benchmarking - Steps and Instructions', bphone: '5.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '4.1 Email Benchmarking - Briefing and Practice', bphonebrief: '5.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '3.1 LinkedIn Check - Briefing and Practice', bzipsteps: '3.2 LinkedIn Check - Steps and Instructions', bnamebrief: '2.1 Name Groups Check - Briefing and Practice', bnamesteps: '2.2 Name Groups Check - Steps and Instructions'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
