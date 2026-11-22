@@ -136,17 +136,23 @@ html,body{overflow-x:hidden}
 .ec-tip{font-size:13px;color:var(--ink-soft);background:var(--surface-2);border-radius:12px;padding:10px 14px}.ec-tip b{color:var(--ink)}
 .spin{width:14px;height:14px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:r .7s linear infinite;display:inline-block}@keyframes r{to{transform:rotate(360deg)}}
 .ec-pending{color:var(--ink-soft);font-size:13px}
+.ec-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}@media (max-width:700px){.ec-g2{grid-template-columns:1fr}}
+.ec-read{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;font-size:13px}.ec-read span{background:#eef5f1;border:1px solid #cfe1d6;border-radius:999px;padding:3px 10px}.ec-read span i{font-style:normal;color:var(--ink-soft);margin-right:4px}.ec-read span.miss{background:#fff6e6;border-color:#f0d9a8}
+#ecEdit{margin-top:10px}#ecEdit summary{cursor:pointer;font-size:13px;color:var(--ink-soft)}
 </style>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Email checker</small></span></div><a class="back" href="portal.html#bemailbrief">Email benchmarking briefing →</a></header>
 <main>
   <div><h1>Email checker</h1><p class="lead">Is this email address real, and does it belong to this person? The checker looks the email up in public sources that can prove it (GitHub, PGP key servers, Gravatar), checks the email's domain, compares the email with the person's name and LinkedIn, and gives you one-click searches across more than 80 open sources: search engines, people-search sites (ThatsThem, TruePeopleSearch, Spokeo and others), contact databases, email validators and domain records. Match only with a page that shows the email with this person.</p></div>
   <div class="panel ec-in">
-    <div class="ec-g"><div class="f"><label for="ecEmail">Email address <span class="hint">(one per line, up to 5)</span></label><textarea id="ecEmail" rows="2" placeholder="e.g. idks16@yahoo.com" spellcheck="false" style="min-height:52px;font:600 15px var(--mono)"></textarea></div>
-      <div class="f"><label for="ecName">Person's full name</label><input id="ecName" placeholder="e.g. Stacy Tang" autocomplete="off"></div>
-      <div class="f"><label for="ecLi">LinkedIn profile link <span class="hint">(optional)</span></label><input id="ecLi" placeholder="https://www.linkedin.com/in/…" autocomplete="off"></div>
-      <div class="f"><label for="ecCo">Current company <span class="hint">(optional)</span></label><input id="ecCo" placeholder="e.g. Corp of Engineers" autocomplete="off"></div>
-      <div class="f"><label for="ecLoc">Location <span class="hint">(optional)</span></label><input id="ecLoc" placeholder="e.g. Philadelphia, Pennsylvania" autocomplete="off"></div>
-      <div class="f"><label for="ecTitle">Job title <span class="hint">(optional)</span></label><input id="ecTitle" placeholder="e.g. Mechanical Engineer" autocomplete="off"></div></div>
+    <div class="f"><label for="ecPerson">Person <span class="hint">(paste the line with name, job title, company and location)</span></label><textarea id="ecPerson" rows="1" placeholder="e.g. Carly Feinstein  Associate Media Director at Universal McCann  Oakland Gardens, New York" spellcheck="false" style="min-height:44px;resize:vertical"></textarea>
+      <div class="ec-read" id="ecRead" hidden></div></div>
+    <div class="ec-g2"><div class="f"><label for="ecLi">LinkedIn profile link <span class="hint">(optional)</span></label><input id="ecLi" placeholder="https://www.linkedin.com/in/…" autocomplete="off"></div>
+      <div class="f"><label for="ecEmail">Email to check <span class="hint">(one per line, up to 5)</span></label><textarea id="ecEmail" rows="1" placeholder="e.g. carlygotham@gmail.com" spellcheck="false" style="min-height:44px;font:600 15px var(--mono)"></textarea></div></div>
+    <details id="ecEdit"><summary>Check or correct what was read</summary><div class="ec-g" style="margin-top:8px">
+      <div class="f"><label for="ecName">Full name</label><input id="ecName" placeholder="e.g. Stacy Tang" autocomplete="off"></div>
+      <div class="f"><label for="ecTitle">Job title</label><input id="ecTitle" placeholder="e.g. Mechanical Engineer" autocomplete="off"></div>
+      <div class="f"><label for="ecCo">Current company</label><input id="ecCo" placeholder="e.g. Corp of Engineers" autocomplete="off"></div>
+      <div class="f"><label for="ecLoc">Location</label><input id="ecLoc" placeholder="e.g. Philadelphia, Pennsylvania" autocomplete="off"></div></div></details>
     <details><summary>More data from LinkedIn (optional): paste the profile page text</summary><p class="hint" style="margin:6px 0">Open the LinkedIn profile (and its <b>Contact info</b>), press Ctrl+A then Ctrl+C, and paste here. The checker reads any emails, websites and usernames in it.</p><textarea id="ecLiText" placeholder="Paste the LinkedIn page text here"></textarea></details>
     <div class="ec-row" id="ecRow"><button class="btn btn-gem" type="button" id="ecGo">Check email</button><button class="btn btn-ghost" type="button" id="ecClear">Clear</button><span class="ec-st" id="ecSt" role="status" aria-live="polite"></span></div>
   </div>
@@ -240,9 +246,63 @@ function peopleSearch(email, P){ const nm = nameParts(P.name), F = nm[0] || '', 
   else groups.push(['Domains registered with this email', [['https://viewdns.info/reversewhois/?q=' + q(email), 'Reverse WHOIS (ViewDNS)']]]);
   groups.push(['More search engines (they index different pages)', [['https://yandex.com/search/?text=' + q('"' + email + '"'), 'Yandex'], ['https://search.brave.com/search?q=' + q('"' + email + '"'), 'Brave'], ['https://www.startpage.com/do/search?q=' + q('"' + email + '"'), 'Startpage'], ['https://www.baidu.com/s?wd=' + q('"' + email + '"'), 'Baidu'], ['https://www.mojeek.com/search?q=' + q('"' + email + '"'), 'Mojeek']]]);
   return groups; }
+// ---------- one-line person reader: "Name  Job title at Company  City, State" ----------
+const TITLE_W = /^(associate|assistant|asst\.?|senior|sr\.?|junior|jr|lead|head|chief|vice|vp|svp|evp|avp|president|director|manager|mgr|engineer|developer|dev|designer|analyst|specialist|coordinator|consultant|executive|exec|officer|partner|principal|founder|co-founder|cofounder|owner|student|intern|teacher|professor|nurse|physician|doctor|dr\.?|attorney|lawyer|paralegal|accountant|administrator|admin|supervisor|technician|tech|representative|rep|agent|advisor|adviser|architect|scientist|researcher|recruiter|operator|driver|clerk|cashier|editor|writer|producer|strategist|planner|buyer|broker|realtor|therapist|pharmacist|account|sales|marketing|media|product|project|program|software|data|business|general|regional|national|global|staff|team|customer|client|creative|art|operations|finance|financial|hr|human|it|ceo|cfo|cto|coo|cmo|cio|ciso|board|managing|deputy|district|store|branch|field|clinical|medical|registered|licensed|certified|graduate|research|teaching|digital|content|brand|social|public|self-employed|freelance|freelancer|retired|volunteer|member|chair|chairman|chairperson|secretary|treasurer|superintendent|principal|coach|trainer|instructor|tutor|pastor|chef|cook|server|bartender|mechanic|electrician|plumber|carpenter|foreman|laborer|welder|pilot|officer|sergeant|captain|lieutenant|commander|specialist|associate)$/i;
+const LOC_PRE = /^(new|san|santa|los|las|el|la|fort|ft\.?|saint|st\.?|north|south|east|west|port|mount|mt\.?|lake|palm|grand|little|big|cape|glen|great|upper|lower|old|bay|cedar|rock|round|long|salt|grand|baton|des|coral|cherry|sioux|eau|el)$/i;
+// name = first two words, plus a middle initial, a particle (de, van, al…) or a suffix (Jr, III); the rest is the job title
+const NAME_MID = /^([A-Z]\.?|de|del|della|der|di|da|dos|du|van|von|la|le|bin|binti|al|el|st\.?|mc|mac)$/i, NAME_SUF = /^(jr\.?|sr\.?|ii|iii|iv|phd|md|mba|cpa|pmp|rn)$/i;
+function splitName(left){ const w = left.trim().split(/\s+/).filter(Boolean); if (!w.length) return {name: '', title: ''};
+  let i = Math.min(2, w.length); while (i < w.length && i < 4 && (NAME_MID.test(w[i - 1]) || NAME_MID.test(w[i]) && i + 1 < w.length && !TITLE_W.test(w[i + 1]))) i++;
+  while (i < w.length && NAME_SUF.test(w[i])) i++;
+  return {name: w.slice(0, i).join(' ').replace(/,/g, ''), title: w.slice(i).join(' ')}; }
+const geoCache = {}, wait = ms => new Promise(r => setTimeout(r, ms));
+const LOC_SUF = /^(gardens|heights|park|hills|beach|springs|falls|city|village|valley|lakes?|grove|point|harbor|harbour|island|creek|ridge|station|junction|township|center|centre|plains|meadows|shores|woods|estates|bluffs|county)$/i;
+const locWords = ws => { let k = 1; if (ws.length >= 2 && LOC_SUF.test(ws[ws.length - 1])) k = 2; if (ws.length > k && LOC_PRE.test(ws[ws.length - k - 1])) k++; return Math.min(k, ws.length); };
+async function isPlace(q, again){ if (q in geoCache) return geoCache[q]; try { const r = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=3&accept-language=en&q=' + encodeURIComponent(q)); const j = await r.json(), first = q.split(',')[0].trim().toLowerCase();
+    const f2 = first.replace(/\s+(city|town|village)$/, ''), ok = (j || []).some(x => { const n = String(x.name || '').toLowerCase(), d = String(x.display_name || '').toLowerCase(); return n === first || n === f2 || d.startsWith(first + ',') || d.startsWith(f2 + ',') || d.startsWith('city of ' + f2 + ','); }); geoCache[q] = ok; return ok; } catch (e) { if (!again) { await wait(1600); return isPlace(q, true); } return null; } }
+// pull a location off the end of a string: "Universal McCann Oakland Gardens, New York" → ["Universal McCann", "Oakland Gardens, New York"]
+async function takeLoc(str){ str = str.trim(); if (!str) return ['', ''];
+  const g = str.match(/^(.*?)\s*\b(Greater\s+.+)$/); if (g) return [g[1].trim(), g[2].trim()];
+  const words = str.split(/\s+/), suf = str.match(/\s(Metropolitan Area|Metro Area|Bay Area|Area|Metroplex|Metro|Region)$/i);
+  if (suf && str.indexOf(',') < 0) { const sl = suf[1].split(/\s+/).length;
+    for (let k = Math.min(sl + 3, words.length); k > sl; k--) { const core = words.slice(-k, -sl).join(' '), ok = await isPlace(core); if (ok === null) break; if (ok) return [words.slice(0, -k).join(' '), words.slice(-k).join(' ')]; await wait(1100); }
+    const k = sl + (words.length - sl >= 2 && LOC_PRE.test(words[words.length - sl - 2]) ? 2 : 1); return [words.slice(0, -k).join(' '), words.slice(-k).join(' ')]; }
+  const c = str.indexOf(','); if (c < 0) return [str, ''];
+  const before = str.slice(0, c).trim().split(/\s+/), after = str.slice(c + 1).trim();
+  if (before.length === 1) return ['', str];
+  for (let k = Math.min(3, before.length); k >= 1; k--) { const tail = before.slice(-k).join(' '); const ok = await isPlace(tail + ', ' + after); if (ok === null) break; if (ok) return [before.slice(0, -k).join(' '), tail + ', ' + after]; await wait(1100); }
+  // lookup unavailable or nothing found: one word, more when it reads like "New York", "Oakland Gardens" or "Palm Beach"
+  const k = locWords(before); return [before.slice(0, -k).join(' '), before.slice(-k).join(' ') + ', ' + after]; }
+async function readPerson(text){ let t = String(text || ''); const li = (t.match(/https?:\/\/[^\s]*linkedin\.com\/in\/[^\s]+/i) || [])[0] || '';
+  t = t.replace(/https?:\/\/\S+/g, ' ').replace(/Open LinkedIn\s*↗?/gi, ' ').replace(/[↗•]/g, ' ');
+  const parts = t.split(/\n|\t|\s{3,}|\s[|·]\s/).map(x => x.replace(/\s+/g, ' ').trim()).filter(Boolean); const out = {name: '', title: '', co: '', loc: '', li};
+  const atRe = /\s+(?:at|@)\s+/i;
+  if (parts.length >= 2) { const sn = splitName(parts[0]); out.name = sn.name; let rest = parts.slice(1); if (sn.title) rest.unshift(sn.title);
+    const ai = rest.findIndex(x => atRe.test(x)); if (ai >= 0) { const m = rest[ai].split(atRe); out.title = m[0]; let co = m.slice(1).join(' at ');
+      const others = rest.filter((x, i) => i !== ai && !atRe.test(x)); const locP = others.reverse().find(x => /,/.test(x) || /\b(Area|Metro|Region)$/i.test(x));
+      if (locP) { out.co = co; out.loc = locP; } else { const [c2, l2] = await takeLoc(co); out.co = c2; out.loc = l2; } }
+    else { const locP = rest.slice().reverse().find(x => /,/.test(x) || /\b(Area|Metro|Region)$/i.test(x)); out.loc = locP || ''; out.title = rest.filter(x => x !== locP).join(' '); }
+    return out; }
+  const one = parts[0] || ''; const m = one.split(atRe);
+  if (m.length >= 2) { const sn = splitName(m[0]); out.name = sn.name; out.title = sn.title; const [c2, l2] = await takeLoc(m.slice(1).join(' at ')); out.co = c2; out.loc = l2; }
+  else { const sn = splitName(one); out.name = sn.name; const [t2, l2] = await takeLoc(sn.title); out.title = t2; out.loc = l2; }
+  return out; }
+let readSeq = 0, readBusy = null;
+async function applyPerson(){ const v = $('ecPerson').value, me = ++readSeq; if (!v.trim()) { $('ecRead').hidden = true; return; }
+  $('ecRead').hidden = false; $('ecRead').innerHTML = '<span><span class="spin"></span> Reading…</span>';
+  const r = await readPerson(v); if (me !== readSeq) return;
+  $('ecName').value = r.name; $('ecTitle').value = r.title; $('ecCo').value = r.co; $('ecLoc').value = r.loc; if (r.li && !$('ecLi').value.trim()) $('ecLi').value = r.li;
+  showRead(); }
+function showRead(){ const f = [['Name', 'ecName'], ['Job title', 'ecTitle'], ['Company', 'ecCo'], ['Location', 'ecLoc']];
+  $('ecRead').hidden = false; $('ecRead').innerHTML = f.map(([t, id]) => { const v = $(id).value.trim(); return `<span class="${v ? '' : 'miss'}"><i>${t}</i>${v ? esc(v) : 'not found'}</span>`; }).join('') + '<span style="background:none;border:0;padding:3px 0"><a href="#" id="ecFix">Edit</a></span>';
+  $('ecFix').onclick = e => { e.preventDefault(); $('ecEdit').open = true; $('ecName').focus(); }; }
+let readT = 0; $('ecPerson').addEventListener('input', () => { clearTimeout(readT); readT = setTimeout(() => { readBusy = applyPerson(); }, 450); });
+$('ecPerson').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); run(); } });
+['ecName', 'ecTitle', 'ecCo', 'ecLoc'].forEach(id => $(id).addEventListener('input', showRead));
 // ---------- run ----------
 let ecLast = null;
-async function run(){ const emails = [...new Set($('ecEmail').value.split(/[\s,;]+/).map(x => x.trim().replace(/^mailto:/i, '').toLowerCase()).filter(Boolean))].slice(0, 5);
+async function run(){ if ($('ecPerson').value.trim() && !$('ecName').value.trim()) { clearTimeout(readT); readBusy = applyPerson(); } if (readBusy) { $('ecSt').innerHTML = '<span class="spin"></span> Reading the person line…'; await readBusy; readBusy = null; }
+  const emails = [...new Set($('ecEmail').value.split(/[\s,;]+/).map(x => x.trim().replace(/^mailto:/i, '').toLowerCase()).filter(Boolean))].slice(0, 5);
   const P = {name: $('ecName').value.trim(), li: $('ecLi').value.trim(), co: $('ecCo').value.trim(), loc: $('ecLoc').value.trim(), title: $('ecTitle').value.trim(), liText: $('ecLiText').value};
   if (!emails.length) { $('ecOut').innerHTML = '<div class="panel empty">Enter an email address.</div>'; return; }
   const bad = emails.filter(e => !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e)); if (bad.length) { $('ecOut').innerHTML = `<div class="panel empty">“${esc(bad[0])}” is not a valid email address.</div>`; return; }
@@ -294,11 +354,11 @@ document.addEventListener('click', e => { const a = e.target.closest('a[data-src
   if (!a.classList.contains('seen')) { a.classList.add('seen'); a.insertAdjacentText('afterbegin', '✓ '); } const c = document.querySelector(`[data-cnt="${CSS.escape(a.dataset.em)}"]`); if (c) { const card = a.closest('.ec-sec'), tot = card.querySelectorAll('a[data-src]').length, n = card.querySelectorAll('a[data-src].seen').length; c.textContent = n + ' of ' + tot + ' sources checked'; } });
 document.addEventListener('click', async e => { const b = e.target.closest('[data-copy]'); if (!b) return; try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = t, 1400); } catch (x) {} });
 $('ecGo').onclick = run; ['ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
-$('ecClear').onclick = () => { ['ecEmail', 'ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle', 'ecLiText'].forEach(id => $(id).value = ''); $('ecOut').innerHTML = ''; $('ecSt').textContent = ''; };
+$('ecClear').onclick = () => { ['ecPerson', 'ecEmail', 'ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle', 'ecLiText'].forEach(id => $(id).value = ''); $('ecRead').hidden = true; $('ecOut').innerHTML = ''; $('ecSt').textContent = ''; };
 // a link from the portal can fill the boxes: email-checker.html#email=…&name=…&li=…
-try { const q = new URLSearchParams(location.hash.slice(1)); if (q.get('email')) { $('ecEmail').value = q.get('email'); $('ecName').value = q.get('name') || ''; $('ecLi').value = q.get('li') || ''; $('ecCo').value = q.get('co') || ''; $('ecLoc').value = q.get('loc') || ''; setTimeout(run, 100); } } catch (e) {}
+try { const q = new URLSearchParams(location.hash.slice(1)); if (q.get('email')) { $('ecEmail').value = q.get('email'); $('ecName').value = q.get('name') || ''; $('ecLi').value = q.get('li') || ''; $('ecCo').value = q.get('co') || ''; $('ecLoc').value = q.get('loc') || ''; if (q.get('name')) showRead(); setTimeout(run, 100); } } catch (e) {}
 </script>
-<script>window.CK_REPORT = {checker: 'email', label: 'Email checker', inputs: ['ecEmail', 'ecName'], go: 'ecGo', row: 'ecRow',
+<script>window.CK_REPORT = {checker: 'email', label: 'Email checker', inputs: ['ecEmail', 'ecPerson', 'ecName'], go: 'ecGo', row: 'ecRow',
   collect: () => { const L = ecLast; if (!L) return {answerText: 'Not checked yet'}; const r = L.results[0] || {}; return {answerText: r.v ? r.v[1] : '', why: r.v ? String(r.v[2]).replace(/<[^>]+>/g, '') : '', person: L.P, results: L.results.map(x => ({email: x.email, verdict: x.v, evidence: x.ev, nameHint: x.nm, domain: x.dk, mx: x.mx, githubCommits: x.commits && x.commits.total, gravatar: x.gv && x.gv.has}))}; }};</script>
 <script src="checker-report.js"></script>
 </body></html>
