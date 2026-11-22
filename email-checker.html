@@ -138,7 +138,8 @@ html,body{overflow-x:hidden}
 .ec-pending{color:var(--ink-soft);font-size:13px}
 .ec-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}@media (max-width:700px){.ec-g2{grid-template-columns:1fr}}
 .ec-read{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;font-size:13px}.ec-read span{background:#eef5f1;border:1px solid #cfe1d6;border-radius:999px;padding:3px 10px}.ec-read span i{font-style:normal;color:var(--ink-soft);margin-right:4px}.ec-read span.miss{background:#fff6e6;border-color:#f0d9a8}
-#ecEdit{margin-top:10px}#ecEdit summary{cursor:pointer;font-size:13px;color:var(--ink-soft)}
+#ecEdit{margin-top:10px}.ec-steps{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;margin-top:12px;padding:12px 16px}.ec-steps span{color:var(--ink-soft)}.ec-steps i{font-style:normal;font-weight:600;color:var(--ink)}a.ec-gm{text-decoration:none;background:#fdf1d6;border-color:#e8c46a;color:#6b4a00}
+.ec-timer{position:sticky;top:8px;z-index:5;margin:12px 0 0;padding:8px 14px;border-radius:999px;background:#eef5f1;border:1px solid #cfe1d6;font:600 13.5px var(--body);width:max-content;max-width:100%}.ec-timer.warn{background:#fff6e6;border-color:#f0d9a8;color:#7a5200}.ec-timer.over{background:#fdecea;border-color:#f3b8b0;color:#9b2c1f}#ecEdit summary{cursor:pointer;font-size:13px;color:var(--ink-soft)}
 </style>
 <header class="top"><div class="brand"><img src="logo.png" alt=""><span>Chrysolite<small>Email checker</small></span></div><a class="back" href="portal.html#bemailbrief">Email benchmarking briefing →</a></header>
 <main>
@@ -156,6 +157,8 @@ html,body{overflow-x:hidden}
     <details><summary>More data from LinkedIn (optional): paste the profile page text</summary><p class="hint" style="margin:6px 0">Open the LinkedIn profile (and its <b>Contact info</b>), press Ctrl+A then Ctrl+C, and paste here. The checker reads any emails, websites and usernames in it.</p><textarea id="ecLiText" placeholder="Paste the LinkedIn page text here"></textarea></details>
     <div class="ec-row" id="ecRow"><button class="btn btn-gem" type="button" id="ecGo">Check email</button><button class="btn btn-ghost" type="button" id="ecClear">Clear</button><span class="ec-st" id="ecSt" role="status" aria-live="polite"></span></div>
   </div>
+  <div class="panel ec-steps"><b>Order for each email (2½ minutes at most):</b> <span>1. Gmail photo: <a href="https://mail.google.com/mail/?view=cm&fs=1" target="_blank" rel="noopener" id="ecGmTop">Compose ↗</a>, paste the email in <i>To</i>, right-click it → <i>More info</i> → <i>Open detailed view</i>, compare the photo with LinkedIn</span><span>2. Search buttons on the review screen</span><span>3. This checker, 1½ minutes at most</span><span>4. Nothing proves it → <b>Can't tell</b> · clearly someone else → <b>Not a match</b></span></div>
+  <div class="ec-timer" id="ecTimer" hidden></div>
   <div id="ecOut"></div>
 </main>
 <script>
@@ -299,6 +302,12 @@ function showRead(){ const f = [['Name', 'ecName'], ['Job title', 'ecTitle'], ['
 let readT = 0; $('ecPerson').addEventListener('input', () => { clearTimeout(readT); readT = setTimeout(() => { readBusy = applyPerson(); }, 450); });
 $('ecPerson').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); run(); } });
 ['ecName', 'ecTitle', 'ecCo', 'ecLoc'].forEach(id => $(id).addEventListener('input', showRead));
+// 1½-minute limit on this checker for each check
+let ecT0 = 0, ecTI = 0; const ECT_MAX = 90000;
+function ecTick(){ const el = $('ecTimer'), ms = Date.now() - ecT0, mmss = x => Math.floor(x / 60000) + ':' + String(Math.floor(x / 1000) % 60).padStart(2, '0'); el.hidden = false;
+  el.className = 'ec-timer' + (ms >= ECT_MAX ? ' over' : ms >= 60000 ? ' warn' : '');
+  el.textContent = ms >= ECT_MAX ? `⏱ ${mmss(ms)}: 1½ minutes are up. If nothing proves it, answer Can't tell (or Not a match if something clearly shows a different person).` : `⏱ Time on the checker: ${mmss(ms)} of 1:30`; }
+function ecTimerStart(){ ecT0 = Date.now(); clearInterval(ecTI); ecTick(); ecTI = setInterval(ecTick, 1000); }
 // ---------- run ----------
 let ecLast = null;
 async function run(){ if ($('ecPerson').value.trim() && !$('ecName').value.trim()) { clearTimeout(readT); readBusy = applyPerson(); } if (readBusy) { $('ecSt').innerHTML = '<span class="spin"></span> Reading the person line…'; await readBusy; readBusy = null; }
@@ -306,7 +315,7 @@ async function run(){ if ($('ecPerson').value.trim() && !$('ecName').value.trim(
   const P = {name: $('ecName').value.trim(), li: $('ecLi').value.trim(), co: $('ecCo').value.trim(), loc: $('ecLoc').value.trim(), title: $('ecTitle').value.trim(), liText: $('ecLiText').value};
   if (!emails.length) { $('ecOut').innerHTML = '<div class="panel empty">Enter an email address.</div>'; return; }
   const bad = emails.filter(e => !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e)); if (bad.length) { $('ecOut').innerHTML = `<div class="panel empty">“${esc(bad[0])}” is not a valid email address.</div>`; return; }
-  $('ecSt').innerHTML = '<span class="spin"></span> Checking public sources…'; $('ecGo').disabled = true; ecLast = {P, results: []};
+  ecTimerStart(); $('ecSt').innerHTML = '<span class="spin"></span> Checking public sources…'; $('ecGo').disabled = true; ecLast = {P, results: []};
   $('ecOut').innerHTML = emails.map((e, i) => `<div class="panel ec-card" id="ecC${i}"><div class="ec-hd"><div><h2>${esc(e)}</h2><p class="ec-pending"><span class="spin"></span> Looking it up…</p></div></div></div>`).join('');
   for (let i = 0; i < emails.length; i++) { const r = await checkOne(emails[i], P); ecLast.results.push(r); draw(i, r, P); }
   $('ecSt').innerHTML = '✓ Done · ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}); $('ecGo').disabled = false; }
@@ -329,7 +338,7 @@ async function checkOne(email, P){ const [local, dom] = email.split('@'), slug =
     else if (dk.k === 'bad') v = ['n', '✗ Throwaway address', 'A disposable inbox is not a real person\'s email.'];
     else if (okEv.length) v = ['m', '✓ Proof found: Match', `${okEv.length} public page${okEv.length === 1 ? '' : 's'} show${okEv.length === 1 ? 's' : ''} this email with ${esc(P.name || 'the person')}'s name. Open it, confirm it is the same person (job, place), then paste its link as the evidence.` + (badEv.length ? ' Note: the same email also appears with another name, so check carefully.' : '')];
     else if (badEv.length) v = ['n', '✗ Shown with someone else\'s name', `A public page shows this email with a different name (${badEv.map(e => e[2].replace(/.*: /, '')).slice(0, 1).join('')}). Check it is not a nickname or a maiden name before choosing Not theirs.`];
-    else v = ['c', '? No public proof found yet', 'Nothing in the automatic sources links this email to the person. Try the searches below (start with the blue ones). If nothing proves it, the answer is Can\'t verify.'];
+    else v = ['c', '? No public proof found yet', 'Nothing in the automatic sources links this email to the person. Try the searches below (start with the blue ones). If nothing proves it, the answer is Can\'t tell.'];
   return {email, local, dom, mx, commits, ghu, pk, uk, gv, uname, ev, nm, dk, slugHint, liEmails, liSites, v}; }
 function draw(i, r, P){ const box = $('ecC' + i); if (!box) return; const lim = r.commits.limited || r.ghu.limited || (r.uname && r.uname.limited);
   const f = (k, t, v, s) => `<div class="ec-f ${k}"><span>${t}</span><b>${v}</b>${s ? `<small>${s}</small>` : ''}</div>`;
@@ -337,7 +346,7 @@ function draw(i, r, P){ const box = $('ecC' + i); if (!box) return; const lim = 
   const evH = r.ev.length ? r.ev.map(([k, src, t, d, url, img]) => `<div class="ec-e ${k}">${img ? `<img class="ec-av" src="${esc(img)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'src',textContent:'${src}'}))">` : `<span class="src">${src}</span>`}<div><b>${t}</b><small>${d}</small>${url ? `<small><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></small>` : ''}</div><div class="act">${url ? `<a class="mini" href="${esc(url)}" target="_blank" rel="noopener">Open ↗</a><button class="mini" type="button" data-copy="${esc(url)}">Copy link</button>` : ''}</div></div>`).join('')
     : '<p class="hint" style="margin:0">No GitHub, PGP, Gravatar or LinkedIn record links this email to anyone.</p>';
   const un = r.uname && r.uname.login ? (() => { const u = r.uname, s = sameName(u.name, P.name); return `<div class="ec-e ${s === 'same' ? 'mid' : ''}"><img class="ec-av" src="${esc(u.avatar)}" alt=""><div><b>GitHub user “${esc(u.login)}” (same as the email's username)${u.name ? ': ' + esc(u.name) : ''}</b><small>${[u.company, u.location, u.blog, u.bio].filter(Boolean).map(esc).join(' · ') || 'No details on the profile'}${s === 'same' ? ' · <b>same name as the person</b>' : s === 'different' ? ' · a different name' : ''}</small><small>A matching username is a lead, not proof: open it and look for the email or a link to the person.</small></div><div class="act"><a class="mini" href="${esc(u.url)}" target="_blank" rel="noopener">Open ↗</a></div></div>`; })() : '';
-  box.innerHTML = `<div class="ec-hd"><div><h2>${esc(r.email)}</h2><p>${esc(P.name || 'No name entered')}${P.co ? ' · ' + esc(P.co) : ''}${P.loc ? ' · ' + esc(P.loc) : ''}</p></div><button class="mini" type="button" data-copy="${esc(r.email)}">Copy email</button></div>
+  box.innerHTML = `<div class="ec-hd"><div><h2>${esc(r.email)}</h2><p>${esc(P.name || 'No name entered')}${P.co ? ' · ' + esc(P.co) : ''}${P.loc ? ' · ' + esc(P.loc) : ''}</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="mini ec-gm" href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(r.email)}" target="_blank" rel="noopener">✉ Open in Gmail ↗</a><button class="mini" type="button" data-copy="${esc(r.email)}">Copy email</button></div></div>
     <div class="ec-v ${r.v[0]}"><b class="t">${r.v[1]}</b><p>${r.v[2]}</p><p class="hint">A helper: you make the final choice using the email rules. Match only with a page that shows this email with this person.</p></div>
     <div class="ec-sec"><h3>Proof pages found automatically</h3><div class="ec-ev">${evH}${un}</div>${r.ev.some(e => e[1] === 'GitHub') ? '<p class="hint" style="margin:8px 0 0">Anyone can type any email into a code commit, so a commit alone is weaker proof: trust it when the GitHub profile is clearly the same person (name, job, place, photo).</p>' : ''}${lim ? '<p class="hint" style="margin:8px 0 0">⚠ GitHub limits free lookups to about 10 a minute. Wait a minute and check again for the full GitHub results.</p>' : ''}</div>
     <div class="ec-sec"><h3>About this email</h3><div class="ec-facts">${f(r.dk.k, 'Email type', r.dk.t, r.dk.d)}${f(mxT[0], 'Domain', mxT[1], mxT[2])}${f(r.nm.k, 'Email vs name', r.nm.t, r.nm.d)}${r.slugHint ? f(r.slugHint.k, 'LinkedIn link', r.slugHint.t, 'Only a hint') : f('', 'LinkedIn link', 'Not given', 'Add it to compare')}
@@ -354,7 +363,7 @@ document.addEventListener('click', e => { const a = e.target.closest('a[data-src
   if (!a.classList.contains('seen')) { a.classList.add('seen'); a.insertAdjacentText('afterbegin', '✓ '); } const c = document.querySelector(`[data-cnt="${CSS.escape(a.dataset.em)}"]`); if (c) { const card = a.closest('.ec-sec'), tot = card.querySelectorAll('a[data-src]').length, n = card.querySelectorAll('a[data-src].seen').length; c.textContent = n + ' of ' + tot + ' sources checked'; } });
 document.addEventListener('click', async e => { const b = e.target.closest('[data-copy]'); if (!b) return; try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = t, 1400); } catch (x) {} });
 $('ecGo').onclick = run; ['ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') run(); }));
-$('ecClear').onclick = () => { ['ecPerson', 'ecEmail', 'ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle', 'ecLiText'].forEach(id => $(id).value = ''); $('ecRead').hidden = true; $('ecOut').innerHTML = ''; $('ecSt').textContent = ''; };
+$('ecClear').onclick = () => { ['ecPerson', 'ecEmail', 'ecName', 'ecLi', 'ecCo', 'ecLoc', 'ecTitle', 'ecLiText'].forEach(id => $(id).value = ''); $('ecRead').hidden = true; clearInterval(ecTI); $('ecTimer').hidden = true; $('ecOut').innerHTML = ''; $('ecSt').textContent = ''; };
 // a link from the portal can fill the boxes: email-checker.html#email=…&name=…&li=…
 try { const q = new URLSearchParams(location.hash.slice(1)); if (q.get('email')) { $('ecEmail').value = q.get('email'); $('ecName').value = q.get('name') || ''; $('ecLi').value = q.get('li') || ''; $('ecCo').value = q.get('co') || ''; $('ecLoc').value = q.get('loc') || ''; if (q.get('name')) showRead(); setTimeout(run, 100); } } catch (e) {}
 </script>

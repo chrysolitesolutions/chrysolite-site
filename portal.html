@@ -4114,8 +4114,8 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 <h2>6. Choose an answer for each email</h2>
 <div class="tblw"><table><thead><tr><th>Button</th><th>Use when</th></tr></thead><tbody>
 <tr><td>✓ Match</td><td>You found a page that proves the email belongs to this person. <strong>Paste that page’s link</strong> in <em>Evidence link</em>. It is required for Match.</td></tr>
-<tr><td>✗ Not theirs</td><td>You found that the email belongs to <strong>someone else</strong>, e.g. a page shows it with another person’s name.</td></tr>
-<tr><td>? Can’t verify</td><td>You searched and found nothing that proves it either way.</td></tr></tbody></table></div>
+<tr><td>✗ Not a match</td><td>You found that the email belongs to <strong>someone else</strong>, e.g. a page shows it with another person’s name.</td></tr>
+<tr><td>? Can’t tell</td><td>You searched and found nothing that proves it either way.</td></tr></tbody></table></div>
 <p>For the <strong>evidence link</strong>, copy the full address of the exact page that shows the email (not a search results page) and paste it in the box under the buttons.</p>
 <h2>7. None verifiable</h2>
 <p>If you searched every email and <strong>none of them</strong> can be proven, click <strong>None verifiable</strong> (bottom left) instead of answering each one.</p>
@@ -4125,8 +4125,8 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 <p>Person: <strong>Narotham Reddy Chilkuri</strong>, Staff DevOps at Zoom, San Jose. Email #1: <strong>narothamrc@gmail.com</strong>.</p>
 <ol><li>Click <strong>Search “narothamrc@gmail.com”</strong>, then <strong>+ name</strong>, then <strong>Search GitHub</strong>.</li>
 <li>If a GitHub profile or personal site shows <strong>Narotham Reddy Chilkuri</strong> with this email and a matching job (DevOps, Zoom) → <strong>✓ Match</strong> and paste that page’s link.</li>
-<li>If a page shows this email with a <strong>different person</strong> → <strong>✗ Not theirs</strong>.</li>
-<li>If nothing comes up → <strong>? Can’t verify</strong>. Don’t choose Match just because the email looks like the name.</li></ol>
+<li>If a page shows this email with a <strong>different person</strong> → <strong>✗ Not a match</strong>.</li>
+<li>If nothing comes up → <strong>? Can’t tell</strong>. Don’t choose Match just because the email looks like the name.</li></ol>
 <h2>10. Quick tips</h2>
 <ul><li>Always try the <strong>email + name</strong> search; it gives the most reliable results.</li>
 <li>One clear proof page is enough. Don’t paste search result pages as evidence.</li>
@@ -4158,7 +4158,29 @@ function ackBlock(k){ const p = projOf(k); if (!p || acting()) return [];
   return out; }
 const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
 const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
-const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k); return d && d.html ? hashStr(d.html) : null; };
+// a procedure added on top of a page, whether the page is the built-in one or an uploaded .docx (it changes the version, so staff accept it again)
+const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from today):</strong> check every email in this order, and spend <strong>no more than 2½ minutes</strong> on each email.</div>
+<h2>Step-by-step email check (start with the Gmail photo)</h2>
+<ol>
+<li><strong>Open a new email in your Chrysolite Gmail.</strong> Click <strong>Compose</strong> (or use <strong>Open in Gmail</strong> in the Email checker, which opens it with the email filled in).</li>
+<li><strong>Copy the email</strong> you need to check from the review screen and <strong>paste it in the To box</strong>. It turns into a chip (e.g. <code>martingg13@yahoo.com</code>). Do not send anything.</li>
+<li><strong>Right-click the chip</strong> (or hover over it) and click <strong>More info</strong>.</li>
+<li>In the small card, click <strong>Open detailed view</strong>.</li>
+<li><strong>Look at the profile photo</strong> and compare it with the LinkedIn photo (use <strong>Open LinkedIn ↗</strong> on the review screen). Same person, clearly → <strong>✓ Match</strong>. Paste the LinkedIn profile link as the evidence and note “Gmail profile photo matches LinkedIn photo”.</li>
+<li>No photo, a logo, or you can’t tell from the photo → use the <strong>search buttons</strong> on the review screen: <em>Search “email”</em>, <em>Search “email” + name</em>, <em>Search GitHub</em>.</li>
+<li>Still nothing → check it in the <a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Email checker ↗</a> for <strong>no more than 1½ minutes</strong>.</li>
+<li>Still nothing that confirms or rules it out → <strong>? Can’t tell</strong>.</li>
+<li>If any one of these methods <strong>clearly and confidently</strong> shows a different person (a different face, a different name, a different company or location on a page that shows this email) → <strong>✗ Not a match</strong>.</li>
+<li><strong>Each email: 2½ minutes at most</strong>, from opening Gmail to answering. When the time is up and nothing proves it, answer <strong>? Can’t tell</strong> and move on.</li>
+</ol>
+<div class="tblw"><table><thead><tr><th>Step</th><th>Time guide</th><th>Result</th></tr></thead><tbody>
+<tr><td>Gmail photo (steps 1–5)</td><td>about 30 seconds</td><td>Same face as LinkedIn → Match · clearly a different face → Not a match</td></tr>
+<tr><td>Search buttons (step 6)</td><td>about 30 seconds</td><td>Page shows this email with this person → Match · with someone else → Not a match</td></tr>
+<tr><td>Email checker (step 7)</td><td>1½ minutes at most</td><td>Proof found → Match · clear difference → Not a match</td></tr>
+<tr><td>Nothing found (step 8)</td><td>total 2½ minutes at most</td><td>Can’t tell</td></tr></tbody></table></div>
+<p class="note">A photo that only looks a bit similar is not proof. Choose Match from the photo only when it is clearly the same person; choose Not a match only when it is clearly a different person.</p>
+`};
+const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k); return d && d.html ? hashStr((GADD[k] || '') + d.html) : null; };
 // 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
 function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k];
   if (k === 'brief') { if (!a) return 'no'; const save = ackMine; ackMine = rec; try { return briefAllOk() ? 'ok' : 'old'; } finally { ackMine = save; } }
@@ -4294,7 +4316,7 @@ function renderGdoc(){
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
-  $('gdDoc').innerHTML = cleanHtml(g.html || ''); try { renderAck(); } catch (e) {} try { mountZpQuiz(); mountZpMap(); } catch (e) { console.error(e); } try { renderAck(); } catch (e) {}
+  $('gdDoc').innerHTML = cleanHtml((GADD[gdKey] || '') + (g.html || '')); try { renderAck(); } catch (e) {} try { mountZpQuiz(); mountZpMap(); } catch (e) { console.error(e); } try { renderAck(); } catch (e) {}
   const hs = [...$('gdDoc').querySelectorAll('h2')]; hs.forEach((h, i) => h.id = 'gd-' + gdKey + '-' + i);
   $('gdToc').innerHTML = hs.map(h => `<a href="#${h.id}" data-to="${h.id}">${esc(h.textContent.replace(/^\d+\.\s*/, ''))}</a>`).join('');
   $('gdUpd').textContent = g.updatedAt ? 'Last updated ' + new Date(g.updatedAt).toLocaleDateString(undefined, {day: 'numeric', month: 'long', year: 'numeric'}) + (g.fileName ? ' from ' + g.fileName : '') : '';
