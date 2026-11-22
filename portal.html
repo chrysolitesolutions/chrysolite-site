@@ -294,7 +294,7 @@ tbody tr:hover{background:var(--surface-2)}
 .gd-tabs{display:inline-flex;width:max-content;max-width:100%;gap:4px;padding:4px;border-radius:999px;border:1px solid var(--line);background:var(--surface);margin:0 0 18px}.gd-tabs button{border:0;background:none;border-radius:999px;padding:9px 18px;font:600 14px var(--body);cursor:pointer;color:var(--ink)}.gd-tabs button.on{background:var(--gem);color:#13240a}
 .gd-group{display:flex;align-items:center;gap:10px;font-size:19px;margin:22px 0 12px}.gd-group .dot{width:10px;height:10px;border-radius:50%}.gd-group .dot.on{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}.gd-group .dot.up{background:var(--info);box-shadow:0 0 0 4px color-mix(in srgb,var(--info) 20%,transparent)}
 #guideGridUp{margin-bottom:8px}#guideGridUp .lk{opacity:.92}
-.gd-doc .intro-img{display:block;width:100%;max-width:760px;margin:6px auto 4px;border-radius:14px;border:1px solid var(--line);box-shadow:0 10px 30px -18px rgba(0,0,0,.35);cursor:zoom-in}
+.gd-doc .gd-pics{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}.gd-doc .gd-pics p{flex:1 1 200px;margin:0}.gd-doc .intro-img.sm{max-width:540px;margin-left:0}.gd-doc .gd-pics .intro-img.sm{max-width:100%}.gd-doc .intro-img{display:block;width:100%;max-width:760px;margin:6px auto 4px;border-radius:14px;border:1px solid var(--line);box-shadow:0 10px 30px -18px rgba(0,0,0,.35);cursor:zoom-in}
 .gd-doc .intro-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 12px}.gd-doc .intro-3 div{padding:12px 14px;border-radius:12px;font-size:14px}.gd-doc .intro-3 b{display:block;font-size:16px;margin-bottom:2px}
 .gd-doc .intro-3 .m{background:#e3f4dc;color:#1f6a2a}.gd-doc .intro-3 .n{background:#fbe3df;color:#a5281c}.gd-doc .intro-3 .c{background:#fff4dc;color:#7a5200}@media(max-width:640px){.gd-doc .intro-3{grid-template-columns:1fr}}
 .gd-doc .intro-tip{padding:10px 14px;border-left:4px solid var(--info);background:color-mix(in srgb,var(--info) 8%,var(--surface));border-radius:8px;margin:8px 0 14px}
@@ -4136,7 +4136,7 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 function cleanHtml(raw){
   const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE|IMG|KBD)$/;
   const walk = el => [...el.children].forEach(c => { if (!OK.test(c.tagName)) { c.replaceWith(...c.childNodes); return walk(el); }
-    [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')) || (c.tagName === 'IMG' && ((a.name === 'src' && /^[\w-]+\.(webp|png|jpe?g)$/i.test(a.value)) || a.name === 'alt')); if (!keep) c.removeAttribute(a.name); });
+    [...c.attributes].forEach(a => { const keep = (a.name === 'class' && /^[\w -]+$/.test(a.value)) || (c.tagName === 'OL' && a.name === 'start' && /^\d+$/.test(a.value)) || (c.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) || (c.tagName === 'A' && (a.name === 'target' || a.name === 'rel')) || (c.tagName === 'IMG' && ((a.name === 'src' && /^[\w-]+\.(webp|png|jpe?g)$/i.test(a.value)) || a.name === 'alt')); if (!keep) c.removeAttribute(a.name); });
     if (c.tagName === 'A') { c.target = '_blank'; c.rel = 'noopener'; } walk(c); });
   const root = doc.body.firstChild; walk(root); return root.innerHTML;
 }
@@ -4159,26 +4159,60 @@ function ackBlock(k){ const p = projOf(k); if (!p || acting()) return [];
 const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
 const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
 // a procedure added on top of a page, whether the page is the built-in one or an uploaded .docx (it changes the version, so staff accept it again)
-const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from today):</strong> check every email in this order, and spend <strong>no more than 2½ minutes</strong> on each email.</div>
+const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from today):</strong> check every email in this order, and spend <strong>no more than 2½ minutes</strong> on each email. The pictures use made-up people; click any picture to open it larger.</div>
 <h2>Step-by-step email check (start with the Gmail photo)</h2>
-<ol>
-<li><strong>Open a new email in your Chrysolite Gmail.</strong> Click <strong>Compose</strong> (or use <strong>Open in Gmail</strong> in the Email checker, which opens it with the email filled in).</li>
-<li><strong>Copy the email</strong> you need to check from the review screen and <strong>paste it in the To box</strong>. It turns into a chip (e.g. <code>martingg13@yahoo.com</code>). Do not send anything.</li>
-<li><strong>Right-click the chip</strong> (or hover over it) and click <strong>More info</strong>.</li>
-<li>In the small card, click <strong>Open detailed view</strong>.</li>
-<li><strong>Look at the profile photo</strong> and compare it with the LinkedIn photo (use <strong>Open LinkedIn ↗</strong> on the review screen). Same person, clearly → <strong>✓ Match</strong>. Paste the LinkedIn profile link as the evidence and note “Gmail profile photo matches LinkedIn photo”.</li>
-<li>No photo, a logo, or you can’t tell from the photo → use the <strong>search buttons</strong> on the review screen: <em>Search “email”</em>, <em>Search “email” + name</em>, <em>Search GitHub</em>.</li>
-<li>Still nothing → check it in the <a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Email checker ↗</a> for <strong>no more than 1½ minutes</strong>.</li>
-<li>Still nothing that confirms or rules it out → <strong>? Can’t tell</strong>.</li>
-<li>If any one of these methods <strong>clearly and confidently</strong> shows a different person (a different face, a different name, a different company or location on a page that shows this email) → <strong>✗ Not a match</strong>.</li>
-<li><strong>Each email: 2½ minutes at most</strong>, from opening Gmail to answering. When the time is up and nothing proves it, answer <strong>? Can’t tell</strong> and move on.</li>
-</ol>
+<h3>Steps 1–2: put the email in a new Gmail message</h3>
+<ol><li><strong>Open a new email in your Chrysolite Gmail.</strong> Click <strong>Compose</strong> (or use <strong>✉ Open in Gmail</strong> in the Email checker, which opens it with the email already filled in).</li>
+<li><strong>Copy the email</strong> you need to check from the review screen and <strong>paste it in the To box</strong>. It turns into a chip. <strong>Do not send anything.</strong></li></ol>
+<p><img class="intro-img sm" src="email-gmail-1-compose.webp" alt="A new Gmail message with the email pasted in the To box"></p>
+<h3>Steps 3–4: More info, then Open detailed view</h3>
+<ol start="3"><li><strong>Right-click the chip</strong> (or hover over it) and click <strong>More info</strong>.</li>
+<li>In the small card, click <strong>Open detailed view</strong>.</li></ol>
+<div class="gd-pics"><p><img class="intro-img sm" src="email-gmail-2-more-info.webp" alt="Right-click menu with More info"></p><p><img class="intro-img sm" src="email-gmail-3-detailed-view.webp" alt="The contact card with Open detailed view"></p><p><img class="intro-img sm" src="email-gmail-4-photo.webp" alt="The detailed view with the profile photo"></p></div>
+<h3>Step 5: compare the photo with LinkedIn</h3>
+<ol start="5"><li><strong>Look at the profile photo</strong> and compare it with the LinkedIn photo (use <strong>Open LinkedIn ↗</strong> on the review screen).
+<ul><li><strong>Clearly the same person</strong> → <strong>✓ Match</strong>. Paste the LinkedIn profile link as the evidence and note “Gmail profile photo matches LinkedIn photo”.</li>
+<li><strong>Clearly a different person</strong> → <strong>✗ Not a match</strong>.</li>
+<li><strong>No photo</strong> (only a letter), the <strong>grey default picture</strong>, a <strong>logo</strong>, or you can’t be sure → go to step 6.</li></ul></li></ol>
+<p><img class="intro-img sm" src="email-photo-same.webp" alt="Gmail photo and LinkedIn photo show the same face: Match"></p><p><img class="intro-img sm" src="email-photo-different.webp" alt="Gmail photo shows a different person from LinkedIn: Not a match"></p><p><img class="intro-img sm" src="email-photo-none.webp" alt="A letter, a grey default picture or a logo cannot prove anything"></p>
+<h3>Steps 6–8: search buttons, then the Email checker</h3>
+<ol start="6"><li>Use the <strong>search buttons</strong> on the review screen: <em>Search “email”</em>, <em>Search “email” + name</em>, <em>Search GitHub</em>.</li>
+<li>Still nothing → check it in the <a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Email checker ↗</a> for <strong>no more than 1½ minutes</strong> (the checker shows a timer).</li>
+<li>Still nothing that confirms or rules it out → <strong>? Can’t tell</strong>.</li></ol>
+<p><img class="intro-img" src="email-review-search.webp" alt="The review screen: Open LinkedIn and the three search buttons"></p>
+<h3>Steps 9–10: the two rules that always apply</h3>
+<ol start="9"><li>If any one of these methods <strong>clearly and confidently</strong> shows a different person (a different face, or a page that shows this email with a different name, company or location) → <strong>✗ Not a match</strong>.</li>
+<li><strong>Each email: 2½ minutes at most</strong>, from opening Gmail to answering. When the time is up and nothing proves it, answer <strong>? Can’t tell</strong> and move on.</li></ol>
 <div class="tblw"><table><thead><tr><th>Step</th><th>Time guide</th><th>Result</th></tr></thead><tbody>
 <tr><td>Gmail photo (steps 1–5)</td><td>about 30 seconds</td><td>Same face as LinkedIn → Match · clearly a different face → Not a match</td></tr>
 <tr><td>Search buttons (step 6)</td><td>about 30 seconds</td><td>Page shows this email with this person → Match · with someone else → Not a match</td></tr>
 <tr><td>Email checker (step 7)</td><td>1½ minutes at most</td><td>Proof found → Match · clear difference → Not a match</td></tr>
 <tr><td>Nothing found (step 8)</td><td>total 2½ minutes at most</td><td>Can’t tell</td></tr></tbody></table></div>
 <p class="note">A photo that only looks a bit similar is not proof. Choose Match from the photo only when it is clearly the same person; choose Not a match only when it is clearly a different person.</p>
+<h2>Examples from websites: what counts and what doesn’t</h2>
+<p>Person on the review screen: <strong>Daniel Reyes</strong>, Senior UX Designer at Northwind Labs, Austin, Texas. Email #1: <code>dan.reyes.sample@yahoo.com</code>. (Made-up person and websites.)</p>
+<h3>Example A: a code profile (GitHub) → ✓ Match</h3>
+<p>The profile shows the <strong>same name, company and city</strong> and lists <strong>this exact email</strong>. Paste the profile’s link as the evidence.</p>
+<p><img class="intro-img sm" src="email-ex-code-profile.webp" alt="A GitHub-style profile with the same name, company, city and this email: Match"></p>
+<h3>Example B: the person’s own website → ✓ Match</h3>
+<p>A personal site or online CV whose <strong>Contact</strong> section shows this email, with the same name and job. Paste the contact page’s link.</p>
+<p><img class="intro-img sm" src="email-ex-own-website.webp" alt="A personal website showing this email in its Contact section: Match"></p>
+<h3>Example C: the email on someone else’s page → ✗ Not a match</h3>
+<p>A speaker page lists this email for <strong>Danielle Reyes-Ortiz</strong>, Marketing Director in Miami: a different name, job and city. The email belongs to someone else.</p>
+<p><img class="intro-img sm" src="email-ex-other-person.webp" alt="A speaker page showing this email for a different person: Not a match"></p>
+<h3>Example D: a people-search listing → only a lead</h3>
+<p>“Daniel R. · Texas · Possible match” with no source. This is <strong>not proof</strong>. Use it only as a hint to search further; if nothing else proves it within the time, answer <strong>? Can’t tell</strong>.</p>
+<p><img class="intro-img sm" src="email-ex-people-search.webp" alt="A people-search listing with half a name and no source: not proof"></p>
+<h3>Example E: found by the Email checker → ✓ Match</h3>
+<p>Person: <strong>Priya Nair</strong>, Data Scientist, Boston. The Email checker found a public profile (Gravatar) for <code>priya.nair.sample@gmail.com</code> with the <strong>same name, job, city and face</strong> as LinkedIn. Paste that profile’s link.</p>
+<p><img class="intro-img sm" src="email-ex-checker-profile.webp" alt="A public profile found by the Email checker with the same name, job, city and photo: Match"></p>
+<div class="tblw"><table><thead><tr><th>You found…</th><th>Answer</th></tr></thead><tbody>
+<tr><td>Gmail photo clearly the same face as LinkedIn</td><td>✓ Match (evidence: LinkedIn link)</td></tr>
+<tr><td>A page with this email + the same name + a matching job, company, city or photo</td><td>✓ Match (evidence: that page)</td></tr>
+<tr><td>Gmail photo clearly a different person</td><td>✗ Not a match</td></tr>
+<tr><td>A page with this email and a different person’s name, job or city</td><td>✗ Not a match</td></tr>
+<tr><td>Only a people-search “possible match”, an email that just looks like the name, or a similar-looking photo</td><td>Not proof: keep checking, then ? Can’t tell</td></tr>
+<tr><td>Nothing after 2½ minutes</td><td>? Can’t tell</td></tr></tbody></table></div>
 `};
 GADD.bemailbrief = GADD.bemail;
 const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k), h = (GADD[k] || '') + ((d && d.html) || ''); return h ? hashStr(h) : null; };
