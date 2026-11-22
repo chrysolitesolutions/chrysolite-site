@@ -4082,56 +4082,79 @@ bprof: {title: 'Profile Review', subtitle: 'Step-by-step instructions for the pr
 <li>When unsure, check LinkedIn before choosing <strong>Can’t decide</strong>.</li>
 <li>Watch the reservation time on long profiles.</li></ul>
 <p class="note">Where the rule box on screen gives a different rule from this page, the rule box applies.</p>`},
-  bemail: {title: 'Email Review', subtitle: 'Step-by-step instructions for the email review screen', html: `
-<h2>1. Before you start</h2>
-<ul><li>Every profile is <strong>reserved for you for a limited time</strong>, shown top right (e.g. “Reserved for you until 11:21 PM”). Finish it before then, or it goes back to the queue.</li>
-<li>The top bar shows <strong>Today</strong> (profiles done today), <strong>Checkpoint streak</strong> and <strong>Quality (7 days)</strong>. Quality depends on correct answers and good evidence, so take care with every link you paste.</li>
-<li>Use <strong>Exit</strong> (top right) only when you want to stop.</li></ul>
-<h2>2. Read the profile header</h2>
-<p>At the top you see the person’s <strong>name</strong>, <strong>job title at company</strong>, <strong>location</strong>, an <strong>Open LinkedIn ↗</strong> link and, below, their <strong>headline</strong>. Keep these details in mind: you need them to confirm that a page is about this person.</p>
-<h2>3. Understand the question</h2>
-<p class="callout"><strong>Do these emails belong to this person?</strong> Search for each email. Choose <strong>Match</strong> only if you found a page that proves it, and paste that page’s link.</p>
-<p>Each email is shown in its own box with a number (#1, #2 …). Check <strong>every email separately</strong>.</p>
-<h2>4. Search for the email</h2>
-<p>Use the search buttons under each email. Each one opens in a new tab:</p>
-<div class="tblw"><table><thead><tr><th>Button</th><th>What it finds</th></tr></thead><tbody>
-<tr><td>Search “email” ↗</td><td>Pages that contain this exact email address</td></tr>
-<tr><td>Search “email” + name ↗</td><td>Pages with the email and the person’s name together. Usually the strongest results</td></tr>
-<tr><td>Search GitHub ↗</td><td>GitHub profiles and code where the email appears. Useful for developers and engineers</td></tr></tbody></table></div>
-<p>You can also open LinkedIn or the person’s own website if one is listed.</p>
-<h2>5. Decide what counts as proof</h2>
-<h3>Good evidence (Match)</h3>
-<p>A page where the email appears <strong>together with this person’s identity</strong>: the same name, plus a matching company, job, location or photo. For example:</p>
-<ul><li>the person’s own website, portfolio or online CV showing the email</li>
-<li>a GitHub profile or project page with this name and this email</li>
-<li>a conference, speaker, author or company team page listing the person with this email</li></ul>
-<p><a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Check an email in the Email checker ↗</a> It looks the email up in public sources that can prove it (GitHub, PGP keys, Gravatar), checks the domain, and gives one-click searches.</p>
-<h3>Not enough on its own</h3>
-<ul><li>The email only <em>looks</em> like the name (e.g. narothamrc ≈ Narotham Reddy Chilkuri). That is a hint, not proof.</li>
-<li>A page about a <strong>different person</strong> with a similar name.</li>
-<li>People-search or contact-guessing sites that only list an email without a clear source.</li></ul>
-<p class="note">Follow any extra evidence rules from your team lead. Where they differ, theirs apply.</p>
-<h2>6. Choose an answer for each email</h2>
-<div class="tblw"><table><thead><tr><th>Button</th><th>Use when</th></tr></thead><tbody>
-<tr><td>✓ Match</td><td>You found a page that proves the email belongs to this person. <strong>Paste that page’s link</strong> in <em>Evidence link</em>. It is required for Match.</td></tr>
-<tr><td>✗ Not a match</td><td>You found that the email belongs to <strong>someone else</strong>, e.g. a page shows it with another person’s name.</td></tr>
-<tr><td>? Can’t tell</td><td>You searched and found nothing that proves it either way.</td></tr></tbody></table></div>
-<p>For the <strong>evidence link</strong>, copy the full address of the exact page that shows the email (not a search results page) and paste it in the box under the buttons.</p>
-<h2>7. None verifiable</h2>
-<p>If you searched every email and <strong>none of them</strong> can be proven, click <strong>None verifiable</strong> (bottom left) instead of answering each one.</p>
-<h2>8. Save and next</h2>
-<p>When every email has an answer (and every Match has an evidence link), click <strong>Save and next</strong> (bottom right). The next profile loads and your <strong>Today</strong> count goes up by one.</p>
-<h2>9. Worked example</h2>
-<p>Person: <strong>Narotham Reddy Chilkuri</strong>, Staff DevOps at Zoom, San Jose. Email #1: <strong>narothamrc@gmail.com</strong>.</p>
-<ol><li>Click <strong>Search “narothamrc@gmail.com”</strong>, then <strong>+ name</strong>, then <strong>Search GitHub</strong>.</li>
-<li>If a GitHub profile or personal site shows <strong>Narotham Reddy Chilkuri</strong> with this email and a matching job (DevOps, Zoom) → <strong>✓ Match</strong> and paste that page’s link.</li>
-<li>If a page shows this email with a <strong>different person</strong> → <strong>✗ Not a match</strong>.</li>
-<li>If nothing comes up → <strong>? Can’t tell</strong>. Don’t choose Match just because the email looks like the name.</li></ol>
-<h2>10. Quick tips</h2>
-<ul><li>Always try the <strong>email + name</strong> search; it gives the most reliable results.</li>
-<li>One clear proof page is enough. Don’t paste search result pages as evidence.</li>
-<li>Work email domains (e.g. @zoom.us) need the same proof as personal emails.</li>
-<li>Watch the reservation time if a profile has many emails.</li></ul>`}};
+  bemail: {title: 'Email Review', subtitle: 'Gmail photo first, then the search buttons and the Email checker. 2½ minutes per email.', html: `<div class="callout"><strong>The rule in one line:</strong> for every email, check the <strong>Gmail photo</strong> first, then the <strong>search buttons</strong>, then the <strong>Email checker</strong> (1½ min at most). Nothing proves it → <strong>Can’t tell</strong>. Clearly someone else → <strong>Not a match</strong>. <strong>2½ minutes at most per email.</strong> The pictures use made-up people; click any picture to open it larger.</div>
+<h2>1. The review screen</h2>
+<ul><li>Each profile is <strong>reserved for you for a limited time</strong> (top right). Finish it before then, or it goes back to the queue.</li>
+<li>At the top: the person’s <strong>name</strong>, <strong>job title at company</strong>, <strong>location</strong> and <strong>Open LinkedIn ↗</strong> (you need the LinkedIn photo for step 5).</li>
+<li>Below: <strong>Do these emails belong to this person?</strong> Each email has its own box (#1, #2 …) with three search buttons, three answers and an <em>Evidence link</em> box. Check <strong>every email separately</strong>.</li></ul>
+<h2>2. Check each email, step by step</h2>
+<h3>Steps 1–2: put the email in a new Gmail message</h3>
+<ol><li><strong>Open a new email in your Chrysolite Gmail.</strong> Click <strong>Compose</strong> (or use <strong>✉ Open in Gmail</strong> in the Email checker, which opens it with the email already filled in).</li>
+<li><strong>Copy the email</strong> you need to check from the review screen and <strong>paste it in the To box</strong>. It turns into a chip. <strong>Do not send anything.</strong></li></ol>
+<p><img class="intro-img sm" src="email-gmail-1-compose.webp" alt="A new Gmail message with the email pasted in the To box"></p>
+<h3>Steps 3–4: More info, then Open detailed view</h3>
+<ol start="3"><li><strong>Right-click the chip</strong> (or hover over it) and click <strong>More info</strong>.</li>
+<li>In the small card, click <strong>Open detailed view</strong>.</li></ol>
+<div class="gd-pics"><p><img class="intro-img sm" src="email-gmail-2-more-info.webp" alt="Right-click menu with More info"></p><p><img class="intro-img sm" src="email-gmail-3-detailed-view.webp" alt="The contact card with Open detailed view"></p><p><img class="intro-img sm" src="email-gmail-4-photo.webp" alt="The detailed view with the profile photo"></p></div>
+<h3>Step 5: compare the photo with LinkedIn</h3>
+<ol start="5"><li><strong>Look at the profile photo</strong> and compare it with the LinkedIn photo (use <strong>Open LinkedIn ↗</strong> on the review screen).
+<ul><li><strong>Clearly the same person</strong> → <strong>✓ Match</strong>. Paste the LinkedIn profile link as the evidence and note “Gmail profile photo matches LinkedIn photo”.</li>
+<li><strong>Clearly a different person</strong> → <strong>✗ Not a match</strong>.</li>
+<li><strong>No photo</strong> (only a letter), the <strong>grey default picture</strong>, a <strong>logo</strong>, or you can’t be sure → go to step 6.</li></ul></li></ol>
+<p><img class="intro-img sm" src="email-photo-same.webp" alt="Gmail photo and LinkedIn photo show the same face: Match"></p><p><img class="intro-img sm" src="email-photo-different.webp" alt="Gmail photo shows a different person from LinkedIn: Not a match"></p><p><img class="intro-img sm" src="email-photo-none.webp" alt="A letter, a grey default picture or a logo cannot prove anything"></p>
+<h3>Steps 6–8: search buttons, then the Email checker</h3>
+<ol start="6"><li>Use the <strong>search buttons</strong> on the review screen: <em>Search “email”</em>, <em>Search “email” + name</em>, <em>Search GitHub</em>.</li>
+<li>Still nothing → check it in the <a class="linkbtn" href="email-checker.html" target="_blank" rel="noopener">Email checker ↗</a> for <strong>no more than 1½ minutes</strong> (the checker shows a timer).</li>
+<li>Still nothing that confirms or rules it out → <strong>? Can’t tell</strong>.</li></ol>
+<p><img class="intro-img" src="email-review-search.webp" alt="The review screen: Open LinkedIn and the three search buttons"></p>
+<h3>Steps 9–10: the two rules that always apply</h3>
+<ol start="9"><li>If any one of these methods <strong>clearly and confidently</strong> shows a different person (a different face, or a page that shows this email with a different name, company or location) → <strong>✗ Not a match</strong>.</li>
+<li><strong>Each email: 2½ minutes at most</strong>, from opening Gmail to answering. When the time is up and nothing proves it, answer <strong>? Can’t tell</strong> and move on.</li></ol>
+<div class="tblw"><table><thead><tr><th>Step</th><th>Time guide</th><th>Result</th></tr></thead><tbody>
+<tr><td>Gmail photo (steps 1–5)</td><td>about 30 seconds</td><td>Same face as LinkedIn → Match · clearly a different face → Not a match</td></tr>
+<tr><td>Search buttons (step 6)</td><td>about 30 seconds</td><td>Page shows this email with this person → Match · with someone else → Not a match</td></tr>
+<tr><td>Email checker (step 7)</td><td>1½ minutes at most</td><td>Proof found → Match · clear difference → Not a match</td></tr>
+<tr><td>Nothing found (step 8)</td><td>total 2½ minutes at most</td><td>Can’t tell</td></tr></tbody></table></div>
+<p class="note">A photo that only looks a bit similar is not proof. Choose Match from the photo only when it is clearly the same person; choose Not a match only when it is clearly a different person.</p>
+<h2>3. Examples from websites: what counts and what doesn’t</h2>
+<p>Person on the review screen: <strong>Daniel Reyes</strong>, Senior UX Designer at Northwind Labs, Austin, Texas. Email #1: <code>dan.reyes.sample@yahoo.com</code>. (Made-up person and websites.)</p>
+<h3>Example A: a code profile (GitHub) → ✓ Match</h3>
+<p>The profile shows the <strong>same name, company and city</strong> and lists <strong>this exact email</strong>. Paste the profile’s link as the evidence.</p>
+<p><img class="intro-img sm" src="email-ex-code-profile.webp" alt="A GitHub-style profile with the same name, company, city and this email: Match"></p>
+<h3>Example B: the person’s own website → ✓ Match</h3>
+<p>A personal site or online CV whose <strong>Contact</strong> section shows this email, with the same name and job. Paste the contact page’s link.</p>
+<p><img class="intro-img sm" src="email-ex-own-website.webp" alt="A personal website showing this email in its Contact section: Match"></p>
+<h3>Example C: the email on someone else’s page → ✗ Not a match</h3>
+<p>A speaker page lists this email for <strong>Danielle Reyes-Ortiz</strong>, Marketing Director in Miami: a different name, job and city. The email belongs to someone else.</p>
+<p><img class="intro-img sm" src="email-ex-other-person.webp" alt="A speaker page showing this email for a different person: Not a match"></p>
+<h3>Example D: a people-search listing → only a lead</h3>
+<p>“Daniel R. · Texas · Possible match” with no source. This is <strong>not proof</strong>. Use it only as a hint to search further; if nothing else proves it within the time, answer <strong>? Can’t tell</strong>.</p>
+<p><img class="intro-img sm" src="email-ex-people-search.webp" alt="A people-search listing with half a name and no source: not proof"></p>
+<h3>Example E: found by the Email checker → ✓ Match</h3>
+<p>Person: <strong>Priya Nair</strong>, Data Scientist, Boston. The Email checker found a public profile (Gravatar) for <code>priya.nair.sample@gmail.com</code> with the <strong>same name, job, city and face</strong> as LinkedIn. Paste that profile’s link.</p>
+<p><img class="intro-img sm" src="email-ex-checker-profile.webp" alt="A public profile found by the Email checker with the same name, job, city and photo: Match"></p>
+<div class="tblw"><table><thead><tr><th>You found…</th><th>Answer</th></tr></thead><tbody>
+<tr><td>Gmail photo clearly the same face as LinkedIn</td><td>✓ Match (evidence: LinkedIn link)</td></tr>
+<tr><td>A page with this email + the same name + a matching job, company, city or photo</td><td>✓ Match (evidence: that page)</td></tr>
+<tr><td>Gmail photo clearly a different person</td><td>✗ Not a match</td></tr>
+<tr><td>A page with this email and a different person’s name, job or city</td><td>✗ Not a match</td></tr>
+<tr><td>Only a people-search “possible match”, an email that just looks like the name, or a similar-looking photo</td><td>Not proof: keep checking, then ? Can’t tell</td></tr>
+<tr><td>Nothing after 2½ minutes</td><td>? Can’t tell</td></tr></tbody></table></div>
+
+<h2>4. Answer and evidence</h2>
+<div class="tblw"><table><thead><tr><th>Button</th><th>Use when</th><th>Evidence link</th></tr></thead><tbody>
+<tr><td>✓ Match</td><td>The Gmail photo is clearly the same face as LinkedIn, or a page shows this email with this person</td><td><strong>Required.</strong> The LinkedIn link (photo match) or the exact page that shows the email. Never a search results page</td></tr>
+<tr><td>✗ Not a match</td><td>Something clearly shows a different person: a different face, or this email on a page about someone else</td><td>Not needed</td></tr>
+<tr><td>? Can’t tell</td><td>Nothing proves it either way within 2½ minutes</td><td>Not needed</td></tr></tbody></table></div>
+<h2>5. Finish the profile</h2>
+<ul><li><strong>None verifiable</strong> (bottom left): use it when you checked every email and none of them can be proven.</li>
+<li><strong>Save and next</strong> (bottom right): when every email has an answer and every Match has an evidence link. Your <strong>Today</strong> count goes up by one.</li></ul>
+<h2>6. Quick tips</h2>
+<ul><li>Start every email with <strong>✉ Open in Gmail</strong> in the Email checker: it opens the message with the email already in To.</li>
+<li>A photo that only <em>looks a bit</em> similar is not proof; an email that only looks like the name is not proof.</li>
+<li>People-search sites are leads, not proof: use them to find the original page, or move on.</li>
+<li>Work emails (e.g. @company.com) need the same proof as personal ones.</li>
+<li>Watch the clock: 2½ minutes per email, 1½ of them at most on the Email checker.</li></ul>`}};
 // only a small set of tags and attributes from uploaded documents is kept
 function cleanHtml(raw){
   const doc = new DOMParser().parseFromString('<div>' + raw + '</div>', 'text/html'), OK = /^(H[1-4]|P|UL|OL|LI|TABLE|THEAD|TBODY|TR|TD|TH|STRONG|EM|B|I|A|BR|DIV|SPAN|CODE|IMG|KBD)$/;
@@ -4157,9 +4180,11 @@ function ackBlock(k){ const p = projOf(k); if (!p || acting()) return [];
   const qc = QUIZ_OF[k]; if (qc && document.querySelector('#gdDoc .' + qc) && !(window.__qzDone || {})[qc]) out.push('answer every practice case on this page correctly (' + ((window.__qzN || {})[qc] || 0) + ' of ' + ((window.__qzT || {})[qc] || '?') + ' correct)');
   return out; }
 const hashStr = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
-const ackDoc = k => guides[GDOCS[k]] || GDEFAULT[k] || null;
+const GNEW = {bemail: '2026-11-22T00:00:00Z'};   // uploads older than this are out of date: the built-in page is shown instead
+const gStored = k => { const d = guides[GDOCS[k]]; return d && GNEW[k] && String(d.updatedAt || '') < GNEW[k] ? null : d; };
+const ackDoc = k => gStored(k) || GDEFAULT[k] || null;
 // a procedure added on top of a page, whether the page is the built-in one or an uploaded .docx (it changes the version, so staff accept it again)
-const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from today):</strong> check every email in this order, and spend <strong>no more than 2½ minutes</strong> on each email. The pictures use made-up people; click any picture to open it larger.</div>
+const GADD = {bemailbrief: `<div class="callout"><strong>New procedure (applies from today):</strong> check every email in this order, and spend <strong>no more than 2½ minutes</strong> on each email. The pictures use made-up people; click any picture to open it larger.</div>
 <h2>Step-by-step email check (start with the Gmail photo)</h2>
 <h3>Steps 1–2: put the email in a new Gmail message</h3>
 <ol><li><strong>Open a new email in your Chrysolite Gmail.</strong> Click <strong>Compose</strong> (or use <strong>✉ Open in Gmail</strong> in the Email checker, which opens it with the email already filled in).</li>
@@ -4214,7 +4239,6 @@ const GADD = {bemail: `<div class="callout"><strong>New procedure (applies from 
 <tr><td>Only a people-search “possible match”, an email that just looks like the name, or a similar-looking photo</td><td>Not proof: keep checking, then ? Can’t tell</td></tr>
 <tr><td>Nothing after 2½ minutes</td><td>? Can’t tell</td></tr></tbody></table></div>
 `};
-GADD.bemailbrief = GADD.bemail;
 const ackVer = k => { if (k === 'brief') return typeof BRIEF_VER === 'string' ? BRIEF_VER : null; const d = ackDoc(k), h = (GADD[k] || '') + ((d && d.html) || ''); return h ? hashStr(h) : null; };
 // 'ok' accepted the current version, 'old' accepted an earlier version, 'no' never accepted, null nothing to accept yet
 function ackState(rec, k){ const v = ackVer(k); if (!v) return null; const a = rec && rec.pages && rec.pages[k];
@@ -4348,7 +4372,7 @@ function mountZpMap(){ const box = document.querySelector('#gdDoc .zp-map'); if 
   box.addEventListener('click', e => { const b = e.target.closest('[data-zm]'); if (b) { show(b.dataset.zm); if (b.tagName === 'TR') box.querySelector('.zm-pic').scrollIntoView({behavior: 'smooth', block: 'center'}); } });
   show(sel); }
 function renderGdoc(){
-  const stored = guides[GDOCS[gdKey]], g = stored || GDEFAULT[gdKey] || (GADD[gdKey] ? {html: ''} : null), names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '4.2 Email Benchmarking - Steps and Instructions', bphone: '5.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '4.1 Email Benchmarking - Briefing and Practice', bphonebrief: '5.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '3.1 LinkedIn Check - Briefing and Practice', bzipsteps: '3.2 LinkedIn Check - Steps and Instructions', bnamebrief: '2.1 Name Groups Check - Briefing and Practice', bnamesteps: '2.2 Name Groups Check - Steps and Instructions'};
+  const stored = gStored(gdKey), g = stored || GDEFAULT[gdKey] || (GADD[gdKey] ? {html: ''} : null), names = {eto: 'ETO Profile Mapping Project', roi: 'ROI Database update Project', csm: 'Standard Usage Reporting - CSM Project', bprof: '1.3 Profile Benchmarking - Steps and Instructions', bemail: '4.2 Email Benchmarking - Steps and Instructions', bphone: '5.2 Phone Number Benchmarking - Steps and Instructions', bintro: '1.1 Introduction to LinkedIn Profile Benchmarking', bemailbrief: '4.1 Email Benchmarking - Briefing and Practice', bphonebrief: '5.1 Phone Number Benchmarking - Briefing and Practice', bzipbrief: '3.1 LinkedIn Check - Briefing and Practice', bzipsteps: '3.2 LinkedIn Check - Steps and Instructions', bnamebrief: '2.1 Name Groups Check - Briefing and Practice', bnamesteps: '2.2 Name Groups Check - Steps and Instructions'};
   const back = document.querySelector('.view[data-view="gdoc"] .gd-back'), sub = BENCH_SUB.includes(gdKey); back.dataset.go = 'guides'; back.textContent = '← Projects';
   $('gdTitle').textContent = (g && g.title) || names[gdKey]; $('gdDocBtn').textContent = stored ? 'Replace with .docx' : 'Upload .docx'; $('gdSub').textContent = (g && g.subtitle) || '';
   if (!g) { $('gdAck').hidden = true; $('gdDoc').innerHTML = '<p class="empty">This guideline hasn\'t been added yet.' + (isAdmin ? ' Use <b>Upload .docx</b> above to add it from a Word document.' : ' Your admin will add it soon.') + '</p>'; $('gdToc').innerHTML = ''; $('gdUpd').textContent = ''; return; }
