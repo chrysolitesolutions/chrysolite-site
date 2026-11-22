@@ -1478,7 +1478,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
       <p class="hint" id="orgHidden" hidden style="margin:-4px 0 10px"></p>
       <div class="panel org-panel"><div class="org-fit" id="orgFit"><div class="org-tree" id="orgTree"></div></div></div>
       <div class="panel admin-only" hidden style="margin-top:16px"><h3>Add a planned team member</h3><p class="hint" style="margin:-4px 0 12px">For people joining soon. They show on the chart as “Joining soon” until you create their login with the same name, then the card switches to the real person automatically.</p>
-        <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option><option>COO / Project Director</option><option>Owner</option></select></div></div>
+        <form class="adm-form" id="opForm" novalidate><div class="g2"><div class="f"><label for="opName">Full name</label><input id="opName" maxlength="80" placeholder="e.g. Nabeel"></div><div class="f"><label for="opRole">Role</label><select id="opRole"><option>Data Executive</option><option>Senior Data Executive</option><option>Team Lead</option><option>Project Manager</option><option>COO / Project Director</option><option>Chairman / Founder</option></select></div></div>
           <div class="g2"><div class="f"><label for="opBoss">Reports to</label><select id="opBoss"></select></div><div class="f"><label for="opDate">Expected joining date</label><input id="opDate" type="date"></div></div>
           <div class="msg err" id="opErr" hidden></div><button class="btn btn-gem" type="submit" style="justify-self:start">Add to the Org Chart</button></form></div>
     </section>
@@ -1805,7 +1805,7 @@ td .neg,.td-neg{color:#b23a26;font-weight:700}.ps-spd{display:flex;align-items:c
             <div class="f"><label for="aName">Full name</label><input id="aName" autocomplete="off" placeholder="e.g. Amara Okafor"></div>
             <div class="f"><label for="aEmail">Login email</label><input id="aEmail" type="email" autocomplete="off" placeholder="name@company.com"></div>
             <div class="g2">
-              <div class="f"><label for="aRole">Role</label><select id="aRole"><option>Owner</option><option>COO / Project Director</option><option>Project Manager</option><option>Team Lead</option><option>Senior Data Executive</option><option selected>Data Executive</option></select></div>
+              <div class="f"><label for="aRole">Role</label><select id="aRole"><option>Chairman / Founder</option><option>COO / Project Director</option><option>Project Manager</option><option>Team Lead</option><option>Senior Data Executive</option><option selected>Data Executive</option></select></div>
               <div class="f"><label for="aStatus">Status</label><select id="aStatus"><option>Active</option><option>On leave</option><option>Bench</option></select></div>
             </div>
             <div class="f"><label for="aAccess">Portal access</label><select id="aAccess"><option value="contributor">Contributor: clock in and out only, everything else view-only</option><option value="admin">Admin: can edit everything in the portal</option></select>
@@ -2074,7 +2074,9 @@ const BRIEF_AMEND = {tbl: 'Worked example updated: years are now the file year m
 const BRIEF_LEGACY = {'brief-2026-11-9': 1, 'brief-2026-11-10-yrs': 2};   // acceptances saved before per-page versions
 let empInfoMine = null, empDocsMine = null, profReqMine = null, profReqAll = {}; const epEditing = {};   // employee details: own records, section being edited per container
 let me = null, setupMode = false, signingIn = false;                    // signed-in account (null for "Portal admin")
-const ROLES = ['Owner', 'COO / Project Director', 'Project Manager', 'Team Lead', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
+// the top role was renamed from Owner to Chairman / Founder; older saved records still say Owner
+const fixRole = r => (r && r.role === 'Owner' ? {...r, role: 'Chairman / Founder'} : r);
+const ROLES = ['Chairman / Founder', 'COO / Project Director', 'Project Manager', 'Team Lead', 'Senior Data Executive', 'Data Executive'], PROJECTS = ['Seekout'];
 let pfDoc = null, guides = {}, gdKey = 'eto', clockIds = [], waCfg = {}, otReqMine = null, otApprMine = null, otReqAll = [], otApprAll = {}, otAsked = '';
 const SESSION_MAX = 16 * 3600000, DAY_MAX = 8 * 3600000;   // DAY_MAX = standard day; SESSION_MAX only stops a clock left running by mistake
 let accounts = [], week = {key:'', rows:[]}, nextWeek = {key:'', rows:[]}, decisions = [], anns = [], requests = [], myReq = null, myReqRaw = null, myReqDoc = null, myClockRaw = null, attDocs = [], clockDocs = [], reqLegacy = [], reqNew = [], links = [], myAtt = null, myAttRaw = null, teamAtt = [];
@@ -2167,9 +2169,9 @@ window.addEventListener('focus', () => { clearTimeout(watchHideT); resumeWatches
 function startData() {
   if (!db || unsub.accounts) return;
   watch('guides', db.collection('guidelines'), s => { guides = {}; s.docs.forEach(d => guides[d.id] = d.data()); pfDoc = guides.powerfilter || null; const was = window.__ckAt, now = (guides.pfcheck || {}).at; if (chkReqAt && now && now !== was && new Date(now) > chkReqAt) { toast('Source check finished'); $('chkMsg').hidden = true; chkReqAt = 0; } window.__ckAt = now; renderPf(); renderChk(); renderSrc(); renderGdoc(); renderGuideCards(); });
-  watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => ({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
+  watch('accounts', db.collection('accounts'), s => { accounts = s.docs.map(d => fixRole({key: d.id, ...d.data(), project: 'Seekout'})); renderAll(); });
   watch('photos', db.collection('photos'), s => { photosAll = {}; s.docs.forEach(d => { const x = d.data(); if (x && x.photo) photosAll[d.id] = x.photo; }); try { renderOrg(); } catch (e) { console.error(e); } });
-  watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => ({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
+  watch('orgPlan', db.collection('orgPlan'), s => { orgPlan = s.docs.map(d => fixRole({id: d.id, ...d.data()})); try { renderOrg(); } catch (e) { console.error(e); } });
   watch('holidays', db.collection('holidays'), s => { holidays = s.docs.flatMap(d => (d.data().items || [])).sort((a, b) => a.date.localeCompare(b.date)); renderTimeOff(); try { renderHolidayWish(); } catch (e) {} try { renderMyMonth(); } catch (e) {} if (isAdmin) seedHolidays(); });
   watch('decisions', db.collection('leaveDecision'), s => { decisions = s.docs.map(d => ({key: d.id, ...d.data()})); renderAll(); });
   watch('anns', db.collection('announcements'), s => { anns = s.docs.map(d => ({key: d.id, ...d.data()})); renderHome(); renderAnnAdmin(); });
@@ -2264,7 +2266,7 @@ function applyRole() {
 
 /* ---------- sign in ---------- */
 function showApp(acc) {
-  me = acc; myClockRaw = null; myClockServer = false; myReqDoc = null; pickMyAtt(); watchMine();
+  me = fixRole(acc); myClockRaw = null; myClockServer = false; myReqDoc = null; pickMyAtt(); watchMine();
   $('loginView').hidden = true; $('appView').hidden = false;
   const label = acc ? acc.name : 'Setup';
   $('myEmail').textContent = label; $('myAv').textContent = initials(label);
@@ -6154,14 +6156,14 @@ addEventListener('resize', () => { moveInd(); queueCharts(); });
 
 
 /* ---------- Org Chart: everyone can see the team, reporting lines, projects and today's tasks ---------- */
-const ROLE_RANK = {'Owner': 0, 'COO / Project Director': 1, 'Project Manager': 2, 'Team Lead': 3, 'Senior Data Executive': 4, 'Data Executive': 5};
+const ROLE_RANK = {'Chairman / Founder': 0, 'Owner': 0, 'COO / Project Director': 1, 'Project Manager': 2, 'Team Lead': 3, 'Senior Data Executive': 4, 'Data Executive': 5};
 function orgTopNames(skip){ const cur = people().filter(p => p.reportsTo === '__top' && p.key !== skip); if (cur.length) return cur.map(p => p.name).join(' and '); const ps = people().filter(p => p.reportsTo !== '__none' && p.reportsTo !== '__top' && (!skip || p.key !== skip)), par = orgParents(ps); return ps.filter(p => !par[p.key]).map(p => p.name).join(' and ') || 'everyone'; }
 const ORG_SPECIAL = skip => `<option value="__none">None (not shown on the Org Chart)</option><option value="__top">Top of the chart (${esc(orgTopNames(skip))} reports to them)</option>`;
 function fillBoss(a){ const sel = $('aBoss'); if (!sel) return; sel.innerHTML = '<option value="">Automatic (by role)</option>' + ORG_SPECIAL(a && a.key) + people().filter(p => !a || p.key !== a.key).map(p => `<option value="${esc(p.key)}">${esc(p.name)} · ${esc(p.role || '')}</option>`).join(''); }
 function orgParents(ps = people()){ ps = ps.filter(p => p.reportsTo !== '__none'); const tops = ps.filter(p => p.reportsTo === '__top'); if (tops.length) { const rest = ps.filter(p => p.reportsTo !== '__top'), par = orgParents(rest); tops.forEach(t => par[t.key] = null); rest.forEach(p => { if (!par[p.key]) par[p.key] = tops[0].key; }); return par; }
   const byRank = r => ps.filter(p => (ROLE_RANK[p.role] ?? 5) === r), parent = {};
   ps.forEach(p => { if (p.reportsTo && p.reportsTo !== p.key && ps.some(x => x.key === p.reportsTo)) { parent[p.key] = p.reportsTo; return; }
-    const r = ROLE_RANK[p.role] ?? 5; for (let up = r >= 4 ? 3 : r - 1; up >= 0; up--) {   /* executives report to a Team Lead, Team Lead to Project Manager, then COO / Project Director, then Owner */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
+    const r = ROLE_RANK[p.role] ?? 5; for (let up = r >= 4 ? 3 : r - 1; up >= 0; up--) {   /* executives report to a Team Lead, Team Lead to Project Manager, then COO / Project Director, then Chairman / Founder */ const c = byRank(up); if (c.length) { parent[p.key] = c[0].key; return; } } parent[p.key] = null; });
   // break any loop an admin may have set by mistake
   ps.forEach(p => { const seen = new Set([p.key]); let q = parent[p.key]; while (q) { if (seen.has(q)) { parent[p.key] = null; break; } seen.add(q); q = parent[q]; } });
   return parent; }
